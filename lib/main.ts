@@ -1,10 +1,10 @@
-import i18n from './i18n'
+import { i18n } from './i18n'
 import * as components from './components'
 import * as datavisualisations from './datavisualisations'
 import * as maps from './maps'
-import config from './config.ts'
+import config from './config'
+import {App} from "vue";
 
-export { default as config } from './config'
 export { default as AccordionWrapper } from './components/AccordionWrapper.vue'
 export { default as AccordionStep } from './components/AccordionStep.vue'
 export { default as ActiveTextTruncate } from './components/ActiveTextTruncate.vue'
@@ -43,36 +43,42 @@ export { default as LineChart } from './datavisualisations/LineChart.vue'
 export { default as StackedBarChart } from './datavisualisations/StackedBarChart.vue'
 
 export { default as ChoroplethMap } from './maps/ChoroplethMap.vue'
-export { default as ChoroplethMapAnnotation } from './maps/ChoroplethMapAnnotation.vue'
 export { default as SymbolMap } from './maps/SymbolMap.vue'
 
-class Murmur {
-  static get i18n() {
+const Murmur = {
+  get i18n() {
     return i18n
-  }
-  static get config() {
+  },
+  get config() {
     return config
-  }
-  static get components() {
+  },
+  get components() {
     return components
-  }
-  static setLocaleMessage(lang, message) {
-    return this.i18n.setLocaleMessage(lang, message)
-  }
-  static mergeLocaleMessage(lang, message) {
-    return this.i18n.mergeLocaleMessage(lang, message)
-  }
-  static setLocale(lang) {
-    return (this.i18n.locale = lang)
-  }
-  static getLocale() {
-    return this.i18n.locale
-  }
-  static install(Vue) {
-    Vue.prototype.$config = Murmur.config
-    Object.keys(components).forEach((key) => Vue.component(key, components[key]))
-    Object.keys(datavisualisations).forEach((key) => Vue.component(key, datavisualisations[key]))
-    Object.keys(maps).forEach((key) => Vue.component(key, maps[key]))
+  },
+  setLocaleMessage(lang:string, message:any) {
+    return Murmur.i18n.global.setLocaleMessage(lang, message)
+  },
+  mergeLocaleMessage(lang:string, message:any) {
+    return Murmur.i18n.global.mergeLocaleMessage(lang, message)
+  },
+  setLocale(lang:"fr" | "en") {
+    // @ts-ignore
+    return (Murmur.i18n.global.locale.value = lang)
+  },
+  getLocale() {
+    // @ts-ignore
+    return Murmur.i18n.global.locale.value
+  },
+  install(app:App<Element>) {
+    app.use(i18n)
+
+    app.config.globalProperties.$config =  Murmur.config
+    // @ts-ignore
+    Object.keys(components).forEach((key) => app.component(key, components[key]))
+    // @ts-ignore
+    Object.keys(datavisualisations).forEach((key) => app.component(key, datavisualisations[key]))
+    // @ts-ignore
+    Object.keys(maps).forEach((key) => app.component(key, maps[key] ))
   }
 }
 

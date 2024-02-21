@@ -1,5 +1,5 @@
-import { createLocalVue } from '@vue/test-utils'
 import Murmur from '@/main'
+import {createApp} from "vue";
 
 describe('main.js', () => {
   it('exposes a static method called `install`', () => {
@@ -22,11 +22,11 @@ describe('main.js', () => {
     expect(Murmur.getLocale).toBeDefined()
   })
 
-  it('uses the `install` method to register components', () => {
-    const localVue = createLocalVue()
-    expect(localVue.options.components.ContentPlaceholder).toBeUndefined()
-    localVue.use(Murmur)
-    expect(localVue.options.components.ContentPlaceholder).toBeDefined()
+  it('use plugin to register Murmur components ', () => {
+    const app = createApp()
+    expect(app._context.components.ContentPlaceholder).toBeUndefined()
+    app.use(Murmur)
+    expect(app._context.components.ContentPlaceholder).toBeDefined()
   })
 
   it('has a list of components', () => {
@@ -47,7 +47,7 @@ describe('main.js', () => {
   })
 
   it('has a locale', () => {
-    expect(Murmur.getLocale()).toBe(Murmur.i18n.locale)
+    expect(Murmur.getLocale()).toBe("en")
   })
 
   it('can update the locale', () => {
@@ -63,7 +63,7 @@ describe('main.js', () => {
     })
 
     Murmur.setLocale('jp')
-    expect(Murmur.i18n.t('hello')).toBe('もしもし')
+    expect(Murmur.i18n.global.t('hello')).toBe('もしもし')
   })
 
   it('can merge an existing locale with new messages', () => {
@@ -72,8 +72,8 @@ describe('main.js', () => {
       hello: 'world',
       foo: 'bar'
     })
-    expect(Murmur.i18n.t('hello')).toBe('world')
-    expect(Murmur.i18n.t('foo')).toBe('bar')
+    expect(Murmur.i18n.global.t('hello')).toBe('world')
+    expect(Murmur.i18n.global.t('foo')).toBe('bar')
   })
 
   afterEach(() => {
