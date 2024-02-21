@@ -5,6 +5,7 @@
     "strict": true,
     "jsx": "preserve",
     "moduleResolution": "node",
+    "resolveJsonModule":true,
     "experimentalDecorators": true,
     "checkJs": true,
     "allowJs": true,
@@ -19,26 +20,13 @@
       "vitest/globals"
     ],
     "paths": {
-      "node_modules": [ "node_modules"],
-      "$package": [ "package.json"],
       "@/*": [ "lib/*"],
-      "$docs/*": [ "docs/*"],
-      "$components/*": [ "docs/components/*"],
-      "$pages/*": [ "docs/pages/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
   },
   "include": [
     "lib/**/*.ts",
-    "lib/**/*.tsx",
     "lib/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.ts"
   ],
   "exclude": [
     "node_modules",

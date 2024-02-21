@@ -29,3 +29,5 @@ export type BrandStyle = StyleValue & {
 export type BrandExpansionStyle = Pick<BrandStyle, '--monochrome-color' | 'background'>
 
 export type Variant = 'primary' | 'secondary' | 'danger' | 'info' | 'warning' | 'success' | 'dark' | 'light'
+
+
