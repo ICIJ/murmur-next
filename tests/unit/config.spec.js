@@ -1,7 +1,7 @@
-import { createLocalVue, mount } from '@vue/test-utils'
 import { default as config, Config } from '@/config'
 import Murmur from '@/main'
-
+import { getCurrentInstance, h} from "vue";
+import { mount } from "@vue/test-utils";
 describe('config.ts', () => {
 
   it('should be an instance of `Config`', () => {
@@ -96,30 +96,33 @@ describe('config.ts', () => {
     expect(config.isnt('activated')).toBeTruthy()
   })
 
+
   it('should create a reactive property', async () => {
-    const localVue = createLocalVue()
-    localVue.use(Murmur)
     const component = {
-      render(h) {
-        return h('div', this.$config.get('reactiveProp', 'bar'))
+      setup(){
+        const app = getCurrentInstance();
+        return ()=> h('div', app.appContext.config.globalProperties.$config.get('reactiveProp', 'bar'))
       }
     }
-    const wrapper = mount(component, { localVue })
+
+    const wrapper = mount(component,{global: {plugins: [Murmur]} })
     expect(wrapper.text()).toBe('bar')
     wrapper.vm.$config.set('reactiveProp', 'baz')
     await wrapper.vm.$nextTick()
     expect(wrapper.text()).toBe('baz')
   })
 
-  it('should create a nested reactive property', async () => {
-    const localVue = createLocalVue()
-    localVue.use(Murmur)
+
+  it('should create a nested reactive property from inside the component', async () => {
+    //configVTU.global.plugins.push(Murmur);
     const component = {
-      render(h) {
-        return h('div', this.$config.get('nested.reactiveProp', 'bar'))
+      setup(){
+        const app = getCurrentInstance();
+        return ()=>h('div', app.appContext.config.globalProperties.$config.get('nested.reactiveProp', 'bar'))
       }
     }
-    const wrapper = mount(component, { localVue })
+
+    const wrapper = mount(component, {global: {plugins: [Murmur]} })
     expect(wrapper.text()).toBe('bar')
     wrapper.vm.$config.set('nested.reactiveProp', 'baz')
     await wrapper.vm.$nextTick()
