@@ -1,17 +1,15 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
+import {createI18n,I18n} from 'vue-i18n'
 
 import fr from '@/locales/fr.json'
 import en from '@/locales/en.json'
 
-if (!Vue.prototype.hasOwnProperty('$i18n')) {
-  Vue.use(VueI18n)
-}
-
 export const locale: string = 'en'
 export const fallbackLocale: string = 'en'
-
-export default new VueI18n({
+// https://vue-i18n.intlify.dev/guide/advanced/composition.html#implicit-with-injected-properties-and-functions
+export const i18n: I18n = createI18n({
+  warnHtmlMessage:false,
+  globalInjection: true,
+  legacy:false,
   locale,
   fallbackLocale,
   messages: { fr, en }
