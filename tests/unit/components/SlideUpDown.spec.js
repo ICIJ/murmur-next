@@ -40,7 +40,7 @@ describe('SlideUpDown', () => {
     const wrapper = mount(SlideUpDown)
     wrapper.vm.cleanLayout = vi.fn()
     expect(wrapper.vm.cleanLayout.mock.calls.length).toBe(0)
-    wrapper.vm.active = false
+    await wrapper.setProps({active:false})
     await new Promise(done => {
       setTimeout(() => {
         expect(wrapper.vm.cleanLayout.mock.calls.length).toBe(1)

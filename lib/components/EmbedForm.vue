@@ -2,19 +2,19 @@
   <div class="embed-form">
     <div class="container-fluid">
       <h4 v-if="!noTitle" class="embed-form__heading">
-        {{ $t('embed-form.heading') }}
+        {{ t('embed-form.heading') }}
       </h4>
       <div class="row">
         <div class="col">
           <p>
-            {{ $t('embed-form.introduction') }}
+            {{ t('embed-form.introduction') }}
           </p>
-          <textarea class="form-control embed-form__code mb-2" readonly :value="embedCode()" @click="selectCode" />
+          <textarea ref='embed-form__code' class="form-control embed-form__code mb-2" readonly :value="embedCode()" @click="selectCode" />
 
           <label class="custom-control custom-checkbox btn btn-sm float-left">
             <input v-model="responsiveCheck" type="checkbox" class="custom-control-input" />
             <span class="custom-control-label font-weight-bold">
-              {{ $t('embed-form.responsive-optin') }}
+              {{ t('embed-form.responsive-optin') }}
             </span>
           </label>
 
@@ -22,7 +22,7 @@
             <haptic-copy
               class="btn-link btn-sm text-uppercase font-weight-bold"
               :text="embedCode()"
-              :label="$t('embed-form.copy').toString()"
+              :label="t('embed-form.copy').toString()"
               @attempt="selectCode()"
             />
           </div>
@@ -38,15 +38,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {computed, defineComponent, ref} from 'vue'
 
-import i18n from '@/i18n'
+import {useI18n} from "vue-i18n";
 import HapticCopy from '@/components/HapticCopy.vue'
 import IframeResizer from '@/utils/iframe-resizer'
 
 interface ComponentInterface {
   currentUrl: string
-  responsiveCheck: string
+  responsiveCheck: boolean
   width: string
   minWidth: number
   height: number
@@ -58,8 +58,7 @@ interface ComponentInterface {
  * Embed Form
  */
 export default defineComponent({
-  i18n,
-  name: 'EmbedForm',
+name: 'EmbedForm',
   components: {
     HapticCopy
   },
@@ -112,32 +111,38 @@ export default defineComponent({
       default: null
     }
   },
-  data() {
-    return {
-      responsiveCheck: false
-    }
-  },
-  computed: {
-    currentUrl() {
-      return this.url || window.location.href
-    }
-  },
-  methods: {
-    iframeCodeFor(this: ComponentInterface, url = this.currentUrl, width: string, height: string) {
+  setup(props)
+  {
+    const {t} = useI18n()
+
+    const responsiveCheck = ref(false)
+    const embedFormCode = ref<HTMLTextAreaElement|null>(null)
+    const currentUrl = computed(()=> {
+      return props.url || window.location.href
+    })
+    function iframeCodeFor(_url = currentUrl, width: string, height: string) {
       return `<iframe width="${width}" height="${height}" src="${IframeResizer.deletePymParams(
-        url
+          props.url
       )}" frameborder="0" allowfullscreen></iframe>`
-    },
-    pymCodeFor(this: ComponentInterface, url = this.currentUrl): string {
-      return IframeResizer.template(url)
-    },
-    selectCode(): void {
-      ;(this.$el.querySelector('.embed-form__code') as HTMLTextAreaElement)?.select()
-    },
-    embedCode(this: ComponentInterface, withPym = this.responsiveCheck): string {
-      const width = typeof this.width === 'string' ? this.width : Math.max(this.width, this.minWidth).toString()
-      const height = Math.max(this.height, this.minHeight).toString()
-      return withPym ? this.pymCodeFor(this.currentUrl) : this.iframeCodeFor(this.currentUrl, width, height)
+    }
+    function pymCodeFor(url = currentUrl): string {
+      return IframeResizer.template(url.value)
+    }
+    function selectCode(): void {
+      embedFormCode.value?.select()
+    }
+    function embedCode(withPym = responsiveCheck.value): string {
+      const width = typeof props.width === 'string' ? props.width : Math.max(props.width, props.minWidth).toString()
+      const height = Math.max(props.height, props.minHeight).toString()
+      return withPym ? pymCodeFor(currentUrl) : iframeCodeFor(currentUrl, width, height)
+    }
+
+    return {
+      t,
+      responsiveCheck,
+      embedFormCode,
+      selectCode,
+      embedCode
     }
   }
 })

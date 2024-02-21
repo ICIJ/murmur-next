@@ -35,7 +35,8 @@ export default defineComponent({
      * Etheir or note we should use the black version of the texture
      */
     black: {
-      type: Boolean
+      type: Boolean,
+      default:false
     },
     /**
      * Host where to find the textures (without tailing slash)

@@ -5,7 +5,7 @@
     </button>
     <sign-up-form class="p-3" />
     <div class="px-3 pb-1 text-uppercase text-muted font-weight-bold">
-      {{ $t('follow-us-popover.heading') }}
+      {{ t('follow-us-popover.heading') }}
     </div>
     <div class="p-3 bg-light container-fluid text-center">
       <div class="row w-100">
@@ -53,34 +53,40 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter'
 import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin'
 import { defineComponent } from 'vue'
-
+import { useI18n } from 'vue-i18n'
 import SignUpForm from './SignUpForm.vue'
 import { library, default as Fa } from './Fa'
+import {onBeforeMount} from "@vue/runtime-core";
 
-import i18n from '@/i18n'
 
 /**
  * FollowUsPopover
  */
 export default defineComponent({
-  i18n,
   name: 'FollowUsPopover',
   components: {
     Fa,
     SignUpForm
   },
-  beforeMount(): void {
-    library.add(faTimes, faTwitter, faFacebook, faLinkedin)
-  },
-  methods: {
-    closeSignupPopover(): void {
+  emits:["update:show"],
+  setup(_props,{emit}){
+    const {t} = useI18n()
+    onBeforeMount((): void=>{
+        library.add(faTimes, faTwitter, faFacebook, faLinkedin)
+    })
+    function closeSignupPopover(): void {
       /**
        * Fired when user click on the `close` button
        *
        * @event update:show
        * @type {boolean}
        */
-      this.$emit('update:show', false)
+      emit('update:show', false)
+    }
+
+    return {
+      t,
+      closeSignupPopover
     }
   }
 })

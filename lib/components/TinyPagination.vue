@@ -8,16 +8,16 @@
       @click="applyPreviousPage"
     >
       <!-- @slot Previous button content -->
-      <slot name="previous" v-bind="{ value, numberOfPages, hasPrevious, hasNext }">
+      <slot name="previous" v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }">
         <fa :icon="previousPageIcon" />
-        <span class="sr-only">{{ $tc('tiny-pagination.previous') }}</span>
+        <span class="sr-only">{{ t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
     <form class="tiny-pagination__form form-inline" @submit.prevent="applyPageForm">
       <label v-show="!compact" class="tiny-pagination__form__label mr-1 mb-0">
         <!-- @slot Display page label -->
-        <slot name="page" v-bind="{ value, numberOfPages }">
-          {{ $t('tiny-pagination.page') }}
+        <slot name="page" v-bind="{ modelValue, numberOfPages }">
+          {{ t('tiny-pagination.page') }}
         </slot>
       </label>
       <b-form-input
@@ -28,11 +28,11 @@
         step="1"
         :min="1"
         :max="numberOfPages"
-        :aria-label="$tc('tiny-pagination.aria')"
+        :aria-label="t('tiny-pagination.aria')"
       />
       <!-- @slot Display number of pages -->
-      <slot name="number-of-pages" v-bind="{ value, numberOfPages }">
-        {{ $tc('tiny-pagination.total', numberOfPages, { numberOfPages }) }}
+      <slot name="number-of-pages" v-bind="{ modelValue, numberOfPages }">
+        {{ t('tiny-pagination.total', { numberOfPages }) }}
       </slot>
     </form>
     <b-button
@@ -43,9 +43,9 @@
       @click="applyNextPage"
     >
       <!-- @slot Next button content -->
-      <slot name="next" v-bind="{ value, numberOfPages, hasPrevious, hasNext }">
+      <slot name="next" v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }">
         <fa :icon="nextPageIcon" />
-        <span class="sr-only">{{ $tc('tiny-pagination.next') }}</span>
+        <span class="sr-only">{{ t('tiny-pagination.next') }}</span>
       </slot>
     </b-button>
   </div>
@@ -53,29 +53,20 @@
 
 <script lang="ts">
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import { BButton, BFormInput } from 'bootstrap-vue'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType, ref, computed, watch, onBeforeMount } from 'vue'
+import {useI18n} from "vue-i18n";
 
 import { library, default as Fa } from './Fa'
 
-import i18n from '@/i18n'
 import { Size } from '@/enums'
-
-interface TinyPaginationData {
-  currentPageInput: number
-}
+import { ButtonVariant, BFormInput, BButton } from 'bootstrap-vue-next'
 
 export default defineComponent({
-  i18n,
   name: 'TinyPagination',
   components: {
-    BButton,
+    Fa,
     BFormInput,
-    Fa
-  },
-  model: {
-    prop: 'value',
-    event: 'input'
+    BButton
   },
   props: {
     /**
@@ -95,7 +86,7 @@ export default defineComponent({
     /**
      * Grabs and syncs the currentPage variable passed down from the parent in v-model
      */
-    value: {
+    modelValue: {
       type: [Number, String],
       default: 1
     },
@@ -103,12 +94,12 @@ export default defineComponent({
      * Set the size of the input: 'sm', 'md' (default), or 'lg'.
      */
     size: {
-      type: String,
+      type: String as PropType<Size>,
       default: Size.md,
       validator: (value: Size) => Object.values(Size).includes(value)
     },
     /**
-     * (Optional) Number of page. Propety `size` is required for this to work
+     * (Optional) Number of page. Property `size` is required for this to work
      * properly. If `pages` is empty, it will be calculated using the size.
      */
     pages: {
@@ -139,7 +130,7 @@ export default defineComponent({
      * Navigation button variants
      */
     navVariant: {
-      type: String,
+      type: String as PropType<ButtonVariant>,
       default: 'link'
     },
     /**
@@ -155,52 +146,58 @@ export default defineComponent({
       type: Boolean
     }
   },
-  data(): TinyPaginationData {
-    return {
-      currentPageInput: +this.value
-    }
-  },
-  computed: {
-    numberOfPages(): number {
-      if (this.pages === null) {
-        return Math.ceil(this.totalRows / this.perPage)
+  emits:['update:modelValue'],
+  setup(props,{emit}) {
+
+    onBeforeMount(()=> {
+      library.add(faAngleLeft, faAngleRight)
+    })
+
+    const { t } = useI18n()
+    const pageValue = computed(()=>{return +props.modelValue})
+    const currentPageInput = ref<number|string>(pageValue.value)
+    const numberOfPages = computed((): number =>{
+      if (props.pages === null) {
+        return Math.ceil(props.totalRows / props.perPage)
       }
-      return Number(this.pages)
-    },
-    paginationClassList(): object {
+      return Number(props.pages)
+    })
+    const paginationClassList = computed((): object =>{
       return {
-        [`tiny-pagination--${this.size}`]: true,
-        [`tiny-pagination--no-nav`]: this.noNav,
-        [`tiny-pagination--block`]: this.block,
-        [`tiny-pagination--compact`]: this.compact
+        [`tiny-pagination--${props.size}`]: true,
+        [`tiny-pagination--no-nav`]: props.noNav,
+        [`tiny-pagination--block`]: props.block,
+        [`tiny-pagination--compact`]: props.compact
       }
-    },
-    hasPrevious(): boolean {
-      return +this.value > 1
-    },
-    hasNext(): boolean {
-      return +this.value < this.numberOfPages
-    }
-  },
-  watch: {
-    value(value: number | string) {
-      this.currentPageInput = +value
-    }
-  },
-  beforeMount() {
-    library.add(faAngleLeft, faAngleRight)
-  },
-  methods: {
-    applyPageForm(): void {
-      if (!isNaN(this.currentPageInput)) {
-        this.$emit('input', this.currentPageInput)
+    })
+    const hasPrevious = computed((): boolean =>{
+      return pageValue.value > 1
+    })
+    const hasNext = computed((): boolean =>{
+      return pageValue.value < numberOfPages.value
+    })
+    function applyPageForm(): void {
+      if (!isNaN(currentPageInput.value as number)) {
+        emit('update:modelValue', +currentPageInput.value)
       }
-    },
-    applyPreviousPage(): void {
-      this.$emit('input', +this.value - 1)
-    },
-    applyNextPage(): void {
-      this.$emit('input', +this.value + 1)
+    }
+
+    function   applyNextPage(): void {
+      emit('update:modelValue', pageValue.value - 1)
+    }
+    function applyPreviousPage(): void {
+      emit('update:modelValue', pageValue.value + 1)
+    }
+    return {
+      t,
+      currentPageInput,
+      paginationClassList,
+      numberOfPages,
+      hasPrevious,
+      hasNext,
+      applyPreviousPage,
+      applyNextPage,
+      applyPageForm
     }
   }
 })

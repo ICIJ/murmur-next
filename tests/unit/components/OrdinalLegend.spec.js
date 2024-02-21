@@ -85,33 +85,33 @@ describe('OrdinalLegend.vue', () => {
       expect(item.classes('ordinal-legend__item--selected')).toBeTruthy()
     })
 
-    it('should emit an highlight event when mouse over the first item', () => {
+    it('should emit an highlight event when mouse over the first item', async () => {
       const item = wrapper.findAll('.ordinal-legend__item a').at(0)
-      item.trigger('mouseover')
+      await item.trigger('mouseover')
       expect(wrapper.emitted('update:highlight')).toBeTruthy()
       expect(wrapper.emitted('update:highlight')).toHaveLength(1)
       expect(wrapper.emitted('update:highlight')[0]).toEqual([1])
     })
 
-    it('should emit an highlight event when mouse over the last item', () => {
+    it('should emit an highlight event when mouse over the last item', async () => {
       const item = wrapper.findAll('.ordinal-legend__item a').at(2)
-      item.trigger('mouseover')
+      await item.trigger('mouseover')
       expect(wrapper.emitted('update:highlight')).toBeTruthy()
       expect(wrapper.emitted('update:highlight')).toHaveLength(1)
       expect(wrapper.emitted('update:highlight')[0]).toEqual([3])
     })
 
-    it('should emit an update event when mouse click the first item', () => {
+    it('should emit an update event when mouse click the first item', async () => {
       const item = wrapper.findAll('.ordinal-legend__item a').at(0)
-      item.trigger('click')
+      await item.trigger('click')
       expect(wrapper.emitted('update')).toBeTruthy()
       expect(wrapper.emitted('update')).toHaveLength(1)
       expect(wrapper.emitted('update')[0]).toEqual([1])
     })
 
-    it('should emit an update event when mouse click the last item', () => {
+    it('should emit an update event when mouse click the last item', async () => {
       const item = wrapper.findAll('.ordinal-legend__item a').at(2)
-      item.trigger('click')
+      await item.trigger('click')
       expect(wrapper.emitted('update')).toBeTruthy()
       expect(wrapper.emitted('update')).toHaveLength(1)
       expect(wrapper.emitted('update')[0]).toEqual([3])

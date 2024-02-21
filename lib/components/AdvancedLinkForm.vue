@@ -1,11 +1,10 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { BTabs, BTab, BInputGroup, BInputGroupAppend, BFormInput } from 'bootstrap-vue'
+import { computed, defineComponent,ref ,Ref } from 'vue'
+import { BTabs, BTab, BInputGroup, BInputGroupAppend, BFormInput } from 'bootstrap-vue-next'
 
 import HapticCopy from './HapticCopy.vue'
 
-import i18n from '@/i18n'
-import { Size } from '@/enums'
+import {useI18n} from "vue-i18n";
 
 type AdvancedLinkedFormClassName = `${'advanced-link-form--'}${string}`
 interface AdvancedLinkedFormClasses {
@@ -26,7 +25,6 @@ interface HTMLElementSupportingCreateRange extends HTMLElement {
  */
 export default defineComponent({
   name: 'AdvancedLinkForm',
-  i18n,
   components: {
     BTabs,
     BTab,
@@ -60,7 +58,7 @@ export default defineComponent({
     /**
      * Index of the selected tab
      */
-    value: {
+    modelValue: {
       type: Number,
       default: 0
     },
@@ -102,63 +100,83 @@ export default defineComponent({
       type: Boolean
     }
   },
-  computed: {
-    titleOrLink(): string | undefined {
-      return this.title || this.link
-    },
-    linkAsMarkdown(): string {
-      return `[${this.titleOrLink}](${this.link})`
-    },
-    linkAsHtml(): string {
-      return `<a href="${this.link}" target="_blank">${this.titleOrLink}</a>`
-    },
-    formClasses(): AdvancedLinkedFormClasses {
-      const props = ['card', 'pills', 'small', 'vertical']
-      return props.reduce((classes: AdvancedLinkedFormClasses, prop): AdvancedLinkedFormClasses => {
-        classes[`advanced-link-form--${prop}`] = (this as any)[prop] // TS: introspection of vue component
-        return classes
-      }, {})
-    },
-    size(): string {
-      return this.small ? Size.sm : Size.md
-    }
-  },
-  methods: {
-    showForm(name: string): boolean {
-      return this.forms.indexOf(name) > -1
-    },
-    selectInput(target: string): void {
-      ;(this.$el.querySelector(target) as HTMLTextAreaElement | null)?.select()
-    },
-    selectRaw(): void {
-      this.selectInput('.advanced-link-form__raw__input')
-    },
-    selectRich(): void {
-      // The element to select
-      const node = this.$el.querySelector('.advanced-link-form__rich__input')
-      if (!node) return
+  emits:["update:modelValue"],
+  setup(props,{emit}) {
+    const { t } = useI18n()
+    const rawInput = ref<HTMLTextAreaElement| null>(null)
+    const richInput = ref<HTMLElement|null>(null)
+    const markdownInput = ref<HTMLTextAreaElement| null>(null)
+    const htmlInput = ref<HTMLTextAreaElement| null>(null)
+    const titleOrLink = computed(() => props.title || props.link);
 
-      // Browser supports `getSelection`
-      const selection = window.getSelection ? window.getSelection() : null
-      if (selection) {
-        const range = document.createRange()
-        range.selectNodeContents(node)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      } // Browser supports `body.createTextRange`
-      else if ((document.body as HTMLElementSupportingCreateRange).createTextRange) {
-        const range: TextRange = (document.body as HTMLElementSupportingCreateRange).createTextRange()
-        range.moveToElementText(node)
-        range.select()
+    const linkAsMarkdown = computed(() => `[${titleOrLink.value}](${props.link})`);
+
+    const linkAsHtml = computed(() => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`);
+
+    const formClasses = computed(() => {
+      const propsToCheck = ['card', 'pills', 'small', 'vertical'];
+      return propsToCheck.reduce((classes, prop) => {
+        //@ts-ignore
+        classes[`advanced-link-form--${prop}`] = props[prop];
+        return classes;
+      }, {});
+    });
+
+    const size = computed(() => props.small ? 'sm' : 'md');
+
+    const showForm  = computed(() => {
+      return (name:string) => props.forms.indexOf(name) > -1
+    })
+
+    const selectInput = (target: Ref<HTMLElement|null>) => {
+      if(!target.value){
+        throw new Error("no target")
       }
-    },
-    selectMarkdown(): void {
-      this.selectInput('.advanced-link-form__markdown__input')
-    },
-    selectHtml(): void {
-      this.selectInput('.advanced-link-form__html__input')
+      if (target.value instanceof HTMLTextAreaElement) {
+        target.value.select();
+      }
+    };
+
+    const selectRaw = () => selectInput(rawInput);
+
+    function selectRich() {
+      if (!richInput.value) return;
+
+      const selection = window.getSelection ? window.getSelection() : null;
+      if (selection) {
+        const range = document.createRange();
+        range.selectNodeContents(richInput.value);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      } else if ((document.body as HTMLElementSupportingCreateRange).createTextRange) {
+        const range = (document.body as HTMLElementSupportingCreateRange).createTextRange();
+        range.moveToElementText(richInput.value);
+        range.select();
+      }
+    };
+    function selectMarkdown() {
+      selectInput(markdownInput)
     }
+
+    function selectHtml() {
+      selectInput(htmlInput)
+    }
+
+    return {
+      t,
+      titleOrLink,
+      linkAsMarkdown,
+      linkAsHtml,
+      formClasses,
+      size,
+      showForm,
+      selectRaw,
+      selectRich,
+      selectMarkdown,
+      selectHtml
+    };
   }
+
 })
 </script>
 
@@ -168,63 +186,63 @@ export default defineComponent({
     :content-class="card ? 'mt-0' : 'mt-3'"
     :card="card"
     :pills="pills"
-    :value="value"
+    v-model="modelValue"
     :small="small"
     :vertical="vertical"
     :active-nav-item-class="activeNavItemClass"
     :no-fade="noFade"
     :class="formClasses"
-    @input="$emit('input', $event)"
   >
-    <b-tab v-if="showForm('raw')" :title="$t('advanced-link-form.raw.tab')">
+    <b-tab v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
       <div class="advanced-link-form__raw" :class="{ small }">
         <b-input-group :size="size">
-          <b-form-input readonly :value="link" class="advanced-link-form__raw__input" @click="selectRaw()" />
+          <b-form-input ref="rawInput" readonly :modelValue="link" class="advanced-link-form__raw__input" @click="selectRaw" />
           <b-input-group-append>
-            <haptic-copy class="btn-secondary" :text="link" @attempt="selectRaw()" />
+<!--            <haptic-copy class="btn-secondary" :text="link" @attempt="selectRaw" />-->
           </b-input-group-append>
         </b-input-group>
       </div>
     </b-tab>
-    <b-tab v-if="showForm('rich')" :title="$t('advanced-link-form.rich.tab')">
+    <b-tab v-if="showForm('rich')" :title="t('advanced-link-form.rich.tab')">
       <div class="advanced-link-form__rich" :class="{ small }">
         <b-input-group :size="size">
-          <a :href="link" class="form-control advanced-link-form__rich__input" @click.prevent="selectRich()">{{
+          <a ref="richInput" :href="link" class="form-control advanced-link-form__rich__input" @click.prevent="selectRich">{{
             titleOrLink
           }}</a>
           <b-input-group-append>
-            <haptic-copy class="btn-secondary" html :text="linkAsHtml" :plain="link" @attempt="selectRich()" />
+            <haptic-copy class="btn-secondary" html :text="linkAsHtml" :plain="link" @attempt="selectRich" />
           </b-input-group-append>
         </b-input-group>
         <p class="text-muted mt-2 mb-0">
-          {{ $t('advanced-link-form.rich.description') }}
+          {{ t('advanced-link-form.rich.description') }}
         </p>
       </div>
     </b-tab>
-    <b-tab v-if="showForm('markdown')" :title="$t('advanced-link-form.markdown.tab')">
+    <b-tab v-if="showForm('markdown')" :title="t('advanced-link-form.markdown.tab')">
       <div class="advanced-link-form__markdown" :class="{ small }">
         <b-input-group :size="size">
           <b-form-input
+            ref="markdownInput"
             readonly
-            :value="linkAsMarkdown"
+            :modelValue="linkAsMarkdown"
             class="advanced-link-form__markdown__input"
-            @click="selectMarkdown()"
+            @click="selectMarkdown"
           />
           <b-input-group-append>
-            <haptic-copy class="btn-secondary" :text="linkAsMarkdown" @attempt="selectMarkdown()" />
+            <haptic-copy class="btn-secondary" :text="linkAsMarkdown" @attempt="selectMarkdown" />
           </b-input-group-append>
         </b-input-group>
         <p class="text-muted mt-2 mb-0">
-          {{ $t('advanced-link-form.markdown.description') }}
+          {{ t('advanced-link-form.markdown.description') }}
         </p>
       </div>
     </b-tab>
-    <b-tab v-if="showForm('html')" :title="$t('advanced-link-form.html.tab')">
+    <b-tab v-if="showForm('html')" :title="t('advanced-link-form.html.tab')">
       <div class="advanced-link-form__html" :class="{ small }">
         <b-input-group :size="size">
-          <b-form-input readonly :value="linkAsHtml" class="advanced-link-form__html__input" @click="selectHtml()" />
+          <b-form-input ref="htmlInput" readonly :modelValue="linkAsHtml" class="advanced-link-form__html__input" @click="selectHtml" />
           <b-input-group-append>
-            <haptic-copy class="btn-secondary" :text="linkAsHtml" @attempt="selectHtml()" />
+            <haptic-copy class="btn-secondary" :text="linkAsHtml" @attempt="selectHtml" />
           </b-input-group-append>
         </b-input-group>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <component :is="tag" :id="uniqComponentId" class="confirm-button" @click="toggleConfirmationTooltip">
+  <component ref="root" :is="tag" :id="uniqComponentId" class="confirm-button" @click="toggleConfirmationTooltip">
     <!-- @slot Main content of the button -->
     <slot>-</slot>
     <b-tooltip ref="confirmationTooltip" :target="uniqComponentId" triggers="blur" :placement="placement">
@@ -37,13 +37,12 @@
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
-import { BTooltip } from 'bootstrap-vue/esm/components/tooltip/tooltip'
-import { defineComponent, PropType } from 'vue'
-import type Vue from 'vue'
+// import { BTooltip } from 'bootstrap-vue/esm/components/tooltip/tooltip'
+import {defineComponent, PropType, ref, watch, ComponentPublicInstance} from 'vue'
 
 import { library, default as Fa } from './Fa'
-
-import { TooltipPlacement } from '@/enums'
+import { PopoverPlacement } from 'bootstrap-vue-next'
+import {onBeforeMount} from "@vue/runtime-core";
 
 /**
  * ConfirmButton
@@ -51,7 +50,7 @@ import { TooltipPlacement } from '@/enums'
 export default defineComponent({
   name: 'ConfirmButton',
   components: {
-    BTooltip,
+    // BTooltip,
     Fa
   },
   props: {
@@ -107,8 +106,8 @@ export default defineComponent({
      * Tooltip position
      */
     placement: {
-      type: String as PropType<TooltipPlacement>,
-      default: TooltipPlacement.Top
+      type: String as PropType<PopoverPlacement>,
+      default: "top"
     },
     /**
      * HTML tag to render this component to.
@@ -118,50 +117,58 @@ export default defineComponent({
       default: 'button'
     }
   },
-  data() {
-    return {
-      showTooltip: false,
-      uniqComponentId: uniqueId('murmur-confirm-button-')
-    }
-  },
-  watch: {
-    showTooltip(value: boolean) {
-      ;(this.$refs.confirmationTooltip as Vue).$emit(value ? 'open' : 'close')
-    }
-  },
-  beforeMount() {
-    library.add(faTimes)
-  },
-  methods: {
-    toggleConfirmationTooltip(): void {
-      if (!this.showTooltip) {
-        this.$root.$emit('bv::hide::tooltip')
+  setup(props){
+    onBeforeMount(()=>{
+      library.add(faTimes)
+    })
+    const showTooltip = ref<Boolean>(false);
+    const uniqComponentId = uniqueId('murmur-confirm-button-');
+    const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
+    const root = ref<ComponentPublicInstance | null>(null)
+    function toggleConfirmationTooltip(): void {
+      if (!showTooltip.value) {
+        root.value?.$emit('bv::hide::tooltip')
       }
-      this.showTooltip = !this.showTooltip
-      /**
-       * Emitted when the confirmation is toggled.
-       * @event toggled
-       * @param Boolean True if the button is shown.
-       */
-      this.$root.$emit('toggled', this.showTooltip)
-    },
-    cancel(): void {
-      ;(this.$refs.confirmationTooltip as Vue).$emit('close')
-      this.cancelled()
-      /**
-       * Emitted when the confirmation is cancelled.
-       * @event cancelled
-       */
-      this.$root.$emit('cancelled')
-    },
-    confirm(): void {
-      this.showTooltip = false
-      this.confirmed()
+    showTooltip.value = !showTooltip.value
+    /**
+     * Emitted when the confirmation is toggled.
+     * @event toggled
+     * @param Boolean True if the button is shown.
+     */
+    root.value?.$emit('toggled', showTooltip.value)
+  }
+   function cancel(): void {
+    confirmationTooltip.value?.$emit('close')
+     props.cancelled()
+    /**
+     * Emitted when the confirmation is cancelled.
+     * @event cancelled
+     */
+    root.value?.$emit('cancelled')
+  }
+   function confirm(): void {
+      showTooltip.value = false
+      props.confirmed()
       /**
        * Emitted when the confirmation is confirmed.
        * @event confirmed
        */
-      this.$root.$emit('confirmed')
+      root.value?.$emit('confirmed')
+    }
+    watch(
+        () => showTooltip,
+        (value)=>{
+          confirmationTooltip.value?.$emit(value ? 'open' : 'close')
+        }
+    )
+
+    return {
+      showTooltip,
+      uniqComponentId,
+      cancel,
+      confirm,
+      confirmationTooltip,
+      toggleConfirmationTooltip
     }
   }
 })

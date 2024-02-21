@@ -124,15 +124,13 @@ import { defineComponent } from 'vue'
 import config from '../config'
 import BrandExpansion from './BrandExpansion.vue'
 
-import i18n from '@/i18n'
 import { BrandMode } from '@/enums'
 
 /**
  * GenericFooter
  */
 export default defineComponent({
-  i18n,
-  name: 'GenericFooter',
+name: 'GenericFooter',
   components: { BrandExpansion },
   props: {
     /**

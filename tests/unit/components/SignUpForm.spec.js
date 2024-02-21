@@ -1,6 +1,16 @@
 import { mount } from '@vue/test-utils'
 import SignUpForm from '@/components/SignUpForm'
 import Murmur from '@/main'
+const mockSend = vi.fn().mockResolvedValue({})
+vi.mock('@/composables/sendEmail', () => ({
+  useSendEmail () {
+    return {
+      send: mockSend,
+    }
+  },
+}))
+
+
 
 describe('SignUpForm', () => {
 
@@ -50,65 +60,72 @@ describe('SignUpForm', () => {
   })
 
   it('sends the email when submitting the form', async () => {
+
     const wrapper = mount(SignUpForm)
-    wrapper.vm.send = vi.fn().mockResolvedValue({ })
-    expect(wrapper.vm.send.mock.calls.length).toBe(0)
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.send.mock.calls.length).toBe(1)
+
+    await wrapper.find('form').trigger('submit.prevent')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.emitted('submit')[0][0]).toBeDefined()
   })
 
   it('sends the email when submitting the form and display the confirmation', async () => {
-    const wrapper = mount(SignUpForm)
     const msg = '☮️'
-    wrapper.vm.send = vi.fn().mockResolvedValue({ result: 'success', msg })
+    mockSend.mockResolvedValueOnce({result:"success",msg})
+    const wrapper = mount(SignUpForm)
+
     await wrapper.vm.subscribe()
     expect(wrapper.vm.successMessage).toBe(msg)
   })
 
   it('sends the email and drops it when the result is a success', async () => {
-    const wrapper = mount(SignUpForm)
     const msg = '☮️'
+
+    mockSend.mockResolvedValueOnce({result:"success",msg})
+
+    const wrapper = mount(SignUpForm)
     wrapper.vm.email = 'data@icij.org'
-    wrapper.vm.send = vi.fn().mockResolvedValue({ result: 'success', msg })
     await wrapper.vm.subscribe()
     expect(wrapper.vm.email).toBe('')
   })
 
   it('sends the email when submitting the form and display the error', async () => {
-    const wrapper = mount(SignUpForm)
     const msg = '❎'
-    wrapper.vm.send = vi.fn().mockResolvedValue({ msg })
+    mockSend.mockRejectedValueOnce({result:"error",msg})
+
+    const wrapper = mount(SignUpForm)
     await wrapper.vm.subscribe()
     expect(wrapper.vm.errorMessage).toBe(msg)
   })
 
   it('sends the email but doesn\'t drop it when the result is an error', async () => {
-    const wrapper = mount(SignUpForm)
     const msg = '❎'
+    mockSend.mockRejectedValueOnce({result:"error",msg})
+    const wrapper = mount(SignUpForm)
     wrapper.vm.email = 'data@icij.org'
-    wrapper.vm.send = vi.fn().mockRejectedValue({ msg })
     await wrapper.vm.subscribe()
     expect(wrapper.vm.email).toBe('data@icij.org')
   })
 
   it('sends the email when submitting the form and display the error, with a rejected promise', async () => {
-    const wrapper = mount(SignUpForm)
     const msg = '❎'
-    wrapper.vm.send = vi.fn().mockRejectedValue({ msg })
+    mockSend.mockRejectedValueOnce({result:"error",msg})
+    const wrapper = mount(SignUpForm)
     await wrapper.vm.subscribe()
     expect(wrapper.vm.errorMessage).toBe(msg)
   })
 
   it('sends the email and transform the error message', async () => {
+    mockSend.mockRejectedValueOnce({ msg: '0 -❎' })
+
     const wrapper = mount(SignUpForm)
-    wrapper.vm.send = vi.fn().mockRejectedValue({ msg: '0 -❎' })
     await wrapper.vm.subscribe()
     expect(wrapper.vm.errorMessage).toBe('❎')
   })
 
   it('sends the email and show a default error message', async () => {
+    mockSend.mockRejectedValueOnce({})
     const wrapper = mount(SignUpForm)
-    wrapper.vm.send = vi.fn().mockRejectedValue({ })
     await wrapper.vm.subscribe()
     expect(wrapper.vm.errorMessage).toBe('Something\'s wrong')
   })

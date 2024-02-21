@@ -26,36 +26,37 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a href="https://www.icij.org/investigations/" target="_blank" class="nav-link text-uppercase">
-              {{ $t('generic-header.navbar.investigations') }}
+              {{ t('generic-header.navbar.investigations') }}
             </a>
           </li>
           <li class="nav-item">
             <a href="https://www.icij.org/leak/" target="_blank" class="nav-link text-uppercase">
-              {{ $t('generic-header.navbar.leak') }}
+              {{ t('generic-header.navbar.leak') }}
             </a>
           </li>
           <li class="nav-item">
             <a id="follow-us-toggler" class="nav-link text-uppercase">
-              {{ $t('generic-header.navbar.follow') }}
+              {{ t('generic-header.navbar.follow') }}
             </a>
           </li>
           <li class="nav-item mr-lg-3">
             <slot name="donate-link">
               <a class="text-uppercase btn btn-primary font-weight-bold" target="_blank" :href="donateUrl">
-                {{ $t('generic-header.navbar.support') }}
+                {{ t('generic-header.navbar.support') }}
               </a>
             </slot>
           </li>
         </ul>
         <b-popover
+          :model-value="showFollowUsPopover"
+          @show="showFollowUsPopover=true"
           id="follow-us-popover"
-          ref="followUsPopover"
+          reference="followUsPopover"
           container="generic-header"
           target="follow-us-toggler"
-          placement="bottomleft"
-          :show.sync="showFollowUsPopover"
+          placement="bottom-start"
         >
-          <follow-us-popover :show.sync="showFollowUsPopover" />
+          <follow-us-popover @update:show="showFollowUsPopover" />
         </b-popover>
       </div>
     </component>
@@ -63,18 +64,17 @@
 </template>
 
 <script lang="ts">
-import { BModal } from 'bootstrap-vue/esm/components/modal/modal'
-import { BPopover } from 'bootstrap-vue/esm/components/popover/popover'
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { headroom } from 'vue-headroom'
-import { defineComponent, PropType } from 'vue'
+import {computed, defineComponent, PropType} from 'vue'
 
-import i18n from '@/i18n'
 import config from '@/config'
 import Fa, { library } from '@/components/Fa'
 import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
 import { BrandMode } from '@/enums'
+import { ref , onBeforeMount} from 'vue'
+import {useI18n} from "vue-i18n";
 
 type BrandOptions = {
   noBorder: boolean
@@ -87,11 +87,8 @@ type BrandOptions = {
  * GenericHeader
  */
 export default defineComponent({
-  i18n,
   name: 'GenericHeader',
   components: {
-    BModal,
-    BPopover,
     BrandExpansion,
     headroom,
     Fa,
@@ -133,41 +130,48 @@ export default defineComponent({
       default: () => config.get('app.donate-url')
     }
   },
-  data() {
-    return {
-      showFollowUsPopover: false,
-      collapseNavbar: true,
-      shortMode: BrandMode.Short,
-      longMode: BrandMode.Long
-    }
-  },
-  computed: {
-    rootElement(): string {
-      return this.noHeadroom ? 'div' : 'headroom'
-    },
-    appliedBrandOptions(): BrandOptions {
-      return Object.assign(this.defaultBrandOptions, this.brandOptions)
-    },
-    defaultBrandOptions(): BrandOptions {
+  setup(props) {
+
+    onBeforeMount((): void =>{
+      library.add(faBars)
+    })
+
+    const {t}= useI18n()
+    const showFollowUsPopover = ref<boolean>(false)
+    const collapseNavbar = ref(true)
+    const shortMode = ref(BrandMode.Short)
+    const longMode = ref(BrandMode.Long)
+    const rootElement = computed((): string => {
+      return props.noHeadroom ? 'div' : 'headroom'
+    })
+    const appliedBrandOptions = computed((): BrandOptions => {
+      return Object.assign(defaultBrandOptions.value, props.brandOptions)
+    })
+    const  defaultBrandOptions = computed((): BrandOptions => {
       return {
         noBorder: true,
         size: 50,
         color: 'white',
         background: '#A10207'
       }
+    })
+    function closeFollowUsPopover(): void {
+      showFollowUsPopover.value = false
     }
-  },
-  beforeMount(): void {
-    library.add(faBars)
-  },
-  methods: {
-    closeFollowUsPopover(): void {
-      this.showFollowUsPopover = false
-    },
-    toggleNavbar(): void {
-      this.collapseNavbar = !this.collapseNavbar
-      this.$root.$emit('bv::hide::popover')
-      this.$root.$emit('bv::hide::dropdwon')
+    function toggleNavbar(): void {
+      collapseNavbar.value = !collapseNavbar.value
+      closeFollowUsPopover()
+    }
+    return {
+      t,
+      rootElement,
+      showFollowUsPopover,
+      collapseNavbar,
+      shortMode,
+      longMode,
+      appliedBrandOptions,
+      closeFollowUsPopover,
+      toggleNavbar
     }
   }
 })

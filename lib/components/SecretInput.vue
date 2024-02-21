@@ -1,16 +1,13 @@
-<script>
+<script lang="ts">
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 
+import { computed,ref,onBeforeMount, watch,defineComponent} from 'vue'
 import { library, default as Fa } from './Fa'
 import HapticCopy from './HapticCopy.vue'
 
-export default {
+export default defineComponent({
   name: 'SecretInput',
   components: { Fa, HapticCopy },
-  model: {
-    prop: 'visible',
-    event: 'input'
-  },
   props: {
     /**
      * If true the value is visible by default
@@ -52,48 +49,46 @@ export default {
       type: Boolean
     }
   },
-  data() {
-    return {
-      isVisible: this.visible
-    }
-  },
-  computed: {
-    inputType() {
-      return this.isVisible ? 'text' : 'password'
-    },
-    togglerIcon() {
-      return this.isVisible ? ['far', 'eye-slash'] : ['far', 'eye']
-    },
-    hapticCopyClassList() {
-      return `btn-${this.hapticCopyVariant}`
-    }
-  },
-  watch: {
-    visible(visible) {
-      this.isVisible = visible
-    }
-  },
-  beforeMount() {
-    library.add(faEye, faEyeSlash)
-  },
-  methods: {
-    toggle() {
-      this.isVisible = !this.isVisible
+  emits:['update:visible'],
+  setup(props,{emit}){
+    onBeforeMount(() =>{
+      library.add(faEye, faEyeSlash)
+    })
+    const secretInput = ref<HTMLInputElement|null>(null)
+    const inputType = computed(() => {
+      return props.visible ? 'text' : 'password'
+    })
+    const togglerIcon = computed(() => {
+      return props.visible ? ['far', 'eye-slash'] : ['far', 'eye']
+    })
+    const hapticCopyClassList = computed(() => {
+          return `btn-${props.hapticCopyVariant}`
+    })
+
+
+    function toggle() {
       /**
        * Emitted when the visibility of the input changes.
        *
-       * @event input
+       * @event update:modelValue
        * @type {Boolean}
        */
-      this.$emit('input', this.isVisible)
-    },
-    selectInput() {
-      if (this.isVisible) {
-        this.$el.querySelector('.secret-input__input').select()
+      emit("update:visible", !props.visible)
+    }
+    function selectInput() {
+      if (props.visible) {
+        secretInput.value?.select()
       }
     }
+    return {
+      selectInput,
+      toggle,
+      togglerIcon,
+      inputType,
+      hapticCopyClassList
+    }
   }
-}
+})
 </script>
 
 <template>
@@ -104,10 +99,11 @@ export default {
       </b-button>
     </b-input-group-prepend>
     <b-form-input
+      ref="secretInput"
       class="text-monospace secret-input__input"
       readonly
       :type="inputType"
-      :value="value"
+      :modelValue="value"
       @click="selectInput"
     />
     <b-input-group-append v-if="!noHapticCopy">

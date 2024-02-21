@@ -13,11 +13,11 @@ describe('TinyPagination.vue', () => {
   })
 
   it('expects totalRows, perPage, value as props', () => {
-    const propsData = { totalRows: 200, perPage: 20, value: 2 }
+    const propsData = { totalRows: 200, perPage: 20, modelValue: 2 }
     const wrapper = mount(TinyPagination, { propsData })
     expect(wrapper.vm.totalRows).toBe(200)
     expect(wrapper.vm.perPage).toBe(20)
-    expect(wrapper.vm.value).toBe(2)
+    expect(wrapper.vm.modelValue).toBe(2)
   })
 
   it('calculates numberOfPages based on the totalRows and perPage prop values', () => {
@@ -29,18 +29,18 @@ describe('TinyPagination.vue', () => {
   it('emits an event on form submit with the currentPageInput', async () => {
     const propsData = { totalRows: 200, perPage: 20, }
     const wrapper = mount(TinyPagination, { propsData })
-    await wrapper.setData({ currentPageInput: 3 })
+    wrapper.vm.currentPageInput =  3
     await wrapper.vm.applyPageForm()
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted().input[0]).toContain(3)
+    expect(wrapper.emitted("update:modelValue")[0]).toContain(3)
   })
 
   it('does not emit an event if the currentPageInput is invalid', async () => {
-    const propsData = { totalRows: 200, perPage: 20, }
+    const propsData = { totalRows: 200, perPage: 20 }
     const wrapper = mount(TinyPagination, { propsData })
-    await wrapper.setData({ currentPageInput: 50 })
+    wrapper.vm.currentPageInput =  "azrazzer"
     await wrapper.vm.applyPageForm()
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted()).toMatchObject({})
+    expect(wrapper.emitted()).toEqual({})
   })
 })

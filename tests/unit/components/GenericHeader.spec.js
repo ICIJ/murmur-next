@@ -1,7 +1,9 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount} from '@vue/test-utils'
 import GenericHeader from '@/components/GenericHeader.vue'
 
 describe('GenericHeader.vue', () => {
+  const global = { renderStubDefaultSlot:true }
+
 
   it('is a Vue instance', () => {
     const wrapper = shallowMount(GenericHeader)
@@ -10,7 +12,7 @@ describe('GenericHeader.vue', () => {
 
   it('renders the header as a `headroom` component', () => {
     const wrapper = shallowMount(GenericHeader)
-    expect(wrapper.find('#generic-header').vm.$options.name).toBe('vueHeadroom')
+    expect(wrapper.find('#generic-header').element.tagName).toBe('HEADROOM-STUB')
   })
 
   it('renders the header as a div', () => {
@@ -44,14 +46,14 @@ describe('GenericHeader.vue', () => {
 
   it('renders home link to the default value', () => {
     const homeUrl = "http://localhost:3000/"
-    const wrapper = shallowMount(GenericHeader)
+    const wrapper = shallowMount(GenericHeader,{global})
     expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
   })
 
   it('renders home link to https://icij.org/', () => {
     const homeUrl = 'https://icij.org/'
     const wrapper = shallowMount(GenericHeader, {
-      propsData: { homeUrl }
+      propsData: { homeUrl }, global
     })
     expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
   })
@@ -59,32 +61,46 @@ describe('GenericHeader.vue', () => {
   it('renders home link to https://pirhoo.com/', () => {
     const homeUrl = 'https://pirhoo.com/'
     const wrapper = shallowMount(GenericHeader, {
-      propsData: { homeUrl }
+      propsData: { homeUrl }, global
     })
     expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
   })
 
   it('renders the navbar as `collapse` by default', () => {
-    const wrapper = shallowMount(GenericHeader)
+    const wrapper = shallowMount(GenericHeader, {global})
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
   })
 
-  it('toggles the navbar', async () => {
-    const wrapper = shallowMount(GenericHeader)
-    await wrapper.vm.$nextTick()
+  it('toggles the navbar on navbarToggler click', async () => {
+    const wrapper = shallowMount(GenericHeader, {global})
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
-    wrapper.vm.toggleNavbar()
-    await wrapper.vm.$nextTick()
+    const navbarToggler = wrapper.find(".navbar-toggler");
+    await navbarToggler.trigger("click")
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeFalsy()
-    wrapper.vm.toggleNavbar()
-    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.showFollowUsPopover).toBe(false)
+    await navbarToggler.trigger("click")
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
   })
+  it('hides popover if shown when navbard is collapsed', async () => {
+    const wrapper = shallowMount(GenericHeader, {global})
+    const $popover= wrapper.find("#follow-us-popover")
+    await $popover.trigger("show")
 
-  it('should change `showFollowUsPopover` to `true`', () => {
-    const wrapper = shallowMount(GenericHeader)
-    wrapper.setData({ showFollowUsPopover: true })
+    //given popover shown
+    expect(wrapper.vm.showFollowUsPopover).toBe(true)
+    const navbarToggler = wrapper.find(".navbar-toggler");
+    //when show navbar
+    await navbarToggler.trigger("click")
+    // popover should be hidden
+    expect(wrapper.vm.showFollowUsPopover).toBe(false)
+  })
+  it('should hide popover  `showFollowUsPopover` to `true`', async () => {
+    const wrapper = shallowMount(GenericHeader, {global})
+    const $popover= wrapper.find("#follow-us-popover")
+    await $popover.trigger("show")
+    expect(wrapper.vm.showFollowUsPopover).toBe(true)
+
     wrapper.vm.closeFollowUsPopover()
-    expect(wrapper.vm.showFollowUsPopover).toBeFalsy()
+    expect(wrapper.vm.showFollowUsPopover).toBe(false)
   })
 })

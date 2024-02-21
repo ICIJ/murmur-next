@@ -1,8 +1,8 @@
 <template>
-  <form class="sign-up-form" :class="{ 'sign-up-form--horizontal': horizontal }" @submit.prevent="subscribe()">
+  <form class="sign-up-form" :class="{ 'sign-up-form--horizontal': horizontal }" @submit.prevent="subscribe">
     <fieldset :disabled="frozen">
       <label v-if="!noLabel" class="text-uppercase text-muted font-weight-bold" for="input-email">
-        {{ $t('sign-up-form.label') }}
+        {{ t('sign-up-form.label') }}
       </label>
       <div class="sign-up-form__fieldset__group" :class="{ 'input-group': horizontal }">
         <input
@@ -11,11 +11,11 @@
           name="EMAIL"
           type="email"
           class="form-control"
-          :placeholder="$t('sign-up-form.placeholder').toString()"
+          :placeholder="t('sign-up-form.placeholder').toString()"
         />
         <div class="sign-up-form__fieldset__group__addon" :class="{ 'input-group-append': horizontal }">
           <button class="btn text-uppercase font-weight-bold" :class="variantColorClass" type="submit">
-            {{ $t('sign-up-form.submit') }}
+            {{ t('sign-up-form.submit') }}
           </button>
         </div>
       </div>
@@ -34,11 +34,12 @@ import jsonp from 'jsonp'
 import castArray from 'lodash/castArray'
 import flatten from 'lodash/flatten'
 import last from 'lodash/last'
-import { defineComponent, PropType } from 'vue'
+import {computed, defineComponent, PropType, ref} from 'vue'
 
 import config from '../config'
+import {useI18n} from "vue-i18n";
+import {useSendEmail} from "@/composables/sendEmail";
 
-import i18n from '@/i18n'
 
 type SignUpFormData = {
   email: string
@@ -47,13 +48,12 @@ type SignUpFormData = {
   errorMessage: string | null
   successMessage: string | null
 }
-type FormDataResult = { result: string; msg: string }
+
 /**
  * SignUpForm
  */
 export default defineComponent({
-  i18n,
-  name: 'SignUpForm',
+name: 'SignUpForm',
   props: {
     /**
      * Mailchimp URL to send the data to.
@@ -110,73 +110,56 @@ export default defineComponent({
       default: 'primary'
     }
   },
-  data(): SignUpFormData {
-    return {
-      email: '',
-      frozen: false,
-      response: {},
-      errorMessage: null,
-      successMessage: null
-    }
-  },
-  computed: {
-    groups() {
-      return flatten(castArray(this.defaultGroups).map((g) => g.split(',')))
-    },
-    url() {
-      return this.action.replace('/post?', '/post-json?').concat('&c=?')
-    },
-    parentReferrer() {
-      if (this.referrer) {
-        return this.referrer
-      }
-      return window.location !== window.parent.location ? document.referrer : document.location.href
-    },
-    submitUrl() {
-      const url = new URL(this.url)
-      url.searchParams.set('SIGNUP', this.tracker)
-      url.searchParams.set('MMERGE24', this.parentReferrer)
-      url.searchParams.set(this.emailField, this.email)
-      this.groups.map((group) => url.searchParams.set(group, '1'))
-      return url.href
-    },
-    variantColorClass() {
-      return `btn-${this.variant}`
-    }
-  },
-  methods: {
-    subscribe(): Promise<void> {
-      this.resetMessages()
-      this.freeze()
+  setup(props){
+    const {t} = useI18n()
+    const email = ref('')
+    const frozen = ref(false)
+    const response = ref({})
+    const errorMessage = ref(null)
+    const successMessage = ref(null)
+    const {send} = useSendEmail(email,props.action,props.emailField, props.tracker, props.referrer,props.defaultGroups)
+
+    const variantColorClass = computed(()=> {
+      return `btn-${props.variant}`
+    } )
+    async function subscribe() {
+      resetMessages()
+      freeze()
       // Send the data, catch the result no matter what and unfreeze the form
-      return this.send().then(this.done, this.done)
-    },
-    send() {
-      return new Promise((resolve, reject) => {
-        jsonp(this.submitUrl, { param: 'c' }, (err: any, data: FormDataResult) => {
-          return err ? reject(err) : resolve(data)
-        })
-      })
-    },
-    done({ result, msg }: any): void {
+      await send().then(done,done).finally(unfreeze)
+
+    }
+
+    function done({ result, msg }: any): void {
       if (result === 'success') {
-        this.email = ''
-        this.successMessage = msg
+        email.value = ''
+        successMessage.value = msg
       } else {
         // Mailchimp formats errors in list
-        this.errorMessage = last((msg || "Something's wrong").split('0 -')) ?? null
+        errorMessage.value = last((msg || "Something's wrong").split('0 -')) ?? null
       }
-      this.unfreeze()
-    },
-    resetMessages() {
-      this.errorMessage = null
-      this.successMessage = null
-    },
-    freeze() {
-      this.frozen = true
-    },
-    unfreeze() {
-      this.frozen = false
+    }
+    function resetMessages() {
+      errorMessage.value = null
+      successMessage.value = null
+    }
+    function freeze() {
+      frozen.value = true
+    }
+    function unfreeze() {
+      frozen.value = false
+    }
+
+    return {
+      t,
+      email,
+      frozen,
+      response,
+      errorMessage,
+      successMessage,
+      variantColorClass,
+      subscribe,
+      send
     }
   }
 })

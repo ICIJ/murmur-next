@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, VNode, DirectiveBinding, PropType } from 'vue'
+import {defineComponent, VNode, DirectiveBinding, PropType, ref, watch, computed, onBeforeMount} from 'vue'
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons/faGripLinesVertical'
 import { clamp, get, has, invoke, round } from 'lodash'
 
@@ -17,7 +17,7 @@ export default defineComponent({
   },
   directives: {
     draggable: {
-      inserted(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
+      mounted(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
         let startX: number, initialClientX: number
         const relative = binding.modifiers?.relative ?? false
 
@@ -34,7 +34,7 @@ export default defineComponent({
         function move(event: MouseEvent | TouchEvent) {
           const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX
           const offset = relative ? el.offsetWidth : 0
-          const maxX = (vnode.context as any).rangeWidth() - offset
+          const maxX = binding.instance?.rangeWidth() - offset
           const data = clamp(startX + clientX - initialClientX, 0, maxX)
           emitEvent({ name: 'dragged', data })
           return false
@@ -74,31 +74,28 @@ export default defineComponent({
       }
     }
   },
-  model: {
-    prop: 'value',
-    event: 'update'
-  },
   props: {
     /**
      * Initial values of the range bounds. Should contain two numbers.
      * indicating the start and end of the range.
      */
-    value: {
-      type: Array as PropType<number[]>,
+    modelValue: {
+      type: Array as unknown as PropType<[number,number]>,
       required: true
     },
     /**
      * Enables hover styling on rows.
      */
     hover: {
-      type: Boolean as PropType<boolean>
+      type: Boolean as PropType<boolean>,
+      default:false
     },
     /**
      * Offset from the left side of the component
      * where the dragging for the start value begins.
      */
     startOffset: {
-      type: [Number as PropType<number>, String as PropType<string>],
+      type: [Number,String] as PropType<number|string>,
       default: 0
     },
     /**
@@ -106,7 +103,7 @@ export default defineComponent({
      * the dragging for the end value ends.
      */
     endOffset: {
-      type: [Number as PropType<number>, String as PropType<string>],
+      type: [Number,String] as PropType<number|string>,
       default: 0
     },
     /**
@@ -149,116 +146,130 @@ export default defineComponent({
       default: false
     }
   },
-  data() {
-    return {
-      start: this.value[0] ?? 0,
-      end: this.value[1] ?? 1,
-      moving: false,
-      resizing: false
-    }
-  },
-  computed: {
-    disabled() {
-      return this.value.length < 2
-    },
-    overlayStyle(): { left: string; right: string } {
+  setup(props, {emit}){
+    onBeforeMount(()=>{
+      library.add(faGripLinesVertical)
+    })
+    const rangePickerBounds = ref<HTMLElement|null>(null)
+    const start =  ref<number>( props.modelValue[0] ?? 0)
+    const end =  ref<number>( props.modelValue[1] ?? 1)
+    const moving =  ref( false)
+    const resizing =  ref( false)
+    const disabled = computed(() => {
+          return props.modelValue.length < 2
+        })
+    const overlayStyle = computed((): { left: string; right: string } => {
       return {
-        left: `${this.start * 100}%`,
-        right: `${(1 - this.end) * 100}%`
+        left: `${start.value * 100}%`,
+        right: `${(1 - end.value) * 100}%`
       }
-    },
-    boundsStyle(): { left: string; right: string } {
-      return {
-        left: this.startOffsetWithUnit,
-        right: this.endOffsetWithUnit
-      }
-    },
-    startOffsetWithUnit(): string {
-      return this.valueWithUnit(this.startOffset)
-    },
-    endOffsetWithUnit(): string {
-      return this.valueWithUnit(this.endOffset)
-    },
-    startBoundStyle(): { left: string } {
-      return { left: `${this.start * 100}% ` }
-    },
-    endBoundStyle(): { left: string } {
-      return { left: `${this.end * 100}%` }
-    },
-    classList(): { [key: string]: boolean } {
-      return {
-        [`range-picker--${this.variant}`]: !!this.variant,
-        'range-picker--hover': this.hover,
-        'range-picker--disabled': this.disabled,
-        'range-picker--rounded': this.rounded,
-        'range-picker--resizing': this.resizing,
-        'range-picker--moving': this.moving
-      }
-    }
-  },
-  watch: {
-    value([start = null, end = null] = []) {
-      this.start = start
-      this.end = end
-    }
-  },
-  beforeMount() {
-    library.add(faGripLinesVertical)
-  },
-  methods: {
-    toggleMoving(value?: boolean) {
-      this.moving = value ?? !this.moving
-    },
-    toggleResizing(value?: boolean) {
-      this.resizing = value ?? !this.resizing
-    },
-    snapValue(value: number): number {
-      return round(value / this.snap) * this.snap
-    },
-    rangeWidth(): number {
-      return this.$el?.querySelector('.range-picker__bounds')?.getBoundingClientRect().width ?? 0
-    },
-    dragStartBound(dx: number) {
-      const newValue = this.snapValue(dx / this.rangeWidth())
-      // Ensure start value doesn't get too close to end value
-      if (newValue < this.end - this.minDistance) {
-        this.start = round(newValue, this.precision)
-        /**
-         * Update the values of the range (both start and end)
-         * @event update
-         * @param Number[] New value of the range
-         */
-        this.$emit('update', [this.start, this.end])
-      }
-    },
-    dragEndBound(dx: number) {
-      const newValue = this.snapValue(dx / this.rangeWidth())
-      // Ensure end value doesn't get too close to start value
-      if (newValue > this.start + this.minDistance) {
-        this.end = round(newValue, this.precision)
-        /**
-         * Update the values of the range (both start and end)
-         * @event update
-         * @param Number[] New value of the range
-         */
-        this.$emit('update', [this.start, this.end])
-      }
-    },
-    dragBounds(dx: number) {
-      const diff = this.snapValue(this.end - this.start)
-      const newValue = this.snapValue(dx / this.rangeWidth())
+    })
+    const boundsStyle = computed((): { left: string; right: string } => {
+          return {
+            left: startOffsetWithUnit.value,
+            right: endOffsetWithUnit.value
+          }
+        })
 
-      this.start = round(newValue, this.precision)
-      this.end = round(newValue + diff, this.precision)
+    const startOffsetWithUnit = computed((): string => {
+      return valueWithUnit(props.startOffset)
+    })
+    const endOffsetWithUnit = computed((): string => {
+          return valueWithUnit(props.endOffset)
+    })
+
+    const startBoundStyle = computed((): { left: string } => {
+      return { left: `${start.value * 100}% ` }
+    })
+
+    const endBoundStyle = computed((): { left: string } => {
+          return { left: `${end.value * 100}%` }
+    })
+    const classList = computed((): { [key: string]: boolean } => {
+          return {
+            [`range-picker--${props.variant}`]: !!props.variant,
+            'range-picker--hover': props.hover,
+            'range-picker--disabled': disabled.value,
+            'range-picker--rounded': props.rounded,
+            'range-picker--resizing': resizing.value,
+            'range-picker--moving': moving.value
+          }
+        }
+    )
+    watch(()=>props.modelValue,([startV=0, endV=0]:[number,number]) =>{
+      start.value = startV
+      end.value = endV
+    },{deep:true})
+
+    function toggleMoving(value?: boolean){
+      moving.value = value ?? !moving.value
+    }
+    function toggleResizing(value?: boolean) {
+      resizing.value = value ?? !resizing.value
+    }
+    function snapValue(value: number): number {
+      return round(value / props.snap) * props.snap
+    }
+    function rangeWidth(): number {
+      return rangePickerBounds.value?.getBoundingClientRect().width ?? 0
+    }
+    function dragStartBound(dx: number) {
+      const newValue = snapValue(dx / rangeWidth())
+      // Ensure start value doesn't get too close to end value
+      if (newValue < end.value - props.minDistance) {
+        start.value = round(newValue, props.precision)
+        /**
+         * Update the values of the range (both start and end)
+         * @event update
+         * @param Number[] New value of the range
+         */
+        emit('update', [start.value, end.value])
+      }
+    }
+    function dragEndBound(dx: number) {
+      const newValue = snapValue(dx / rangeWidth())
+      // Ensure end value doesn't get too close to start value
+      if (newValue > start.value + props.minDistance) {
+        end.value = round(newValue, props.precision)
+        /**
+         * Update the values of the range (both start and end)
+         * @event update
+         * @param Number[] New value of the range
+         */
+        emit('update', [start.value, end.value])
+      }
+    }
+    function dragBounds(dx: number) {
+      const diff = snapValue(end.value - start.value)
+      const newValue = snapValue(dx / rangeWidth())
+
+      start.value = round(newValue, props.precision)
+      end.value = round(newValue + diff, props.precision)
       /**
        * Update the values of the range (both start and end)
        * @event update
        * @param Number[] New value of the range
        */
-      this.$emit('update', [this.start, this.end])
-    },
-    valueWithUnit(value: number | string): string {
+      emit('update:modelValue', [start.value, end.value])
+    }
+    function valueWithUnit(value: number | string): string {
       return typeof value === 'number' ? `${value}px` : `${value}`
+    }
+    return {
+      rangePickerBounds,
+      start,
+      end,
+      classList,
+      disabled,
+      overlayStyle,
+      boundsStyle,
+      startBoundStyle,
+      endBoundStyle,
+      dragStartBound,
+      dragEndBound,
+      dragBounds,
+      toggleMoving,
+      toggleResizing
     }
   }
 })
@@ -269,7 +280,7 @@ export default defineComponent({
     <div class="range-picker__wrapper">
       <slot />
     </div>
-    <div v-show="!disabled" class="range-picker__bounds" :style="boundsStyle">
+    <div v-show="!disabled" ref="rangePickerBounds" class="range-picker__bounds" :style="boundsStyle">
       <div
         v-draggable.relative
         class="range-picker__bounds__overlay"
