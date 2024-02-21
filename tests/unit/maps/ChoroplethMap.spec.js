@@ -1,14 +1,13 @@
 import { promises as fs } from 'fs'
 import { join, resolve } from 'path'
 import { zipObjectDeep } from 'lodash'
-import { shallowMount } from '@vue/test-utils'
-
+import { shallowMount,flushPromises } from '@vue/test-utils'
 import ChoroplethMap from '@/maps/ChoroplethMap.vue'
 
 vi.mock('d3', async () => {
   return {
     ...(await vi.importActual('d3')),
-    json: async (url) => {
+    json: async url => {
       const pathname = url.split('https://icij.github.io/murmur/').pop()
       const abspath = resolve(__dirname, join('../../../public', pathname))
       const raw = await fs.readFile(abspath, 'UTF-8')
@@ -27,7 +26,9 @@ vi.mock('d3', async () => {
 })
 
 describe('ChoroplethMap.vue', () => {
+
   describe('a map of the world', () => {
+
     let wrapper
 
     beforeEach(async () => {
@@ -36,10 +37,10 @@ describe('ChoroplethMap.vue', () => {
           FRA: 100,
           SRB: 150,
           KGZ: 200
-        }
+        },
       }
-      wrapper = shallowMount(ChoroplethMap, { propsData })
-      wrapper.vm.$el.style.width = '500px'
+      wrapper = shallowMount(ChoroplethMap, { propsData, global:{renderDefaultStub:true} })
+      wrapper.vm.$refs.resizable.style.width = '500px'
       await wrapper.vm.loadTopojson()
       await wrapper.vm.$nextTick()
     })
@@ -50,14 +51,14 @@ describe('ChoroplethMap.vue', () => {
 
     it('has a feature for KGZ with the end color of the scale', () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-kgz')
-      const color = window.getComputedStyle(feature.element).color
-      expect(color).toBe('rgb(255, 0, 0)')
+      const color = window.getComputedStyle(feature.wrapperElement).color
+      expect(color).toBe('rgb(133, 35, 8)')
     })
 
     it('has a feature for SRV with the middle color of the scale', () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-srb')
       const color = window.getComputedStyle(feature.element).color
-      expect(color).toBe('rgb(255, 128, 128)')
+      expect(color).toBe('rgb(194, 145, 132)')
     })
 
     it('has a feature for FRA with the start color of the scale', () => {
@@ -73,14 +74,14 @@ describe('ChoroplethMap.vue', () => {
     })
 
     it('changes the cursor when mouse is over another feature', () => {
-      wrapper.setData({ featureCursor: 'KGZ' })
+      wrapper.vm.updateFeatureCursor('KGZ')
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-fra')
       feature.element.dispatchEvent(new Event('mouseover'))
       expect(wrapper.vm.featureCursor).toBe('FRA')
     })
 
     it('deactivates the cursor when mouse leaves a feature', () => {
-      wrapper.setData({ featureCursor: 'KGZ' })
+      wrapper.vm.updateFeatureCursor('KGZ')
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-kgz')
       feature.element.dispatchEvent(new Event('mouseleave'))
       expect(wrapper.vm.featureCursor).toBeNull()
@@ -100,7 +101,8 @@ describe('ChoroplethMap.vue', () => {
     })
 
     it('remove the class to the component when a cursor is removed', async () => {
-      await wrapper.setData({ featureCursor: 'KGZ' })
+      wrapper.vm.updateFeatureCursor('KGZ')
+      await wrapper.vm.$nextTick()
       expect(wrapper.classes('choropleth-map--has-cursor')).toBeTruthy()
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-kgz')
       feature.element.dispatchEvent(new Event('mouseleave'))
@@ -109,7 +111,9 @@ describe('ChoroplethMap.vue', () => {
     })
   })
 
+
   describe('a clickable map of france with data on 3 departments', () => {
+
     let wrapper
 
     beforeEach(async () => {
@@ -120,19 +124,21 @@ describe('ChoroplethMap.vue', () => {
         clickable: true,
         transitionDuration: 0,
         data: {
-          '01': 100,
-          '02': 150,
-          '03': 200
+          "01": 100,
+          "02": 150,
+          "03": 200
         }
       }
       wrapper = shallowMount(ChoroplethMap, { propsData })
-      wrapper.vm.$el.style.width = '500px'
+      wrapper.vm.$refs.resizable.style.width = '500px'
       await wrapper.vm.loadTopojson()
       await wrapper.vm.$nextTick()
       // Since JSDOM badly lack SVG support, we need to mock
       // some low level attributes such as size of the SVG element.
-      wrapper.vm.map.node().width = zipObjectDeep(['baseVal.width.value'], [500])
-      wrapper.vm.map.node().height = zipObjectDeep(['baseVal.height.value'], [300])
+      wrapper.vm.setMapNodeSize({
+        width:zipObjectDeep(['baseVal.width.value'], [500]),
+        height:zipObjectDeep(['baseVal.height.value'], [300])
+      })
     })
 
     it('is a Vue instance', () => {
@@ -148,47 +154,59 @@ describe('ChoroplethMap.vue', () => {
     it('has a feature for 02 with the middle color of the scale', () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-02')
       const color = window.getComputedStyle(feature.element).color
-      expect(color).toBe('rgb(255, 128, 128)')
+      expect(color).toBe('rgb(194, 145, 132)')
     })
 
     it('has a feature for 03 with the end color of the scale', () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
       const color = window.getComputedStyle(feature.element).color
-      expect(color).toBe('rgb(255, 0, 0)')
+      expect(color).toBe('rgb(133, 35, 8)')
     })
 
     it('zooms on the map when a feature is clicked', async () => {
+
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
-      feature.element.dispatchEvent(new Event('click'))
-      expect(wrapper.vm.featureZoom).toBe('03')
+      await feature.trigger('click')
+
+      const zoomed = wrapper.emitted("zoomed");
+
+      expect(zoomed).toHaveLength(1)
+      expect(zoomed[0][0]).toMatchObject({"properties": {
+        "code": "03",
+        "nom": "Allier",
+      }})
     })
 
     it('adds a class to a feature upon click', async () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
-      feature.element.dispatchEvent(new Event('click'))
-      await new Promise((resolve) => wrapper.vm.$on('zoomed', resolve))
-      expect(feature.classes('choropleth-map__main__features__item--zoomed')).toBeTruthy()
+      await feature.trigger('click')
+      const updatedFeature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
+      expect(updatedFeature.classes('choropleth-map__main__features__item--zoomed')).toBeTruthy()
+      expect(wrapper.emitted("zoomed")).toHaveLength(1)
     })
 
     it('removes a class from a feature on the second click', async () => {
+
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
-      feature.element.dispatchEvent(new Event('click'))
-      feature.element.dispatchEvent(new Event('click'))
-      await new Promise((resolve) => wrapper.vm.$on('zoomed', resolve))
+      await feature.trigger('click')
+      await feature.trigger('click')
+
+
+      expect(wrapper.emitted("click")).toHaveLength(2)
+      expect(wrapper.emitted("zoomed")).toHaveLength(1)
       expect(feature.classes('choropleth-map__main__features__item--zoomed')).toBeFalsy()
     })
 
     it('adds a class to the map upon click on a feature', async () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
-      feature.element.dispatchEvent(new Event('click'))
-      await wrapper.vm.$nextTick()
+      await feature.trigger('click')
       expect(wrapper.classes('choropleth-map--has-zoom')).toBeTruthy()
     })
 
     it('removes a class from the map on the second click', async () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-03')
-      feature.element.dispatchEvent(new Event('click'))
-      feature.element.dispatchEvent(new Event('click'))
+      await feature.trigger('click')
+      await feature.trigger('click')
       await wrapper.vm.$nextTick()
       expect(wrapper.classes('choropleth-map--has-zoom')).toBeFalsy()
     })
