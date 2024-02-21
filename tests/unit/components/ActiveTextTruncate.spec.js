@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import ActiveTextTruncate from '@/components/ActiveTextTruncate.vue'
 
 // Mock HTML element offset so the size of the wrapper can be calculated
-// dynamicly using JSDOM and tests
+// dynamically using JSDOM and tests
 Object.defineProperties(window.HTMLElement.prototype, {
   offsetWidth: {
     get () { return parseFloat(this.style.width) || 0 }

@@ -4,7 +4,7 @@ import uniqueId from 'lodash/uniqueId'
 import ResizeObserver from 'resize-observer-polyfill'
 import { defineComponent } from 'vue'
 
-import { RequestAnimationFrameWrapper } from '../utils/animation'
+import { RequestAnimationFrameWrapper } from '@/utils/animation'
 
 type ActiveTextTruncateData = { textLivePosition: number; resizeObserverKey: string | null }
 
@@ -123,7 +123,7 @@ export default defineComponent({
     await this.$nextTick()
     this.$options.resizeObserver?.observe(this.$el)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$options.resizeObserver?.unobserve(this.$el)
     this.$options.resizeObserver = null
   },

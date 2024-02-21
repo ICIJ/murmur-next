@@ -1,78 +1,70 @@
 import get from 'lodash/get'
 import each from 'lodash/each'
-import Vue from 'vue'
+import { reactive, ref } from 'vue'
 import defaultValues from './config.default'
+import {Ref} from "@vue/runtime-core";
 
-// Prefix properties with @ to not clash with Vue "_" prefix for private props
-const _VALUES = '@VALUES'
-const _SCOPES = '@SCOPES'
 
-export const Config = Vue.extend({
-  props: {
-    defaultValues: {
-      type: Object,
-      default: () => ({})
+type ConfigMap = { [key: string]: any };
+
+export class Config {
+  _VALUES : Ref<ConfigMap>;
+  _SCOPES : Ref<ConfigMap>;
+  constructor (values = {}) {
+    this._VALUES = ref({})
+    this._SCOPES = ref({})
+    this.merge(values)
+    return this;
+  }
+  merge (values = {}) {
+    return each(values, (value, key) => {
+      this.set(key, value)
+    })
+  }
+  set (key:string, value: any) {
+    const levels = key.split('.')
+    this._VALUES.value = this._VALUES.value ?? {}
+
+    if (levels.length > 1) {
+
+      const scope = this.scope(levels.shift() as string);
+      this._VALUES.value[key] = scope.set(levels.join('.'), value)
+    } else {
+      this._VALUES.value[key] = value
     }
-  },
-  data() {
-    return {
-      [_VALUES]: {},
-      [_SCOPES]: {}
-    }
-  },
-  created() {
-    this.merge(this.defaultValues)
-  },
-  methods: {
-    merge(values = {}) {
-      each(values, (value, key) => {
-        this.set(key, value)
-      })
-    },
-    set(key: string, value: any): any {
-      const levels: string[] = key.split('.')
-      if (levels.length > 1) {
-        this.$set(this[_VALUES], key, this.scope(levels.shift() as string).set(levels.join('.'), value))
-      } else {
-        this.$set(this[_VALUES], key, value)
-      }
-      return value
-    },
-    get(key: string, defaultValue?: any): any {
-      return get(this[_VALUES], key, defaultValue)
-    },
-    is(key: string): boolean {
-      const value = this.get(key, null)
-      switch (value) {
-        case 1: return true
-        case true: return true
-        case '1': return true
-        case 'true': return true
-        case 0: return false
-        case false: return false
-        case '0': return false
-        case 'false': return false
-        default: return !!value
-      }
-    },
-    isnt(key: string): boolean {
-      return !this.is(key)
-    },
-    scope(name: string) {
-      this.$set(this[_SCOPES], name, get(this.scopes, name, new Config()))
-      return get(this, [_SCOPES, name])
-    },
-  },
-  computed: {
-    values(): any {
-      return this[_VALUES]
-    },
-    scopes(): any {
-      return this[_SCOPES]
+    return value
+  }
+  get (key:string, defaultValue?: Object | null) {
+    return get(this._VALUES.value, key, defaultValue)
+  }
+  is (key:string) {
+    const value = this.get(key, null)
+    switch(value) {
+      case 1: return true
+      case true: return true
+      case '1': return true
+      case 'true': return true
+      case 0: return false
+      case false: return false
+      case '0': return false
+      case 'false': return false
+      default: return !!value
     }
   }
-})
+  isnt (key:string) {
+    return !this.is(key)
+  }
+  scope (name:string) {
+    this.scopes[name] = this.scopes[name] ?? new Config()
+    return this.scopes[name]
+  }
+  get values () {
+    return this._VALUES.value
+  }
+  get scopes () {
+    this._SCOPES.value = this._SCOPES.value ?? ref({})
+    return this._SCOPES.value
+  }
+}
 
-export default new Config({
-  propsData: { defaultValues }
-})
+export default new Config(defaultValues)
