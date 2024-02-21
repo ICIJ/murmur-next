@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import StackedBarChart from '@/datavisualisations/StackedBarChart.vue'
 
 // Mock HTML element offset so the size of the chart can be calculated
@@ -97,8 +97,7 @@ describe('StackedBarChart.vue', () => {
     })
 
     it('creates the first group with "Avatar" as label when ordered by "budget"', async () => {
-      wrapper.setProps({ sortBy: 'budget' })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ sortBy: 'budget' })
       const firstGroup = wrapper.findAll('.stacked-bar-chart__groups__item').at(0)
       const label = firstGroup.find('.stacked-bar-chart__groups__item__label')
       expect(label.text()).toBe("ET: The Extra-Terrestrial")
@@ -111,17 +110,17 @@ describe('StackedBarChart.vue', () => {
       expect(boxOfficeLegend.text()).toBe("box_office")
     })
 
-    it('hightlight the legend "budget"', async () => {
+    it('highlights the legend "budget"', async () => {
       const budgetLegend = wrapper.findAll('.stacked-bar-chart__legend__item').at(0)
       expect(budgetLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeFalsy()
-      budgetLegend.trigger('mouseover')
+      await budgetLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       expect(budgetLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the bars for "budget"', async () => {
+    it('highlights the bars for "budget"', async () => {
       const budgetLegend = wrapper.findAll('.stacked-bar-chart__legend__item').at(0)
-      budgetLegend.trigger('mouseover')
+      await budgetLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       const budgetBars = wrapper.findAll('.stacked-bar-chart__groups__item__bars__item--budget')
       expect(budgetBars.at(0).classes('stacked-bar-chart__groups__item__bars__item--highlighted')).toBeTruthy()
@@ -130,9 +129,9 @@ describe('StackedBarChart.vue', () => {
       expect(budgetBars.at(3).classes('stacked-bar-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the bars for "box_office"', async () => {
+    it('highlights the bars for "box_office"', async () => {
       const boxOfficeLegend = wrapper.findAll('.stacked-bar-chart__legend__item').at(1)
-      boxOfficeLegend.trigger('mouseover')
+      await boxOfficeLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       const budgetBars = wrapper.findAll('.stacked-bar-chart__groups__item__bars__item--box-office')
       expect(budgetBars.at(0).classes('stacked-bar-chart__groups__item__bars__item--highlighted')).toBeTruthy()
@@ -141,22 +140,21 @@ describe('StackedBarChart.vue', () => {
       expect(budgetBars.at(3).classes('stacked-bar-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the legend "budget" on mouseover and "box_office" by default', async () => {
-      wrapper.setProps({ highlights: ['box_office'] })
-      await wrapper.vm.$nextTick()
+    it('highlights the legend "budget" on mouseover and "box_office" by default', async () => {
+      await wrapper.setProps({ highlights: ['box_office'] })
       const budgetLegend = wrapper.findAll('.stacked-bar-chart__legend__item').at(0)
       const boxOfficeLegend = wrapper.findAll('.stacked-bar-chart__legend__item').at(1)
       expect(budgetLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeFalsy()
       expect(boxOfficeLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeTruthy()
-      budgetLegend.trigger('mouseover')
+      await budgetLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       expect(budgetLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeTruthy()
       expect(boxOfficeLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeFalsy()
     })
 
-    it('hightlight the bars for "box_office" after a while', async () => {
+    it('highlights the bars for "box_office" after a while', async () => {
       const boxOfficeLegend = wrapper.findAll('.stacked-bar-chart__legend__item').at(1)
-      boxOfficeLegend.trigger('mouseover')
+      await boxOfficeLegend.trigger('mouseover')
       expect(boxOfficeLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeFalsy()
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay / 2)
       expect(boxOfficeLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeFalsy()
@@ -164,7 +162,7 @@ describe('StackedBarChart.vue', () => {
       expect(boxOfficeLegend.classes('stacked-bar-chart__legend__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the whole "Avatar" row', async () => {
+    it('highlights the whole "Avatar" row', async () => {
       await wrapper.setProps({ rowHighlights: ['Avatar'] })
       const boxOffice = wrapper.findAll('.stacked-bar-chart__groups__item__bars__item').at(0)
       const budget = wrapper.findAll('.stacked-bar-chart__groups__item__bars__item').at(1)
@@ -172,7 +170,7 @@ describe('StackedBarChart.vue', () => {
       expect(budget.classes('stacked-bar-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the whole "Ghostbusters" row', async () => {
+    it('highlights the whole "Ghostbusters" row', async () => {
       await wrapper.setProps({ rowHighlights: ['Ghostbusters'] })
       const boxOffice = wrapper.findAll('.stacked-bar-chart__groups__item__bars__item').at(6)
       const budget = wrapper.findAll('.stacked-bar-chart__groups__item__bars__item').at(7)
@@ -181,8 +179,7 @@ describe('StackedBarChart.vue', () => {
     })
 
     it('creates bars with specific colors', async () => {
-      wrapper.setProps({ barColors: [ "#000", "#444" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ barColors: [ "#000", "#444" ] })
       const firstGroup = wrapper.findAll('.stacked-bar-chart__groups__item').at(0)
       const budgetBar = firstGroup.find('.stacked-bar-chart__groups__item__bars__item--budget')
       const boxOfficeBar = firstGroup.find('.stacked-bar-chart__groups__item__bars__item--box-office')
@@ -191,8 +188,7 @@ describe('StackedBarChart.vue', () => {
     })
 
     it('creates legend with specific colors', async () => {
-      wrapper.setProps({ barColors: [ "#000", "#444" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ barColors: [ "#000", "#444" ] })
       const legendBoxes = wrapper.findAll('.stacked-bar-chart__legend__item__box')
       const budgetBox = legendBoxes.at(0)
       const boxOfficeBox = legendBoxes.at(1)
@@ -200,24 +196,21 @@ describe('StackedBarChart.vue', () => {
       expect(boxOfficeBox.element.style['background-color']).toBe('rgb(68, 68, 68)')
     })
 
-    it('creates one legend when using explicite keys', async () => {
-      wrapper.setProps({ keys: [ "box_office" ] })
-      await wrapper.vm.$nextTick()
+    it('creates one legend when using explicit keys', async () => {
+      await wrapper.setProps({ keys: [ "box_office" ] })
       const legendItems = wrapper.findAll('.stacked-bar-chart__legend__item')
       expect(legendItems).toHaveLength(1)
     })
 
-    it('creates one bar when using explicite keys', async () => {
-      wrapper.setProps({ keys: [ "box_office" ] })
-      await wrapper.vm.$nextTick()
+    it('creates one bar when using explicit keys', async () => {
+      await wrapper.setProps({ keys: [ "box_office" ] })
       const firstGroup = wrapper.findAll('.stacked-bar-chart__groups__item').at(0)
       const bars = firstGroup.findAll('.stacked-bar-chart__groups__item__bars__item')
       expect(bars).toHaveLength(1)
     })
 
     it('creates legend with custom group names', async () => {
-      wrapper.setProps({ groups: [ "Budget", "Box Office" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ groups: [ "Budget", "Box Office" ] })
       const legendItems = wrapper.findAll('.stacked-bar-chart__legend__item')
       expect(legendItems.at(0).text()).toBe("Budget")
       expect(legendItems.at(1).text()).toBe("Box Office")
@@ -231,8 +224,7 @@ describe('StackedBarChart.vue', () => {
     })
 
     it('creates bar direct labeling without with currency formatting', async () => {
-      wrapper.setProps({ xAxisTickFormat: '$,' })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ xAxisTickFormat: '$,' })
       const firstGroup = wrapper.findAll('.stacked-bar-chart__groups__item').at(0)
       const values = firstGroup.findAll('.stacked-bar-chart__groups__item__bars__item__value')
       expect(values.at(0).text()).toBe('$237')

@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { mount } from '@vue/test-utils'
+import { mount,flushPromises} from '@vue/test-utils'
 import ColumnChart from '@/datavisualisations/ColumnChart.vue'
 
 vi.mock('d3', async () => {
@@ -39,8 +39,8 @@ describe('ColumnChart.vue', () => {
       }
 
       wrapper = mount(ColumnChart, { propsData })
+
       wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
       await wrapper.vm.$nextTick()
     })
 
@@ -103,7 +103,7 @@ describe('ColumnChart.vue', () => {
     let wrapper
 
     beforeAll(async () => {
-      d3.json = vi.fn().mockReturnValue([
+      d3.json = vi.fn().mockResolvedValue([
         { date: 2019, value: 50 },
         { date: 2020, value: 100 }
       ])
@@ -113,8 +113,8 @@ describe('ColumnChart.vue', () => {
       const propsData = { data: 'http://localhost/data.json' }
       wrapper = mount(ColumnChart, { propsData })
       wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
       await wrapper.vm.$nextTick()
+      await flushPromises()
     })
 
     it('is a Vue instance', () => {
@@ -182,7 +182,6 @@ describe('ColumnChart.vue', () => {
       }
       wrapper = mount(ColumnChart, { propsData })
       wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
       await wrapper.vm.$nextTick()
     })
 
@@ -260,7 +259,6 @@ describe('ColumnChart.vue', () => {
       const propsData = { data: 'http://localhost/data.json', noXAxis: true }
       wrapper = mount(ColumnChart, { propsData })
       wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
       await wrapper.vm.$nextTick()
     })
 
@@ -275,7 +273,6 @@ describe('ColumnChart.vue', () => {
       wrapper = mount(ColumnChart, { propsData })
       wrapper.vm.$el.style.width = '500px'
       await new Promise((resolve) => setTimeout(resolve))
-      wrapper.vm.setSizes()
       await wrapper.vm.$nextTick()
 
       const column = wrapper.findAll('.column-chart__columns__item__bar').at(2)
@@ -286,9 +283,8 @@ describe('ColumnChart.vue', () => {
     it('should have a max value to 180 set with a property', async () => {
       const propsData = { data: 'http://localhost/data.json', maxValue: 180 }
       wrapper = mount(ColumnChart, { propsData })
-      await new Promise((resolve) => setTimeout(resolve))
       wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
+      await new Promise((resolve) => setTimeout(resolve))
       await wrapper.vm.$nextTick()
 
       const column = wrapper.findAll('.column-chart__columns__item__bar').at(2)
@@ -304,7 +300,7 @@ describe('ColumnChart.vue', () => {
     })
 
     it('should have one tooltip visible after the mouse overs a column', async () => {
-      wrapper.findAll('.column-chart__columns__item').at(0).trigger('mouseover')
+      await wrapper.findAll('.column-chart__columns__item').at(0).trigger('mouseover') // TODO fix me
       await wrapper.vm.$nextTick()
       const visibleTooltips = wrapper.findAll('.column-chart__tooltips__item__wrapper')
       expect(visibleTooltips).toHaveLength(1)
@@ -313,11 +309,11 @@ describe('ColumnChart.vue', () => {
     it('should hide the tooltip after the mouse leaves a column', async () => {
       const firstColumn = wrapper.findAll('.column-chart__columns__item').at(0)
 
-      firstColumn.trigger('mouseover')
+      await firstColumn.trigger('mouseover')
       await wrapper.vm.$nextTick()
       expect(wrapper.findAll('.column-chart__tooltips__item__wrapper')).toHaveLength(1)
 
-      firstColumn.trigger('mouseleave')
+      await firstColumn.trigger('mouseleave')
       await wrapper.vm.$nextTick()
       expect(wrapper.findAll('.column-chart__tooltips__item__wrapper')).toHaveLength(0)
     })
@@ -339,7 +335,7 @@ describe('ColumnChart.vue', () => {
     })
 
     it('should emit a "select" event when clicking on an item', async () => {
-      wrapper.findAll('.column-chart__columns__item__bar').at(0).trigger('click')
+      await wrapper.findAll('.column-chart__columns__item__bar').at(0).trigger('click')
 
       expect(wrapper.emitted().select).toBeTruthy()
       expect(wrapper.emitted().select[0][0]).toBe(wrapper.vm.bars[0].datum)

@@ -1,61 +1,16 @@
-<template>
-  <div
-    class="bar-chart"
-    :style="{
-      '--bar-color': barColor,
-      '--bar-highlight-color': barHighlightColor
-    }"
-    :class="{
-      'bar-chart--has-highlights': dataHasHighlights,
-      'bar-chart--social-mode': socialMode
-    }"
-  >
-    <svg :width="width" :height="height">
-      <g :style="{ transform: `translate(0, ${margin.top}px)` }" class="bar-chart__labels">
-        <text
-          v-for="(label, i) in labels"
-          :key="i"
-          :x="label.x"
-          :y="label.y"
-          text-anchor="end"
-          class="bar-chart__labels__item"
-        >
-          {{ label.label }}
-        </text>
-      </g>
-      <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }" class="bar-chart__bars">
-        <g
-          v-for="(bar, i) in bars"
-          :key="i"
-          class="bar-chart__bars__item"
-          :class="{ 'bar-chart__bars__item--highlight': bar.highlight }"
-        >
-          <rect :width="bar.width" :height="bar.height" :x="bar.x" :y="bar.y" />
-          <text
-            class="bar-chart__bars__item__value"
-            :x="bar.width + valueGap"
-            :y="bar.y + bar.height / 2"
-            text-anchor="start"
-            dominant-baseline="middle"
-          >
-            {{ bar.value | d3Formatter(xAxisTickFormat) }}
-          </text>
-        </g>
-      </g>
-    </svg>
-  </div>
-</template>
+
 
 <script>
 import * as d3 from 'd3'
 import identity from 'lodash/identity'
 import sortBy from 'lodash/sortBy'
+import {defineComponent, computed, ref, watch, ComponentPublicInstance} from "vue"
+import {chartProps, getChartProps, useChart} from "@/composables/chart.ts";
 
-import chart from '../mixins/chart'
 
-export default {
+export default defineComponent({
   name: 'BarChart',
-  mixins: [chart],
+  //mixins: [chart],
   props: {
     /**
      * Height of each bar
@@ -126,103 +81,172 @@ export default {
      */
     xAxisTickFormat: {
       type: [Function, String],
-      default: identity
-    }
+      default: ()=>identity
+    },
+    ...chartProps()
   },
-  data() {
-    return {
-      width: 0
-    }
-  },
-  computed: {
-    sortedData() {
-      if (!this.loadedData) {
+  emits:["loaded","resized"],
+  setup(props,{emit}){
+    const el = ref(null)
+    const width=ref(0)
+    const isLoaded = ref(false)
+    const {loadedData, elementsMaxBBox,dataHasHighlights,d3Formatter}=useChart(el,getChartProps(props),{emit},isLoaded,onResize,null)
+    // onMounted(() => {
+    //   window.addEventListener('resize', onResize)
+    //   onResize()
+    // })
+    // beforeUnmount(()=> {
+    //   window.removeEventListener('resize', onResize)
+    // })
+
+    const sortedData = computed(() => {
+      if (!loadedData.value) {
         return []
       }
-      return !this.sortBy ? this.loadedData : sortBy(this.sortedData, this.sortBy)
-    },
-    labelWidth() {
-      if (this.fixedLabelWidth) {
-        return this.fixedLabelWidth
+      return !props.sortBy ? loadedData.value : sortBy(sortedData.value, props.sortBy)
+    })
+    const labelWidth = computed(() => {
+      if (props.fixedLabelWidth) {
+        return props.fixedLabelWidth
       }
       const selector = '.bar-chart__labels__item'
       const defaultWidth = 100
-      return this.elementsMaxBBox({ selector, defaultWidth }).width
-    },
-    valueWidth() {
-      if (this.fixedValueWidth) {
-        return this.fixedValueWidth
+      return elementsMaxBBox({ selector, defaultWidth }).width
+    })
+    const valueWidth = computed(() => {
+      if (props.fixedValueWidth) {
+        return props.fixedValueWidth
       }
       const selector = '.bar-chart__bars__item__value'
       const defaultWidth = 0
-      return this.elementsMaxBBox({ selector, defaultWidth }).width + this.valueGap
-    },
-    margin() {
-      const left = this.labelWidth + this.labelGap
+      return elementsMaxBBox({ selector, defaultWidth }).width + props.valueGap
+    })
+
+    const margin = computed(() => {
+      const left = labelWidth.value + props.labelGap
       const right = 0
       const top = 0
       const bottom = 0
       return { left, right, top, bottom }
-    },
-    padded() {
-      const width = this.width - this.margin.left - this.margin.right
-      const height = this.height - this.margin.top - this.margin.bottom
-      return { width, height }
-    },
-    scale() {
+    })
+
+    const padded = computed(() => {
+      const widthP = width.value - margin.left - margin.right
+      const heightP = height.value - margin.top - margin.bottom
+      return { width:widthP, height:heightP }
+    })
+    const scale = computed(() => {
       const x = d3
-        .scaleLinear()
-        .domain([0, d3.max(this.sortedData, (d) => d.value)])
-        .range([0, this.padded.width - this.valueWidth])
+          .scaleLinear()
+          .domain([0, d3.max(sortedData.value, (d) => d.value)])
+          .range([0, padded.value.width - valueWidth.value])
       return { x }
-    },
-    bars() {
-      return this.sortedData.map((d, i) => {
+    })
+    const bars = computed(() => {
+      return sortedData.value.map((d, i) => {
         return {
-          width: Math.abs(this.scale.x(d.value)),
-          height: Math.abs(this.barHeight),
+          width: Math.abs(scale.value.x(d.value)),
+          height: Math.abs(props.barHeight),
           value: d.value,
           highlight: d.highlight,
           x: 0,
-          y: (this.barHeight + this.barGap) * i
+          y: (props.barHeight + props.barGap) * i
         }
       })
-    },
-    labels() {
-      return this.sortedData.map((d, i) => {
+    })
+    const labels = computed(() => {
+      return sortedData.value.map((d, i) => {
         return {
           label: d.label,
-          x: this.labelWidth,
-          y: 4 + this.barHeight / 2 + (this.barHeight + this.barGap) * i
+          x: labelWidth.value,
+          y: 4 + props.barHeight / 2 + (props.barHeight + props.barGap) * i
         }
       })
-    },
-    height() {
-      return (this.barHeight + this.barGap) * this.sortedData.length
+    })
+    const height = computed(() => {
+          return (props.barHeight + props.barGap) * sortedData.value.length
+        }
+    )
+
+    function formatXDatum(d){
+      return d3Formatter(d,props.xAxisTickFormat)
     }
-  },
-  watch: {
-    width() {
-      this.initialize()
+    function onResize() {
+      if(el.value){
+        width.value = el.value.offsetWidth
+      }
     }
-  },
-  mounted() {
-    window.addEventListener('resize', this.onResize)
-    this.onResize()
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize)
-  },
-  methods: {
-    onResize() {
-      this.width = this.$el.offsetWidth
-    },
-    initialize() {
-      d3.axisBottom().scale(this.scale.x)
+    function initialize() {
+      d3.axisBottom().scale(scale.value.x)
+    }
+
+    watch(width,()=> {
+      initialize()
+    })
+
+    return {
+      el,
+      dataHasHighlights,
+      width,
+      height,
+      margin,
+      labels,
+      bars,
+      formatXDatum
     }
   }
-}
+})
 </script>
+
+
+<template>
+  <div
+      ref="el"
+      class="bar-chart"
+      :style="{
+      '--bar-color': barColor,
+      '--bar-highlight-color': barHighlightColor
+    }"
+      :class="{
+      'bar-chart--has-highlights': dataHasHighlights,
+      'bar-chart--social-mode': socialMode
+    }"
+  >
+    <svg :width="width" :height="height">
+      <g :style="{ transform: `translate(0, ${margin.top}px)` }" class="bar-chart__labels">
+        <text
+            v-for="(label, i) in labels"
+            :key="i"
+            :x="label.x"
+            :y="label.y"
+            text-anchor="end"
+            class="bar-chart__labels__item"
+        >
+          {{ label.label }}
+        </text>
+      </g>
+      <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }" class="bar-chart__bars">
+        <g
+            v-for="(bar, i) in bars"
+            :key="i"
+            class="bar-chart__bars__item"
+            :class="{ 'bar-chart__bars__item--highlight': bar.highlight }"
+        >
+          <rect :width="bar.width" :height="bar.height" :x="bar.x" :y="bar.y" />
+          <text
+              class="bar-chart__bars__item__value"
+              :x="bar.width + valueGap"
+              :y="bar.y + bar.height / 2"
+              text-anchor="start"
+              dominant-baseline="middle"
+          >
+            {{ formatXDatum(bar.value) }}
+          </text>
+        </g>
+      </g>
+    </svg>
+  </div>
+</template>
 
 <style lang="scss">
 @import '../styles/lib';

@@ -44,7 +44,7 @@ describe('StackedColumnChart.vue', () => {
       await vi.runAllTimersAsync()
       vi.useRealTimers()
     })
-    
+
     it('is a Vue instance', () => {
       expect(wrapper.vm).toBeTruthy()
     })
@@ -104,8 +104,7 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates the first group with "2009" as label when ordered by "foo"', async () => {
-      wrapper.setProps({ sortBy: 'foo' })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ sortBy: 'foo' })
       const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
       const label = firstGroup.find('.stacked-column-chart__groups__item__label')
       expect(label.text()).toBe("2009")
@@ -121,14 +120,14 @@ describe('StackedColumnChart.vue', () => {
     it('hightlight the legend "foo"', async () => {
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
-      fooLegend.trigger('mouseover')
+      await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay + 10)
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
     })
 
     it('hightlight the columns for "foo"', async () => {
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
-      fooLegend.trigger('mouseover')
+      await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       const fooColumns = wrapper.findAll('.stacked-column-chart__groups__item__bars__item--foo')
       expect(fooColumns.at(0).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
@@ -139,7 +138,7 @@ describe('StackedColumnChart.vue', () => {
 
     it('hightlight the columns for "bar"', async () => {
       const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
-      barLegend.trigger('mouseover')
+      await barLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       const budgetBars = wrapper.findAll('.stacked-column-chart__groups__item__bars__item--bar')
       expect(budgetBars.at(0).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
@@ -149,13 +148,12 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('hightlight the legend "foo" on mouseover and "bar" by default', async () => {
-      wrapper.setProps({ highlights: ['bar'] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ highlights: ['bar'] })
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
       expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
-      fooLegend.trigger('mouseover')
+      await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
       expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
@@ -163,8 +161,8 @@ describe('StackedColumnChart.vue', () => {
 
     it('hightlight the columns for "bar" after a while', async () => {
       const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
-      wrapper.setProps({ highlightDelay: 150 })
-      barLegend.trigger('mouseover')
+      await wrapper.setProps({ highlightDelay: 150 })
+      await barLegend.trigger('mouseover')
       expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay / 2)
       expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
@@ -189,8 +187,7 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates columns with specific colors', async () => {
-      wrapper.setProps({ barColors: [ "#000", "#444" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ barColors: [ "#000", "#444" ] })
       const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
       const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
       const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
@@ -199,8 +196,7 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates legend with specific colors', async () => {
-      wrapper.setProps({ barColors: [ "#000", "#444" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ barColors: [ "#000", "#444" ] })
       const legendBoxes = wrapper.findAll('.stacked-column-chart__legend__item__box')
       const budgetBox = legendBoxes.at(0)
       const boxOfficeBox = legendBoxes.at(1)
@@ -209,23 +205,20 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates one legend when using explicite keys', async () => {
-      wrapper.setProps({ keys: [ "foo" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ keys: [ "foo" ] })
       const legendItems = wrapper.findAll('.stacked-column-chart__legend__item')
       expect(legendItems).toHaveLength(1)
     })
 
     it('creates one bar when using explicite keys', async () => {
-      wrapper.setProps({ keys: [ "foo" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ keys: [ "foo" ] })
       const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
       const columns = firstGroup.findAll('.stacked-column-chart__groups__item__bars__item')
       expect(columns).toHaveLength(1)
     })
 
     it('creates legend with custom group names', async () => {
-      wrapper.setProps({ groups: [ "Foo", "Bar" ] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ groups: [ "Foo", "Bar" ] })
       const legendItems = wrapper.findAll('.stacked-column-chart__legend__item')
       expect(legendItems.at(0).text()).toBe("Foo")
       expect(legendItems.at(1).text()).toBe("Bar")
@@ -239,8 +232,7 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates bar direct labeling without with currency formatting', async () => {
-      wrapper.setProps({ yAxisTickFormat: '$,' })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ yAxisTickFormat: '$,' })
       const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
       const values = firstGroup.findAll('.stacked-column-chart__groups__item__bars__item__value')
       expect(values.at(0).text()).toBe('$90')
@@ -248,7 +240,6 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates an invisible left axis', async () => {
-      await wrapper.vm.$nextTick()
       const leftAxis = wrapper.find('.stacked-column-chart__left-axis')
       expect(leftAxis.attributes('style')).toBe('display: none;')
     })
@@ -335,26 +326,22 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates a visible left axis', async () => {
-      await wrapper.vm.$nextTick()
       const leftAxis = wrapper.find('.stacked-column-chart__left-axis')
       expect(leftAxis.attributes('style')).not.toBe('display: none;')
     })
 
     it('creates a left axis with the same sizes than the component', async () => {
-      await wrapper.vm.$nextTick()
       const leftAxis = wrapper.find('.stacked-column-chart__left-axis')
       expect(leftAxis.attributes('width')).toBe('600px')
       expect(leftAxis.attributes('height')).toBe('500px')
     })
 
     it('creates a left axis with 0 as minimum value', async () => {
-      await wrapper.vm.$nextTick()
       const firstTick = wrapper.find('.stacked-column-chart__left-axis .tick:first-of-type text')
       expect(firstTick.text()).toBe('0')
     })
 
     it('creates a left axis with 100 as minimum value', async () => {
-      await wrapper.vm.$nextTick()
       const lastTick = wrapper.find('.stacked-column-chart__left-axis .tick:last-of-type text')
       expect(lastTick.text()).toBe('100')
     })

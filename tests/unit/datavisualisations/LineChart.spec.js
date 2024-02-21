@@ -40,9 +40,6 @@ describe('LineChart.vue', () => {
       }
 
       wrapper = mount(LineChart, { propsData })
-      wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
-      await wrapper.vm.$nextTick()
     })
 
     it('is a Vue instance', () => {
@@ -51,8 +48,7 @@ describe('LineChart.vue', () => {
 
     it('is a fixed height chart, regardeless of the mode', async () => {
       expect(wrapper.vm.height).toBe(300)
-      wrapper.setProps({ socialMode: true })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ socialMode: true })
       expect(wrapper.vm.height).toBe(300)
     })
 
@@ -86,8 +82,6 @@ describe('LineChart.vue', () => {
       }
       wrapper = mount(LineChart, { propsData })
       wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
-      await wrapper.vm.$nextTick()
     })
 
     it('is a Vue instance', () => {
@@ -130,13 +124,10 @@ describe('LineChart.vue', () => {
         seriesName: 'indicator'
       }
       wrapper = mount(LineChart, { propsData })
-      wrapper.vm.$el.style.width = '500px'
-      wrapper.vm.setSizes()
-      await wrapper.vm.$nextTick()
     })
 
     afterEach(async () => {
-      wrapper.destroy()
+      wrapper.unmount()
     })
 
     it('is a Vue instance', () => {

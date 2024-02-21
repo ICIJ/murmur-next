@@ -1,40 +1,17 @@
-<template>
-  <div class="line-chart" :style="{ '--line-color': lineColor }" :class="{ 'line-chart--social-mode': socialMode }">
-    <svg :width="width" :height="height">
-      <g
-        class="line-chart__axis line-chart__axis--x"
-        :style="{
-          transform: `translate(${margin.left}px, ${margin.top + padded.height}px)`
-        }"
-      >
-        >
-      </g>
-      <g
-        class="line-chart__axis line-chart__axis--y"
-        :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }"
-      >
-        >
-      </g>
-      <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
-        <path class="line-chart__line" :d="line" />
-      </g>
-    </svg>
-  </div>
-</template>
 
-<script>
+<script lang="ts">
 import * as d3 from 'd3'
 import isFunction from 'lodash/isFunction'
 import identity from 'lodash/identity'
-
-import chart from '../mixins/chart'
+import {chartProps, getChartProps, useChart} from "@/composables/chart.js"
+import {computed, ref, defineComponent, watchEffect,watch, ComponentPublicInstance, toRaw} from 'vue'
 
 // Call the first argument if it's a function, or return it
 const castCall = (fnOrValue = identity, ...rest) => (isFunction(fnOrValue) ? fnOrValue(...rest) : fnOrValue)
 
-export default {
+export default defineComponent({
   name: 'LineChart',
-  mixins: [chart],
+  //mixins: [chart],
   props: {
     /**
      * Color of the line (uses the CSS variable --line-color by default)
@@ -78,7 +55,7 @@ export default {
      */
     yAxisTickFormat: {
       type: [Function, String],
-      default: identity
+      default: ()=>identity
     },
     /**
      * Argument for y-axis ticks
@@ -94,141 +71,178 @@ export default {
     timeseriesKey: {
       type: String,
       default: 'date'
-    }
+    },
+    ...chartProps()
   },
-  data() {
-    return {
-      width: 0,
-      height: 0,
-      line: null
-    }
-  },
-  computed: {
-    labelWidth() {
-      if (this.fixedLabelWidth) {
-        return this.fixedLabelWidth
+  emits:["loaded","resized"],
+  setup(props,{emit}){
+    const el= ref<ComponentPublicInstance<HTMLElement> | null>(null)
+    const width =ref(0)
+    const height= ref(0)
+    const line= ref<d3.Line<[number,number]>|null>(null)
+    const isLoaded = ref(false)
+    // onMounted(()=> {
+    //   window.addEventListener('resize', this.setSizes)
+    //   this.setSizes()
+    // })
+    // beforeUnmount() {
+    //   window.removeEventListener('resize', this.setSizes)
+    // }
+    const {loadedData, elementsMaxBBox,xAxisYearFormat,d3Formatter,baseHeightRatio}=useChart(el,getChartProps(props),{emit},isLoaded,setSizes)
+
+
+    const labelWidth = computed(()=> {
+      if (props.fixedLabelWidth) {
+        return props.fixedLabelWidth
       }
       const selector = '.line-chart__axis--y .tick text'
       const defaultWidth = 100
-      return this.elementsMaxBBox({ selector, defaultWidth }).width
-    },
-    labelHeight() {
+      return elementsMaxBBox({ selector, defaultWidth }).width
+    })
+    const labelHeight = computed(()=> {
       const selector = '.line-chart__axis--y .tick'
       const defaultHeight = 10
-      return this.elementsMaxBBox({ selector, defaultHeight }).height
-    },
-    bucketHeight() {
+      return elementsMaxBBox({ selector, defaultHeight }).height
+    })
+    const bucketHeight = computed(()=> {
       const selector = '.line-chart__axis--x .tick'
       const defaultHeight = 10
-      return this.elementsMaxBBox({ selector, defaultHeight }).height
-    },
-    bucketWidth() {
+      return elementsMaxBBox({ selector, defaultHeight }).height
+    })
+    const bucketWidth = computed(()=> {
       const selector = '.line-chart__axis--x .tick text'
       const defaultWidth = 0
-      return this.elementsMaxBBox({ selector, defaultWidth }).width
-    },
-    scale() {
+      return elementsMaxBBox({ selector, defaultWidth }).width
+    })
+    const scale = computed(()=> {
       return {
-        x: d3.scaleTime().range([0, this.padded.width]),
-        y: d3.scaleLinear().range([this.padded.height, 0])
+        x: d3.scaleTime().range([0, padded.value.width]),
+        y: d3.scaleLinear().range([padded.value.height, 0])
       }
-    },
-    margin() {
-      const left = this.labelWidth + 10
-      const right = this.bucketWidth / 2
-      const top = this.labelHeight
-      const bottom = this.bucketHeight + 10
+    })
+    const margin = computed(()=> {
+      const left = labelWidth.value + 10
+      const right = bucketWidth.value / 2
+      const top = labelHeight.value
+      const bottom = bucketHeight.value + 10
       return { left, right, top, bottom }
-    },
-    padded() {
-      const width = this.width - this.margin.left - this.margin.right
-      const height = this.height - this.margin.top - this.margin.bottom
-      return { width, height }
-    },
-    formattedData() {
-      if (!this.loadedData) {
-        return []
-      }
-      return this.loadedData.map((d) => {
-        d[this.timeseriesKey] = this.parseTime(d[this.timeseriesKey])
-        d[this.seriesName] = +d[this.seriesName]
-        return d
-      })
-    }
-  },
-  watch: {
-    socialMode() {
-      this.setSizes()
-    },
-    width() {
-      this.update()
-    },
-    height() {
-      this.update()
-    },
-    fixedHeight() {
-      this.update()
-    },
-    loadedData() {
-      this.update()
-    },
-    labelHeight() {
-      this.update()
-    }
-  },
-  mounted() {
-    window.addEventListener('resize', this.setSizes)
-    this.setSizes()
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.setSizes)
-  },
-  methods: {
-    createLine: d3
-      .line()
-      .x((d) => d.x)
-      .y((d) => d.y),
-    parseTime: d3.timeParse('%Y'),
-    setSizes() {
-      this.width = this.$el.offsetWidth
-      this.height = this.fixedHeight !== null ? this.fixedHeight : this.$el.offsetWidth * this.baseHeightRatio
-    },
-    update() {
-      this.scale.x.domain(d3.extent(this.formattedData, (d) => d[this.timeseriesKey]))
-      this.scale.y.domain([0, d3.max(this.formattedData, (d) => d[this.seriesName])])
+    })
+    const padded = computed(()=> {
+      const widthP = width.value - margin.value.left - margin.value.right
+      const heightP = height.value - margin.value.top - margin.value.bottom
+      return { width:widthP, height:heightP }
+    })
+    const formattedData = computed(()=> {
+          if (!loadedData.value) {
+            return []
+          }
+      return loadedData.value.map(d => {
+        // toRaw prevent modifying the Proxy object created with the props.data
+        let rawD = toRaw(d)
+        rawD[props.timeseriesKey] = parseTime(d[props.timeseriesKey])
+        rawD[props.seriesName]= +d[props.seriesName]
+        return rawD
+      });
+    })
+    const createLine = d3.line().x((d) => d.x).y((d) => d.y)
 
-      const points = this.formattedData.map((d) => {
+    const parseTime = d3.timeParse('%Y')
+    function setSizes() {
+      if(el.value){
+        width.value = el.value.offsetWidth
+        height.value = props.fixedHeight !== null ? props.fixedHeight : el.value.offsetWidth * baseHeightRatio
+      }
+    }
+    function update() {
+      scale.value.x.domain(d3.extent(formattedData.value, d => d[props.timeseriesKey]))
+      scale.value.y.domain([0, d3.max(formattedData.value, (d) => d[props.seriesName])])
+
+      const points = formattedData.value.map((d) => {
         return {
-          x: this.scale.x(d[this.timeseriesKey]),
-          y: this.scale.y(d[this.seriesName])
+          x: scale.value.x(d[props.timeseriesKey]),
+          y: scale.value.y(d[props.seriesName])
         }
       })
 
-      this.line = this.createLine(points)
+      line.value = createLine(points)
+      d3.select(el.value)
+          .select('.line-chart__axis--x')
+          .call(
+              d3.axisBottom(scale.value.x)
+                  .ticks(props.xAxisTicks)
+                  .tickFormat((d) => castCall(xAxisYearFormat, d.getFullYear()))
+          )
+      d3.select(el.value)
+          .select('.line-chart__axis--y')
+          .call(
+              d3.axisLeft(scale.value.y)
+                  .tickFormat((d) => d3Formatter(d, props.yAxisTickFormat))
+                  .ticks(props.yAxisTicks)
+          )
+          .selectAll('.tick line')
+          .attr('x2', padded.value.width)
 
-      d3.select(this.$el)
-        .select('.line-chart__axis--x')
-        .call(
-          d3
-            .axisBottom(this.scale.x)
-            .ticks(this.xAxisTicks)
-            .tickFormat((d) => castCall(this.xAxisYearFormat, d.getFullYear()))
-        )
 
-      d3.select(this.$el)
-        .select('.line-chart__axis--y')
-        .call(
-          d3
-            .axisLeft(this.scale.y)
-            .tickFormat((d) => this.$options.filters.d3Formatter(d, this.yAxisTickFormat))
-            .ticks(this.yAxisTicks)
-        )
-        .selectAll('.tick line')
-        .attr('x2', this.padded.width)
+
+    }
+    // function initialize() {
+    //   d3.axisBottom().scale(scale.value.x)
+    // }
+
+    // watch(width,()=> {
+    //   update()
+    // })
+    // watch(width,()=> {
+    //   update()
+    // })
+    // watch(height,()=> {
+    //   update()
+    // })
+    //
+    // watch(loadedData,()=> {
+    //   update()
+    // })
+    // watch(labelHeight,()=> {
+    //   update()
+    // })
+    watchEffect(()=> {
+        update()
+    })
+    return {
+      el,
+      width,
+      height,
+      margin,
+      padded,
+      line,
+      setSizes
     }
   }
-}
+})
 </script>
+<template>
+  <div ref="el" class="line-chart" :style="{ '--line-color': lineColor }" :class="{ 'line-chart--social-mode': socialMode }">
+    <svg :width="width" :height="height">
+      <g
+          class="line-chart__axis line-chart__axis--x"
+          :style="{
+          transform: `translate(${margin.left}px, ${margin.top + padded.height}px)`
+        }"
+      >
+        >
+      </g>
+      <g
+          class="line-chart__axis line-chart__axis--y"
+          :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }"
+      >
+        >
+      </g>
+      <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
+        <path class="line-chart__line" :d="line" />
+      </g>
+    </svg>
+  </div>
+</template>
 
 <style lang="scss">
 @import '../styles/lib';
