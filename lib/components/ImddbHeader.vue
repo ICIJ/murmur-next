@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="root">
     <component
       :is="rootElement"
       id="imddb-header"
@@ -14,7 +14,7 @@
       <!-- @slot Redefines brand -->
       <slot name="brand">
         <a :href="homeUrl" class="navbar-brand imddb-header__brand">
-          <img src="../assets/images/icij@2x.png" height="25" class="mr-3" />
+          <img alt="ICIJ logo" class="mr-3" height="25" src="../assets/images/icij@2x.png"/>
           {{ project }}
         </a>
       </slot>
@@ -26,15 +26,15 @@
           <!-- @slot Redefines the main navbar block (containing the dropdown) -->
           <slot name="navbar">
             <ul class="navbar-nav">
-              <b-nav-item-dropdown @show="$root.$emit('bv::hide::popover')">
-                <template slot="button-content">
+              <b-nav-item-dropdown @show="hidePopover">
+                <template v-slot:button-content>
                   {{ title }}
                 </template>
                 <b-dropdown-item
                   v-for="(item, $index) in dropdownItems"
+                  v-bind="{ active: !!item.active }"
                   :key="$index"
                   :href="item.href"
-                  v-bind="{ active: !!item.active }"
                 >
                   {{ item.label }}
                 </b-dropdown-item>
@@ -44,16 +44,16 @@
         </div>
         <ul class="navbar-nav">
           <li v-if="hasLanguagesDropdown" class="nav-item">
-            <b-nav-item-dropdown @show="$root.$emit('bv::hide::popover')">
-              <template slot="button-content">
+            <b-nav-item-dropdown @show="hidePopover">
+              <template v-slot:button-content>
                 <fa icon="globe" />
                 {{ currentLanguage }}
               </template>
               <b-dropdown-item
                 v-for="(item, $index) in languages"
+                v-bind="{ active: !!item.active }"
                 :key="$index"
                 :href="item.href"
-                v-bind="{ active: !!item.active }"
               >
                 {{ item.label }}
               </b-dropdown-item>
@@ -61,27 +61,27 @@
           </li>
           <li class="nav-item">
             <a href="https://www.icij.org/leak/" target="_blank" class="nav-link">
-              {{ $t('imddb-header.navbar.leak') }}
+              {{ t('imddb-header.navbar.leak') }}
             </a>
           </li>
           <li class="nav-item mr-lg-3">
             <slot name="donate-link">
               <a target="_blank" :href="donateUrl" class="nav-link">
-                {{ $t('imddb-header.navbar.support') }}
+                {{ t('imddb-header.navbar.support') }}
               </a>
             </slot>
           </li>
           <li class="nav-item">
             <button id="follow-icij" class="btn btn-primary btn-block font-weight-bold">
-              {{ $t('imddb-header.navbar.follow') }}
+              {{ t('imddb-header.navbar.follow') }}
             </button>
             <b-popover
+              :model-value="showFollowUsPopover"
               container="imddb-header"
               target="follow-icij"
-              placement="bottomleft"
-              :show.sync="showFollowUsPopover"
+              placement="bottom-start"
             >
-              <follow-us-popover :show.sync="showFollowUsPopover" />
+              <follow-us-popover v-model:show="showFollowUsPopover" />
             </b-popover>
           </li>
         </ul>
@@ -91,21 +91,26 @@
 </template>
 
 <script lang="ts">
-import { BDropdownItem } from 'bootstrap-vue/esm/components/dropdown/dropdown-item'
-import { BModal } from 'bootstrap-vue/esm/components/modal/modal'
-import { BNavItemDropdown } from 'bootstrap-vue/esm/components/nav/nav-item-dropdown'
-import { BPopover } from 'bootstrap-vue/esm/components/popover/popover'
 import { headroom } from 'vue-headroom'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import find from 'lodash/find'
 import get from 'lodash/get'
-import { defineComponent, PropType } from 'vue'
 
 import { default as Fa, library } from './Fa'
 import FollowUsPopover from './FollowUsPopover.vue'
 import config from '../config'
+import {
+  computed,
+  ComponentPublicInstance,
+  defineComponent,
+  PropType,
+  ref,
+  onMounted,
+  onBeforeMount
+} from 'vue'
+import { useI18n } from 'vue-i18n'
+import { BDropdownItem, BModal, BNavItemDropdown, BPopover } from 'bootstrap-vue-next'
 
-import i18n from '@/i18n'
 
 type CssPosition = 'absolute' | 'relative' | 'fixed' | 'static'
 type ImddHeaderItem = { label: string; href: string; active: boolean }
@@ -118,7 +123,6 @@ interface ImddHeaderData {
  * ImddbHeader
  */
 export default defineComponent({
-  i18n,
   name: 'ImddbHeader',
   components: {
     BDropdownItem,
@@ -179,41 +183,53 @@ export default defineComponent({
       default: () => config.get('app.donate-url')
     }
   },
-  data(): ImddHeaderData {
+  setup(props){
+    const { t }= useI18n()
+    const showFollowUsPopover = ref(false)
+    const collapseNavbar = ref(true)
+    const languages = ref<ImddHeaderItem[]>([])
+    const root = ref<ComponentPublicInstance|null>(null)
+    const rootElement = computed((): string=> {
+      return props.noHeadroom ? 'div' : 'headroom'
+    })
+    const hasLanguagesDropdown = computed((): boolean=> {
+      return !!languages.value?.length
+    })
+    const currentLanguage = computed((): string=> {
+      return get(find(languages.value, { active: true }), 'label', 'Language')
+    })
+    onBeforeMount(()=>{
+      library.add(faGlobe)
+    })
+    onMounted(()=>{
+      languages.value = config.get('imddb-header.languages.items')
+    })
+    function closeFollowUsPopover(): void {
+      showFollowUsPopover.value = false
+    }
+    function hidePopover(){
+      root.value?.$emit('bv::hide::popover')
+    }
+    function hideDropdown(){
+      root.value?.$emit('bv::hide::dropdown')
+    }
+    function toggleNavbar(): void {
+      collapseNavbar.value = !collapseNavbar.value
+      hidePopover()
+      hideDropdown()
+    }
+
     return {
-      showFollowUsPopover: false,
-      collapseNavbar: true,
-      languages: []
-    }
-  },
-  computed: {
-    rootElement(): string {
-      return this.noHeadroom ? 'div' : 'headroom'
-    },
-    hasLanguagesDropdown(): boolean {
-      return !!this.languages.length
-    },
-    currentLanguage(): string {
-      return get(find(this.languages, { active: true }), 'label', 'Language')
-    }
-  },
-  beforeMount(): void {
-    library.add(faGlobe)
-  },
-  mounted(): void {
-    this.setLanguages(config.get('imddb-header.languages.items'))
-  },
-  methods: {
-    closeFollowUsPopover(): void {
-      this.showFollowUsPopover = false
-    },
-    toggleNavbar(): void {
-      this.collapseNavbar = !this.collapseNavbar
-      this.$root.$emit('bv::hide::popover')
-      this.$root.$emit('bv::hide::dropdwon')
-    },
-    setLanguages(languages: ImddHeaderItem[] = []): void {
-      this.$set(this, 'languages', languages)
+      t,
+      collapseNavbar,
+      currentLanguage,
+      hasLanguagesDropdown,
+      languages,
+      rootElement,
+      showFollowUsPopover,
+      closeFollowUsPopover,
+      hidePopover,
+      toggleNavbar
     }
   }
 })

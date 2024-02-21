@@ -56,7 +56,7 @@ describe('HapticCopy.vue', () => {
     expect(wrapper.emitted().success).toBeTruthy()
   })
 
-  it('should emit an `attempt` event before copying text', async () => {
+  it('should emit an `attempt` event before copying text', async () => {
     const wrapper = mount(HapticCopy, { propsData })
     await wrapper.vm.copy()
     expect(wrapper.emitted().attempt).toBeTruthy()

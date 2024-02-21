@@ -2,6 +2,7 @@
   <div class="digits-input">
     <div class="d-flex digits-input__container">
       <input
+          ref="inputs"
         v-for="d in length"
         :key="d - 1"
         v-model="values[d - 1]"
@@ -16,7 +17,7 @@
 
 <script lang="ts">
 import { filter, isEqual } from 'lodash'
-import { defineComponent } from 'vue'
+import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
 
 type DigitsInputData = {
   mounted: boolean
@@ -28,10 +29,7 @@ type DigitsInputData = {
  */
 export default defineComponent({
   name: 'DigitsInput',
-  model: {
-    prop: 'value',
-    event: 'input'
-  },
+  emits: ['update:modelValue','update:values'],
   props: {
     /**
      * Number of digits to display
@@ -43,7 +41,7 @@ export default defineComponent({
     /**
      * Value of the input
      */
-    value: {
+    modelValue: {
       type: [String, Number],
       default: ''
     },
@@ -55,87 +53,104 @@ export default defineComponent({
       default: ''
     }
   },
-  data(): DigitsInputData {
-    return {
-      mounted: false,
-      values: String(this.value).split('').slice(0, this.length)
-    }
-  },
-  computed: {
-    joinedValues(): string {
-      return filter(this.values, (v) => !isNaN(v as any)).join('')
-    },
-    /* eslint-disable no-undef */
-    inputs(): NodeListOf<HTMLElement> | [] {
-      if (!this.mounted) {
-        return []
-      }
-      return this.$el.querySelectorAll<HTMLElement>('.digits-input__container__input')
-    },
-    nextInput(): HTMLElement | null {
-      if (this.joinedValues.length === this.length) {
+  setup(props, {emit}) {
+
+    const inputs = ref<HTMLInputElement[]>([]);
+
+    onMounted(async () => {
+      await nextTick()
+    })
+
+    const values = ref(String(props.modelValue).split('').slice(0, props.length))
+    const joinedValues = computed((): string=> {
+      return filter(values.value, (v) => !isNaN(v as any)).join('')
+    })
+
+    const nextInput = computed((): HTMLInputElement | null =>{
+      if (joinedValues.value.length === props.length) {
         return null
       }
+
       // Next input is the first non-empty input or the last input
-      return this.inputs[this.joinedValues.length] || this.lastInput
-    },
-    hasNextInput(): boolean {
-      return !!this.nextInput
-    },
-    lastInput(): HTMLElement | null {
-      return this.inputs[this.inputs.length - 1]
+      return inputs.value[joinedValues.value.length] || lastInput.value
+    })
+
+    const hasNextInput = computed((): boolean=> {
+      return !!nextInput.value
+    })
+
+    const lastInput = computed((): HTMLElement | null=> {
+      const index = inputs.value.length -1;
+      return inputs.value[index]
+    })
+
+    function focusToNextInput() {
+      if (hasNextInput.value) {
+       nextInput.value?.focus()
+      }
     }
-  },
-  watch: {
-    values(values: number[] | null[] | string[]): void {
-      // Copy and remove values that are not numbers
-      const formattedValues = values.map((value) => String(value).replace(/\D/g, ''))
-      // Iterate over the values to be sure
-      // they are not exceeding 10 and should
-      // be spread to the next inputs
-      formattedValues.forEach((value, d) => {
-        // The value must be spread to the next input only
-        // if it's higher than 9 (more than one digit)
-        if (value !== null && Number(value) > 9) {
-          // Split the number into an array of strings
-          String(value)
-            .split('')
-            .forEach((nextValue, n) => {
-              // Spread the value to the next inputs of the array
-              formattedValues[d + n] = String(Number(nextValue))
-            })
+    function focusToPreviousWhenEmpty(d: number) {
+      if (!values.value[d]) {
+        inputs.value[d - 1]?.focus()
+      }
+    }
+    watch(
+        () => values,
+        (values) => {
+          // Copy and remove values that are not numbers
+          const formattedValues = values.value.map((value) => String(value).replace(/\D/g, ''));
+          // Iterate over the values to be sure
+          // they are not exceeding 10 and should
+          // be spread to the next inputs
+          formattedValues.forEach((value, d) => {
+            // The value must be spread to the next input only
+            // if it's higher than 9 (more than one digit)
+            if (value !== null && Number(value) > 9) {
+              // Split the number into an array of strings
+              String(value)
+                  .split('')
+                  .forEach((nextValue, n) => {
+                    // Spread the value to the next inputs of the array
+                    formattedValues[d + n] = String(Number(nextValue));
+                  });
+            }
+          });
+          // We update the values data attribute only if they changed
+          // to avoid an infinite update cycle
+          if (JSON.stringify(values.value) !== JSON.stringify(formattedValues)) {
+            values.value = formattedValues.slice(0, props.length)
+          }
+          focusToNextInput();
+        },
+        { deep: true }
+    );
+
+    watch(
+        () => joinedValues,
+        () => {
+          emit('update:modelValue', joinedValues.value)
+        },
+        { deep: true }
+    )
+
+    watch(
+        () => props.modelValue,
+        () => {
+          const formattedValues = String(props.modelValue).split('').slice(0, props.length);
+          emit('update:values', formattedValues);
         }
-      })
-      // We update the values data attribute only if they changed
-      // to avoid an infinite update cycle
-      if (!isEqual(this.values, formattedValues)) {
-        this.$set(this, 'values', formattedValues.slice(0, this.length))
-      }
-      this.focusToNextInput()
-    },
-    joinedValues() {
-      this.$emit('input', this.joinedValues)
-    },
-    value() {
-      this.values = String(this.value).split('').slice(0, this.length)
+    );
+    return {
+      values,
+      joinedValues,
+      inputs,
+      nextInput,
+      hasNextInput,
+      lastInput,
+      focusToPreviousWhenEmpty
     }
   },
-  async mounted() {
-    await this.$nextTick()
-    this.mounted = true
-  },
-  methods: {
-    focusToNextInput() {
-      if (this.hasNextInput) {
-        this.nextInput?.focus()
-      }
-    },
-    focusToPreviousWhenEmpty(d: number) {
-      if (!this.values[d]) {
-        this.inputs[d - 1]?.focus()
-      }
-    }
-  }
+
 })
 </script>
 

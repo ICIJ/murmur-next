@@ -1,42 +1,4 @@
-<template>
-  <div
-    v-if="!hide"
-    class="selectable-dropdown show"
-    :class="{ 'selectable-dropdown--multiple': multiple, [listClass]: true }"
-  >
-    <recycle-scroller
-      v-slot="{ item, active }"
-      :style="cssProps"
-      class="scroller"
-      :items="items_"
-      :key-field="keyField"
-      :item-size="itemSize"
-    >
-      <span
-        :class="{ 'recycle_scroller-item--active': active, active: itemActivated(item), [itemClass]: true }"
-        class="selectable-dropdown__item px-3 d-flex"
-        @click.exact="clickToSelectItem(item)"
-        @click.ctrl="clickToAddItem(item)"
-        @click.shift="clickToSelectRangeToItem(item)"
-      >
-        <!-- @slot Item content -->
-        <slot name="item" :item="item">
-          <div v-if="multiple" class="selectable-dropdown__item__check">
-            <fa :icon="indexIcon(item)" class="mr-2" />
-          </div>
-          <div class="flex-grow-1 text-truncate selectable-dropdown__item__label">
-            <!-- @slot Item's label content -->
-            <slot name="item-label" :item="item">
-              {{ serializer(item) }}
-            </slot>
-          </div>
-        </slot>
-      </span>
-    </recycle-scroller>
-  </div>
-</template>
-
-<script>
+<script lang="ts">
 import castArray from 'lodash/castArray'
 import eq from 'lodash/eq'
 import findIndex from 'lodash/findIndex'
@@ -48,12 +10,13 @@ import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons'
 import { RecycleScroller } from 'vue-virtual-scroller'
 
 import Fa from './Fa'
+import {defineComponent, ref, computed, watch, onMounted, onUnmounted,PropType } from 'vue'
 
 const KEY_ESC_CODE = 27
 const KEY_UP_CODE = 38
 const KEY_DOWN_CODE = 40
-
-export default {
+type Item = any;
+export default defineComponent({
   name: 'SelectableDropdown',
   components: {
     Fa,
@@ -64,7 +27,7 @@ export default {
      * The items of the list.
      */
     items: {
-      type: Array,
+      type: Array as PropType<Item[]>,
       default() {
         return []
       }
@@ -72,8 +35,8 @@ export default {
     /**
      * The actual selected item.
      */
-    value: {
-      type: [String, Object, Array, Number],
+    modelValue: {
+      type: [String, Object, Array, Number] as PropType<Item>,
       default: null
     },
     /**
@@ -122,7 +85,7 @@ export default {
       type: Boolean
     },
     /**
-     * Comparaison function to verify equality between selected items.
+     * Comparison function to verify equality between selected items.
      */
     eq: {
       type: Function,
@@ -145,45 +108,50 @@ export default {
       default: 'inherit'
     }
   },
-  data() {
-    return {
-      activeItems: []
-    }
-  },
-  computed: {
-    cssProps() {
+  emits:['click','update:modelValue', 'deactivate'],
+  setup(props,{emit}){
+    onMounted(()=> {
+      activateItemOrItems()
+      toggleKeys()
+    })
+    onUnmounted(() => {
+      unbindKeys()
+    })
+    const scroller=ref(null)
+    const activeItems =  ref<Item[]>([])
+    const cssProps = computed(()=>{
       return {
-        '--scroller-height': this.scrollerHeight
+        '--scroller-height': props.scrollerHeight
       }
-    },
-    keyField() {
-      return typeof this.items_[0] === 'string' ? null : 'recycle_scroller_id'
-    },
-    items_() {
-      if (typeof this.items[0] === 'string') {
-        return this.items
+    })
+    const keyField = computed(()=>{
+      return typeof items_.value[0] === 'string' ? null : 'recycle_scroller_id'
+    })
+    const items_ = computed(():Item[]=>{
+      if (typeof props.items[0] === 'string') {
+        return props.items
       }
-      return this.items.map((item) => ({ ...item, recycle_scroller_id: `id-${uniqueId()}` }))
-    },
-    firstActiveItemIndex() {
-      return this.activeItems.length ? this.items_.indexOf(this.activeItems[0]) : -1
-    },
-    lastActiveItemIndex() {
-      return this.activeItems.length ? this.items_.indexOf(this.activeItems.slice(-1)) : -1
-    },
-    keysMap() {
-      return {
-        [KEY_UP_CODE]: this.activatePreviousItem,
-        [KEY_DOWN_CODE]: this.activateNextItem,
-        [KEY_ESC_CODE]: this.deactivateItems
-      }
-    }
-  },
-  watch: {
-    hide() {
-      this.toggleKeys()
-    },
-    activeItems() {
+      return props.items.map((item:Item) => ({ ...item, recycle_scroller_id: `id-${uniqueId()}` }))
+    })
+    const firstActiveItemIndex = computed(()=>{
+      return activeItems.value.length ? items_.value.indexOf(activeItems.value[0]) : -1
+    })
+    const lastActiveItemIndex = computed(()=>{
+      return activeItems.value.length ? items_.value.indexOf(activeItems.value.slice(-1)) : -1
+    })
+    const keysMap = computed(():{[key:string]:Function }=>{
+          return {
+            [KEY_UP_CODE]: activatePreviousItem,
+            [KEY_DOWN_CODE]: activateNextItem,
+            [KEY_ESC_CODE]: deactivateItems
+          }
+        }
+    )
+    watch(()=>props.hide,()=> {
+      toggleKeys()
+    })
+    watch(()=>activeItems.value,
+        ()=> {
       /**
        * Fired when the selected value change. It will pass a canonical value
        * or an array of values if the property `multiple` is set to true.
@@ -191,149 +159,199 @@ export default {
        * @event input
        * @type {String, Object, Array, Number}
        */
-      this.$emit('input', this.multiple ? this.activeItems : this.activeItems[0])
-    },
-    value(itemOrItems) {
+      emit('update:modelValue', props.multiple ? activeItems.value : activeItems.value[0])
+    })
+    watch(()=>props.modelValue,
+        (itemOrItems)=>{
       const items = castArray(itemOrItems)
-      if (!isEqual(this.activeItems, items)) {
-        this.activateItemOrItems(items)
+      if (!isEqual(activeItems.value, items)) {
+        activateItemOrItems(items)
+      }
+      },
+        {deep: true})
+    function indexIcon(item:Item){
+      return itemActivated(item) ? faCheckSquare : faSquare
+    }
+    function itemActivated(item:Item) {
+      return findIndex(activeItems.value, (i) => props.eq(item, i)) > -1
+    }
+    function clickToSelectItem(item:Item) {
+      /**
+       * Fired when user click on an item
+       *
+       * @event click
+       * @type {String, Object, Array, Number}
+       */
+      emit('click', item)
+      if (props.multiple) {
+        addItem(item)
+      } else {
+        selectItem(item)
       }
     }
-  },
-  mounted() {
-    this.activateItemOrItems()
-    this.toggleKeys()
-  },
-  destroyed() {
-    this.unbindKeys()
-  },
-  methods: {
-    indexIcon(item) {
-      return this.itemActivated(item) ? faCheckSquare : faSquare
-    },
-    itemActivated(item) {
-      return findIndex(this.activeItems, (i) => this.eq(item, i)) > -1
-    },
-    clickToSelectItem(item) {
+    function clickToAddItem(item:Item) {
       /**
        * Fired when user click on an item
        *
        * @event click
        * @type {String, Object, Array, Number}
        */
-      this.$emit('click', item)
-      if (this.multiple) {
-        this.addItem(item)
-      } else {
-        this.selectItem(item)
-      }
-    },
-    clickToAddItem(item) {
+      emit('click', item)
+      addItem(item)
+    }
+    function clickToSelectRangeToItem(item:Item) {
       /**
        * Fired when user click on an item
        *
        * @event click
        * @type {String, Object, Array, Number}
        */
-      this.$emit('click', item)
-      this.addItem(item)
-    },
-    clickToSelectRangeToItem(item) {
-      /**
-       * Fired when user click on an item
-       *
-       * @event click
-       * @type {String, Object, Array, Number}
-       */
-      this.$emit('click', item)
-      this.selectRangeToItem(item)
-    },
-    emitEventOnItem(name, item) {
-      this.$emit(name, item)
-    },
-    selectItem(item) {
-      if (this.itemActivated(item) && this.activeItems.length === 1) {
-        this.activeItems = filter(this.activeItems, (i) => !this.eq(item, i))
+      emit('click', item)
+      selectRangeToItem(item)
+    }
+    function emitEventOnItem(name:"click" | "update:modelValue" | "deactivate", item:Item) {
+      emit(name, item)
+    }
+    function selectItem(item:Item) {
+      if (itemActivated(item) && activeItems.value.length === 1) {
+        activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))
       } else {
-        this.activeItems = [item]
+        activeItems.value = [item]
       }
-    },
-    addItem(item) {
-      if (this.itemActivated(item)) {
-        this.activeItems = filter(this.activeItems, (i) => !this.eq(item, i))
+    }
+    function addItem(item:Item) {
+      if (itemActivated(item)) {
+        activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))
       } else {
-        this.activeItems.push(item)
+        activeItems.value.push(item)
       }
-    },
-    selectRangeToItem(item) {
+    }
+    function selectRangeToItem(item:Item) {
       // No activated items
-      if (!this.activeItems.length || !this.multiple) {
-        this.selectItem(item)
+      if (!activeItems.value.length || !props.multiple) {
+        selectItem(item)
       } else {
-        const index = this.items_.indexOf(item)
-        if (index > this.firstActiveItemIndex) {
-          this.activeItems = this.items_.slice(this.firstActiveItemIndex, index + 1)
+        const index = items_.value.indexOf(item)
+        if (index > firstActiveItemIndex.value) {
+          activeItems.value = items_.value.slice(firstActiveItemIndex.value, index + 1)
         } else {
-          this.activeItems = this.items_.slice(index, this.firstActiveItemIndex + 1)
+          activeItems.value = items_.value.slice(index, firstActiveItemIndex.value + 1)
         }
       }
-    },
-    activateItemOrItems(itemOrItems = this.value) {
+    }
+    function activateItemOrItems(itemOrItems = props.modelValue) {
       const items = castArray(itemOrItems)
-      this.activeItems = [...items]
-    },
-    activatePreviousItem() {
-      this.activeItems = [this.items_[Math.max(this.firstActiveItemIndex - 1, -1)]]
-    },
-    activateNextItem() {
-      this.activeItems = [this.items_[Math.min(this.firstActiveItemIndex + 1, this.items_.length - 1)]]
-    },
-    deactivateItems() {
-      this.activeItems = []
+      activeItems.value = [...items]
+    }
+    function activatePreviousItem() {
+      activeItems.value = [items_.value[Math.max(firstActiveItemIndex.value - 1, -1)]]
+    }
+    function activateNextItem() {
+      activeItems.value = [items_.value[Math.min(firstActiveItemIndex.value + 1, items_.value.length - 1)]]
+    }
+    function deactivateItems() {
+      activeItems.value = []
       /**
        * Fired when items selection is deactivated
        *
        * @event deactivate
        */
-      this.$emit('deactivate')
-    },
-    keyDown(event) {
+      emit('deactivate')
+    }
+    function keyDown(event:KeyboardEvent) {
       const keyCode = event.keyCode || event.which
       // The dropdown must be active
-      if (this.deactivateKeys || this.hide || !this.isKnownKey(keyCode)) return
+      if (props.deactivateKeys || props.hide || !isKnownKey(keyCode)) return
       // Should we stop the event propagation?
-      if (!this.propagate && event.stopPropagation) {
+      if (!props.propagate && event.stopPropagation) {
         event.stopPropagation()
         event.preventDefault()
       }
       // Then call the right method
-      this.keysMap[keyCode].call(this)
-    },
-    isKnownKey(keycode) {
-      return Object.keys(this.keysMap).map(Number).indexOf(keycode) > -1
-    },
-    unbindKeys() {
-      window.removeEventListener('keydown', this.keyDown)
-    },
-    bindKeys() {
-      window.addEventListener('keydown', this.keyDown)
-    },
-    toggleKeys() {
-      if (this.hide) {
-        this.unbindKeys()
+      keysMap.value[keyCode]()
+    }
+    function isKnownKey(keycode:number) {
+      return Object.keys(keysMap.value).map(Number).indexOf(keycode) > -1
+    }
+    function unbindKeys() {
+      window.removeEventListener('keydown', keyDown)
+    }
+    function bindKeys() {
+      window.addEventListener('keydown', keyDown)
+    }
+    function toggleKeys() {
+      if (props.hide) {
+        unbindKeys()
       } else {
-        this.bindKeys()
+        bindKeys()
       }
     }
+    function itemId(item:Item){
+      return `dropdown-item-${item.recycle_scroller_id ?? item.toLowerCase()}`
+    }
+
+    return {
+      cssProps,
+      items_,
+      keyField,
+      lastActiveItemIndex,
+      itemActivated,
+      clickToSelectItem,
+      clickToAddItem,
+      clickToSelectRangeToItem,
+      indexIcon,
+      scroller,
+      activeItems,
+      itemId
+    }
   }
-}
+})
 </script>
 
+<template>
+  <div
+      v-if="!hide"
+      class="selectable-dropdown show"
+      :class="{ 'selectable-dropdown--multiple': multiple, [listClass]: true }"
+  >
+    <recycle-scroller
+        v-slot="{ item, active }"
+        :style="cssProps"
+        class="scroller"
+        :items="items_"
+        :key-field="keyField"
+        :item-size="itemSize"
+    >
+      <span
+          :id="itemId(item)"
+          :class="{ 'recycle_scroller-item--active': active, active: itemActivated(item), [itemClass]: true }"
+          class="selectable-dropdown__item px-3 d-flex"
+          @click.exact="clickToSelectItem(item)"
+          @click.ctrl="clickToAddItem(item)"
+          @click.shift="clickToSelectRangeToItem(item)"
+      >
+        <!-- @slot Item content -->
+        <slot name="item" :item="item">
+          <div v-if="multiple" class="selectable-dropdown__item__check">
+            <fa :icon="indexIcon(item)" class="mr-2" />
+          </div>
+          <div class="flex-grow-1 text-truncate selectable-dropdown__item__label">
+            <!-- @slot Item's label content -->
+            <slot name="item-label" :item="item">
+              {{ serializer(item) }}
+            </slot>
+          </div>
+        </slot>
+      </span>
+    </recycle-scroller>
+  </div>
+</template>
+
 <style lang="scss">
-@import 'node_modules/vue-virtual-scroller/dist/vue-virtual-scroller.css';
+@import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
 .selectable-dropdown {
-  --scroller-height: 'inherit';
+  --scroller-height: 200px;
   user-select: none;
 
   &.dropdown-menu {

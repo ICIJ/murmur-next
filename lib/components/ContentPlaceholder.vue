@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import {computed, defineComponent, PropType} from 'vue'
 
 import config from '@/config'
 import { formatRows } from '@/utils/placeholder'
@@ -43,10 +43,12 @@ export default defineComponent({
       default: '250%'
     }
   },
-  computed: {
-    formattedRows(): ContentPlaceholderStyledRows {
-      return formatRows(this.rows, 'content-placeholder__wrapper__row__box')
-    }
+  setup(props){
+    const formattedRows = computed(():ContentPlaceholderStyledRows=>{
+      return props.rows ? formatRows(props.rows, 'content-placeholder__wrapper__row__box'):[]
+
+    })
+    return {formattedRows}
   }
 })
 </script>

@@ -40,10 +40,10 @@ describe('SharingOptionsLink', () => {
     expect(wrapper.element.tagName).toBe('BUTTON')
   })
 
-  it('should raise a console.error for an invalid prop', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => null)
-    mount(SharingOptionsLink, { network: 'foo' })
-    expect(spy).toBeCalledWith(expect.stringContaining('[Vue warn]: Missing required prop: "network"'))
+  it('should validate prop against platforms names', () => {
+    const validator = SharingOptionsLink.props.network.validator
+    expect(validator('foo')).toBe(false)
+    expect(validator('email')).toBe(true)
   })
 
   it('should give a different `base` for Twitter', () => {
@@ -122,13 +122,13 @@ describe('SharingOptionsLink', () => {
     expect(wrapper.vm.args).toHaveProperty('hashtag')
   })
 
-  it('should create open a popup when clicking on the component', () => {
+  it('should create open a popup when clicking on the component', async () => {
     const propsData = { network: 'twitter', title: 'Foo' }
     const wrapper = mount(SharingOptionsLink, { propsData })
     // Create two spies that must be called when clicking
     const spyOpenPopup = vi.spyOn(wrapper.vm, 'openPopup').mockImplementation(() => null)
     const spyCleanExistingPopup = vi.spyOn(wrapper.vm, 'cleanExistingPopupInstance').mockImplementation(() => null)
-    wrapper.trigger('click')
+    await wrapper.trigger('click')
     expect(spyOpenPopup).toBeCalled()
     expect(spyCleanExistingPopup).toBeCalled()
   })
@@ -155,12 +155,12 @@ describe('SharingOptionsLink', () => {
     expect($popup.instance.close).toBeCalled()
   })
 
-  it('should open a popup wgen clicking on the component', () => {
+  it('should open a popup wgen clicking on the component', async () => {
     // Return a fake popup instance
     $popup.parent = mockPopupParent()
     const wrapper = mount(SharingOptionsLink, { propsData })
     expect($popup.parent.open).not.toBeCalled()
-    wrapper.trigger('click')
+    await wrapper.trigger('click')
     expect($popup.parent.open).toBeCalled()
   })
 

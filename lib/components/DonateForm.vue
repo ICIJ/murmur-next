@@ -1,12 +1,12 @@
 <template>
   <div class="donate-form container-fluid py-2">
     <h2 v-if="!noTitle" class="donate-form__title text-uppercase font-weight-bold text-primary h5">
-      {{ $t('donate-form.support') }}
+      {{ t('donate-form.support') }}
     </h2>
     <!-- @slot Description of the form (bellow the title). -->
     <slot name="introduction">
       <!-- eslint-disable vue/no-v-html -->
-      <p class="donate-form__introduction" v-html="$t('donate-form.introduction')" />
+      <p class="donate-form__introduction" v-html="t('donate-form.introduction')" />
       <!-- eslint-enable -->
     </slot>
 
@@ -24,14 +24,14 @@
             @click="selectLevel('conversation')"
           >
             <h3 class="donate-form__payment__heading text-uppercase font-weight-bold text-primary h5">
-              {{ $t('donate-form.benefits.impacts.conversation.heading') }}
+              {{ t('donate-form.benefits.impacts.conversation.heading') }}
             </h3>
             <div class="Article">
               <div>
                 <!-- eslint-disable vue/no-v-html -->
                 <p
                   class="donate-form__payment__highlight text-icij font-weight-bold"
-                  v-html="$t('donate-form.benefits.impacts.conversation.highlight')"
+                  v-html="t('donate-form.benefits.impacts.conversation.highlight')"
                 />
                 <!-- eslint-enable -->
               </div>
@@ -43,14 +43,14 @@
             @click="selectLevel('rules')"
           >
             <h3 class="donate-form__payment__heading text-uppercase font-weight-bold text-primary h5">
-              {{ $t('donate-form.benefits.impacts.rules.heading') }}
+              {{ t('donate-form.benefits.impacts.rules.heading') }}
             </h3>
             <div class="Article">
               <div>
                 <!-- eslint-disable vue/no-v-html -->
                 <p
                   class="donate-form__payment__highlight text-icij font-weight-bold"
-                  v-html="$t('donate-form.benefits.impacts.rules.highlight')"
+                  v-html="t('donate-form.benefits.impacts.rules.highlight')"
                 />
                 <!-- eslint-enable -->
               </div>
@@ -62,14 +62,14 @@
             @click="selectLevel('world')"
           >
             <h3 class="donate-form__payment__heading text-uppercase font-weight-bold text-primary h5">
-              {{ $t('donate-form.benefits.impacts.world.heading') }}
+              {{ t('donate-form.benefits.impacts.world.heading') }}
             </h3>
             <div class="Article">
               <div>
                 <!-- eslint-disable vue/no-v-html -->
                 <p
                   class="donate-form__payment__highlight text-icij font-weight-bold"
-                  v-html="$t('donate-form.benefits.impacts.world.highlight')"
+                  v-html="t('donate-form.benefits.impacts.world.highlight')"
                 />
                 <!-- eslint-enable -->
               </div>
@@ -82,32 +82,32 @@
             <span class="donate-form__payment__buttons">
               <button
                 type="button"
-                class="btn btn-sm"
+                class="btn btn-sm frequency-monthly"
                 :class="{ 'btn-primary': installmentPeriod === 'monthly' }"
                 @click="installmentPeriod = 'monthly'"
               >
-                {{ $t('donate-form.frequency.monthly') }}
+                {{ t('donate-form.frequency.monthly') }}
               </button>
               <button
                 type="button"
-                class="btn btn-sm"
+                class="btn btn-sm frequency-yearly"
                 :class="{ 'btn-primary': installmentPeriod === 'yearly' }"
                 @click="installmentPeriod = 'yearly'"
               >
-                {{ $t('donate-form.frequency.yearly') }}
+                {{ t('donate-form.frequency.yearly') }}
               </button>
               <button
                 type="button"
-                class="btn btn-sm"
+                class="btn btn-sm frequency-onetime"
                 :class="{ 'btn-primary': installmentPeriod === null }"
-                @click="installmentPeriod = null"
+                @click="installmentPeriod = 'onetime'"
               >
-                {{ $t('donate-form.frequency.onetime') }}
+                {{ t('donate-form.frequency.onetime') }}
               </button>
             </span>
           </div>
           <div class="mt-4">
-            <span>{{ $t('donate-form.label') }}&nbsp;</span>
+            <span>{{ t('donate-form.label') }}&nbsp;</span>
             <label class="donate-form__payment__unit input-group input-group-sm d-inline-flex">
               <span class="input-group-prepend">
                 <span class="input-group-text">$</span>
@@ -118,7 +118,7 @@
                 name="amount"
                 type="number"
                 min="0"
-                @change="amountIsPristine = false"
+                @change="amountIsNotPristine"
               />
             </label>
           </div>
@@ -127,7 +127,7 @@
             <input v-model="campaign" name="campaign" type="hidden" />
             <input v-model="installmentPeriod" name="installmentPeriod" type="hidden" />
             <button type="submit" class="btn btn-primary rounded-pill text-uppercase font-weight-bold">
-              {{ $t('donate-form.submit') }}
+              {{ t('donate-form.submit') }}
             </button>
             <a target="_blank" href="https://icij.org/donate" class="donate-form__payment__image" />
           </div>
@@ -137,15 +137,15 @@
 
     <div class="donate-form__insider">
       <h2 class="donate-form__insider__title">
-        {{ $t('donate-form.benefits.heading') }}
+        {{ t('donate-form.benefits.heading') }}
       </h2>
       <p>
-        {{ $t('donate-form.benefits.introduction') }}
+        {{ t('donate-form.benefits.introduction') }}
       </p>
       <div>
         <ul class="donate-form__insider__list">
           <li
-            v-for="(benefit, index) in $t('donate-form.benefits.list')"
+            v-for="(benefit, index) in listBenefits"
             :key="index"
             class="donate-form__insider__list-item"
             v-html="benefit"
@@ -160,7 +160,7 @@
             href="https://icij.org/donate"
             class="btn btn-primary rounded-pill text-uppercase font-weight-bold py-2"
           >
-            {{ $t('donate-form.benefits.more') }}
+            {{ t('donate-form.benefits.more') }}
           </a>
         </div>
       </div>
@@ -175,15 +175,15 @@ import sortBy from 'lodash/sortBy'
 import forEach from 'lodash/forEach'
 
 import config from '../config'
+import {useI18n} from "vue-i18n";
+import {computed, ref, watch} from "vue";
 
-import i18n from '@/i18n'
 
 /**
- * A form to encourage donations. We usualy put this form inside a modal
+ * A form to encourage donations. We usually put this form inside a modal
  */
 export default {
-  i18n,
-  name: 'DonateForm',
+name: 'DonateForm',
   props: {
     /**
      * Title of the form.
@@ -192,83 +192,102 @@ export default {
       type: Boolean
     }
   },
-  data() {
-    return {
-      amount: 10,
-      // True if the amount wasn't changed by the user yet
-      amountIsPristine: true,
-      installmentPeriod: 'monthly',
-      level: 'conversation',
-      campaign: config.get('donate-form.tracker'),
-      labelForChange: {
-        monthly: {
-          1: this.$t('donate-form.result.conversation'),
-          15: this.$t('donate-form.result.rules'),
-          50: this.$t('donate-form.result.world')
-        },
-        yearly: {
-          1: this.$t('donate-form.result.conversation'),
-          180: this.$t('donate-form.result.rules'),
-          600: this.$t('donate-form.result.world')
-        }
+  setup(props, {emit}){
+    const {t, locale, messages} = useI18n()
+    const amount = ref(10)
+    // True if the amount wasn't changed by the user yet
+    const amountIsPristine = ref(true)
+    const installmentPeriod = ref('monthly')
+    const level = ref('conversation')
+    const campaign = ref(config.get('donate-form.tracker'))
+    const labelForChange = ref({
+      monthly: {
+        1: t('donate-form.result.conversation'),
+        15: t('donate-form.result.rules'),
+        50: t('donate-form.result.world')
       },
-      suggestedAmount: this.$t('donate-form.suggesteddonation')
-    }
-  },
-  computed: {
-    firstRange() {
-      const key = keys(this.ranges)[0]
-      return this.ranges[key]
-    },
-    ranges() {
-      return this.labelForChange[this.installmentPeriod || 'yearly']
-    },
-    changeThe() {
-      // Final label
-      let label = null
-      forEach(sortBy(map(keys(this.ranges), Number)), (amount) => {
-        label = this.amount >= amount ? this.ranges[amount] : label
-      })
-      return label
-    }
-  },
-  watch: {
-    installmentPeriod() {
-      if (!this.amountIsPristine) {
+      yearly: {
+        1: t('donate-form.result.conversation'),
+        180: t('donate-form.result.rules'),
+        600: t('donate-form.result.world')
+      }
+    })
+
+    const suggestedAmount = ref(messages.value[locale.value]['donate-form']["suggesteddonation"])
+    const listBenefits = ref(messages.value[locale.value]['donate-form']["benefits"]["list"])
+    const ranges = computed(()=> {
+      if(installmentPeriod.value==='onetime'){
+        return labelForChange.value['yearly']
+      }
+      return labelForChange.value[installmentPeriod.value]
+    })
+    const firstRange = computed(()=> {
+      const key = keys(ranges.value)[0]
+      return ranges.value[key]
+    })
+    const changeThe = computed(()=> {
+          // Final label
+          let label = null
+          forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
+            label = amount.value >= amountV ? ranges.value[amountV] : label
+          })
+          return label
+        }
+
+    )
+    watch(installmentPeriod,() => {
+      if (!amountIsPristine.value) {
         return
       }
 
       // Set suggested amount
-      this.amount = this.getSuggestedAmount()
-    },
-    amount(v) {
-      this.level = this.changeThe
+      amount.value = getSuggestedAmount()
+    })
+    watch(()=>amount.value,(v) => {
+          level.value = changeThe.value
 
-      // Set manual amount
-      return (this.amount = v)
-    }
-  },
-  methods: {
-    getSuggestedAmount() {
-      if (!this.amountIsPristine) {
+          // Set manual amount
+          return (amount.value = v)
+        }
+    )
+    function getSuggestedAmount() {
+      if (!amountIsPristine.value) {
         return
       }
 
-      if (!this.level) {
-        this.level = this.firstRange
+      if (!level.value) {
+        level.value = firstRange.value
       }
 
       // Return suggested amount
-      return this.suggestedAmount[this.level][this.installmentPeriod]
-    },
-    selectLevel(level) {
+      return suggestedAmount.value[level.value][installmentPeriod.value]
+    }
+    function selectLevel(levelSelected) {
       // Set chose level
-      this.level = level
+      level.value = levelSelected
 
       // Set suggested amount
-      this.amount = this.getSuggestedAmount()
+      amount.value = getSuggestedAmount()
     }
-  }
+    function amountIsNotPristine(){
+      amountIsPristine.value = false
+    }
+
+    return {
+      t,
+      amount,
+      level,
+      campaign,
+      labelForChange,
+      installmentPeriod,
+      changeThe,
+      listBenefits,
+      selectLevel,
+      amountIsNotPristine
+    }
+
+  },
+
 }
 </script>
 

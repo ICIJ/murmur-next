@@ -1,16 +1,16 @@
 <template>
   <div class="sharing-options" :style="style">
-    <sharing-options-link network="facebook" class="sharing-options__link" v-bind="valuesFor('facebook')" />
-    <sharing-options-link network="twitter" class="sharing-options__link" v-bind="valuesFor('twitter')" />
-    <sharing-options-link network="linkedin" class="sharing-options__link" v-bind="valuesFor('linkedin')" />
-    <sharing-options-link network="email" class="sharing-options__link" v-bind="valuesFor('email')" />
+    <sharing-options-link v-bind="valuesFor('facebook')" network="facebook" class="sharing-options__link"  />
+    <sharing-options-link v-bind="valuesFor('twitter')" network="twitter" class="sharing-options__link"  />
+    <sharing-options-link v-bind="valuesFor('linkedin')" network="linkedin" class="sharing-options__link"  />
+    <sharing-options-link v-bind="valuesFor('email')" network="email" class="sharing-options__link"  />
     <div v-show="!noEmbed" class="sharing-options__link sharing-options__link--embed">
-      <a @click="showEmbedForm">
+      <a @click="show">
         <fa icon="code" />
         <span class="sr-only">Embed</span>
       </a>
     </div>
-    <b-modal ref="embedForm" hide-footer title="Embed on your website" class="text-dark">
+    <b-modal ref="embedForm" id="embedForm" hide-footer title="Embed on your website" class="text-dark">
       <embed-form
         no-title
         no-preview
@@ -20,23 +20,23 @@
       />
     </b-modal>
   </div>
+
+
 </template>
 
 <script lang="ts">
-import { BModal } from 'bootstrap-vue/esm/components/modal/modal'
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
 import { faCode } from '@fortawesome/free-solid-svg-icons/faCode'
-import { defineComponent, PropType } from 'vue'
-import type { CSSProperties } from 'vue/types/jsx'
+import { defineComponent, PropType, CSSProperties,computed, onBeforeMount, ref } from 'vue'
 
 import { default as Fa, library } from './Fa'
 
-import i18n from '@/i18n'
 import EmbedForm from '@/components/EmbedForm.vue'
 import SharingOptionsLink from '@/components/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'
+import {BModal, useModal} from "bootstrap-vue-next";
 
 type MetaValuesMap = {
   url: string
@@ -53,8 +53,7 @@ type MetaValuesMap = {
  * SharingOptions
  */
 export default defineComponent({
-  i18n,
-  name: 'SharingOptions',
+name: 'SharingOptions',
   components: {
     BModal,
     EmbedForm,
@@ -128,51 +127,57 @@ export default defineComponent({
       type: Boolean
     }
   },
-  computed: {
-    style(): CSSProperties {
+  setup(props){
+
+    onBeforeMount(()=> {
+      library.add(faCode)
+    })
+
+    const embedForm = ref(null)
+    const {show } = useModal("embedForm")
+    const style = computed((): CSSProperties=> {
+          return {
+            'flex-direction': props.direction
+          } as CSSProperties
+    })
+
+    const metaValues = computed((): MetaValuesMap=> {
       return {
-        'flex-direction': this.direction
-      } as CSSProperties
-    },
-    metaValues(): MetaValuesMap {
-      return {
-        url: this.url,
-        title: this.defaultValueFor('sharing-options.title'),
-        description: this.defaultValueFor('sharing-options.description', 'meta[name="description]'),
-        facebook_title: this.defaultValueFor('sharing-options.facebook_title', 'meta[property="og:title"]'),
-        facebook_description: this.defaultValueFor('sharing-options.description', 'meta[property="og:description"]'),
-        facebook_media: this.defaultValueFor('sharing-options.media', 'meta[property="og:image"]'),
-        twitter_media: this.defaultValueFor('sharing-options.media', 'meta[name="twitter:image"]'),
-        twitter_user: this.defaultValueFor('sharing-options.twitter-user', 'meta[name="twitter:site"]')
+        url: props.url ?? "",
+        title: defaultValueFor('sharing-options.title'),
+        description: defaultValueFor('sharing-options.description', 'meta[name="description]'),
+        facebook_title: defaultValueFor('sharing-options.facebook_title', 'meta[property="og:title"]'),
+        facebook_description: defaultValueFor('sharing-options.description', 'meta[property="og:description"]'),
+        facebook_media: defaultValueFor('sharing-options.media', 'meta[property="og:image"]'),
+        twitter_media: defaultValueFor('sharing-options.media', 'meta[name="twitter:image"]'),
+        twitter_user: defaultValueFor('sharing-options.twitter-user', 'meta[name="twitter:site"]')
       }
-    }
-  },
-  beforeMount() {
-    library.add(faCode)
-  },
-  methods: {
-    showEmbedForm(): boolean {
-      // @ts-ignore
-      return this.$refs.embedForm?.show() ?? false
-    },
-    valuesFor(network: string): { [key: string]: string } {
-      const values = Object.assign(this.metaValues, this.values)
+    })
+    function valuesFor(network: string): { [key: string]: string } {
+      const values = Object.assign(metaValues.value, props.values)
       return reduce(
-        this.valuesKeys,
-        (res: { [name: string]: string }, key) => {
-          res[key] = get(values, `${network}_${key}`, values[key])
-          return res
-        },
-        {}
+          props.valuesKeys,
+          (res: { [name: string]: string }, key) => {
+            res[key] = get(values, `${network}_${key}`, values[key])
+            return res
+          },
+          {}
       )
-    },
-    defaultValueFor(key: string, metaSelector?: string): string {
-      if (this.noMeta || !metaSelector) {
+    }
+    function defaultValueFor(key: string, metaSelector?: string): string {
+      if (props.noMeta || !metaSelector) {
         return config.get(key)
       }
       return get(document.head.querySelector(metaSelector), 'content', config.get(key))
     }
-  }
+    return {
+      style,
+      show,
+      embedForm,
+      valuesFor
+    }
+
+  },
 })
 </script>
 

@@ -7,7 +7,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter'
 import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin'
-import { CreateElement, defineComponent, PropType, VNode, VNodeChildren } from 'vue'
+import { h, defineComponent, PropType, VNode} from 'vue'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 import Fa from './Fa'
@@ -218,7 +218,7 @@ export default defineComponent({
       this.cleanExistingPopupInstance()
       this.openPopup()
     },
-    renderIcon(h: CreateElement): void | VNode | null {
+    renderIcon(): void | VNode | null {
       if (!this.noIcon) {
         return h('fa', { props: { icon: this.icon } })
       }
@@ -248,12 +248,12 @@ export default defineComponent({
       return this.network !== 'email'
     }
   },
-  render(h: CreateElement): void | VNode | null {
+  render(): void | VNode | null {
     const click = this.hasPopup() ? preventDefault(this.click) : noop
     const href = this.href
     const children =
-      this.$slots.default || ([this.renderIcon(h), h('span', { class: 'sr-only' }, this.name)] as VNodeChildren)
-    return h(this.tag, { attrs: { href }, on: { click } }, children)
+      this.$slots.default || ([this.renderIcon(h), h('span', { class: 'sr-only' }, this.name)])
+    return h(this.tag, { attrs: { href },  onClick: click  }, children)
   }
 })
 </script>

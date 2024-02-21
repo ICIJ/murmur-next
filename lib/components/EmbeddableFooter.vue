@@ -2,15 +2,12 @@
   <div class="embeddable-footer p-2 text-nowrap">
     <a :href="homeUrl" target="_blank" class="text-white embeddable-footer__brand">
       <brand :size="40" no-border class="mr-2" color="white" />
-      <!-- @slot Slot to redefine title display -->
-      <slot name="title">
-        <span v-html="title"></span>
-      </slot>
+      {{ title }}
     </a>
     <div class="embeddable-footer__lead small text-truncate">
       <!-- @slot Main slot to redefine lead text display -->
       <slot :lead="lead">
-        <span v-html="lead"></span>
+        {{ lead }}
       </slot>
     </div>
     <!-- @slot Overide the sharing button -->
@@ -40,7 +37,6 @@ import { defineComponent } from 'vue'
 
 import { library, default as Fa } from './Fa'
 
-import i18n from '@/i18n'
 import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand.vue'
 import SharingOptions from '@/components/SharingOptions.vue'
@@ -53,8 +49,7 @@ type EmbeddableFooterData = {
  * EmbeddableFooter
  */
 export default defineComponent({
-  i18n,
-  name: 'EmbeddableFooter',
+name: 'EmbeddableFooter',
   components: {
     Fa,
     SharingOptions,

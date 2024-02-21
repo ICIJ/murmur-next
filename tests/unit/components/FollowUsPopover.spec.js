@@ -18,12 +18,12 @@ describe('FollowUsPopover.vue', () => {
     expect(wrapper.find('.follow-us__close').exists()).toBeTruthy()
   })
 
-  it('emits an event when clicking on close button', () => {
+  it('emits an event when clicking on close button', async () => {
     const wrapper = shallowMount(FollowUsPopover)
     const btn = wrapper.find('.follow-us__close')
-    expect(wrapper.emitted()['update:show']).toBeFalsy()
-    btn.trigger('click')
-    expect(wrapper.emitted()['update:show']).toBeTruthy()
+    expect(wrapper.emitted('update:show')).toBeFalsy()
+    await btn.trigger('click')
+    expect(wrapper.emitted('update:show')).toBeTruthy()
   })
 
 })

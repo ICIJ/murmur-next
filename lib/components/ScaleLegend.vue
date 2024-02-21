@@ -1,8 +1,8 @@
 <script lang="ts">
-import { isFunction, isString } from 'lodash'
+import {isFunction, isString} from 'lodash'
 import * as d3 from 'd3'
 import * as scaleFunctions from 'd3-scale'
-import { defineComponent, PropType } from 'vue'
+import {defineComponent, PropType, ref, computed, onMounted, watch, nextTick} from 'vue'
 
 type ClassListLegend = { 'scale-legend--has-cursor': boolean }
 // eslint-disable-next-line no-unused-vars
@@ -14,9 +14,6 @@ type WidthScaleFn = (x: number) => string
 
 export default defineComponent({
   name: 'ScaleLegend',
-  filters: {
-    formatNumber: d3.format(',')
-  },
   props: {
     width: {
       type: Number,
@@ -57,116 +54,132 @@ export default defineComponent({
       default: '#fff'
     }
   },
-  data() {
-    return {
-      cursorWrapperOffset: 0,
-      mounted: false
-    }
-  },
-  computed: {
-    classList(): ClassListLegend {
+  setup(props) {
+    const cursorWrapperOffset = ref(0)
+    const mounted = ref(false)
+    const el = ref<Element | null>(null)
+    const classList = computed((): ClassListLegend => {
       return {
-        'scale-legend--has-cursor': this.hasCursor
+        'scale-legend--has-cursor': hasCursor.value
       }
-    },
-    cursorLeft(): string {
-      const left = this.cursorLeftScale(this.cursorValue)
+    })
+
+    onMounted(async () => {
+      await nextTick()
+      setCursorWrapperOffset()
+      setColorScaleCanvas()
+      mounted.value = true
+    })
+    const cursorLeft = computed((): string => {
+      const left = cursorLeftScale.value(props.cursorValue)
       return isNaN(left) ? '0%' : `${left}%`
-    },
-    colorScaleBaseCanvas(): HTMLCanvasElement | null {
-      return d3.create('canvas').attr('width', this.width).attr('height', this.height).node()
-    },
-    colorScaleContext(): CanvasRenderingContext2D | null {
-      return this.colorScaleBaseCanvas?.getContext('2d') ?? null
-    },
-    colorScaleBase64(): string | null {
-      if (this.mounted) {
-        return this.colorScaleBaseCanvas?.toDataURL() ?? null
+    })
+    const colorScaleBaseCanvas = computed((): HTMLCanvasElement | null => {
+      return d3.create('canvas').attr('width', props.width).attr('height', props.height).node()
+    })
+    const colorScaleContext = computed((): CanvasRenderingContext2D | null => {
+      return colorScaleBaseCanvas.value?.getContext('2d') ?? null
+    })
+    const colorScaleBase64 = computed((): string | undefined => {
+      if (mounted.value) {
+        return colorScaleBaseCanvas.value?.toDataURL() ?? undefined
       }
-      return null
-    },
-    colorScaleWidthRange(): number[] {
-      return d3.range(1, this.width + 1)
-    },
-    hasCursor(): boolean {
-      return this.cursorValue != null // double equal also tests undefined
-    },
-    colorScaleFunction(): ColorScaleFn {
-      if (isString(this.colorScale)) {
+      return undefined
+    })
+    const colorScaleWidthRange = computed((): number[] => {
+      return d3.range(1, props.width + 1)
+    })
+    const hasCursor = computed((): boolean => {
+      return props.cursorValue != null // double equal also tests undefined
+    })
+    const colorScaleFunction = computed((): ColorScaleFn => {
+      if (isString(props.colorScale)) {
         // @ts-ignore
-        const fn: () => any = scaleFunctions[this.colorScale]
-        return fn().domain([this.min, this.max]).range([this.colorScaleStart, this.colorScaleEnd])
+        const fn: () => any = scaleFunctions[props.colorScale]
+        return fn().domain([props.min, props.max]).range([props.colorScaleStart, props.colorScaleEnd])
       }
-      return this.colorScale
-    },
-    cursorLeftScale(): d3.ScaleLinear<number, number> {
-      return d3.scaleLinear().domain([this.min, this.max]).range([0, 100]).interpolate(d3.interpolateRound)
-    },
-    widthScaleColor(): WidthScaleFn {
+      return props.colorScale
+    })
+    const cursorLeftScale = computed((): d3.ScaleLinear<number, number> => {
+      return d3.scaleLinear().domain([props.min, props.max]).range([0, 100]).interpolate(d3.interpolateRound)
+    })
+    const widthScaleColor = computed((): WidthScaleFn => {
       return (x: number) => {
-        const value = this.widthScale(x)
-        return this.colorScaleFunction(value)
+        const value = widthScale.value(x)
+        return colorScaleFunction.value(value)
       }
-    },
-    widthScale(): d3.ScaleLinear<number, number> {
-      return d3.scaleLinear().domain([0, this.width]).range([this.min, this.max])
-    }
-  },
-  watch: {
-    async cursorValue() {
-      await this.$nextTick()
-      this.setCursorWrapperOffset()
-    }
-  },
-  async mounted() {
-    await this.$nextTick()
-    this.setCursorWrapperOffset()
-    this.setColorScaleCanvas()
-    this.mounted = true
-  },
-  methods: {
-    setCursorWrapperOffset(): void {
-      const cursor = this.$el.querySelector('.scale-legend__cursor')
-      if (cursor) {
-        const { x: cursorX, width: cursorWidth } = cursor.getBoundingClientRect()
-        const { x: legendX, width: legendWidth } = this.$el.getBoundingClientRect()
+    })
+    const widthScale = computed((): d3.ScaleLinear<number, number> => {
+      return d3.scaleLinear().domain([0, props.width]).range([props.min, props.max])
+    })
+
+    const formatNumber = d3.format(',')
+
+    function setCursorWrapperOffset(): void {
+      const cursor = el.value?.querySelector('.scale-legend__cursor')
+      if (cursor && el.value) {
+        const {x: cursorX, width: cursorWidth} = cursor.getBoundingClientRect()
+        const {x: legendX, width: legendWidth} = el.value.getBoundingClientRect()
         const left = legendX - cursorX - 6
         const right = legendX + legendWidth - (cursorX + cursorWidth) + 6
-        this.cursorWrapperOffset = Math.max(0, left) || Math.min(0, right)
+        cursorWrapperOffset.value = Math.max(0, left) || Math.min(0, right)
       } else {
-        this.cursorWrapperOffset = 0
+        cursorWrapperOffset.value = 0
       }
-    },
-    setColorScaleCanvas(): void {
-      if (!this.colorScaleContext) {
+    }
+
+    function setColorScaleCanvas(): void {
+      if (!colorScaleContext.value) {
         return
       }
-      for (const x of this.colorScaleWidthRange) {
-        this.colorScaleContext.fillStyle = this.widthScaleColor(x)
-        this.colorScaleContext.fillRect(x, 0, 1, this.height)
+      for (const x of colorScaleWidthRange.value) {
+        colorScaleContext.value.fillStyle = widthScaleColor.value(x)
+        colorScaleContext.value.fillRect(x, 0, 1, props.height)
       }
+    }
+
+    watch(
+        () => {
+          props.cursorValue
+        },
+        async () => {
+          await nextTick()
+          setCursorWrapperOffset()
+        })
+
+    return {
+      classList,
+      colorScaleBase64,
+      cursorLeft,
+      cursorWrapperOffset,
+      formatNumber,
+      hasCursor,
+      //CD: function below are only uses in unit tests. use callable?
+      widthScale,
+      colorScaleFunction,
+      widthScaleColor,
     }
   }
 })
 </script>
 
 <template>
-  <div :class="classList" class="scale-legend">
+  <div ref="el" :class="classList" class="scale-legend">
     <div class="scale-legend__bound scale-legend__bound--min">
       <slot name="legend-cursor-min" v-bind="{ min }">
-        {{ min | formatNumber }}
+        {{ formatNumber(min) }}
       </slot>
     </div>
-    <img :height="height" :src="colorScaleBase64" :width="width" class="scale-legend__scale" />
+    <img :height="height" :src="colorScaleBase64" :width="width" class="scale-legend__scale" alt="legend scale"/>
     <div class="scale-legend__bound scale-legend__bound--max">
       <slot name="legend-cursor-max" v-bind="{ max }">
-        {{ max | formatNumber }}
+        {{ formatNumber(max) }}
       </slot>
     </div>
     <div v-if="hasCursor" :style="{ left: cursorLeft }" class="scale-legend__cursor">
       <div :style="{ transform: `translateX(${cursorWrapperOffset}px)` }" class="scale-legend__cursor__wrapper">
         <slot name="cursor" v-bind="{ value: cursorValue }">
-          {{ cursorValue | formatNumber }}
+          {{ formatNumber(cursorValue) }}
         </slot>
       </div>
     </div>

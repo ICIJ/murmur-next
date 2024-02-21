@@ -1,8 +1,8 @@
 <template>
-  <button class="btn haptic-copy" @click.stop="copy" @mouseleave="closeTooltip">
+  <button ref="el" class="btn haptic-copy" @click.stop="copy" @mouseleave="closeTooltip">
     <!-- @slot Main content of the button (including the icon) -->
     <slot>
-      <font-awesome-layers functional>
+      <font-awesome-layers>
         <transition name="spin">
           <fa v-if="!tooltipTimeout" icon="clipboard" class="haptic-copy__icon" />
         </transition>
@@ -11,15 +11,15 @@
         </transition>
       </font-awesome-layers>
       <span :class="{ 'sr-only': hideLabel }" class="ml-1 haptic-copy__label">
-        {{ label || $t('haptic-copy.label') }}
+        {{ label || t('haptic-copy.label') }}
       </span>
     </slot>
     <b-tooltip
-      v-if="!noTooltip && mounted && $el"
+      v-if="!noTooltip && el"
       ref="tooltip"
       noninteractive
       :placement="tooltipPlacement"
-      :target="() => $el"
+      :target="() : HTMLElement => el"
       :triggers="[]"
       :container="tooltipContainer"
     >
@@ -32,30 +32,16 @@
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardCheck'
-import { BTooltip } from 'bootstrap-vue/esm/components/tooltip/tooltip'
+import { BTooltip } from 'bootstrap-vue-next'
+
 import noop from 'lodash/noop'
-import Vue, { defineComponent } from 'vue'
-import { TranslateResult } from 'vue-i18n'
+import {ComponentPublicInstance, computed, defineComponent, onBeforeMount,  nextTick, ref, PropType} from 'vue'
+import {TranslateResult, useI18n} from 'vue-i18n'
 
 import { default as Fa, library } from './Fa'
 
-import i18n from '@/i18n'
 import { copyHtml, copyText } from '@/utils/clipboard'
-
-const TOOLTIPS_PLACEMENTS = [
-  'top',
-  'topleft',
-  'topright',
-  'right',
-  'righttop',
-  'rightbottom',
-  'bottom',
-  'bottomleft',
-  'bottomright',
-  'left',
-  'lefttop',
-  'leftbottom'
-]
+import { PopoverPlacement } from 'bootstrap-vue-next'
 
 type HapticCopyData = {
   mounted: boolean
@@ -63,12 +49,10 @@ type HapticCopyData = {
   tooltipContent: TranslateResult | string
   tooltipTimeout: ReturnType<typeof setTimeout> | undefined
 }
-
 export default defineComponent({
-  i18n,
   name: 'HapticCopy',
   components: {
-    BTooltip,
+    // BTooltip,
     FontAwesomeLayers,
     Fa
   },
@@ -113,9 +97,8 @@ export default defineComponent({
      * and leftbottom.
      */
     tooltipPlacement: {
-      type: String,
-      default: 'top',
-      validator: (placement: string) => TOOLTIPS_PLACEMENTS.includes(placement)
+      type: String as PropType<PopoverPlacement>,
+      default: 'top'
     },
     /**
      * Copy HTML content
@@ -130,95 +113,102 @@ export default defineComponent({
       type: Boolean
     }
   },
-  data(): HapticCopyData {
-    return {
-      mounted: false,
-      succeed: false,
-      tooltipContent: '',
-      tooltipTimeout: undefined
-    }
-  },
-  computed: {
-    tooltipContainer(): string | null {
+  emits:['attempt','success', 'error'],
+  setup(props, {emit}){
+    const {t,te} = useI18n()
+    const tooltip = ref<ComponentPublicInstance|null>(null)
+    const el = ref<ComponentPublicInstance<HTMLElement>|null>(null)
+    const tooltipContent = ref('')
+    const tooltipTimeout = ref<NodeJS.Timeout|undefined>(undefined)
+
+    onBeforeMount(()=>{
+        library.add(faClipboard)
+        library.add(faClipboardCheck)
+    })
+    const tooltipContainer = computed((): string | undefined =>{
       // By default we append the tooltip in the root container using its
       // id (if any) because BootstrapVue doesn't like HTMLElement for some
       // reasons.
-      if (this.mounted && 'id' in this.$root.$el) {
-        return `#${this.$root.$el.id}`
-      }
-      return null
+      return el.value?.id.length ? `#${el.value.id}` : undefined
+    })
+    function copyTextToClipboard(): Promise<void> {
+      return el.value? copyText(props.text, el.value) : Promise.resolve()
     }
-  },
-  beforeMount() {
-    library.add(faClipboard)
-    library.add(faClipboardCheck)
-  },
-  mounted() {
-    this.$nextTick(() => (this.mounted = true))
-  },
-  methods: {
-    copyTextOrHtml() {
-      return this.html ? this.copyHtml() : this.copyText()
-    },
-    copyText(): Promise<void> {
-      return copyText(this.text, this.$el)
-    },
-    copyHtml(): void {
-      return copyHtml(this.text, this.plain || this.text)
-    },
-    async copy(): Promise<void> {
+    function copyHtmlToClipboard(): void {
+      return copyHtml(props.text, props.plain || props.text)
+    }
+
+    function copyTextOrHtml() {
+      return props.html ? copyHtmlToClipboard() : copyTextToClipboard()
+    }
+
+
+    async function copy(): Promise<void> {
       try {
         /**
          * Emitted when an attempt to copy text is made
          *
          * @event attempt
          */
-        this.$emit('attempt')
+        emit('attempt')
         // Use clipboard.js internally
-        await this.copyTextOrHtml()
+        await copyTextOrHtml()
         // Then option the tooltip in case of success
-        await this.openTooltip('haptic-copy.tooltip.succeed')
+        await openTooltip('haptic-copy.tooltip.succeed')
         /**
          * Emitted when the text has been copied successfully
          *
          * @event success
          */
-        this.$emit('success')
+        emit('success')
       } catch (error) {
-        await this.openTooltip('haptic-copy.tooltip.failed')
+        await openTooltip('haptic-copy.tooltip.failed')
         /**
          * Emitted when the text couldn't be copied
          *
          * @event error
          */
-        this.$emit('error', error)
+        emit('error', error)
       }
       // And close the tooltip after a short delay
-      this.nextTimeout(this.closeTooltip, this.tooltipHideDelay)
-    },
-    async openTooltip(msg = 'haptic-copy.tooltip.succeed') {
-      this.tooltipContent = this.$te(msg) ? this.$t(msg) : msg
-      this.$root.$emit('bv::hide::tooltip')
-      await this.$nextTick()
-
-      this.$refs.tooltip && (this.$refs.tooltip as Vue).$emit('open')
-    },
-    async closeTooltip() {
-      this.$refs.tooltip && (this.$refs.tooltip as Vue).$emit('close')
-      // Clear the tooltip after a short delay
-      await this.$nextTick()
-      this.tooltipContent = ''
-      this.tooltipTimeout = undefined
-    },
-    nextTimeout(fn = noop, delay = 0) {
-      clearTimeout(this.tooltipTimeout)
-      return new Promise((resolve) => {
-        this.tooltipTimeout = setTimeout(resolve, delay)
-      })
-        .finally(this.$nextTick)
-        .then(fn)
+      nextTimeout(closeTooltip, props.tooltipHideDelay)
     }
-  }
+    async function openTooltip(msg = 'haptic-copy.tooltip.succeed') {
+      tooltipContent.value = te(msg) ? t(msg) : msg
+     // TODO CD: HIDE tooltip el.value?.$emit('bv::hide::tooltip')
+      await nextTick()
+
+      tooltip.value?.$emit('open')
+    }
+    async function closeTooltip() {
+      tooltip.value?.$emit('close')
+      // Clear the tooltip after a short delay
+      await nextTick()
+      tooltipContent.value = ''
+      tooltipTimeout.value = undefined
+    }
+    function nextTimeout(fn = noop, delay = 0) {
+      clearTimeout(tooltipTimeout.value)
+      return new Promise((resolve) => {
+        tooltipTimeout.value = setTimeout(resolve, delay)
+      })
+          .finally(nextTick)
+          .then(fn)
+    }
+
+    return {
+      t,
+      tooltip,
+      tooltipContainer,
+      tooltipContent,
+      tooltipTimeout,
+      copy,
+      openTooltip,
+      closeTooltip,
+      nextTimeout,
+      el
+    }
+  },
 })
 </script>
 

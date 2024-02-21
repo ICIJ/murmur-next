@@ -8,14 +8,14 @@
         <b-pagination
           :total-rows="perPage * numberOfPages"
           :per-page="perPage"
-          :value="value"
+          :model-value="modelValue"
           :pills="pills"
           :class="paginationClassList"
           :size="size"
           class="m-0"
           first-number
           last-number
-          @input="updateValue"
+          @update:modelValue="updateModelValue"
         >
           <template #prev-text="{ disabled, index, page }">
             <!-- @slot The 'Go to previous page' button content -->
@@ -37,7 +37,7 @@
       </div>
       <div class="col-auto">
         <div class="custom-pagination__form">
-          <form class="input-group" @submit.prevent="applyJumpFormPage">
+          <form ref="customPaginationForm" class="input-group" @submit.prevent="applyJumpFormPage">
             <b-input-group :size="size">
               <input
                 v-model="currentPageInput"
@@ -58,7 +58,7 @@
               {{ errors[0] }}
             </small>
             <small v-else class="float-left mt-1 ml-1 text-muted">
-              {{ $tc('custom-pagination.total-pages', numberOfPages, { count: numberOfPages }) }}
+              {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
             </small>
           </template>
         </div>
@@ -68,30 +68,13 @@
 </template>
 
 <script lang="ts">
-import { BInputGroup, BPagination } from 'bootstrap-vue'
-import { defineComponent } from 'vue'
-import { TranslateResult } from 'vue-i18n'
+import {computed, defineComponent,ref,PropType} from 'vue'
+import { useI18n } from 'vue-i18n'
 
-import i18n from '@/i18n'
 import { Size } from '@/enums'
 
-interface CustomPaginationData {
-  currentPageInput: string
-  invalidNumberError: TranslateResult
-  errors: TranslateResult[]
-}
-
 export default defineComponent({
-  i18n,
-  name: 'CustomPagination',
-  components: {
-    BInputGroup,
-    BPagination
-  },
-  model: {
-    prop: 'value',
-    event: 'input'
-  },
+name: 'CustomPagination',
   props: {
     /**
      * Total items to be stored in pages
@@ -110,7 +93,7 @@ export default defineComponent({
     /**
      * Grabs and syncs the currentPage variable passed down from the parent in v-model
      */
-    value: {
+    modelValue: {
       type: Number,
       default: 1
     },
@@ -124,7 +107,7 @@ export default defineComponent({
      * Set the size of the input: 'sm', 'md' (default), or 'lg'.
      */
     size: {
-      type: String,
+      type: String as PropType<Size>,
       default: Size.md,
       validator: (value: Size) => Object.values(Size).includes(value)
     },
@@ -143,43 +126,55 @@ export default defineComponent({
       default: null
     }
   },
-  data(): CustomPaginationData {
+  emits:["update:modelValue"],
+  setup(props, {emit}) {
+    const {t} = useI18n()
+    const customPaginationForm = ref<HTMLFormElement|null>(null)
+    const currentPageInput = ref('')
+    const invalidNumberError = t('custom-pagination.invalid-number-error')
+    const errors = ref<string[]>([])
+    const inputPlaceholder = computed((): string => {
+      const compact = props.compact ? 'compact-' : ''
+      return t(`custom-pagination.${compact}placeholder`) as string
+    })
+    const numberOfPages = computed((): number => {
+      if (props.pages === null) {
+        return Math.ceil(props.totalRows / props.perPage)
+      }
+      return Number(props.pages)
+    })
+    const paginationClassList = computed((): string[] => {
+      return props.size === Size.sm ? ['float-right', 'mr-1'] : []
+    })
+
+    function applyJumpFormPage(): void {
+      const number = isNaN(parseInt(currentPageInput.value)) ? 0 : parseInt(currentPageInput.value)
+      errors.value = []
+      if (number > numberOfPages.value || number < 1) {
+        errors.value.push(invalidNumberError)
+      }
+      if (errors.value.length === 0) {
+        updateModelValue(parseInt(currentPageInput.value))
+      }
+    }
+
+    function updateModelValue(value: string|number): void {
+      emit('update:modelValue', value)
+    }
+
     return {
-      currentPageInput: '',
-      invalidNumberError: this.$t('custom-pagination.invalid-number-error'),
-      errors: []
-    }
-  },
-  computed: {
-    inputPlaceholder(): string {
-      const compact = this.compact ? 'compact-' : ''
-      return this.$t(`custom-pagination.${compact}placeholder`) as string
-    },
-    numberOfPages(): number {
-      if (this.pages === null) {
-        return Math.ceil(this.totalRows / this.perPage)
-      }
-      return Number(this.pages)
-    },
-    paginationClassList(): string[] {
-      return this.size === Size.sm ? ['float-right', 'mr-1'] : []
-    }
-  },
-  methods: {
-    applyJumpFormPage(): void {
-      const number = isNaN(parseInt(this.currentPageInput)) ? 0 : parseInt(this.currentPageInput)
-      this.errors = []
-      if (number > this.numberOfPages || number < 1) {
-        this.errors.push(this.invalidNumberError)
-      }
-      if (this.errors.length === 0) {
-        this.$emit('input', parseInt(this.currentPageInput))
-      }
-    },
-    updateValue(value: string): void {
-      this.$emit('input', value)
+      customPaginationForm,
+      currentPageInput,
+      errors,
+      inputPlaceholder,
+      numberOfPages,
+      paginationClassList,
+      t,
+      applyJumpFormPage,
+      updateModelValue,
     }
   }
+
 })
 </script>
 

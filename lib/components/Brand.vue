@@ -16,74 +16,64 @@
   </span>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { isString } from 'lodash'
-
-import type { BrandStyle } from '@/types'
-
+<script setup lang="ts">
 /**
  * A component to create variations of ICIJ logo
  */
-export default defineComponent({
-  name: 'Brand',
-  props: {
-    /**
-     * Add a balancing effect to the globe
-     */
-    animated: {
-      type: Boolean
-    },
-    /**
-     * Monochromatic logo's color
-     */
-    color: {
-      type: [String],
-      default: null
-    },
-    /**
-     * Logo's background color
-     */
-    background: {
-      type: String,
-      default: null
-    },
-    /**
-     * Logo's size
-     */
-    size: {
-      type: [Number, String],
-      default: '70px'
-    },
-    /**
-     * Force the width of the logo to be the same as the height
-     */
-    square: {
-      type: Boolean
-    }
-  },
-  computed: {
-    width(): string {
-      return `${(147.151 / 200) * this.sizeAsNumber}px`
-    },
-    height(): string {
-      return `${this.sizeAsNumber}px`
-    },
-    sizeAsNumber(): number {
-      return isString(this.size) ? parseInt(this.size) : this.size
-    },
-    style(): BrandStyle {
-      const width = this.square ? this.height : 'auto'
+import {computed, ref} from 'vue';
+import isString from "lodash/isString";
 
-      return {
-        '--monochrome-color': this.color,
-        color: this.color,
-        background: this.background,
-        width
-      }
-    }
-  }
-})
+interface BrandProps {
+  /**
+   * Add a balancing effect to the globe
+   */
+  animated?: boolean;
+  /**
+   * Monochromatic logo's color
+   */
+  color?: string | null;
+  /**
+   * Logo's background color
+   */
+  background?: string | null;
+  /**
+   * Logo's size
+   */
+  size?: number | string;
+  /**
+   * Force the width of the logo to be the same as the height
+   */
+  square?: boolean;
+}
+
+interface BrandStyle {
+  '--monochrome-color': string | null;
+  color: string | null;
+  background: string | null;
+  width: string | number;
+}
+
+const props = withDefaults(defineProps<BrandProps>(),{
+  color: null,
+  background:null,
+  size: '70px'
+});
+const sizeAsNumber = ref(isString(props.size) ? parseInt(props.size) : props.size);
+
+const width = computed(() => `${(147.151 / 200) * sizeAsNumber.value}px`);
+const height = computed(() => `${sizeAsNumber.value}px`);
+
+const style = computed<BrandStyle>(() => {
+  const {square} = props;
+  const widthValue = square ? height.value : 'auto';
+
+  return {
+    '--monochrome-color': props.color,
+    color: props.color,
+    background: props.background,
+    width: widthValue,
+  };
+});
 </script>
 
 <style scoped lang="scss">
@@ -149,6 +139,7 @@ export default defineComponent({
 
     .plate,
     .globe {
+      //noinspection CssInvalidPropertyValue
       animation-direction: repeat;
       transform: rotate(0deg);
       transform-origin: bottom center;

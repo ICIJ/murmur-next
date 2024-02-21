@@ -55,12 +55,12 @@ describe('ScaleLegend.vue', () => {
       expect(wrapper.classes('scale-legend--has-cursor')).toBeFalsy()
     })
 
-    it('should give arround 100 for the width 100', () => {
+    it('should give around 100 for the width 100', () => {
       const value = Math.round(wrapper.vm.widthScale(100))
       expect(value).toBe(100)
     })
 
-    it('should give arround 150 for the width 150', () => {
+    it('should give around 150 for the width 150', () => {
       const value = Math.round(wrapper.vm.widthScale(150))
       expect(value).toBe(150)
     })
