@@ -8,81 +8,63 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import {ref, computed, PropType, provide, defineComponent} from 'vue';
+import { AccordionKey } from '@/keys';
+import {Accordion, Step} from '@/types';
 
-import { AccordionKey } from '@/keys'
-import type { AccordionProvide, Step } from '@/types'
-
-const STEP_CHANGE_EVENT: string = 'step-change'
-
+const STEP_CHANGE_EVENT: string = 'step-change';
 export default defineComponent({
-  name: 'AccordionWrapper',
-  provide(): AccordionProvide {
-    return {
-      [AccordionKey]: {
-        emitAccordionNextStepEvent: this.emitAccordionNextStepEvent,
-        emitAccordionPreviousStepEvent: this.emitAccordionPreviousStepEvent,
-        isActiveStep: this.isActiveStep,
-        isPreviousStep: this.isPreviousStep,
-        isFirstStep: this.isFirstStep,
-        isLastStep: this.isLastStep,
-        step: this.step,
-        steps: this.steps
-      }
-    }
-  },
-  model: {
-    prop: 'step',
-    event: STEP_CHANGE_EVENT
-  },
-  props: {
-    /**
-     * Current active step value. Modified on "step-change" event.
-     */
+  props:{
     step: {
       type: [String, Symbol, Object as () => Step],
-      required: true
+      required: true,
     },
-    /**
-     * List of the steps. Numbering respects the array positions
-     */
     steps: {
       type: Array as PropType<Step[]>,
-      required: true
-    }
+      required: true,
+    },
   },
-  computed: {
-    activeStepIndex(): number {
-      return this.steps.indexOf(this.step)
-    }
-  },
-  methods: {
-    isFirstStep(step: Step): boolean {
-      return this.steps.indexOf(step) === 0
-    },
-    isLastStep(step: Step): boolean {
-      return this.steps.indexOf(step) === this.steps.length - 1
-    },
-    isActiveStep(step: Step): boolean {
-      return this.step === step
-    },
-    isPreviousStep(step: Step): boolean {
-      return this.steps.indexOf(step) < this.activeStepIndex
-    },
-    emitAccordionNextStepEvent(): void {
-      /**
-       * When the step is changed it updates the step v-model value.
-       * @event step-change
-       * @param Mixed New step value.
-       */
-      this.$emit(STEP_CHANGE_EVENT, this.steps[this.activeStepIndex + 1] || this.step)
-    },
-    emitAccordionPreviousStepEvent(): void {
-      this.$emit(STEP_CHANGE_EVENT, this.steps[this.activeStepIndex - 1] || this.step)
+  emits:['step-change'],
+  setup(props,{emit}){
+
+    const emitAccordionNextStepEvent = () => {
+      emit('step-change', props.steps[activeStepIndex.value + 1] || props.step);
+    };
+
+    const emitAccordionPreviousStepEvent = () => {
+      emit('step-change', props.steps[activeStepIndex.value - 1] || props.step);
+    };
+
+    const activeStepIndex = computed(() => props.steps?.indexOf(props.step));
+
+    const isFirstStep = (step: Step): boolean => props.steps?.indexOf(step) === 0;
+    const isLastStep = (step: Step): boolean => props.steps?.indexOf(step) === props.steps?.length - 1;
+    const isActiveStep = (step: Step): boolean => props.step === step;
+    const isPreviousStep = (step: Step): boolean => props.steps?.indexOf(step) < activeStepIndex.value;
+
+
+    provide<Accordion>(AccordionKey, {
+      emitAccordionNextStepEvent,
+      emitAccordionPreviousStepEvent,
+      isActiveStep,
+      isPreviousStep,
+      isFirstStep,
+      isLastStep,
+      step: props.step,
+      steps: props.steps,
+    })
+    return {
+      emitAccordionNextStepEvent,
+      emitAccordionPreviousStepEvent,
+      isActiveStep,
+      isPreviousStep,
+      isFirstStep,
+      isLastStep
     }
   }
 })
 </script>
+
 
 <style lang="scss" scoped>
 @use 'sass:math';
