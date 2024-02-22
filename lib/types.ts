@@ -1,6 +1,10 @@
-import type { StyleValue } from 'vue/types/jsx'
+import type { StyleValue } from 'vue'
 
-import { AccordionKey } from '@/keys'
+import {AccordionKey, ParentKey} from '@/keys'
+import { ComputedRef } from 'vue'
+import type { GeoProjection } from 'd3-geo'
+import { Ref } from 'vue'
+
 
 export type Step = symbol | string
 
@@ -30,4 +34,11 @@ export type BrandExpansionStyle = Pick<BrandStyle, '--monochrome-color' | 'backg
 
 export type Variant = 'primary' | 'secondary' | 'danger' | 'info' | 'warning' | 'success' | 'dark' | 'light'
 
+export type MapTransform = { k: number, x: number, y: number, rotateX: number, rotateY : number }
 
+export type ParentMap = {
+  mapRect:Ref<DOMRect>, mapTransform:Ref<MapTransform>, rotatingMapProjection:ComputedRef<GeoProjection|Function>
+}
+export type ParentMapProvide = {
+  [ParentKey]: ParentMap
+}
