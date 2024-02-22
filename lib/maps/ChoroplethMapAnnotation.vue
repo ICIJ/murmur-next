@@ -1,6 +1,9 @@
-<script>
-import { values } from 'lodash'
-import { geoDistance } from 'd3-geo'
+<script lang="ts">
+import {values} from 'lodash'
+import {geoDistance, GeoProjection} from 'd3-geo'
+import {computed, defineComponent, inject} from "vue";
+import {ParentKey} from "@/keys";
+import {ParentMap} from "@/types";
 
 export const PLACEMENTS = {
   TOP: 'top',
@@ -17,12 +20,11 @@ export const PLACEMENTS = {
   LEFTBOTTOM: 'leftbottom'
 }
 
-export default {
+export default defineComponent({
   name: 'ChoroplethMapAnnotation',
-  inject: ['parent'],
   props: {
     /**
-     * Latutuyde of the annotation.
+     * Latitude of the annotation.
      */
     latitude: {
       type: Number,
@@ -85,154 +87,198 @@ export default {
     placement: {
       type: String,
       default: null,
-      validator: (p) => p === null || values(PLACEMENTS).includes(p)
+      validator: (p: null | string) => p === null || values(PLACEMENTS).includes(p)
     }
   },
-  computed: {
-    classList() {
-      return {
-        'choropleth-map-annotation--center': this.isCenter,
-        'choropleth-map-annotation--right': this.isRight,
-        'choropleth-map-annotation--left': this.isLeft,
-        'choropleth-map-annotation--top': this.isTop,
-        'choropleth-map-annotation--bottom': this.isBottom
+  setup(props) {
+    const parent = inject<ParentMap>(ParentKey)
+    if (!parent) {
+      throw new Error("parent is undefined")
+    }
+    const translateY = computed(() => {
+      if (isTop.value) {
+        return 0 - props.height
       }
-    },
-    center() {
-      return [this.longitude, this.latitude]
-    },
-    projection() {
-      return this.parent.rotatingMapProjection
-    },
-    position() {
-      const [x, y] = this.projection(this.center)
-      return { x, y }
-    },
-    mapK() {
-      return this.parent.mapTransform.k
-    },
-    translateX() {
-      if (this.isRight) {
+      if (isBottom.value) {
         return 0
       }
-      if (this.isLeft) {
-        return 0 - this.width
-      }
-      return 0 - (this.width) / 2
-    },
-    translateY() {
-      if (this.isTop) {
-        return 0 - this.height
-      }
-      if (this.isBottom) {
-        return 0
-      }
-      return 0 - (this.height) / 2
-    },
-    transform() {
-      return `translate(${this.translateX}, ${this.translateY})`
-    },
-    x() {
-      return this.position.x
-    },
-    y() {
-      return this.position.y
-    },
-    isRight() {
-      return [
-        PLACEMENTS.RIGHT,
-        PLACEMENTS.RIGHTBOTTOM,
-        PLACEMENTS.RIGHTTOP,
-        PLACEMENTS.BOTTOMRIGHT,
-        PLACEMENTS.TOPRIGHT
-      ].includes(this.placement)
-    },
-    isLeft() {
-      return [
-        PLACEMENTS.LEFT,
-        PLACEMENTS.LEFTBOTTOM,
-        PLACEMENTS.LEFTTOP,
-        PLACEMENTS.BOTTOMLEFT,
-        PLACEMENTS.TOPLEFT
-      ].includes(this.placement)
-    },
-    isTop() {
+      return 0 - (props.height) / 2
+    })
+    const isTop = computed(() => {
       return [
         PLACEMENTS.TOP,
         PLACEMENTS.TOPLEFT,
         PLACEMENTS.TOPRIGHT,
         PLACEMENTS.LEFTTOP,
         PLACEMENTS.RIGHTTOP
-      ].includes(this.placement)
-    },
-    isBottom() {
+      ].includes(props.placement)
+    })
+    const classList = computed(() => {
+      return {
+        'choropleth-map-annotation--center': isCenter.value,
+        'choropleth-map-annotation--right': isRight.value,
+        'choropleth-map-annotation--left': isLeft.value,
+        'choropleth-map-annotation--top': isTop.value,
+        'choropleth-map-annotation--bottom': isBottom.value
+      }
+    })
+
+    const center = computed((): [number, number] => {
+      return [props.longitude, props.latitude]
+    })
+
+    const projection = computed(() => {
+      return parent.rotatingMapProjection.value as GeoProjection
+    })
+
+    const position = computed(() => {
+      const [x, y] = projection.value(center.value)
+      return {x, y}
+    })
+
+    const mapK = computed(() => {
+      return parent?.mapTransform.value.k
+    })
+
+    const translateX = computed(() => {
+      if (isRight.value) {
+        return 0
+      }
+      if (isLeft.value) {
+        return 0 - props.width
+      }
+      return 0 - (props.width) / 2
+    })
+
+    const transform = computed(() => {
+      return `translate(${translateX.value}, ${translateY.value})`
+    })
+
+    const x = computed(() => {
+      return position.value.x
+    })
+
+    const y = computed(() => {
+      return position.value.y
+    })
+
+    const isRight = computed(() => {
+      return [
+        PLACEMENTS.RIGHT,
+        PLACEMENTS.RIGHTBOTTOM,
+        PLACEMENTS.RIGHTTOP,
+        PLACEMENTS.BOTTOMRIGHT,
+        PLACEMENTS.TOPRIGHT
+      ].includes(props.placement)
+    })
+
+    const isLeft = computed(() => {
+      return [
+        PLACEMENTS.LEFT,
+        PLACEMENTS.LEFTBOTTOM,
+        PLACEMENTS.LEFTTOP,
+        PLACEMENTS.BOTTOMLEFT,
+        PLACEMENTS.TOPLEFT
+      ].includes(props.placement)
+    })
+
+    const isBottom = computed(() => {
       return [
         PLACEMENTS.BOTTOM,
         PLACEMENTS.BOTTOMLEFT,
         PLACEMENTS.BOTTOMRIGHT,
         PLACEMENTS.LEFTBOTTOM,
         PLACEMENTS.RIGHTBOTTOM
-      ].includes(this.placement)
-    },
-    isCenter() {
-      return !this.isLeft && !this.isRight && !this.isTop && !this.isBottom
-    },
-    wrapperStyle() {
+      ].includes(props.placement)
+    })
+
+    const isCenter = computed(() => {
+      return !isLeft.value && !isRight.value && !isTop.value && !isBottom.value
+    })
+
+    const wrapperStyle = computed(() => {
       return {
-        '--color': this.color,
-        '--drop-shadow': this.dropShadow,
-        '--scale': this.scale ? null : 1 / this.mapK,
-        '--transform-origin': this.wrapperTransformOrigin
+        '--color': props.color,
+        '--drop-shadow': props.dropShadow,
+        '--scale': props.scale ? null : 1 / mapK.value,
+        '--transform-origin': wrapperTransformOrigin.value
       }
-    },
-    wrapperTransformOrigin() {
-      return `${this.wrapperTransformOriginX} ${this.wrapperTransformOriginY}`
-    },
-    wrapperTransformOriginX() {
-      if (this.isRight) {
+    })
+
+    const wrapperTransformOrigin = computed(() => {
+      return `${wrapperTransformOriginX.value} ${wrapperTransformOriginY.value}`
+    })
+
+    const wrapperTransformOriginX = computed(() => {
+      if (isRight.value) {
         return 'left'
-      } else if (this.isLeft) {
+      } else if (isLeft.value) {
         return 'right'
       }
       return 'center'
-    },
-    wrapperTransformOriginY() {
-      if (this.isTop) {
+    })
+
+    const wrapperTransformOriginY = computed(() => {
+      if (isTop.value) {
         return 'bottom'
-      } else if (this.isBottom) {
+      } else if (isBottom.value) {
         return 'top'
       }
       return 'center'
-    },
-    isVisible() {
-      return this.geoDistanceFromCenter <= this.geoDistanceThreshold
-    },
-    geoDistanceFromCenter() {
+    })
+    const geoDistanceFromCenter = computed(() => {
       try {
-        const { width, height } = this.parent.mapRect
-        const mapCenter = this.projection.invert([width / 2, height / 2])
-        return geoDistance(this.center, mapCenter)
+        if (!projection.value?.invert) {
+          return 0
+        }
+        const mapCenter = projection.value.invert([parent.mapRect.value.width / 2, parent.mapRect.value.height / 2])
+        return geoDistance(center.value, mapCenter)
       } catch (_) {
         return 0
       }
+    })
+    const isVisible = computed(() => {
+      return geoDistanceFromCenter.value <= props.geoDistanceThreshold
+    })
+
+
+    return {
+      classList,
+      x,
+      y,
+      wrapperStyle,
+      isVisible,
+      isRight,
+      isLeft,
+      isTop,
+      isBottom,
+      isCenter,
+      translateX,
+      translateY,
+      transform,
+      wrapperTransformOriginX,
+      wrapperTransformOriginY,
+      wrapperTransformOrigin,
+      geoDistanceFromCenter
     }
   }
-}
+
+})
 </script>
 
 <template>
-  <g class="choropleth-map-annotation" :class="classList">
-    <foreignObject :x="x" :y="y" :transform="transform" :width="width" :height="height">
-      <div class="choropleth-map-annotation__wrapper" :style="wrapperStyle" v-show="isVisible">
+  <g :class="classList" class="choropleth-map-annotation">
+    <foreignObject :height="height" :transform="transform" :width="width" :x="x" :y="y">
+      <div v-show="isVisible" :style="wrapperStyle" class="choropleth-map-annotation__wrapper">
         <div class="choropleth-map-annotation__wrapper__content">
-          <slot />
+          <slot/>
         </div>
       </div>
     </foreignObject>
   </g>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import '../styles/lib';
 
 .choropleth-map-annotation {

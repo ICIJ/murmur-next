@@ -1,14 +1,15 @@
 <script lang="ts">
 import * as d3 from 'd3'
-import { geoRobinson } from 'd3-geo-projection'
-import { debounce, find, get, groupBy, isFunction, kebabCase, keys, pickBy, set, uniq, uniqueId } from 'lodash'
-import { feature } from 'topojson'
+import {GeoPermissibleObjects} from 'd3'
+import {geoRobinson} from 'd3-geo-projection'
+import {debounce, find, get, groupBy, isFunction, kebabCase, keys, pickBy, set, uniq, uniqueId} from 'lodash'
+import {feature} from 'topojson'
 
 import config from '../config'
 import OrdinalLegend from '../components/OrdinalLegend.vue'
 import {chartEmits, chartProps, getChartProps, useChart} from "@/composables/chart.js";
-import { defineComponent, ref, watch, computed, ComponentPublicInstance} from "vue";
-import { GeoPermissibleObjects } from 'd3'
+import {ComponentPublicInstance, computed, defineComponent, PropType, ref, watch} from "vue";
+import {GeometryCollection} from "topojson-specification"
 
 export default defineComponent({
   components: {
@@ -84,7 +85,7 @@ export default defineComponent({
       default: 'countries1'
     },
     topojsonObjectsPath: {
-      type: [String, Array],
+      type: [String, Array] as PropType<string | string[]>,
       default: 'id'
     },
     topojsonUrl: {
@@ -116,20 +117,23 @@ export default defineComponent({
     const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
     const markerCursor = ref<{ [cursor: string]: string } | null>(null)
     const categoryHighlight = ref<any | null>(null)
+    const featureZoom = ref<string | null>(null)
 
     const isLoaded = ref<boolean>(false)
     const debouncedDraw = debounce(function () {
       draw()
     }, 10)
 
-    const {loadedData} = useChart(el, getChartProps(props), {emit}, isLoaded,debouncedDraw,afterLoaded)
-    function afterLoaded(){
+    const {loadedData} = useChart(el, getChartProps(props), {emit}, isLoaded, debouncedDraw, afterLoaded)
+
+    function afterLoaded() {
       return new Promise<void>(async (resolve) => {
         await loadTopojson()
         draw()
         resolve()
       })
     }
+
     //computed
     const featurePath = computed(() => {
       return d3.geoPath().projection(mapProjection.value)
@@ -140,13 +144,15 @@ export default defineComponent({
     const hasHighlight = computed(() => {
       return !!categoryHighlight.value
     })
-
+    const hasZoom = computed(() => {
+      return !!featureZoom.value
+    })
     const geojson = computed(() => {
       return props.fitToMarkers ? markersGeojson.value : featuresGeojson.value
     })
     const featuresGeojson = computed(() => {
       const object = get(topojson.value, ['objects', props.topojsonObjects], null)
-      return feature(topojson.value, object)
+      return feature(topojson.value, object as GeometryCollection)
     })
     const markersGeojson = computed(() => {
       return {
@@ -169,6 +175,7 @@ export default defineComponent({
       return {
         'symbol-map--has-cursor': hasCursor.value,
         'symbol-map--has-highlight': hasHighlight.value,
+        'symbol-map--has-zoom': hasZoom.value,
         'symbol-map--has-markers-scale': !props.noMarkersScale
       }
     })
@@ -185,7 +192,7 @@ export default defineComponent({
     })
     const mapZoom = computed(() => {
       return d3
-          .zoom<SVGElement, null>()
+          .zoom()
           .scaleExtent([props.zoomMin, props.zoomMax])
           .translateExtent([
             [0, 0],
@@ -201,7 +208,7 @@ export default defineComponent({
     })
     const map = computed(() => {
       const selection = d3.select(el.value).select<SVGElement>('.symbol-map__main');
-      if(!selection){
+      if (!selection) {
         throw new Error("Empty SVG selection")
       }
       return selection
@@ -247,12 +254,11 @@ export default defineComponent({
     )
 
 
-
     //methods
 
 
     function prepare() {
-      if(!map.value){
+      if (!map.value) {
         throw new Error("Map is null")
       }
       // Set the map sizes
@@ -269,8 +275,8 @@ export default defineComponent({
       }
     }
 
-    function categoryColor(category:string) {
-      if (el.value && mounted.value) {
+    function categoryColor(category: string) {
+      if (el.value && loadedData.value) {
         const index = categories.value.indexOf(category)
         const style = window.getComputedStyle(el.value)
         return style.getPropertyValue(`--category-color-${index}n`) || '#000'
@@ -286,19 +292,19 @@ export default defineComponent({
       update()
       // Bind a group for marker paths
       map.value?.append('g')
-        .attr('class', 'symbol-map__main__markers')
-        .selectAll('.symbol-map__main__markers__item')
-        .data(loadedDataWithIds.value)
-        .enter()
-        .append('g')
-        .attr('id', markerId)
-        .attr('class', markerClass)
-        .attr('transform', markerTransform)
-        .append('path')
-        .on('mouseover', markerMouseOver)
-        .on('mouseleave', markerMouseLeave)
-        .attr('d', markerPathFunction)
-        .attr('fill', markerColorFunction)
+          .attr('class', 'symbol-map__main__markers')
+          .selectAll('.symbol-map__main__markers__item')
+          .data(loadedDataWithIds.value)
+          .enter()
+          .append('g')
+          .attr('id', markerId)
+          .attr('class', markerClass)
+          .attr('transform', markerTransform)
+          .append('path')
+          .on('mouseover', markerMouseOver)
+          .on('mouseleave', markerMouseLeave)
+          .attr('d', markerPathFunction)
+          .attr('fill', markerColorFunction)
       prepareZoom()
     }
 
@@ -311,7 +317,8 @@ export default defineComponent({
       const id = get(d, props.topojsonObjectsPath, null)
       return {
         [pathClass]: true,
-        [`${pathClass}--identifier-${kebabCase(id)}`]: id !== null
+        [`${pathClass}--identifier-${kebabCase(id)}`]: id !== null,
+        [`${pathClass}--zoomed`]: featureZoom.value === id
       }
     }
 
@@ -398,7 +405,7 @@ export default defineComponent({
       return `translate(${cx}, ${cy}) scale(${scale})`
     }
 
-    async function featureClicked(event:MouseEvent, d: d3.GeoPermissibleObjects) {
+    async function featureClicked(event: MouseEvent, d: d3.GeoPermissibleObjects) {
       /**
        * A click on a feature
        * @event click
@@ -421,7 +428,7 @@ export default defineComponent({
       emit('zoomed', d)
     }
 
-    function resetZoom() {
+    function resetZoom(_event: MouseEvent, _d: number) {
       map.value?.style('--map-scale', 1)
           .transition()
           .duration(props.transitionDuration)
@@ -440,7 +447,7 @@ export default defineComponent({
     }
 
     function setFeatureZoom(d: GeoPermissibleObjects, pointer = [0, 0]) {
-      if(!mounted.value ){
+      if (!loadedData.value) {
         return
       }
       featureZoom.value = get(d, props.topojsonObjectsPath)
@@ -460,9 +467,10 @@ export default defineComponent({
           .call(mapZoom.value?.transform, zoomIdentity, pointer)
           .end()
     }
+
     function update() {
       // Bind geojson features to path
-      if(!map.value){
+      if (!map.value) {
         return
       }
       // Bind a group for geojson features to path
@@ -512,32 +520,32 @@ export default defineComponent({
 </script>
 
 <template>
-  <div ref="el" class="symbol-map" :class="mapClass">
+  <div ref="el" :class="mapClass" class="symbol-map">
     <slot name="legend" v-bind="{ legendData }">
       <ordinal-legend
-        v-if="!hideLegend && legendData"
-        :data="legendData"
-        v-model:highlight="categoryHighlight"
-        :horizontal="horizontalLegend"
-        :marker-path="markerPath"
-        category-objects-path="label"
+          v-if="!hideLegend && legendData"
+          v-model:highlight="categoryHighlight"
+          :data="legendData"
+          :horizontal="horizontalLegend"
+          :marker-path="markerPath"
+          category-objects-path="label"
       >
         <template #marker="d">
-          <slot name="legend-marker" v-bind="d" />
+          <slot name="legend-marker" v-bind="d"/>
         </template>
         <template #label="d">
-          <slot name="legend-label" v-bind="d" />
+          <slot name="legend-label" v-bind="d"/>
         </template>
       </ordinal-legend>
     </slot>
-    <svg class="symbol-map__main" />
+    <svg class="symbol-map__main"/>
     <b-tooltip
-      v-if="tooltipTarget"
-      ref="marker-tooltip"
-      :custom-class="tooltipCustomClass"
-      :fallback-placement="tooltipFallbackPlacement"
-      :placement="tooltipPlacement"
-      :target="tooltipTarget"
+        v-if="tooltipTarget"
+        ref="marker-tooltip"
+        :custom-class="tooltipCustomClass"
+        :fallback-placement="tooltipFallbackPlacement"
+        :placement="tooltipPlacement"
+        :target="tooltipTarget"
     >
       <slot name="tooltip" v-bind="{ markerCursor, ...markerCursorValue }">
         {{ markerLabel(markerCursorValue) }}
