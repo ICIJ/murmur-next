@@ -49,8 +49,9 @@
     </b-collapse>
   </b-card>
 </template>
+
 <script lang="ts">
-import {computed, defineComponent, inject} from 'vue';
+import {computed, defineComponent, inject, PropType} from 'vue';
 import {AccordionKey} from '@/keys'
 import {Accordion, Step} from '@/types'
 
@@ -72,10 +73,10 @@ export default defineComponent({
     /**
      * Force card expansion/collapse
      */
-    active: {type: Boolean, default: false},
+    active: {type: Boolean as PropType<boolean|undefined>, default: false},
   },
   emits: ['next-step', 'previous-step'],
-  setup(props: { step: Step; active: boolean; }, {emit}: any) {
+  setup(props: { step: Step, active: boolean|undefined }, {emit}: any) {
 
     const accordion = inject<Accordion>(AccordionKey)
     const isActive = computed(() => {
