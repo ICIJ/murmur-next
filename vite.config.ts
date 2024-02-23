@@ -74,9 +74,6 @@ export default defineConfig({
       node_modules: resolve(__dirname, 'node_modules'),
       $package: resolve(__dirname, 'package.json'),
       '@': fileURLToPath(new URL('./lib', import.meta.url)),
-      $docs: resolve(__dirname, 'docs'),
-      $components: resolve(__dirname, 'docs/components'),
-      $pages: resolve(__dirname, 'docs/pages')
     },
     dedupe: ['vue']
   }
