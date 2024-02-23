@@ -1,12 +1,14 @@
 <script lang="ts">
-import {ComponentPublicInstance, computed, defineComponent, PropType, provide, ref, watch} from 'vue'
 import {clamp, debounce, get, kebabCase, keys, max, min, pickBy, values} from 'lodash'
+
 import * as d3 from 'd3'
 import {geoRobinson} from 'd3-geo-projection'
 import type {GeoProjection} from 'd3-geo'
 import {geoGraticule} from 'd3-geo'
 import {feature} from 'topojson'
 import {GeometryCollection} from "topojson-specification";
+
+import {ComponentPublicInstance, computed, defineComponent, PropType, provide, ref, watch} from 'vue'
 
 import {ParentKey} from "@/keys";
 import {MapTransform, ParentMap} from "@/types";

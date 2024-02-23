@@ -9,11 +9,8 @@ import get from 'lodash/get'
 import identity from 'lodash/identity'
 import sortBy from 'lodash/sortBy'
 import without from 'lodash/without'
-import ResizeObserver from 'resize-observer-polyfill'
-import {ComponentPublicInstance, computed, defineComponent, ref} from 'vue'
+import {ComponentPublicInstance, computed, defineComponent, ref, nextTick, watch} from 'vue'
 import {chartProps, getChartProps, useChart} from "@/composables/chart.js";
-import { nextTick } from 'vue'
-import { watch } from 'vue'
 
 export default defineComponent({
   name: 'StackedColumnChart',
