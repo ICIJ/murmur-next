@@ -1,0 +1,7 @@
+@import './variables.scss';
+@import '../lib/styles/lib';
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue-next/dist/bootstrap-vue-next';
+.bg-striped {
+  background: repeating-linear-gradient(45deg, #dfdddd, #dfdddd 10px, #cfcccc 10px, #cfcccc 20px)
+}
