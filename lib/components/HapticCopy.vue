@@ -32,7 +32,7 @@
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardCheck'
-import { BTooltip } from 'bootstrap-vue-next'
+import {BTooltip, PopoverPlacement} from 'bootstrap-vue-next'
 
 import noop from 'lodash/noop'
 import {ComponentPublicInstance, computed, defineComponent, onBeforeMount,  nextTick, ref, PropType} from 'vue'
@@ -41,7 +41,6 @@ import {TranslateResult, useI18n} from 'vue-i18n'
 import { default as Fa, library } from './Fa'
 
 import { copyHtml, copyText } from '@/utils/clipboard'
-import { PopoverPlacement } from 'bootstrap-vue-next'
 
 type HapticCopyData = {
   mounted: boolean
@@ -52,7 +51,7 @@ type HapticCopyData = {
 export default defineComponent({
   name: 'HapticCopy',
   components: {
-    // BTooltip,
+    BTooltip,
     FontAwesomeLayers,
     Fa
   },
