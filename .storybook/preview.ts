@@ -1,5 +1,7 @@
 import {setup, Preview} from '@storybook/vue3'
+import './app.scss';
 import Murmur from "@/main";
+
 setup((app)=>{
   app.use(Murmur)
 })
