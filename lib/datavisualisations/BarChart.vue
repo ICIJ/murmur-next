@@ -4,7 +4,7 @@
 import * as d3 from 'd3'
 import identity from 'lodash/identity'
 import sortBy from 'lodash/sortBy'
-import {defineComponent, computed, ref, watch, ComponentPublicInstance} from "vue"
+import {defineComponent, computed, ref, watch} from "vue"
 import {chartProps, getChartProps, useChart} from "@/composables/chart.ts";
 
 

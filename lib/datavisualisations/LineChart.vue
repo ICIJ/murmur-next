@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import isFunction from 'lodash/isFunction'
 import identity from 'lodash/identity'
 import {chartProps, getChartProps, useChart} from "@/composables/chart.js"
-import {computed, ref, defineComponent, watchEffect,watch, ComponentPublicInstance, toRaw} from 'vue'
+import {computed, ref, defineComponent, watchEffect, ComponentPublicInstance, toRaw} from 'vue'
 
 // Call the first argument if it's a function, or return it
 const castCall = (fnOrValue = identity, ...rest) => (isFunction(fnOrValue) ? fnOrValue(...rest) : fnOrValue)

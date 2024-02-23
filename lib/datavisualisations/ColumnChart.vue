@@ -3,7 +3,6 @@ import {ComponentPublicInstance, computed, defineComponent, PropType, ref, watch
 import {identity, iteratee, sortBy} from 'lodash'
 import * as d3 from 'd3'
 import {chartProps, getChartProps, useChart} from "@/composables/chart";
-import { watch } from 'vue';
 
 type ColumnBar = {
   datum: { [timeSerie: string]: any },

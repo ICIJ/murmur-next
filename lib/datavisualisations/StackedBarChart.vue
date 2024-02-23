@@ -10,8 +10,6 @@ import sortBy from 'lodash/sortBy'
 import {ComponentPublicInstance, computed, defineComponent, nextTick, PropType, ref, watch} from 'vue'
 import {chartProps, getChartProps, useChart} from "@/composables/chart.js";
 
-//import chart from '../mixins/chart.js'
-
 export default defineComponent({
   name: 'StackedBarChart',
   //mixins: [chart],

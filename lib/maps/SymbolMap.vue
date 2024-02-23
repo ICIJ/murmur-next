@@ -2,8 +2,8 @@
 import * as d3 from 'd3'
 import {GeoPermissibleObjects} from 'd3'
 import {geoRobinson} from 'd3-geo-projection'
-import {debounce, find, get, groupBy, isFunction, kebabCase, keys, pickBy, set, uniq, uniqueId} from 'lodash'
 import {feature} from 'topojson'
+import {debounce, find, get, groupBy, isFunction, kebabCase, keys, pickBy, set, uniq, uniqueId} from 'lodash'
 
 import config from '../config'
 import OrdinalLegend from '../components/OrdinalLegend.vue'
