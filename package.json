@@ -20,7 +20,8 @@
     "format": "prettier --write lib/",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "vitest"
+    "test": "vitest",
+    "test:unit": "vitest run"
   },
   "type": "module",
   "dependencies": {

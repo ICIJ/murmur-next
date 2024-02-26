@@ -24,4 +24,4 @@ jobs:
       # Run unit tests!
       - run:
           name: run tests
-          command: yarn test
+          command: yarn test:unit

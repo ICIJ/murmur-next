@@ -81,13 +81,7 @@ export default defineComponent({
     const height= ref(0)
     const line= ref<d3.Line<[number,number]>|null>(null)
     const isLoaded = ref(false)
-    // onMounted(()=> {
-    //   window.addEventListener('resize', this.setSizes)
-    //   this.setSizes()
-    // })
-    // beforeUnmount() {
-    //   window.removeEventListener('resize', this.setSizes)
-    // }
+
     const {loadedData, elementsMaxBBox,xAxisYearFormat,d3Formatter,baseHeightRatio}=useChart(el,getChartProps(props),{emit},isLoaded,setSizes)
 
 
