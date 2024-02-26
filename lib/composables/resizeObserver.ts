@@ -3,7 +3,7 @@ import { Ref,nextTick } from "vue";
 import ResizeObserver from 'resize-observer-polyfill'
 
 export const useResizeObserver = (resizableRef?:Ref) => {
-    const resizeRef = resizableRef ?? ref();
+    const resizeRef:Ref<HTMLElement> = resizableRef ?? ref();
     const resizeState = reactive({
         dimensions: {} as DOMRect,
         offsetWidth: 540,

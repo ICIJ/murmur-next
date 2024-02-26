@@ -1,10 +1,9 @@
 <script lang="ts">
-import get from 'lodash/get'
-import uniqueId from 'lodash/uniqueId'
-import ResizeObserver from 'resize-observer-polyfill'
-import { defineComponent } from 'vue'
+import {computed, defineComponent, ref} from 'vue'
 
 import { RequestAnimationFrameWrapper } from '@/utils/animation'
+import useResizeObserver from "@/composables/resizeObserver";
+import { watch } from 'vue'
 
 type ActiveTextTruncateData = { textLivePosition: number; resizeObserverKey: string | null }
 
@@ -50,125 +49,125 @@ export default defineComponent({
       validator: (value: string) => ['ltr', 'rtl'].indexOf(value) > -1
     }
   },
-  data(): ActiveTextTruncateData {
-    return {
-      textLivePosition: 0,
-      // This will hold a key generated every time the component is resized.
-      resizeObserverKey: null
-    }
-  },
-  resizeObserver: null,
-  computed: {
-    wrapperElement(): Element | null {
+  emits:['cancel','end','start'],
+  setup(props,{emit}){
+    const el  = ref(null)
+    const textLivePosition = ref(0)
+     // This will hold a key generated every time the component is resized.
+    const {resizeRef,resizeState} = useResizeObserver(el)
+      watch(resizeState,()=>{
+        onResized()
+      })
+
+    const wrapperElement = computed((): HTMLElement | null => {
       const selector = '.active-text-truncate__wrapper'
-      return this.resizeObserverKey ? this.$el.querySelector(selector) : null
-    },
-    wrapperElementWidth(): number {
-      return get(this, 'wrapperElement.offsetWidth', 0)
-    },
-    textElement(): Element | null {
+      return resizeRef.value?.querySelector(selector) ?? null
+    })
+    const wrapperElementWidth = computed((): number => {
+      return wrapperElement.value?.offsetWidth ?? 0
+    })
+    const textElement = computed((): HTMLElement | null => {
       const selector = '.active-text-truncate__wrapper__text'
-      return this.resizeObserverKey ? this.$el.querySelector(selector) : null
-    },
-    textElementWidth(): number {
-      return get(this, 'textElement.offsetWidth', 0)
-    },
-    textOffsetTransitionDelay(): string {
-      return `${this.delay}ms`
-    },
-    textOffsetTransitionDuration(): string {
-      const offset = Math.abs(this.wrapperElementWidth - this.textElementWidth)
-      const duration = offset / this.ppms
+      return resizeRef.value?.querySelector(selector) ?? null
+    })
+    const textElementWidth = computed((): number => {
+      return textElement.value?.offsetWidth ?? 0
+    })
+    const textOffsetTransitionDelay = computed((): string => {
+      return `${props.delay}ms`
+    })
+    const textOffsetTransitionDuration = computed((): string => {
+      const offset = Math.abs(wrapperElementWidth.value - textElementWidth.value)
+      const duration = offset / props.ppms
       return `${duration}ms`
-    },
-    textInitialOffset(): string {
+    })
+    const textInitialOffset = computed((): string => {
       return '0'
-    },
-    textFinalOffset(): string {
-      const offset = this.wrapperElementWidth - this.textElementWidth
+    })
+    const textFinalOffset = computed((): string => {
+      const offset = wrapperElementWidth.value - textElementWidth.value
       return `${offset}px`
-    },
-    textOffsetValues(): string[] {
-      if (this.direction === 'ltr') {
-        return [this.textInitialOffset, this.textFinalOffset]
+    })
+    const textOffsetValues = computed((): string [] => {
+      if (props.direction === 'ltr') {
+        return [textInitialOffset.value, textFinalOffset.value]
       }
-      return [this.textFinalOffset, this.textInitialOffset]
-    },
-    isFadingLeft(): boolean {
-      return this.direction === 'rtl' && this.isFading
-    },
-    isFadingRight(): boolean {
-      return this.direction === 'ltr' && this.isFading
-    },
-    isFading(): boolean {
-      return this.wrapperElementWidth < this.textElementWidth
-    },
-    fadingLeftWidth(): string {
-      const offset = this.textLivePosition
-      const width = Math.min(Math.max(this.fadingMinWidth, Math.abs(offset)), this.fadingMaxWidth)
+      return [textFinalOffset.value, textInitialOffset.value]
+    })
+    const isFadingLeft = computed((): boolean => {
+      return props.direction === 'rtl' && isFading.value
+    })
+    const isFadingRight = computed((): boolean => {
+      return props.direction === 'ltr' && isFading.value
+    })
+    const isFading = computed((): boolean => {
+      return wrapperElementWidth.value < textElementWidth.value
+    })
+    const fadingLeftWidth = computed((): string => {
+      const offset = textLivePosition.value
+      const width = Math.min(Math.max(props.fadingMinWidth, Math.abs(offset)), props.fadingMaxWidth)
       return `${width}px`
-    },
-    fadingRightWidth(): string {
-      const offset = parseInt(this.textFinalOffset) - this.textLivePosition
-      const width = Math.min(Math.max(this.fadingMinWidth, Math.abs(offset)), this.fadingMaxWidth)
+    })
+    const fadingRightWidth = computed((): string => {
+      const offset = parseInt(textFinalOffset.value) - textLivePosition.value
+      const width = Math.min(Math.max(props.fadingMinWidth, Math.abs(offset)), props.fadingMaxWidth)
       return `${width}px`
-    },
-    textLivePositionRequestAnimationFrame(): RequestAnimationFrameWrapper {
+    })
+    const textLivePositionRequestAnimationFrame = computed((): RequestAnimationFrameWrapper => {
       return new RequestAnimationFrameWrapper()
-    }
-  },
-  async mounted() {
-    this.$options.resizeObserver = new ResizeObserver(this.setup)
-    // Bind the resize observer after the first rendering
-    await this.$nextTick()
-    this.$options.resizeObserver?.observe(this.$el)
-  },
-  beforeUnmount() {
-    this.$options.resizeObserver?.unobserve(this.$el)
-    this.$options.resizeObserver = null
-  },
-  methods: {
-    setup() {
-      this.resizeObserverKey = uniqueId()
-      this.textLivePosition = parseInt(this.textOffsetValues[0])
+    })
+
+    function onResized() {
+
+      textLivePosition.value = parseInt(textOffsetValues.value[0])
       // Track transitions to update the text position in live using Request Animation Frame
-      this.listenOnTextElement('transitionstart', this.startTrackingTextLivePosition)
-      this.listenOnTextElement('transitionend', this.endTrackingTextLivePosition)
-      this.listenOnTextElement('transitioncancel', this.resetTextLivePosition)
-    },
-    listenOnTextElement(name: string, func: () => void) {
-      this.textElement?.removeEventListener(name, func)
-      this.textElement?.addEventListener(name, func)
-    },
-    trackTextLivePosition(): void {
-      if (!this.textElement) return
-      const left = window.getComputedStyle(this.textElement, null).getPropertyValue('left')
-      this.textLivePosition = parseInt(left)
-    },
-    startTrackingTextLivePosition(): void {
-      this.textLivePositionRequestAnimationFrame.start(this.trackTextLivePosition)
+      listenOnTextElement('transitionstart', startTrackingTextLivePosition)
+      listenOnTextElement('transitionend', endTrackingTextLivePosition)
+      listenOnTextElement('transitioncancel', resetTextLivePosition)
+    }
+    function listenOnTextElement(name: string, func: () => void) {
+      textElement.value?.removeEventListener(name, func)
+      textElement.value?.addEventListener(name, func)
+    }
+    function trackTextLivePosition(): void {
+      if (!textElement.value) return
+      const left = window.getComputedStyle(textElement.value, null).getPropertyValue('left')
+      textLivePosition.value = parseInt(left)
+    }
+    function startTrackingTextLivePosition(): void {
+      textLivePositionRequestAnimationFrame.value.start(trackTextLivePosition)
       /**
        * Emitted when the animation on the text starts.
        * @event start
        */
-      this.$emit('start')
-    },
-    endTrackingTextLivePosition(): void {
-      this.textLivePositionRequestAnimationFrame.stop()
+      emit('start')
+    }
+    function endTrackingTextLivePosition(): void {
+      textLivePositionRequestAnimationFrame.value.stop()
       /**
        * Emitted when the animation on the text reaches the end.
        * @event end
        */
-      this.$emit('end')
-    },
-    resetTextLivePosition(): void {
-      this.textLivePositionRequestAnimationFrame.stop()
-      this.textLivePosition = parseInt(this.textOffsetValues[0])
+      emit('end')
+    }
+    function resetTextLivePosition(): void {
+      textLivePositionRequestAnimationFrame.value.stop()
+      textLivePosition.value = parseInt(textOffsetValues.value[0])
       /**
        * Emitted when the animation on the text is cancelled.
        * @event cancel
        */
-      this.$emit('cancel')
+      emit('cancel')
+    }
+    return {
+      el,
+      isFading,
+      fadingLeftWidth,
+      fadingRightWidth,
+      textOffsetTransitionDuration,
+      textOffsetTransitionDelay,
+      textFinalOffset,
+      resetTextLivePosition
     }
   }
 })
@@ -176,6 +175,7 @@ export default defineComponent({
 
 <template>
   <span
+    ref="el"
     class="active-text-truncate"
     :class="{
       'active-text-truncate--fading': isFading,
