@@ -1,9 +1,7 @@
 <script lang="ts">
-import {computed, defineComponent, ref} from 'vue'
-
-import { RequestAnimationFrameWrapper } from '@/utils/animation'
+import {computed, defineComponent, ref, watch} from 'vue'
 import useResizeObserver from "@/composables/resizeObserver";
-import { watch } from 'vue'
+import { RequestAnimationFrameWrapper } from '@/utils/animation'
 
 type ActiveTextTruncateData = { textLivePosition: number; resizeObserverKey: string | null }
 
