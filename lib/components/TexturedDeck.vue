@@ -1,6 +1,6 @@
 <script lang="ts">
 import { clamp } from 'lodash'
-import { defineComponent, PropType } from 'vue'
+import {computed, defineComponent, PropType} from 'vue'
 
 import { DeckTexture } from '@/enums'
 import config from '@/config'
@@ -13,7 +13,7 @@ export default defineComponent({
     /**
      * Name of the texture file ('silk', 'brick', 'rock', 'sand', 'crack', 'carbon')
      */
-    value: {
+    modelValue: {
       type: String as PropType<TexturedDeckValue>,
       default: DeckTexture.Brick
     },
@@ -32,7 +32,7 @@ export default defineComponent({
       default: 'div'
     },
     /**
-     * Etheir or note we should use the black version of the texture
+     * Either or note we should use the black version of the texture
      */
     black: {
       type: Boolean,
@@ -46,36 +46,41 @@ export default defineComponent({
       default: () => config.get('textured-deck.background-base-url', window.location.origin)
     }
   },
-  computed: {
-    names(): DeckTexture[] {
+  setup(props, {attrs}) {
+    const names = computed((): DeckTexture[] =>{
       return Object.values(DeckTexture)
-    },
-    textureIndex(): number {
-      if (typeof this.value !== 'number') {
-        return clamp(this.names.indexOf(this.value), 0, this.names.length - 1)
+    })
+    const textureIndex = computed((): number =>{
+      if (typeof props.modelValue !== 'number') {
+        return clamp(names.value.indexOf(props.modelValue), 0, names.value.length - 1)
       }
-      return this.value
-    },
-    textureName(): string {
-      return this.names[this.textureIndex]
-    },
-    filename(): string {
-      if (this.black) {
-        return `texture-${this.textureName}-black.jpg`
+      return props.modelValue
+    })
+    const textureName = computed((): string =>{
+      return names.value[textureIndex.value]
+    })
+    const filename = computed((): string =>{
+      if (props.black) {
+        return `texture-${textureName.value}-black.jpg`
       }
-      return `texture-${this.textureName}.jpg`
-    },
-    backgroundUrl(): string {
-      return `${this.backgroundBaseUrl}/assets/img/${this.filename}`
-    },
-    backgroundSize(): string {
-      return this.size
-    },
-    backgroundImage(): string {
-      return `url("${this.backgroundUrl}")`
-    },
-    inheritedProps(): object {
-      return { ...this.$attrs, ...this.$props, tag: undefined }
+      return `texture-${textureName.value}.jpg`
+    })
+    const backgroundUrl = computed((): string =>{
+      return `${props.backgroundBaseUrl}/assets/img/${filename.value}`
+    })
+    const backgroundSize = computed((): string =>{
+      return props.size
+    })
+    const backgroundImage = computed((): string =>{
+      return `url("${backgroundUrl.value}")`
+    })
+    const inheritedProps = computed((): object =>{
+      return { ...attrs, ...props, tag: undefined }
+    })
+    return {
+      backgroundSize,
+      backgroundImage,
+      inheritedProps
     }
   }
 })
