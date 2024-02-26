@@ -9,7 +9,7 @@ vi.mock('d3', async () => {
 })
 
 // Mock HTML element offset so the size of the chart can be calculated
-// dynamicly using JSDOM and tests
+// dynamically using JSDOM and tests
 Object.defineProperties(window.HTMLElement.prototype, {
   offsetWidth: {
     get () { return parseFloat(this.style.width) || 0 }
