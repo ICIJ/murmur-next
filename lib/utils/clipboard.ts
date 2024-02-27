@@ -5,7 +5,7 @@ export function copyText (text: string, container: Element): Promise<void> {
     const fakeElement = document.createElement('button')
     // Use the document body as container is no valid object is provided
     container = typeof container === 'object' ? container : document.body
-    
+
     const clipboard: Clipboard = new Clipboard(fakeElement, { text: () => text, container })
 
     clipboard.on('success', () => {
@@ -25,7 +25,7 @@ export function copyText (text: string, container: Element): Promise<void> {
 export function copyHtml (html: string, plain: string) {
   interface ClipboardEvent extends Event {
     clipboardData: {
-      setData: (attribute: string, value: string) => void 
+      setData: (attribute: string, value: string) => void
     }
   }
 
@@ -34,7 +34,7 @@ export function copyHtml (html: string, plain: string) {
     event.clipboardData.setData("text/plain", plain)
     event.preventDefault()
   }
-  
+
   document.addEventListener("copy", listener as EventListener)
   document.execCommand("copy")
   document.removeEventListener("copy", listener as EventListener)

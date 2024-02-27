@@ -1,33 +1,3 @@
-<template>
-  <button ref="el" class="btn haptic-copy" @click.stop="copy" @mouseleave="closeTooltip">
-    <!-- @slot Main content of the button (including the icon) -->
-    <slot>
-      <font-awesome-layers>
-        <transition name="spin">
-          <fa v-if="!tooltipTimeout" icon="clipboard" class="haptic-copy__icon" />
-        </transition>
-        <transition name="spin">
-          <fa v-if="tooltipTimeout" icon="clipboard-check" class="haptic-copy__icon" />
-        </transition>
-      </font-awesome-layers>
-      <span :class="{ 'sr-only': hideLabel }" class="ml-1 haptic-copy__label">
-        {{ label || t('haptic-copy.label') }}
-      </span>
-    </slot>
-    <b-tooltip
-      v-if="!noTooltip && el"
-      ref="tooltip"
-      noninteractive
-      :placement="tooltipPlacement"
-      :target="() : HTMLElement => el"
-      :triggers="[]"
-      :container="tooltipContainer"
-    >
-      {{ tooltipContent }}
-    </b-tooltip>
-  </button>
-</template>
-
 <script lang="ts">
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
@@ -35,7 +5,16 @@ import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardC
 import {BTooltip, PopoverPlacement} from 'bootstrap-vue-next'
 
 import noop from 'lodash/noop'
-import {ComponentPublicInstance, computed, defineComponent, onBeforeMount,  nextTick, ref, PropType} from 'vue'
+import {
+  ComponentPublicInstance,
+  computed,
+  defineComponent,
+  onBeforeMount,
+  nextTick,
+  ref,
+  PropType,
+  onMounted, onUnmounted
+} from 'vue'
 import {TranslateResult, useI18n} from 'vue-i18n'
 
 import { default as Fa, library } from './Fa'
@@ -88,7 +67,7 @@ export default defineComponent({
      */
     tooltipHideDelay: {
       type: Number,
-      default: 2000
+      default: 1e3
     },
     /**
      * Placement of the tooltip. Can be: top, topleft, topright, right,<br />
@@ -112,23 +91,24 @@ export default defineComponent({
       type: Boolean
     }
   },
-  emits:['attempt','success', 'error'],
-  setup(props, {emit}){
+  emits:['attempt','success', 'error','hideClipboardTooltip'],
+  setup(props, {emit, expose}){
     const {t,te} = useI18n()
     const tooltip = ref<ComponentPublicInstance|null>(null)
     const el = ref<ComponentPublicInstance<HTMLElement>|null>(null)
-    const tooltipContent = ref('')
+    const tooltipContent = ref<string>('')
     const tooltipTimeout = ref<NodeJS.Timeout|undefined>(undefined)
-
+    const showClipboardTooltip= ref(false)
     onBeforeMount(()=>{
         library.add(faClipboard)
         library.add(faClipboardCheck)
     })
-    const tooltipContainer = computed((): string | undefined =>{
+    const tooltipContainer = computed((): string | null =>{
       // By default we append the tooltip in the root container using its
       // id (if any) because BootstrapVue doesn't like HTMLElement for some
       // reasons.
-      return el.value?.id.length ? `#${el.value.id}` : undefined
+
+      return el.value?.id.length ? `#${el.value.id}` : null;
     })
     function copyTextToClipboard(): Promise<void> {
       return el.value? copyText(props.text, el.value) : Promise.resolve()
@@ -140,7 +120,6 @@ export default defineComponent({
     function copyTextOrHtml() {
       return props.html ? copyHtmlToClipboard() : copyTextToClipboard()
     }
-
 
     async function copy(): Promise<void> {
       try {
@@ -172,19 +151,19 @@ export default defineComponent({
       // And close the tooltip after a short delay
       nextTimeout(closeTooltip, props.tooltipHideDelay)
     }
-    async function openTooltip(msg = 'haptic-copy.tooltip.succeed') {
-      tooltipContent.value = te(msg) ? t(msg) : msg
-     // TODO CD: HIDE tooltip el.value?.$emit('bv::hide::tooltip')
-      await nextTick()
+    function getTooltipContent(msg:string){
+      return te(msg) ? t(msg) : msg
+    }
 
-      tooltip.value?.$emit('open')
+    async function openTooltip(msg = 'haptic-copy.tooltip.succeed') {
+      tooltipContent.value = getTooltipContent(msg)
+      showClipboardTooltip.value=true
     }
     async function closeTooltip() {
-      tooltip.value?.$emit('close')
-      // Clear the tooltip after a short delay
-      await nextTick()
-      tooltipContent.value = ''
+      showClipboardTooltip.value=false
       tooltipTimeout.value = undefined
+      emit('hideClipboardTooltip')
+
     }
     function nextTimeout(fn = noop, delay = 0) {
       clearTimeout(tooltipTimeout.value)
@@ -195,31 +174,69 @@ export default defineComponent({
           .then(fn)
     }
 
+    onUnmounted(()=>{
+      closeTooltip()
+    })
+    expose({
+      hide: closeTooltip,
+    })
     return {
       t,
       tooltip,
+      el,
+      showClipboardTooltip,
       tooltipContainer,
       tooltipContent,
       tooltipTimeout,
       copy,
-      openTooltip,
       closeTooltip,
       nextTimeout,
-      el
     }
   },
 })
 </script>
 
+<template>
+    <button ref="el" id="hapticCopy" class="btn haptic-copy" @click.stop="copy" @mouseleave="closeTooltip"  >
+      <!-- @slot Main content of the button (including the icon) -->
+      <slot>
+        <font-awesome-layers>
+          <transition name="spin">
+            <fa v-if="!tooltipTimeout" icon="clipboard" class="haptic-copy__icon" />
+          </transition>
+          <transition name="spin">
+            <fa v-if="tooltipTimeout" icon="clipboard-check" class="haptic-copy__icon" />
+          </transition>
+        </font-awesome-layers>
+        <span :class="{ 'sr-only': hideLabel }" class="ml-1 haptic-copy__label">
+          {{ label || t('haptic-copy.label') }}
+        </span>
+      </slot>
+      <b-tooltip
+          v-if="!noTooltip"
+          ref="tooltip"
+          :placement="tooltipPlacement"
+          target="hapticCopy"
+          :model-value="showClipboardTooltip"
+          noninteractive
+          manual
+      >
+        {{ tooltipContent }}
+      </b-tooltip>
+    </button>
+
+</template>
 <style lang="scss">
 .haptic-copy {
   &__icon {
+    transform: rotate(0deg);
+
     &.spin-enter-active,
     &.spin-leave-active {
       transition: all 0.2s;
     }
 
-    &.spin-enter {
+    &.spin-enter-from {
       transform: rotate(-180deg);
       opacity: 0;
     }
