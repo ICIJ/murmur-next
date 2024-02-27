@@ -13,7 +13,7 @@ import {
   nextTick,
   ref,
   PropType,
-  onMounted, onUnmounted
+  onUnmounted
 } from 'vue'
 import {TranslateResult, useI18n} from 'vue-i18n'
 
@@ -190,6 +190,7 @@ export default defineComponent({
       tooltipTimeout,
       copy,
       closeTooltip,
+      openTooltip,
       nextTimeout,
     }
   },
