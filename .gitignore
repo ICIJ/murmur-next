@@ -3,7 +3,6 @@ node_modules
 /dist
 /src
 coverage
-
 # local env files
 .env.local
 .env.*.local
@@ -22,3 +21,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+/tmpDoc/
