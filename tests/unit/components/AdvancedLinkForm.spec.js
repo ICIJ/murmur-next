@@ -1,8 +1,6 @@
 import MutationObserver from 'mutationobserver-shim'
 import { mount,flushPromises } from '@vue/test-utils'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
-// @see https://github.com/molgenis/molgenis-ui-filter/issues/16#issuecomment-576639112
-//global.MutationObserver = MutationObserver
 
 describe('AdvancedLinkForm.vue', () => {
   const createContainer = (tag = 'div') => {
@@ -10,7 +8,7 @@ describe('AdvancedLinkForm.vue', () => {
     document.body.appendChild(container)
     return container
   }
-  const global = {stubs: {HapticCopy: true}}
+  const global = {}
   it('should be a Vue instance', () => {
     const wrapper = mount(AdvancedLinkForm, { global })
     expect(wrapper.vm).toBeTruthy()
@@ -37,8 +35,8 @@ describe('AdvancedLinkForm.vue', () => {
     expect(wrapper.find('.advanced-link-form__raw__input').element._value).toBe(propsData.link)
   })
 
-  it('should create switch between form using `value` property', async () => {
-    const wrapper = mount(AdvancedLinkForm, { global })
+  it('should create switch between form using `modelValue` property', async () => {
+    const wrapper = mount(AdvancedLinkForm, { global:{stubs: {HapticCopy: true}} })
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.tab-pane.active .advanced-link-form__raw').exists()).toBeTruthy()
     await wrapper.setProps({modelValue: 1})
