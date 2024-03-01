@@ -1,9 +1,10 @@
+import {createBootstrap} from "bootstrap-vue-next";
 import { i18n } from './i18n'
 import * as components from './components'
 import * as datavisualisations from './datavisualisations'
 import * as maps from './maps'
 import config from './config'
-import {App} from "vue";
+import { type App} from "vue";
 
 export { default as AccordionWrapper } from './components/AccordionWrapper.vue'
 export { default as AccordionStep } from './components/AccordionStep.vue'
@@ -70,6 +71,7 @@ const Murmur = {
     return Murmur.i18n.global.locale.value
   },
   install(app:App<Element>) {
+    app.use(createBootstrap())
     app.use(i18n)
 
     app.config.globalProperties.$config =  Murmur.config
