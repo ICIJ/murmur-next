@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent,ref ,Ref } from 'vue'
+import {computed, defineComponent, ref, Ref, toRef} from 'vue'
 import { BTabs, BTab, BInputGroup, BInputGroupAppend, BFormInput } from 'bootstrap-vue-next'
 
 import HapticCopy from './HapticCopy.vue'
@@ -112,7 +112,7 @@ export default defineComponent({
     const linkAsMarkdown = computed(() => `[${titleOrLink.value}](${props.link})`);
 
     const linkAsHtml = computed(() => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`);
-
+    const currentTab  = toRef(props, 'modelValue');
     const formClasses = computed(() => {
       const propsToCheck = ['card', 'pills', 'small', 'vertical'];
       return propsToCheck.reduce((classes, prop) => {
@@ -129,9 +129,9 @@ export default defineComponent({
     })
 
     const selectInput = (target: Ref<HTMLElement|null>) => {
-      if(!target.value){
-        throw new Error("no target")
-      }
+      // if(!target.value){
+      //   throw new Error("no target")
+      // }
       if (target.value instanceof HTMLTextAreaElement) {
         target.value.select();
       }
@@ -153,7 +153,7 @@ export default defineComponent({
         range.moveToElementText(richInput.value);
         range.select();
       }
-    };
+    }
     function selectMarkdown() {
       selectInput(markdownInput)
     }
@@ -163,6 +163,7 @@ export default defineComponent({
     }
 
     return {
+      currentTab,
       t,
       titleOrLink,
       linkAsMarkdown,
@@ -186,7 +187,7 @@ export default defineComponent({
     :content-class="card ? 'mt-0' : 'mt-3'"
     :card="card"
     :pills="pills"
-    v-model="modelValue"
+    v-model="currentTab"
     :small="small"
     :vertical="vertical"
     :active-nav-item-class="activeNavItemClass"
@@ -196,9 +197,9 @@ export default defineComponent({
     <b-tab v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
       <div class="advanced-link-form__raw" :class="{ small }">
         <b-input-group :size="size">
-          <b-form-input ref="rawInput" readonly :modelValue="link" class="advanced-link-form__raw__input" @click="selectRaw" />
+          <b-form-input ref="rawInput" readonly :model-value="link" class="advanced-link-form__raw__input" @click="selectRaw" />
           <b-input-group-append>
-<!--            <haptic-copy class="btn-secondary" :text="link" @attempt="selectRaw" />-->
+            <haptic-copy class="btn-secondary" :text="link" @attempt="selectRaw" />
           </b-input-group-append>
         </b-input-group>
       </div>
@@ -224,7 +225,7 @@ export default defineComponent({
           <b-form-input
             ref="markdownInput"
             readonly
-            :modelValue="linkAsMarkdown"
+            :model-value="linkAsMarkdown"
             class="advanced-link-form__markdown__input"
             @click="selectMarkdown"
           />

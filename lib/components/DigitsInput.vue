@@ -1,22 +1,5 @@
-<template>
-  <div class="digits-input">
-    <div class="d-flex digits-input__container">
-      <input
-          ref="inputs"
-        v-for="d in length"
-        :key="d - 1"
-        v-model="values[d - 1]"
-        :class="`digits-input__container__input--${d - 1}`"
-        class="digits-input__container__input w-0 form-control"
-        @keyup.delete="focusToPreviousWhenEmpty(d - 1)"
-      />
-      <input type="hidden" :value="joinedValues" :name="name" />
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
-import { filter, isEqual } from 'lodash'
+import { filter } from 'lodash'
 import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
 
 type DigitsInputData = {
@@ -154,8 +137,25 @@ export default defineComponent({
 })
 </script>
 
+<template>
+  <div class="digits-input">
+    <div class="d-flex digits-input__container">
+      <input
+          ref="inputs"
+          v-for="d in length"
+          :key="d - 1"
+          v-model="values[d - 1]"
+          :class="`digits-input__container__input--${d - 1}`"
+          class="digits-input__container__input w-0 form-control"
+          @keyup.delete="focusToPreviousWhenEmpty(d - 1)"
+      />
+      <input type="hidden" :value="joinedValues" :name="name" />
+    </div>
+  </div>
+</template>
+
 <style scoped lang="scss">
-@import '../styles/lib.scss';
+@import '../styles/lib';
 
 .digits-input {
   &__container {
