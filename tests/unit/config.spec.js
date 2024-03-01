@@ -1,99 +1,104 @@
-import { default as config, Config } from '@/config'
+import { config } from '@vue/test-utils';
+
+import { default as murmurConfig, Config } from '@/config'
 import Murmur from '@/main'
 import { getCurrentInstance, h} from "vue";
 import { mount } from "@vue/test-utils";
+import {beforeAll} from "vitest";
 describe('config.ts', () => {
-
+  beforeAll(()=>{
+    config.global.plugins = []
+  })
   it('should be an instance of `Config`', () => {
-    expect(config).toBeInstanceOf(Config)
+    expect(murmurConfig).toBeInstanceOf(Config)
   })
 
   it('should define a scope named `foo`', () => {
-    config.set('foo.bar', 'uwu')
-    expect(config.scope('foo')).toBeInstanceOf(Config)
-    expect(config.scope('foo').get('bar')).toBe('uwu')
+    murmurConfig.set('foo.bar', 'uwu')
+    expect(murmurConfig.scope('foo')).toBeInstanceOf(Config)
+    expect(murmurConfig.scope('foo').get('bar')).toBe('uwu')
   })
 
   it('should define two scopes named `foo` and `bar`', () => {
-    config.set('foo.bar', 'uwu')
-    config.set('bar.foo', 'owo')
-    expect(config.scope('foo').get('bar')).toBe('uwu')
-    expect(config.scope('bar').get('foo')).toBe('owo')
-    expect(config.scopes.foo).toBeDefined()
-    expect(config.scopes.bar).toBeDefined()
+    murmurConfig.set('foo.bar', 'uwu')
+    murmurConfig.set('bar.foo', 'owo')
+    expect(murmurConfig.scope('foo').get('bar')).toBe('uwu')
+    expect(murmurConfig.scope('bar').get('foo')).toBe('owo')
+    expect(murmurConfig.scopes.foo).toBeDefined()
+    expect(murmurConfig.scopes.bar).toBeDefined()
   })
 
   it('should define two values named `foo` and `bar`', () => {
-    config.set('foo', 'uwu')
-    config.set('bar', 'owo')
-    expect(config.values.foo).toBeDefined()
-    expect(config.values.bar).toBeDefined()
+    murmurConfig.set('foo', 'uwu')
+    murmurConfig.set('bar', 'owo')
+    expect(murmurConfig.values.foo).toBeDefined()
+    expect(murmurConfig.values.bar).toBeDefined()
   })
 
-  it('should merge the given object with the config', () => {
-    config.set('foo', 'erased')
-    config.merge({ 'foo': 'foo', 'bar': 'bar' })
-    expect(config.get('foo')).toBe('foo')
-    expect(config.get('bar')).toBe('bar')
+  it('should merge the given object with the murmurConfig', () => {
+    murmurConfig.set('foo', 'erased')
+    murmurConfig.merge({ 'foo': 'foo', 'bar': 'bar' })
+    expect(murmurConfig.get('foo')).toBe('foo')
+    expect(murmurConfig.get('bar')).toBe('bar')
   })
 
   it('should merge all the boolean values', () => {
-    config.merge({ 'foo': true, 'bar': false })
-    expect(config.get('foo')).toBe(true)
-    expect(config.get('bar')).toBe(false)
-    config.merge({ 'foo': false, 'bar': true })
-    expect(config.get('foo')).toBe(false)
-    expect(config.get('bar')).toBe(true)
+    murmurConfig.merge({ 'foo': true, 'bar': false })
+    expect(murmurConfig.get('foo')).toBe(true)
+    expect(murmurConfig.get('bar')).toBe(false)
+    murmurConfig.merge({ 'foo': false, 'bar': true })
+    expect(murmurConfig.get('foo')).toBe(false)
+    expect(murmurConfig.get('bar')).toBe(true)
   })
 
-  it('should merge the given object and its scopes with the config', () => {
-    config.merge({ 'foo.bar': 'foobar' })
-    expect(config.scope('foo').get('bar')).toBe('foobar')
-    config.merge({ 'bar.foo': 'barfoo' })
-    expect(config.scope('bar').get('foo')).toBe('barfoo')
+  it('should merge the given object and its scopes with the murmurConfig', () => {
+    murmurConfig.merge({ 'foo.bar': 'foobar' })
+    expect(murmurConfig.scope('foo').get('bar')).toBe('foobar')
+    murmurConfig.merge({ 'bar.foo': 'barfoo' })
+    expect(murmurConfig.scope('bar').get('foo')).toBe('barfoo')
   })
 
-  it('should merge the given object with the config with a new key', () => {
-    expect(config.get('help')).toBeUndefined()
-    config.merge({ 'help': 'link' })
-    expect(config.get('help')).toBe('link')
+  it('should merge the given object with the murmurConfig with a new key', () => {
+    expect(murmurConfig.get('help')).toBeUndefined()
+    murmurConfig.merge({ 'help': 'link' })
+    expect(murmurConfig.get('help')).toBe('link')
   })
 
   it('should give the value of a given key as true', () => {
-    config.set('activated', 1)
-    expect(config.is('activated')).toBeTruthy()
-    config.set('activated', '1')
-    expect(config.is('activated')).toBeTruthy()
-    config.set('activated', 'true')
-    expect(config.is('activated')).toBeTruthy()
-    config.set('activated', true)
-    expect(config.is('activated')).toBeTruthy()
-    config.set('activated', 'foo')
-    expect(config.is('activated')).toBeTruthy()
-    config.set('activated', 'bar')
-    expect(config.is('activated')).toBeTruthy()
+    murmurConfig.set('activated', 1)
+    expect(murmurConfig.is('activated')).toBeTruthy()
+    murmurConfig.set('activated', '1')
+    expect(murmurConfig.is('activated')).toBeTruthy()
+    murmurConfig.set('activated', 'true')
+    expect(murmurConfig.is('activated')).toBeTruthy()
+    murmurConfig.set('activated', true)
+    expect(murmurConfig.is('activated')).toBeTruthy()
+    murmurConfig.set('activated', 'foo')
+    expect(murmurConfig.is('activated')).toBeTruthy()
+    murmurConfig.set('activated', 'bar')
+    expect(murmurConfig.is('activated')).toBeTruthy()
   })
 
   it('should give the value of a given key as false', () => {
-    config.set('activated', 0)
-    expect(config.is('activated')).toBeFalsy()
-    config.set('activated', '0')
-    expect(config.is('activated')).toBeFalsy()
-    config.set('activated', 'false')
-    expect(config.is('activated')).toBeFalsy()
-    config.set('activated', false)
-    expect(config.is('activated')).toBeFalsy()
+    murmurConfig.set('activated', 0)
+    expect(murmurConfig.is('activated')).toBeFalsy()
+    murmurConfig.set('activated', '0')
+    expect(murmurConfig.is('activated')).toBeFalsy()
+    murmurConfig.set('activated', 'false')
+    expect(murmurConfig.is('activated')).toBeFalsy()
+    murmurConfig.set('activated', false)
+    expect(murmurConfig.is('activated')).toBeFalsy()
   })
 
   it('should give the value of a given key as false (when it\'s true)', () => {
-    config.set('activated', 0)
-    expect(config.isnt('activated')).toBeTruthy()
-    config.set('activated', '0')
-    expect(config.isnt('activated')).toBeTruthy()
-    config.set('activated', 'false')
-    expect(config.isnt('activated')).toBeTruthy()
-    config.set('activated', false)
-    expect(config.isnt('activated')).toBeTruthy()
+    murmurConfig.set('activated', 0)
+    expect(murmurConfig.isnt('activated')).toBeTruthy()
+    murmurConfig.set('activated', '0')
+    expect(murmurConfig.isnt('activated')).toBeTruthy()
+    murmurConfig.set('activated', 'false')
+    expect(murmurConfig.isnt('activated')).toBeTruthy()
+    murmurConfig.set('activated', false)
+    expect(murmurConfig.isnt('activated')).toBeTruthy()
   })
 
 
