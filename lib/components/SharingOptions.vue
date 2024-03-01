@@ -1,36 +1,10 @@
-<template>
-  <div class="sharing-options" :style="style">
-    <sharing-options-link v-bind="valuesFor('facebook')" network="facebook" class="sharing-options__link"  />
-    <sharing-options-link v-bind="valuesFor('twitter')" network="twitter" class="sharing-options__link"  />
-    <sharing-options-link v-bind="valuesFor('linkedin')" network="linkedin" class="sharing-options__link"  />
-    <sharing-options-link v-bind="valuesFor('email')" network="email" class="sharing-options__link"  />
-    <div v-show="!noEmbed" class="sharing-options__link sharing-options__link--embed">
-      <a @click="show">
-        <fa icon="code" />
-        <span class="sr-only">Embed</span>
-      </a>
-    </div>
-    <b-modal ref="embedForm" id="embedForm" hide-footer title="Embed on your website" class="text-dark">
-      <embed-form
-        no-title
-        no-preview
-        :url="embedUrl || url"
-        :min-height="iframeMinHeight"
-        :min-width="iframeMinWidth"
-      />
-    </b-modal>
-  </div>
-
-
-</template>
-
 <script lang="ts">
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
-import { faCode } from '@fortawesome/free-solid-svg-icons/faCode'
-import { defineComponent, PropType, CSSProperties,computed, onBeforeMount, ref } from 'vue'
+import {faCode} from '@fortawesome/free-solid-svg-icons/faCode'
+import {computed, CSSProperties, defineComponent, onBeforeMount, PropType, ref} from 'vue'
 
-import { default as Fa, library } from './Fa'
+import {default as Fa, library} from './Fa'
 
 import EmbedForm from '@/components/EmbedForm.vue'
 import SharingOptionsLink from '@/components/SharingOptionsLink.vue'
@@ -53,7 +27,7 @@ type MetaValuesMap = {
  * SharingOptions
  */
 export default defineComponent({
-name: 'SharingOptions',
+  name: 'SharingOptions',
   components: {
     BModal,
     EmbedForm,
@@ -127,21 +101,21 @@ name: 'SharingOptions',
       type: Boolean
     }
   },
-  setup(props){
+  setup(props) {
 
-    onBeforeMount(()=> {
+    onBeforeMount(() => {
       library.add(faCode)
     })
 
     const embedForm = ref(null)
-    const {show } = useModal("embedForm")
-    const style = computed((): CSSProperties=> {
-          return {
-            'flex-direction': props.direction
-          } as CSSProperties
+    const {show} = useModal("embedForm")
+    const style = computed((): CSSProperties => {
+      return {
+        'flex-direction': props.direction
+      } as CSSProperties
     })
 
-    const metaValues = computed((): MetaValuesMap=> {
+    const metaValues = computed((): MetaValuesMap => {
       return {
         url: props.url ?? "",
         title: defaultValueFor('sharing-options.title'),
@@ -153,6 +127,7 @@ name: 'SharingOptions',
         twitter_user: defaultValueFor('sharing-options.twitter-user', 'meta[name="twitter:site"]')
       }
     })
+
     function valuesFor(network: string): { [key: string]: string } {
       const values = Object.assign(metaValues.value, props.values)
       return reduce(
@@ -164,12 +139,14 @@ name: 'SharingOptions',
           {}
       )
     }
+
     function defaultValueFor(key: string, metaSelector?: string): string {
       if (props.noMeta || !metaSelector) {
         return config.get(key)
       }
       return get(document.head.querySelector(metaSelector), 'content', config.get(key))
     }
+
     return {
       style,
       show,
@@ -180,6 +157,30 @@ name: 'SharingOptions',
   },
 })
 </script>
+
+<template>
+  <div :style="style" class="sharing-options">
+    <sharing-options-link class="sharing-options__link" network="facebook" v-bind="valuesFor('facebook')"/>
+    <sharing-options-link class="sharing-options__link" network="twitter" v-bind="valuesFor('twitter')"/>
+    <sharing-options-link class="sharing-options__link" network="linkedin" v-bind="valuesFor('linkedin')"/>
+    <sharing-options-link class="sharing-options__link" network="email" v-bind="valuesFor('email')"/>
+    <div v-show="!noEmbed" class="sharing-options__link sharing-options__link--embed">
+      <a @click="show">
+        <fa icon="code"/>
+        <span class="sr-only">Embed</span>
+      </a>
+    </div>
+    <b-modal id="embedForm" ref="embedForm" class="text-dark" hide-footer title="Embed on your website">
+      <embed-form
+          :min-height="iframeMinHeight"
+          :min-width="iframeMinWidth"
+          :url="embedUrl || url"
+          no-preview
+          no-title
+      />
+    </b-modal>
+  </div>
+</template>
 
 <style lang="scss">
 @import '@/styles/lib';

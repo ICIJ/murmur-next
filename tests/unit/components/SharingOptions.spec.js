@@ -1,6 +1,7 @@
-import { mount,flushPromises,enableAutoUnmount } from '@vue/test-utils'
+import { mount, enableAutoUnmount,config } from '@vue/test-utils'
 
 import SharingOptions from '@/components/SharingOptions'
+import Murmur from "@/main";
 
 describe('SharingOptions', () => {
 
@@ -12,8 +13,6 @@ describe('SharingOptions', () => {
       facebook_description: 'A short description for facebook but not for the other network'
     }
   }
-
-  const global = { stubs: { HapticCopy: true, teleport: true }}
 
   enableAutoUnmount(afterEach)
 
@@ -30,12 +29,12 @@ describe('SharingOptions', () => {
   })
 
   it('is a Vue instance', () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.vm).toBeTruthy()
   })
 
   it('renders props.direction on the root element with the default value', () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.element.style['flex-direction']).toBe('row')
   })
 
@@ -43,7 +42,7 @@ describe('SharingOptions', () => {
   it('renders props.direction on the root element with `row`', () => {
     const direction = 'row'
     const wrapper = mount(SharingOptions, {
-      propsData: { direction, ...propsData } , global
+      propsData: { direction, ...propsData }
     })
     expect(wrapper.element.style['flex-direction']).toBe(direction)
   })
@@ -51,7 +50,7 @@ describe('SharingOptions', () => {
   it('renders props.direction on the root element with `row-reverse`', () => {
     const direction = 'row-reverse'
     const wrapper = mount(SharingOptions, {
-      propsData: { direction, ...propsData }, global
+      propsData: { direction, ...propsData }
     })
     expect(wrapper.element.style['flex-direction']).toBe(direction)
   })
@@ -59,7 +58,7 @@ describe('SharingOptions', () => {
   it('renders props.direction on the root element with `column`', () => {
     const direction = 'column'
     const wrapper = mount(SharingOptions, {
-      propsData: { direction, ...propsData } , global
+      propsData: { direction, ...propsData }
     })
     expect(wrapper.element.style['flex-direction']).toBe(direction)
   })
@@ -67,20 +66,20 @@ describe('SharingOptions', () => {
   it('renders props.direction on the root element with `column-reverse`', () => {
     const direction = 'column-reverse'
     const wrapper = mount(SharingOptions, {
-      propsData: { direction, ...propsData } , global
+      propsData: { direction, ...propsData }
     })
     expect(wrapper.element.style['flex-direction']).toBe(direction)
   })
 
   it('renders the embed button by default', () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.find('.sharing-options__link--embed').element.style.display).not.toBe('none')
   })
 
   it('hides the embed button when props.noEmbed is passed', () => {
     const noEmbed = true
     const wrapper = mount(SharingOptions, {
-      propsData: { noEmbed, ...propsData }, global
+      propsData: { noEmbed, ...propsData }
     })
     expect(wrapper.find('.sharing-options__link--embed').element.style.display).toBe('none')
   })
@@ -88,29 +87,29 @@ describe('SharingOptions', () => {
   it('hides the embed button when props.noEmbed is passed', () => {
     const noEmbed = true
     const wrapper = mount(SharingOptions, {
-      propsData: { noEmbed, ...propsData }, global
+      propsData: { noEmbed, ...propsData }
     })
     expect(wrapper.find('.sharing-options__link--embed').element.style.display).toBe('none')
   })
 
   it('uses a generic title', () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.vm.valuesFor('facebook').title).toBe('A title to share')
     expect(wrapper.vm.valuesFor('other').title).toBe('A title to share')
   })
 
   it('uses a dedicated title for Twitter', () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.vm.valuesFor('twitter').title).toBe('A tweet to share #vue')
   })
 
   it('uses a dedicated description for Facebook', () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.vm.valuesFor('facebook').description).toBe('A short description for facebook but not for the other network')
   })
 
   it('toggles the embed form', async () => {
-    const wrapper = mount(SharingOptions, { propsData, global })
+    const wrapper = mount(SharingOptions, { propsData, global:{ stubs: { teleport: true , HapticCopy:true}} })
 
     const $modal = wrapper.find('#embedForm')
     expect($modal.isVisible()).toBe(false)
