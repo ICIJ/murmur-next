@@ -112,7 +112,6 @@ export default defineComponent({
     const linkAsMarkdown = computed(() => `[${titleOrLink.value}](${props.link})`);
 
     const linkAsHtml = computed(() => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`);
-    const currentTab  = toRef(props, 'modelValue');
     const formClasses = computed(() => {
       const propsToCheck = ['card', 'pills', 'small', 'vertical'];
       return propsToCheck.reduce((classes, prop) => {
@@ -163,7 +162,6 @@ export default defineComponent({
     }
 
     return {
-      currentTab,
       t,
       titleOrLink,
       linkAsMarkdown,
@@ -187,12 +185,13 @@ export default defineComponent({
     :content-class="card ? 'mt-0' : 'mt-3'"
     :card="card"
     :pills="pills"
-    v-model="currentTab"
+    :model-value="modelValue"
     :small="small"
     :vertical="vertical"
     :active-nav-item-class="activeNavItemClass"
     :no-fade="noFade"
     :class="formClasses"
+    @update:model-value="$emit('update:modelValue')"
   >
     <b-tab v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
       <div class="advanced-link-form__raw" :class="{ small }">
