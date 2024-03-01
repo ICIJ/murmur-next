@@ -1,5 +1,5 @@
 import {AdvancedLinkForm} from "@/components";
-import {BButton, BModal, useModal} from "bootstrap-vue-next";
+import {BButton, BCard, BModal, BPopover, useModal} from "bootstrap-vue-next";
 import {StoryObj} from "@storybook/vue3";
 import {ref} from "vue";
 
@@ -52,8 +52,53 @@ InsideModal.args = {
     card:true
 };
 
+const popoverDecorator = () => ({
+    components: { BPopover },
+    template:`    <div>
+        <div class="p-4 text-center">
+            <button class="btn btn-info font-weight-bold" id="popover-button-sample">
+                Click to see the form
+            </button>
+        </div>
+        <b-popover target="popover-button-sample" placement="right" >
+            <story id="popover-button-sample"/>
+        </b-popover>
+    </div>`
+})
 
+export const InsidePopover = Template.bind({});
+InsidePopover.decorators= [popoverDecorator]
+InsidePopover.args = {
+    title:"Medtronic spends millions each year on lobbying in the US",
+    link:"https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying",
+    card:true,
+    small:true,
+    noFade:true,
+    forms:['raw', 'markdown']
+};
 
-
-
-
+const tabPillsDecorator = () => ({
+    components: { BCard },
+    template:`<div class="text-center p-4">
+        <b-card no-body>
+            <story/>
+        </b-card>
+    </div>`
+})
+export const WithTabPills = Template.bind({});
+WithTabPills.decorators= [tabPillsDecorator]
+WithTabPills.args = {
+    title:"Medtronic spends millions each year on lobbying in the US",
+    link:"https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying",
+    card:true,
+    pills:true,
+};
+export const WithTabPillsActiveClass = Template.bind({});
+WithTabPillsActiveClass.decorators= [tabPillsDecorator]
+WithTabPillsActiveClass.args = {
+    title:"Medtronic spends millions each year on lobbying in the US",
+    link:"https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying",
+    card:true,
+    pills:true,
+    activeNavItemClass:"bg-primary fw-bold"
+};
