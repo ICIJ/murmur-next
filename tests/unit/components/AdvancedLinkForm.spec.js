@@ -8,7 +8,7 @@ describe('AdvancedLinkForm.vue', () => {
     document.body.appendChild(container)
     return container
   }
-  const global = {}
+  const global = {stubs: {HapticCopy: true}}
   it('should be a Vue instance', () => {
     const wrapper = mount(AdvancedLinkForm, { global })
     expect(wrapper.vm).toBeTruthy()
@@ -36,7 +36,7 @@ describe('AdvancedLinkForm.vue', () => {
   })
 
   it('should create switch between form using `modelValue` property', async () => {
-    const wrapper = mount(AdvancedLinkForm, { global:{stubs: {HapticCopy: true}} })
+    const wrapper = mount(AdvancedLinkForm, { global })
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.tab-pane.active .advanced-link-form__raw').exists()).toBeTruthy()
     await wrapper.setProps({modelValue: 1})
