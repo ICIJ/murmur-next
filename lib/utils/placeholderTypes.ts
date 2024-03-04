@@ -1,4 +1,4 @@
-import type { StyleValue } from 'vue/types/jsx'
+import type { StyleValue } from 'vue'
 
 export interface BoxStyle {
   style: StyleValue,
