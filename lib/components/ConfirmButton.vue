@@ -5,11 +5,11 @@
     <b-tooltip ref="confirmationTooltip" :target="uniqComponentId" triggers="blur" :placement="placement">
       <div class="confirm-button__tooltip">
         <button
-          v-if="!noCloseButton"
-          class="confirm-button__tooltip__cancel btn btn-sm btn-link text-muted p-0 float-right"
-          @click="cancel"
+            v-if="!noCloseButton"
+            class="confirm-button__tooltip__cancel btn btn-sm btn-link text-light p-0 float-end"
+            @click="cancel"
         >
-          <fa icon="times" />
+          <fa icon="times"/>
         </button>
         <p class="confirm-button__tooltip__label mb-2">
           {{ label }}
@@ -17,13 +17,13 @@
         <p v-if="description" class="confirm-button__tooltip__description mb-2">
           {{ description }}
         </p>
-        <div class="confirm-button__tooltip__actions text-right">
-          <button class="confirm-button__tooltip__actions__cancel btn btn-sm btn-link text-muted" @click="cancel">
+        <div class="confirm-button__tooltip__actions text-end">
+          <button class="confirm-button__tooltip__actions__cancel btn btn-sm btn-link text-light" @click="cancel">
             {{ no }}
           </button>
           <button
-            class="confirm-button__tooltip__actions__confirm btn btn-sm btn-link text-light fw-bold"
-            @click="confirm"
+              class="confirm-button__tooltip__actions__confirm btn btn-sm btn-link text-light fw-bold"
+              @click="confirm"
           >
             {{ yes }}
           </button>
@@ -36,12 +36,11 @@
 <script lang="ts">
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
-// import { BTooltip } from 'bootstrap-vue/esm/components/tooltip/tooltip'
-import {defineComponent, PropType, ref, watch, ComponentPublicInstance} from 'vue'
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes'
+import {BTooltip, PopoverPlacement} from 'bootstrap-vue-next'
+import {ComponentPublicInstance, defineComponent, PropType, ref} from 'vue'
 
-import { library, default as Fa } from './Fa'
-import { PopoverPlacement } from 'bootstrap-vue-next'
+import {default as Fa, library} from './Fa'
 import {onBeforeMount} from "@vue/runtime-core";
 
 /**
@@ -50,7 +49,7 @@ import {onBeforeMount} from "@vue/runtime-core";
 export default defineComponent({
   name: 'ConfirmButton',
   components: {
-    // BTooltip,
+    BTooltip,
     Fa
   },
   props: {
@@ -117,50 +116,45 @@ export default defineComponent({
       default: 'button'
     }
   },
-  setup(props){
-    onBeforeMount(()=>{
+  emits: ['toggled', 'cancelled', "confirmed"],
+  setup(props, {emit}) {
+    onBeforeMount(() => {
       library.add(faTimes)
     })
     const showTooltip = ref<Boolean>(false);
     const uniqComponentId = uniqueId('murmur-confirm-button-');
     const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
-    const root = ref<ComponentPublicInstance | null>(null)
+
     function toggleConfirmationTooltip(): void {
-      if (!showTooltip.value) {
-        root.value?.$emit('bv::hide::tooltip')
-      }
-    showTooltip.value = !showTooltip.value
-    /**
-     * Emitted when the confirmation is toggled.
-     * @event toggled
-     * @param Boolean True if the button is shown.
-     */
-    root.value?.$emit('toggled', showTooltip.value)
-  }
-   function cancel(): void {
-    confirmationTooltip.value?.$emit('close')
-     props.cancelled()
-    /**
-     * Emitted when the confirmation is cancelled.
-     * @event cancelled
-     */
-    root.value?.$emit('cancelled')
-  }
-   function confirm(): void {
-      showTooltip.value = false
+      console.log("hey")
+      showTooltip.value = !showTooltip.value
+      /**
+       * Emitted when the confirmation is toggled.
+       * @event toggled
+       * @param Boolean True if the button is shown.
+       */
+      emit('toggled', showTooltip.value)
+    }
+
+    function cancel(): void {
+      // showTooltip.value = false
+      props.cancelled()
+      /**
+       * Emitted when the confirmation is cancelled.
+       * @event cancelled
+       */
+      emit('cancelled')
+    }
+
+    function confirm(): void {
+      // showTooltip.value = false
       props.confirmed()
       /**
        * Emitted when the confirmation is confirmed.
        * @event confirmed
        */
-      root.value?.$emit('confirmed')
+      emit('confirmed')
     }
-    watch(
-        () => showTooltip,
-        (value)=>{
-          confirmationTooltip.value?.$emit(value ? 'open' : 'close')
-        }
-    )
 
     return {
       showTooltip,

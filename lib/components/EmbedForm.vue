@@ -11,14 +11,14 @@
           </p>
           <textarea ref='embed-form__code' class="form-control embed-form__code mb-2" readonly :value="embedCode()" @click="selectCode" />
 
-          <label class="custom-control custom-checkbox btn btn-sm float-left">
+          <label class="custom-control custom-checkbox btn btn-sm float-start">
             <input v-model="responsiveCheck" type="checkbox" class="custom-control-input" />
             <span class="custom-control-label fw-bold">
               {{ t('embed-form.responsive-optin') }}
             </span>
           </label>
 
-          <div class="text-right">
+          <div class="text-end">
             <haptic-copy
               class="btn-link btn-sm text-uppercase fw-bold"
               :text="embedCode()"
