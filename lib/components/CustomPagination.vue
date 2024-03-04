@@ -54,10 +54,10 @@
             </b-input-group>
           </form>
           <template v-if="!compact">
-            <small v-if="errors.length" id="invalid-number-error" class="float-left mt-1 ml-1 text-danger">
+            <small v-if="errors.length" id="invalid-number-error" class="float-start mt-1 ml-1 text-danger">
               {{ errors[0] }}
             </small>
-            <small v-else class="float-left mt-1 ml-1 text-muted">
+            <small v-else class="float-start mt-1 ml-1 text-muted">
               {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
             </small>
           </template>
@@ -144,7 +144,7 @@ name: 'CustomPagination',
       return Number(props.pages)
     })
     const paginationClassList = computed((): string[] => {
-      return props.size === Size.sm ? ['float-right', 'mr-1'] : []
+      return props.size === Size.sm ? ['float-end', 'mr-1'] : []
     })
 
     function applyJumpFormPage(): void {
