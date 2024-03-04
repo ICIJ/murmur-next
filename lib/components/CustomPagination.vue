@@ -1,72 +1,3 @@
-<template>
-  <div
-    class="custom-pagination container-fluid"
-    :class="{ 'custom-pagination--compact': compact, 'custom-pagination--pills': pills }"
-  >
-    <div class="row justify-content-center align-items-stretch" :class="{ 'no-gutters': compact && !pills }">
-      <div class="col-auto custom-pagination__pages">
-        <b-pagination
-          :total-rows="perPage * numberOfPages"
-          :per-page="perPage"
-          :model-value="modelValue"
-          :pills="pills"
-          :class="paginationClassList"
-          :size="size"
-          class="m-0"
-          first-number
-          last-number
-          @update:modelValue="updateModelValue"
-        >
-          <template #prev-text="{ disabled, index, page }">
-            <!-- @slot The 'Go to previous page' button content -->
-            <slot name="prev-text" v-bind="{ disabled, index, page }" />
-          </template>
-          <template #next-text="{ disabled, index, page }">
-            <!-- @slot The 'Go to next page' button content -->
-            <slot name="next-text" v-bind="{ disabled, index, page }" />
-          </template>
-          <template #page="{ active, content, disabled, index, page }">
-            <!-- @slot Page number button content -->
-            <slot name="page" v-bind="{ active, content, disabled, index, page }" />
-          </template>
-          <template #ellipsis-text>
-            <!-- @slot The '...' indicator content. Overrides the `ellipsis-text` prop -->
-            <slot name="ellipsis-text" />
-          </template>
-        </b-pagination>
-      </div>
-      <div class="col-auto">
-        <div class="custom-pagination__form">
-          <form ref="customPaginationForm" class="input-group" @submit.prevent="applyJumpFormPage">
-            <b-input-group :size="size">
-              <input
-                v-model="currentPageInput"
-                type="number"
-                class="form-control"
-                :placeholder="inputPlaceholder"
-                aria-label="Jump to page"
-              />
-              <div v-if="!compact" class="input-group-append">
-                <button class="btn btn-secondary btn-sm" type="submit">
-                  <span class="px-1 py-3"> Go </span>
-                </button>
-              </div>
-            </b-input-group>
-          </form>
-          <template v-if="!compact">
-            <small v-if="errors.length" id="invalid-number-error" class="float-start mt-1 ml-1 text-danger">
-              {{ errors[0] }}
-            </small>
-            <small v-else class="float-start mt-1 ml-1 text-muted">
-              {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
-            </small>
-          </template>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import {computed, defineComponent,ref,PropType} from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -179,6 +110,75 @@ export default defineComponent({
 
 })
 </script>
+
+<template>
+  <div
+      class="custom-pagination container-fluid"
+      :class="{ 'custom-pagination--compact': compact, 'custom-pagination--pills': pills }"
+  >
+    <div class="row justify-content-center align-items-stretch" :class="{ 'no-gutters': compact && !pills }">
+      <div class="col-auto custom-pagination__pages">
+        <b-pagination
+            :total-rows="perPage * numberOfPages"
+            :per-page="perPage"
+            :model-value="modelValue"
+            :pills="pills"
+            :class="paginationClassList"
+            :size="size"
+            class="m-0"
+            first-number
+            last-number
+            @update:modelValue="updateModelValue"
+        >
+          <template #prev-text="{ disabled, index, page }">
+            <!-- @slot The 'Go to previous page' button content -->
+            <slot name="prev-text" v-bind="{ disabled, index, page }" />
+          </template>
+          <template #next-text="{ disabled, index, page }">
+            <!-- @slot The 'Go to next page' button content -->
+            <slot name="next-text" v-bind="{ disabled, index, page }" />
+          </template>
+          <template #page="{ active, content, disabled, index, page }">
+            <!-- @slot Page number button content -->
+            <slot name="page" v-bind="{ active, content, disabled, index, page }" />
+          </template>
+          <template #ellipsis-text>
+            <!-- @slot The '...' indicator content. Overrides the `ellipsis-text` prop -->
+            <slot name="ellipsis-text" />
+          </template>
+        </b-pagination>
+      </div>
+      <div class="col-auto">
+        <div class="custom-pagination__form">
+          <form ref="customPaginationForm" class="input-group" @submit.prevent="applyJumpFormPage">
+            <b-input-group :size="size">
+              <input
+                  v-model="currentPageInput"
+                  type="number"
+                  class="form-control"
+                  :placeholder="inputPlaceholder"
+                  aria-label="Jump to page"
+              />
+              <div v-if="!compact" class="input-group-append">
+                <button class="btn btn-secondary btn-sm" type="submit">
+                  <span class="px-1 py-3"> Go </span>
+                </button>
+              </div>
+            </b-input-group>
+          </form>
+          <template v-if="!compact">
+            <small v-if="errors.length" id="invalid-number-error" class="float-start mt-1 ml-1 text-danger">
+              {{ errors[0] }}
+            </small>
+            <small v-else class="float-start mt-1 ml-1 text-muted">
+              {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
+            </small>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import '../styles/lib';
