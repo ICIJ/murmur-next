@@ -72,9 +72,11 @@ import {computed, defineComponent,ref,PropType} from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Size } from '@/enums'
+import {BPagination} from "bootstrap-vue-next";
 
 export default defineComponent({
-name: 'CustomPagination',
+  name: 'CustomPagination',
+  components: {BPagination},
   props: {
     /**
      * Total items to be stored in pages
@@ -118,7 +120,7 @@ name: 'CustomPagination',
       type: Boolean
     },
     /**
-     * (Optional) Number of page. Propety `size` is required for this to work
+     * (Optional) Number of page. Property `size` is required for this to work
      * properly. If `pages` is empty, it will be calculated using the size.
      */
     pages: {
