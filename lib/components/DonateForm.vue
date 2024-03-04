@@ -21,7 +21,7 @@ name: 'DonateForm',
       type: Boolean
     }
   },
-  setup(props, {emit}){
+  setup(){
     const {t, locale, messages} = useI18n()
     const amount = ref(10)
     // True if the amount wasn't changed by the user yet

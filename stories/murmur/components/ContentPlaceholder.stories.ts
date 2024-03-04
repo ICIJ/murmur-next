@@ -1,6 +1,6 @@
 import { ContentPlaceholder } from "@/components";
 import { StoryObj } from "@storybook/vue3";
-import {ContentPlaceholderRow, ContentPlaceholderRows} from "@/utils/placeholderTypes";
+import {ContentPlaceholderRows} from "@/utils/placeholderTypes";
 
 export default {
     title: 'Murmur/components/ContentPlaceholder',
