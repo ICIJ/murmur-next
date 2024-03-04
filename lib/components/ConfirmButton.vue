@@ -1,8 +1,18 @@
 <template>
-  <component ref="root" :is="tag" :id="uniqComponentId" class="confirm-button" @click="toggleConfirmationTooltip">
+  <component
+      :is="tag"
+      :id="uniqComponentId"
+      class="confirm-button"
+      @click.stop="toggleConfirmationTooltip">
     <!-- @slot Main content of the button -->
     <slot>-</slot>
-    <b-tooltip ref="confirmationTooltip" :target="uniqComponentId" triggers="blur" :placement="placement">
+    <b-tooltip
+        ref="confirmationTooltip"
+        :model-value="showTooltip"
+        :placement="placement"
+        :target="uniqComponentId"
+        manual
+    >
       <div class="confirm-button__tooltip">
         <button
             v-if="!noCloseButton"
