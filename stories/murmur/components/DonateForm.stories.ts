@@ -1,6 +1,7 @@
 import {DonateForm} from "@/components";
 import {StoryObj} from "@storybook/vue3";
-import {BModal, useModal} from "bootstrap-vue-next";
+import {Size} from "@/enums";
+import {modalDecorator} from "../decorators";
 
 export default {
   title: 'Murmur/components/DonateForm',
@@ -20,25 +21,9 @@ const Template: Story = (args: any) => ({
 
 export const Default = Template.bind({});
 Default.args = {};
-const modalDecorator = () => ({
-  components: {BModal},
-  setup() {
-    const {show} = useModal('formModal')
-    return {show};
-  },
-  template: `
-    <div class="p-4 text-center">
-      <button class="btn btn-info fw-bold" @click="show">
-        Click to see the form
-      </button>
-    </div>
-    <b-modal hide-footer lazy title="Support ICIJ" id="formModal" size="lg" no-headings>
-      <story/>
-    </b-modal>`
-})
 
 export const InModal = Template.bind({})
-InModal.decorators = [modalDecorator]
+InModal.decorators = [modalDecorator.bind(this,"Click to see the form","Support ICIJ",Size.lg)]
 InModal.args = {
   noTitle:true
 }
