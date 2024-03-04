@@ -4,7 +4,7 @@
       <fa icon="times" />
     </button>
     <sign-up-form class="p-3" />
-    <div class="px-3 pb-1 text-uppercase text-muted font-weight-bold">
+    <div class="px-3 pb-1 text-uppercase text-muted fw-bold">
       {{ t('follow-us-popover.heading') }}
     </div>
     <div class="p-3 bg-light container-fluid text-center">

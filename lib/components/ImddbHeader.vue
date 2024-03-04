@@ -72,7 +72,7 @@
             </slot>
           </li>
           <li class="nav-item">
-            <button id="follow-icij" class="btn btn-primary btn-block font-weight-bold">
+            <button id="follow-icij" class="btn btn-primary btn-block fw-bold">
               {{ t('imddb-header.navbar.follow') }}
             </button>
             <b-popover

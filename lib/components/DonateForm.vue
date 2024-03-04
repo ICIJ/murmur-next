@@ -1,6 +1,6 @@
 <template>
   <div class="donate-form container-fluid py-2">
-    <h2 v-if="!noTitle" class="donate-form__title text-uppercase font-weight-bold text-primary h5">
+    <h2 v-if="!noTitle" class="donate-form__title text-uppercase fw-bold text-primary h5">
       {{ t('donate-form.support') }}
     </h2>
     <!-- @slot Description of the form (bellow the title). -->
@@ -23,14 +23,14 @@
             :class="{ active: level === 'conversation' }"
             @click="selectLevel('conversation')"
           >
-            <h3 class="donate-form__payment__heading text-uppercase font-weight-bold text-primary h5">
+            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
               {{ t('donate-form.benefits.impacts.conversation.heading') }}
             </h3>
             <div class="Article">
               <div>
                 <!-- eslint-disable vue/no-v-html -->
                 <p
-                  class="donate-form__payment__highlight text-icij font-weight-bold"
+                  class="donate-form__payment__highlight text-icij fw-bold"
                   v-html="t('donate-form.benefits.impacts.conversation.highlight')"
                 />
                 <!-- eslint-enable -->
@@ -42,14 +42,14 @@
             :class="{ active: level === 'rules' }"
             @click="selectLevel('rules')"
           >
-            <h3 class="donate-form__payment__heading text-uppercase font-weight-bold text-primary h5">
+            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
               {{ t('donate-form.benefits.impacts.rules.heading') }}
             </h3>
             <div class="Article">
               <div>
                 <!-- eslint-disable vue/no-v-html -->
                 <p
-                  class="donate-form__payment__highlight text-icij font-weight-bold"
+                  class="donate-form__payment__highlight text-icij fw-bold"
                   v-html="t('donate-form.benefits.impacts.rules.highlight')"
                 />
                 <!-- eslint-enable -->
@@ -61,14 +61,14 @@
             :class="{ active: level === 'world' }"
             @click="selectLevel('world')"
           >
-            <h3 class="donate-form__payment__heading text-uppercase font-weight-bold text-primary h5">
+            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
               {{ t('donate-form.benefits.impacts.world.heading') }}
             </h3>
             <div class="Article">
               <div>
                 <!-- eslint-disable vue/no-v-html -->
                 <p
-                  class="donate-form__payment__highlight text-icij font-weight-bold"
+                  class="donate-form__payment__highlight text-icij fw-bold"
                   v-html="t('donate-form.benefits.impacts.world.highlight')"
                 />
                 <!-- eslint-enable -->
@@ -126,7 +126,7 @@
             <input name="org_id" value="icij" type="hidden" />
             <input v-model="campaign" name="campaign" type="hidden" />
             <input v-model="installmentPeriod" name="installmentPeriod" type="hidden" />
-            <button type="submit" class="btn btn-primary rounded-pill text-uppercase font-weight-bold">
+            <button type="submit" class="btn btn-primary rounded-pill text-uppercase fw-bold">
               {{ t('donate-form.submit') }}
             </button>
             <a target="_blank" href="https://icij.org/donate" class="donate-form__payment__image" />
@@ -158,7 +158,7 @@
           <a
             target="_blank"
             href="https://icij.org/donate"
-            class="btn btn-primary rounded-pill text-uppercase font-weight-bold py-2"
+            class="btn btn-primary rounded-pill text-uppercase fw-bold py-2"
           >
             {{ t('donate-form.benefits.more') }}
           </a>

@@ -13,14 +13,14 @@
 
           <label class="custom-control custom-checkbox btn btn-sm float-left">
             <input v-model="responsiveCheck" type="checkbox" class="custom-control-input" />
-            <span class="custom-control-label font-weight-bold">
+            <span class="custom-control-label fw-bold">
               {{ t('embed-form.responsive-optin') }}
             </span>
           </label>
 
           <div class="text-right">
             <haptic-copy
-              class="btn-link btn-sm text-uppercase font-weight-bold"
+              class="btn-link btn-sm text-uppercase fw-bold"
               :text="embedCode()"
               :label="t('embed-form.copy').toString()"
               @attempt="selectCode()"
