@@ -1,7 +1,7 @@
 <template>
   <form class="sign-up-form" :class="{ 'sign-up-form--horizontal': horizontal }" @submit.prevent="subscribe">
     <fieldset :disabled="frozen">
-      <label v-if="!noLabel" class="text-uppercase text-muted font-weight-bold" for="input-email">
+      <label v-if="!noLabel" class="text-uppercase text-muted fw-bold" for="input-email">
         {{ t('sign-up-form.label') }}
       </label>
       <div class="sign-up-form__fieldset__group" :class="{ 'input-group': horizontal }">
@@ -14,7 +14,7 @@
           :placeholder="t('sign-up-form.placeholder').toString()"
         />
         <div class="sign-up-form__fieldset__group__addon" :class="{ 'input-group-append': horizontal }">
-          <button class="btn text-uppercase font-weight-bold" :class="variantColorClass" type="submit">
+          <button class="btn text-uppercase fw-bold" :class="variantColorClass" type="submit">
             {{ t('sign-up-form.submit') }}
           </button>
         </div>

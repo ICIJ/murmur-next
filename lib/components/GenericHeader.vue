@@ -41,7 +41,7 @@
           </li>
           <li class="nav-item mr-lg-3">
             <slot name="donate-link">
-              <a class="text-uppercase btn btn-primary font-weight-bold" target="_blank" :href="donateUrl">
+              <a class="text-uppercase btn btn-primary fw-bold" target="_blank" :href="donateUrl">
                 {{ t('generic-header.navbar.support') }}
               </a>
             </slot>

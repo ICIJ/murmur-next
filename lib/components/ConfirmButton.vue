@@ -22,7 +22,7 @@
             {{ no }}
           </button>
           <button
-            class="confirm-button__tooltip__actions__confirm btn btn-sm btn-link text-light font-weight-bold"
+            class="confirm-button__tooltip__actions__confirm btn btn-sm btn-link text-light fw-bold"
             @click="confirm"
           >
             {{ yes }}
