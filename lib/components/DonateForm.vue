@@ -1,173 +1,3 @@
-<template>
-  <div class="donate-form container-fluid py-2">
-    <h2 v-if="!noTitle" class="donate-form__title text-uppercase fw-bold text-primary h5">
-      {{ t('donate-form.support') }}
-    </h2>
-    <!-- @slot Description of the form (bellow the title). -->
-    <slot name="introduction">
-      <!-- eslint-disable vue/no-v-html -->
-      <p class="donate-form__introduction" v-html="t('donate-form.introduction')" />
-      <!-- eslint-enable -->
-    </slot>
-
-    <div class="donate-form__payment mb-4 text-center">
-      <form
-        action="//checkout.fundjournalism.org/memberform"
-        method="get"
-        target="_blank"
-        class="donate-form__payment__form bg-light p-4"
-      >
-        <div class="donate-form__payment__levels row">
-          <div
-            class="col donate-form__payment__level"
-            :class="{ active: level === 'conversation' }"
-            @click="selectLevel('conversation')"
-          >
-            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
-              {{ t('donate-form.benefits.impacts.conversation.heading') }}
-            </h3>
-            <div class="Article">
-              <div>
-                <!-- eslint-disable vue/no-v-html -->
-                <p
-                  class="donate-form__payment__highlight text-icij fw-bold"
-                  v-html="t('donate-form.benefits.impacts.conversation.highlight')"
-                />
-                <!-- eslint-enable -->
-              </div>
-            </div>
-          </div>
-          <div
-            class="col donate-form__payment__level"
-            :class="{ active: level === 'rules' }"
-            @click="selectLevel('rules')"
-          >
-            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
-              {{ t('donate-form.benefits.impacts.rules.heading') }}
-            </h3>
-            <div class="Article">
-              <div>
-                <!-- eslint-disable vue/no-v-html -->
-                <p
-                  class="donate-form__payment__highlight text-icij fw-bold"
-                  v-html="t('donate-form.benefits.impacts.rules.highlight')"
-                />
-                <!-- eslint-enable -->
-              </div>
-            </div>
-          </div>
-          <div
-            class="col donate-form__payment__level"
-            :class="{ active: level === 'world' }"
-            @click="selectLevel('world')"
-          >
-            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
-              {{ t('donate-form.benefits.impacts.world.heading') }}
-            </h3>
-            <div class="Article">
-              <div>
-                <!-- eslint-disable vue/no-v-html -->
-                <p
-                  class="donate-form__payment__highlight text-icij fw-bold"
-                  v-html="t('donate-form.benefits.impacts.world.highlight')"
-                />
-                <!-- eslint-enable -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="mt-5">
-            <span class="donate-form__payment__buttons">
-              <button
-                type="button"
-                class="btn btn-sm frequency-monthly"
-                :class="{ 'btn-primary': installmentPeriod === 'monthly' }"
-                @click="installmentPeriod = 'monthly'"
-              >
-                {{ t('donate-form.frequency.monthly') }}
-              </button>
-              <button
-                type="button"
-                class="btn btn-sm frequency-yearly"
-                :class="{ 'btn-primary': installmentPeriod === 'yearly' }"
-                @click="installmentPeriod = 'yearly'"
-              >
-                {{ t('donate-form.frequency.yearly') }}
-              </button>
-              <button
-                type="button"
-                class="btn btn-sm frequency-onetime"
-                :class="{ 'btn-primary': installmentPeriod === null }"
-                @click="installmentPeriod = 'onetime'"
-              >
-                {{ t('donate-form.frequency.onetime') }}
-              </button>
-            </span>
-          </div>
-          <div class="mt-4">
-            <span>{{ t('donate-form.label') }}&nbsp;</span>
-            <label class="donate-form__payment__unit input-group input-group-sm d-inline-flex">
-              <span class="input-group-prepend">
-                <span class="input-group-text">$</span>
-              </span>
-              <input
-                v-model="amount"
-                class="donate-form__payment__input form-control"
-                name="amount"
-                type="number"
-                min="0"
-                @change="amountIsNotPristine"
-              />
-            </label>
-          </div>
-          <div class="mt-4">
-            <input name="org_id" value="icij" type="hidden" />
-            <input v-model="campaign" name="campaign" type="hidden" />
-            <input v-model="installmentPeriod" name="installmentPeriod" type="hidden" />
-            <button type="submit" class="btn btn-primary rounded-pill text-uppercase fw-bold">
-              {{ t('donate-form.submit') }}
-            </button>
-            <a target="_blank" href="https://icij.org/donate" class="donate-form__payment__image" />
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div class="donate-form__insider">
-      <h2 class="donate-form__insider__title">
-        {{ t('donate-form.benefits.heading') }}
-      </h2>
-      <p>
-        {{ t('donate-form.benefits.introduction') }}
-      </p>
-      <div>
-        <ul class="donate-form__insider__list">
-          <li
-            v-for="(benefit, index) in listBenefits"
-            :key="index"
-            class="donate-form__insider__list-item"
-            v-html="benefit"
-          />
-        </ul>
-      </div>
-      <div>
-        <hr class="donate-form__insider__separator" />
-        <div class="donate-form__insider__more text-center">
-          <a
-            target="_blank"
-            href="https://icij.org/donate"
-            class="btn btn-primary rounded-pill text-uppercase fw-bold py-2"
-          >
-            {{ t('donate-form.benefits.more') }}
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import keys from 'lodash/keys'
 import map from 'lodash/map'
@@ -177,7 +7,6 @@ import forEach from 'lodash/forEach'
 import config from '../config'
 import {useI18n} from "vue-i18n";
 import {computed, ref, watch} from "vue";
-
 
 /**
  * A form to encourage donations. We usually put this form inside a modal
@@ -290,6 +119,176 @@ name: 'DonateForm',
 
 }
 </script>
+
+<template>
+  <div class="donate-form container-fluid py-2">
+    <h2 v-if="!noTitle" class="donate-form__title text-uppercase fw-bold text-primary h5">
+      {{ t('donate-form.support') }}
+    </h2>
+    <!-- @slot Description of the form (bellow the title). -->
+    <slot name="introduction">
+      <!-- eslint-disable vue/no-v-html -->
+      <p class="donate-form__introduction" v-html="t('donate-form.introduction')" />
+      <!-- eslint-enable -->
+    </slot>
+
+    <div class="donate-form__payment mb-4 text-center">
+      <form
+          action="//checkout.fundjournalism.org/memberform"
+          method="get"
+          target="_blank"
+          class="donate-form__payment__form bg-light p-4"
+      >
+        <div class="donate-form__payment__levels row">
+          <div
+              class="col donate-form__payment__level"
+              :class="{ active: level === 'conversation' }"
+              @click="selectLevel('conversation')"
+          >
+            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
+              {{ t('donate-form.benefits.impacts.conversation.heading') }}
+            </h3>
+            <div class="Article">
+              <div>
+                <!-- eslint-disable vue/no-v-html -->
+                <p
+                    class="donate-form__payment__highlight text-icij fw-bold"
+                    v-html="t('donate-form.benefits.impacts.conversation.highlight')"
+                />
+                <!-- eslint-enable -->
+              </div>
+            </div>
+          </div>
+          <div
+              class="col donate-form__payment__level"
+              :class="{ active: level === 'rules' }"
+              @click="selectLevel('rules')"
+          >
+            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
+              {{ t('donate-form.benefits.impacts.rules.heading') }}
+            </h3>
+            <div class="Article">
+              <div>
+                <!-- eslint-disable vue/no-v-html -->
+                <p
+                    class="donate-form__payment__highlight text-icij fw-bold"
+                    v-html="t('donate-form.benefits.impacts.rules.highlight')"
+                />
+                <!-- eslint-enable -->
+              </div>
+            </div>
+          </div>
+          <div
+              class="col donate-form__payment__level"
+              :class="{ active: level === 'world' }"
+              @click="selectLevel('world')"
+          >
+            <h3 class="donate-form__payment__heading text-uppercase fw-bold text-primary h5">
+              {{ t('donate-form.benefits.impacts.world.heading') }}
+            </h3>
+            <div class="Article">
+              <div>
+                <!-- eslint-disable vue/no-v-html -->
+                <p
+                    class="donate-form__payment__highlight text-icij fw-bold"
+                    v-html="t('donate-form.benefits.impacts.world.highlight')"
+                />
+                <!-- eslint-enable -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="mt-5">
+            <span class="donate-form__payment__buttons">
+              <button
+                  type="button"
+                  class="btn btn-sm frequency-monthly"
+                  :class="{ 'btn-primary': installmentPeriod === 'monthly' }"
+                  @click="installmentPeriod = 'monthly'"
+              >
+                {{ t('donate-form.frequency.monthly') }}
+              </button>
+              <button
+                  type="button"
+                  class="btn btn-sm frequency-yearly"
+                  :class="{ 'btn-primary': installmentPeriod === 'yearly' }"
+                  @click="installmentPeriod = 'yearly'"
+              >
+                {{ t('donate-form.frequency.yearly') }}
+              </button>
+              <button
+                  type="button"
+                  class="btn btn-sm frequency-onetime"
+                  :class="{ 'btn-primary': installmentPeriod === null }"
+                  @click="installmentPeriod = 'onetime'"
+              >
+                {{ t('donate-form.frequency.onetime') }}
+              </button>
+            </span>
+          </div>
+          <div class="mt-4">
+            <span>{{ t('donate-form.label') }}&nbsp;</span>
+            <label class="donate-form__payment__unit input-group input-group-sm d-inline-flex">
+              <span class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </span>
+              <input
+                  v-model="amount"
+                  class="donate-form__payment__input form-control"
+                  name="amount"
+                  type="number"
+                  min="0"
+                  @change="amountIsNotPristine"
+              />
+            </label>
+          </div>
+          <div class="mt-4">
+            <input name="org_id" value="icij" type="hidden" />
+            <input v-model="campaign" name="campaign" type="hidden" />
+            <input v-model="installmentPeriod" name="installmentPeriod" type="hidden" />
+            <button type="submit" class="btn btn-primary rounded-pill text-uppercase fw-bold">
+              {{ t('donate-form.submit') }}
+            </button>
+            <a target="_blank" href="https://icij.org/donate" class="donate-form__payment__image" />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="donate-form__insider">
+      <h2 class="donate-form__insider__title">
+        {{ t('donate-form.benefits.heading') }}
+      </h2>
+      <p>
+        {{ t('donate-form.benefits.introduction') }}
+      </p>
+      <div>
+        <ul class="donate-form__insider__list">
+          <li
+              v-for="(benefit, index) in listBenefits"
+              :key="index"
+              class="donate-form__insider__list-item"
+              v-html="benefit"
+          />
+        </ul>
+      </div>
+      <div>
+        <hr class="donate-form__insider__separator" />
+        <div class="donate-form__insider__more text-center">
+          <a
+              target="_blank"
+              href="https://icij.org/donate"
+              class="btn btn-primary rounded-pill text-uppercase fw-bold py-2"
+          >
+            {{ t('donate-form.benefits.more') }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style lang="scss">
 @import '../styles/lib';
