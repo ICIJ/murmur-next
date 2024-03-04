@@ -36,7 +36,7 @@ const modalDecorator = () => ({
             return {show};
         },
         template:`  <div class="p-4 text-center">
-            <button class="btn btn-info font-weight-bold" @click="show">
+            <button class="btn btn-info fw-bold" @click="show">
                 Click to see the form
             </button>
         </div>
@@ -56,7 +56,7 @@ const popoverDecorator = () => ({
     components: { BPopover },
     template:`    <div>
         <div class="p-4 text-center">
-            <button class="btn btn-info font-weight-bold" id="popover-button-sample">
+            <button class="btn btn-info fw-bold" id="popover-button-sample">
                 Click to see the form
             </button>
         </div>
