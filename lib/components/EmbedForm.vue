@@ -11,14 +11,14 @@
           </p>
           <textarea ref='embed-form__code' class="form-control embed-form__code mb-2" readonly :value="embedCode()" @click="selectCode" />
 
-          <label class="custom-control custom-checkbox btn btn-sm float-start">
-            <input v-model="responsiveCheck" type="checkbox" class="custom-control-input" />
-            <span class="custom-control-label fw-bold">
+          <div class="d-flex justify-content-between">
+          <div class="form-check align-self-end">
+            <input type="checkbox" class="form-check-input" id="responsiveOptin" v-model="responsiveCheck" />
+            <label class="form-check-label fw-bold" for="responsiveOptin">
               {{ t('embed-form.responsive-optin') }}
-            </span>
-          </label>
+            </label>
+          </div>
 
-          <div class="text-end">
             <haptic-copy
               class="btn-link btn-sm text-uppercase fw-bold"
               :text="embedCode()"
@@ -132,6 +132,7 @@ name: 'EmbedForm',
       embedFormCode.value?.select()
     }
     function embedCode(withPym = responsiveCheck.value): string {
+      console.log("éhey")
       const width = typeof props.width === 'string' ? props.width : Math.max(props.width, props.minWidth).toString()
       const height = Math.max(props.height, props.minHeight).toString()
       return withPym ? pymCodeFor(currentUrl) : iframeCodeFor(currentUrl, width, height)
@@ -155,13 +156,7 @@ name: 'EmbedForm',
   font-size: 0.9rem;
   overflow: auto;
 
-  .custom-control.btn {
-    .custom-control-label:before,
-    .custom-control-label:after {
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
+
 
   &__heading {
     font-size: 1.1em;
