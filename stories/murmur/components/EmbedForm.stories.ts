@@ -23,7 +23,7 @@ const Template: Story = (args: any) => ({
 export const Default = Template.bind({});
 Default.args = {
     noPreview:true,
-    height:"330",
+    height:330,
     url:"https://projects.icij.org/the-implant-files/graphics/#/device-related-incidents-in-europe"
 };
 export const InModal = Template.bind({});
