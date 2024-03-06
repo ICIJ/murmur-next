@@ -50,13 +50,10 @@
         <b-popover
           :model-value="showFollowUsPopover"
           @show="showFollowUsPopover=true"
-          id="follow-us-popover"
-          reference="followUsPopover"
-          container="generic-header"
           target="follow-us-toggler"
           placement="bottom-start"
         >
-          <follow-us-popover @update:show="showFollowUsPopover" />
+          <follow-us-popover id="fup" @update:show="showFollowUsPopover" />
         </b-popover>
       </div>
     </component>
@@ -65,16 +62,16 @@
 
 <script lang="ts">
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
-import { headroom } from 'vue-headroom'
-import {computed, defineComponent, PropType} from 'vue'
+import { headroom } from '@/components/headroom';
+import {computed, defineComponent,type PropType,ref , onBeforeMount} from 'vue'
 
 import config from '@/config'
 import Fa, { library } from '@/components/Fa'
 import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
-import { BrandMode } from '@/enums'
-import { ref , onBeforeMount} from 'vue'
+import {BrandMode} from '@/enums'
 import {useI18n} from "vue-i18n";
+import {BPopover} from "bootstrap-vue-next";
 
 type BrandOptions = {
   noBorder: boolean
@@ -89,10 +86,11 @@ type BrandOptions = {
 export default defineComponent({
   name: 'GenericHeader',
   components: {
+    BPopover,
     BrandExpansion,
-    headroom,
     Fa,
-    FollowUsPopover
+    FollowUsPopover,
+    headroom
   },
   props: {
     /**
@@ -106,7 +104,8 @@ export default defineComponent({
      * Disable Headroom for hiding header until needed.
      */
     noHeadroom: {
-      type: Boolean
+      type: Boolean,
+      default:false
     },
     /**
      * Target link of the ICIJ logo and project name.
@@ -145,7 +144,7 @@ export default defineComponent({
       return props.noHeadroom ? 'div' : 'headroom'
     })
     const appliedBrandOptions = computed((): BrandOptions => {
-      return Object.assign(defaultBrandOptions.value, props.brandOptions)
+      return {...defaultBrandOptions.value,... props.brandOptions}
     })
     const  defaultBrandOptions = computed((): BrandOptions => {
       return {

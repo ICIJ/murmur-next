@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { headroom } from 'vue-headroom'
+import {headroom} from '@/components/headroom'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import find from 'lodash/find'
 import get from 'lodash/get'
