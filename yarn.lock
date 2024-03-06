@@ -9846,6 +9846,10 @@ vue-eslint-parser@^9.4.2:
     lodash "^4.17.21"
     semver "^7.3.6"
 
+"vue-headroom@github:caro3801/vue-headroom":
+  version "0.0.1"
+  resolved "https://codeload.github.com/caro3801/vue-headroom/tar.gz/d8784a1dbb7a53d4d87f8bcad7302acc37ad1426"
+
 vue-i18n@*, vue-i18n@^9.9.1:
   version "9.10.1"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-9.10.1.tgz#b3244233da31a55a07a2ae72cdddab7296bca814"
