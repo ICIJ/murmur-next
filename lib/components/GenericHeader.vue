@@ -35,7 +35,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a id="follow-us-toggler" class="nav-link text-uppercase">
+            <a id="follow-us-toggler" class="nav-link text-uppercase" @mouseenter="showFollowUsPopover=true">
               {{ t('generic-header.navbar.follow') }}
             </a>
           </li>
@@ -48,12 +48,13 @@
           </li>
         </ul>
         <b-popover
-          :model-value="showFollowUsPopover"
-          @show="showFollowUsPopover=true"
-          target="follow-us-toggler"
-          placement="bottom-start"
+            v-model="showFollowUsPopover"
+            target="follow-us-toggler"
+            placement="bottom-start"
+            ref="followUsPopover"
+            click
         >
-          <follow-us-popover id="fup" @update:show="showFollowUsPopover" />
+          <follow-us-popover @update:close="closeFollowUsPopover" @keydown.esc="closeFollowUsPopover" />
         </b-popover>
       </div>
     </component>
@@ -62,8 +63,17 @@
 
 <script lang="ts">
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
-import { headroom } from '@/components/headroom';
-import {computed, defineComponent,type PropType,ref , onBeforeMount} from 'vue'
+import headroom  from 'vue-headroom/src/headroom.vue';
+import {
+  computed,
+  defineComponent,
+  type PropType,
+  ref,
+  onBeforeMount,
+  watch,
+  nextTick,
+  ComponentPublicInstance
+} from 'vue'
 
 import config from '@/config'
 import Fa, { library } from '@/components/Fa'
@@ -71,7 +81,7 @@ import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
 import {BrandMode} from '@/enums'
 import {useI18n} from "vue-i18n";
-import {BPopover} from "bootstrap-vue-next";
+import {BPopover, vBPopover} from "bootstrap-vue-next";
 
 type BrandOptions = {
   noBorder: boolean
@@ -136,6 +146,8 @@ export default defineComponent({
     })
 
     const {t}= useI18n()
+    const followUsPopover = ref<ComponentPublicInstance<typeof BPopover>|null>(null)
+    const closable = ref(false)
     const showFollowUsPopover = ref<boolean>(false)
     const collapseNavbar = ref(true)
     const shortMode = ref(BrandMode.Short)
@@ -154,21 +166,27 @@ export default defineComponent({
         background: '#A10207'
       }
     })
-    function closeFollowUsPopover(): void {
-      showFollowUsPopover.value = false
+    function closeFollowUsPopover() {
+      if(followUsPopover.value?.hide){
+        followUsPopover.value?.hide(new Event('forceHide'))
+      }
+      showFollowUsPopover.value=false
     }
     function toggleNavbar(): void {
       collapseNavbar.value = !collapseNavbar.value
       closeFollowUsPopover()
     }
+
     return {
       t,
       rootElement,
       showFollowUsPopover,
+      followUsPopover,
       collapseNavbar,
       shortMode,
       longMode,
       appliedBrandOptions,
+      closable,
       closeFollowUsPopover,
       toggleNavbar
     }
@@ -186,14 +204,16 @@ export default defineComponent({
   width: 100%;
   z-index: $zindex-sticky;
 
+
   .popover {
     width: 100%;
   }
 
-  &.headroom {
+  & .headroom {
     will-change: transform;
     transition: transform 200ms linear;
-
+    display: flex;
+    flex-grow: 1;
     &--unpinned {
       transform: translateY(-100%) !important;
     }
@@ -210,16 +230,16 @@ export default defineComponent({
   &__brand {
     position: relative;
     font-weight: bolder;
-    padding-right: $spacer;
+    padding: $spacer;
     font-size: 1rem;
+    display: inline-block;
   }
 
   .navbar-toggler {
     position: absolute;
     right: $spacer;
     top: $spacer;
-    margin: 0;
-    margin-top: 1px;
+    margin: 1px 0 0;
   }
 
   .nav-item {

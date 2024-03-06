@@ -7,8 +7,7 @@
     <div class="px-3 pb-1 text-uppercase text-muted fw-bold">
       {{ t('follow-us-popover.heading') }}
     </div>
-    <div class="p-3 bg-light container-fluid text-center">
-      <div class="row w-100">
+    <div class="p-3 bg-light d-flex justify-content-between text-center">
         <div class="col">
           <a
             href="https://twitter.com/ICIJorg"
@@ -43,7 +42,6 @@
           </a>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -52,11 +50,10 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter'
 import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin'
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SignUpForm from './SignUpForm.vue'
 import { library, default as Fa } from './Fa'
-import {onBeforeMount} from "@vue/runtime-core";
 
 
 /**
@@ -68,7 +65,7 @@ export default defineComponent({
     Fa,
     SignUpForm
   },
-  emits:["update:show"],
+  emits:["update:close"],
   setup(_props,{emit}){
     const {t} = useI18n()
     onBeforeMount((): void=>{
@@ -78,10 +75,10 @@ export default defineComponent({
       /**
        * Fired when user click on the `close` button
        *
-       * @event update:show
+       * @event update:close
        * @type {boolean}
        */
-      emit('update:show', false)
+      emit('update:close', false)
     }
 
     return {
@@ -97,7 +94,8 @@ export default defineComponent({
 
 .follow-us {
   position: relative;
-  width: 300px;
+  width: 100%;
+  min-width: 298px;
 
   &__social-btn {
     height: 46px;
