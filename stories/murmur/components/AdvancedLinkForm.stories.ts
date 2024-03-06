@@ -1,8 +1,8 @@
 import {AdvancedLinkForm} from "@/components";
-import {BButton, BCard, BModal, BPopover, useModal} from "bootstrap-vue-next";
+import {BCard, BModal, BPopover, useModal} from "bootstrap-vue-next";
 import {StoryObj} from "@storybook/vue3";
 import {ref} from "vue";
-import {Size} from "../../../lib/enums";
+import {Size} from "@/enums";
 import {modalDecorator} from "../decorators";
 
 export default {
