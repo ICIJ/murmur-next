@@ -132,7 +132,6 @@ name: 'EmbedForm',
       embedFormCode.value?.select()
     }
     function embedCode(withPym = responsiveCheck.value): string {
-      console.log("éhey")
       const width = typeof props.width === 'string' ? props.width : Math.max(props.width, props.minWidth).toString()
       const height = Math.max(props.height, props.minHeight).toString()
       return withPym ? pymCodeFor(currentUrl) : iframeCodeFor(currentUrl, width, height)
