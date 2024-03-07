@@ -21,6 +21,7 @@ const Template: Story = (args: any) => ({
 
 export const Default = Template.bind({});
 Default.args = {};
+Default.decorators= [() => ({ template: '<div style="height: 1800px"><story/></div>' })]
 Default.parameters = { layout: 'fullscreen' }
 export const NoHeadroom = Template.bind({});
 NoHeadroom.args = {noHeadroom:true, position:"relative"};
