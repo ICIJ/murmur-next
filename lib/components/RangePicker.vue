@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, VNode, DirectiveBinding, PropType, ref, watch, computed, onBeforeMount} from 'vue'
+import {defineComponent, VNode, DirectiveBinding, PropType, ref, watch, computed, onBeforeMount, toRef} from 'vue'
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons/faGripLinesVertical'
 import { clamp, get, has, invoke, round } from 'lodash'
 
@@ -17,17 +17,18 @@ export default defineComponent({
   },
   directives: {
     draggable: {
+
       mounted(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
         let startX: number, initialClientX: number
         const relative = binding.modifiers?.relative ?? false
 
         // Emit an event to the parent component
         function emitEvent({ name, data = null }: { name: string; data?: any }) {
-          const handlers = get(vnode, 'data.on') ?? get(vnode, 'componentOptions.listeners')
-
-          if (has(handlers, name)) {
+          vnode.el.dispatchEvent(new CustomEvent(name,{detail: data}))
+          //const handlers = get(vnode, 'data.on') ?? get(vnode, 'componentOptions.listeners')
+          /*if (has(handlers, name)) {
             invoke(handlers, `${name}.fns`, data)
-          }
+          }*/
         }
 
         // Handle the dragging of the element
@@ -79,7 +80,7 @@ export default defineComponent({
      * Initial values of the range bounds. Should contain two numbers.
      * indicating the start and end of the range.
      */
-    modelValue: {
+    range: {
       type: Array as unknown as PropType<[number,number]>,
       required: true
     },
@@ -146,17 +147,18 @@ export default defineComponent({
       default: false
     }
   },
+  emits:['update:range'],
   setup(props, {emit}){
     onBeforeMount(()=>{
       library.add(faGripLinesVertical)
     })
     const rangePickerBounds = ref<HTMLElement|null>(null)
-    const start =  ref<number>( props.modelValue[0] ?? 0)
-    const end =  ref<number>( props.modelValue[1] ?? 1)
+    const start = toRef(props.range[0] ?? 0)
+    const end =  toRef(props.range[1] ?? 0)
     const moving =  ref( false)
     const resizing =  ref( false)
     const disabled = computed(() => {
-          return props.modelValue.length < 2
+          return props.range.length < 2
         })
     const overlayStyle = computed((): { left: string; right: string } => {
       return {
@@ -196,24 +198,21 @@ export default defineComponent({
           }
         }
     )
-    watch(()=>props.modelValue,([startV=0, endV=0]:[number,number]) =>{
-      start.value = startV
-      end.value = endV
-    },{deep:true})
 
-    function toggleMoving(value?: boolean){
+    function toggleMoving(value){
       moving.value = value ?? !moving.value
     }
-    function toggleResizing(value?: boolean) {
+    function toggleResizing(value) {
       resizing.value = value ?? !resizing.value
     }
-    function snapValue(value: number): number {
+    function snapValue(value): number {
       return round(value / props.snap) * props.snap
     }
     function rangeWidth(): number {
       return rangePickerBounds.value?.getBoundingClientRect().width ?? 0
     }
-    function dragStartBound(dx: number) {
+    function dragStartBound({detail: dx}) {
+
       const newValue = snapValue(dx / rangeWidth())
       // Ensure start value doesn't get too close to end value
       if (newValue < end.value - props.minDistance) {
@@ -223,10 +222,10 @@ export default defineComponent({
          * @event update
          * @param Number[] New value of the range
          */
-        emit('update', [start.value, end.value])
+        emit('update:range', [start.value, end.value])
       }
     }
-    function dragEndBound(dx: number) {
+    function dragEndBound({detail: dx}) {
       const newValue = snapValue(dx / rangeWidth())
       // Ensure end value doesn't get too close to start value
       if (newValue > start.value + props.minDistance) {
@@ -236,13 +235,12 @@ export default defineComponent({
          * @event update
          * @param Number[] New value of the range
          */
-        emit('update', [start.value, end.value])
+        emit('update:range', [start.value, end.value])
       }
     }
-    function dragBounds(dx: number) {
+    function dragBounds({detail:dx}) {
       const diff = snapValue(end.value - start.value)
       const newValue = snapValue(dx / rangeWidth())
-
       start.value = round(newValue, props.precision)
       end.value = round(newValue + diff, props.precision)
       /**
@@ -250,7 +248,7 @@ export default defineComponent({
        * @event update
        * @param Number[] New value of the range
        */
-      emit('update:modelValue', [start.value, end.value])
+      emit('update:range', [start.value, end.value])
     }
     function valueWithUnit(value: number | string): string {
       return typeof value === 'number' ? `${value}px` : `${value}`
@@ -263,6 +261,7 @@ export default defineComponent({
       disabled,
       overlayStyle,
       boundsStyle,
+      rangeWidth,
       startBoundStyle,
       endBoundStyle,
       dragStartBound,
