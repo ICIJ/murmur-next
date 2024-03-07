@@ -92,7 +92,7 @@ describe('GenericHeader.vue', () => {
     // popover should be hidden
     expect(wrapper.vm.showFollowUsPopover).toBe(false)
   })
-  it('should hide popover  `showFollowUsPopover` to `true`', async () => {
+  it('should show on mouseenter then hide popover', async () => {
     const wrapper = mount(GenericHeader, {global:{renderStubDefaultSlot:true,  stubs: { teleport: true, BPopover:true , FollowUsPopover:true}}})
     const popovertoggler = wrapper.find("#follow-us-toggler")
     await popovertoggler.trigger("mouseenter")
