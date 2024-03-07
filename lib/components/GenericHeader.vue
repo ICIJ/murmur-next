@@ -211,8 +211,11 @@ export default defineComponent({
   & .headroom {
     will-change: transform;
     transition: transform 200ms linear;
-    display: flex;
+    @include media-breakpoint-up(lg) {
+      display: flex;
+    }
     flex-grow: 1;
+
     &--unpinned {
       transform: translateY(-100%) !important;
     }
