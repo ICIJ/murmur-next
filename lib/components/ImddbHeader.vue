@@ -1,10 +1,9 @@
 <template>
-  <div ref="root">
     <component
       :is="rootElement"
       id="imddb-header"
       data-turbolinks-permanent
-      class="navbar navbar-expand-lg navbar-light imddb-header"
+      class="navbar navbar-expand-lg imddb-header"
       :offset="100"
       :z-index="1020"
       :on-unpin="closeFollowUsPopover"
@@ -13,7 +12,7 @@
     >
       <!-- @slot Redefines brand -->
       <slot name="brand">
-        <a :href="homeUrl" class="navbar-brand imddb-header__brand">
+        <a :href="homeUrl" class="navbar-brand imddb-header__brand ">
           <img alt="ICIJ logo" class="mr-3" height="25" src="../assets/images/icij@2x.png"/>
           {{ project }}
         </a>
@@ -22,7 +21,7 @@
         <span class="navbar-toggler-icon" />
       </button>
       <div class="navbar-collapse" :class="{ collapse: collapseNavbar }">
-        <div class="imddb-header__site-switch mr-auto">
+        <div class="imddb-header__site-switch me-auto">
           <!-- @slot Redefines the main navbar block (containing the dropdown) -->
           <slot name="navbar">
             <ul class="navbar-nav">
@@ -72,26 +71,27 @@
             </slot>
           </li>
           <li class="nav-item">
-            <button id="follow-icij" class="btn btn-primary btn-block fw-bold">
+            <button id="follow-icij" class="btn btn-primary btn-block fw-bold" @mouseenter="showFollowUsPopover=true">
               {{ t('imddb-header.navbar.follow') }}
             </button>
             <b-popover
-              :model-value="showFollowUsPopover"
-              container="imddb-header"
+                v-model="showFollowUsPopover"
               target="follow-icij"
+              ref="followUsPopover"
               placement="bottom-start"
+              click
+
             >
-              <follow-us-popover v-model:show="showFollowUsPopover" />
+              <follow-us-popover @update:close="closeFollowUsPopover" @keydown.esc="closeFollowUsPopover" />
             </b-popover>
           </li>
         </ul>
       </div>
     </component>
-  </div>
 </template>
 
 <script lang="ts">
-import {headroom} from '@/components/headroom'
+import headroom from 'vue-headroom/src/headroom.vue'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import find from 'lodash/find'
 import get from 'lodash/get'
@@ -185,6 +185,7 @@ export default defineComponent({
   },
   setup(props){
     const { t }= useI18n()
+    const followUsPopover = ref<ComponentPublicInstance<typeof BPopover>|null>(null)
     const showFollowUsPopover = ref(false)
     const collapseNavbar = ref(true)
     const languages = ref<ImddHeaderItem[]>([])
@@ -204,11 +205,15 @@ export default defineComponent({
     onMounted(()=>{
       languages.value = config.get('imddb-header.languages.items')
     })
-    function closeFollowUsPopover(): void {
-      showFollowUsPopover.value = false
+    function closeFollowUsPopover() {
+      if(followUsPopover.value?.hide){
+        followUsPopover.value?.hide(new Event('forceHide'))
+      }
+      showFollowUsPopover.value=false
     }
     function hidePopover(){
       root.value?.$emit('bv::hide::popover')
+      closeFollowUsPopover()
     }
     function hideDropdown(){
       root.value?.$emit('bv::hide::dropdown')
@@ -221,11 +226,13 @@ export default defineComponent({
 
     return {
       t,
+      root,
       collapseNavbar,
       currentLanguage,
       hasLanguagesDropdown,
       languages,
       rootElement,
+      followUsPopover,
       showFollowUsPopover,
       closeFollowUsPopover,
       hidePopover,
@@ -245,6 +252,9 @@ export default defineComponent({
   top: 0;
   width: 100%;
   z-index: $zindex-sticky;
+  display: flex;
+  padding: 0px;
+
 
   .popover {
     width: 100%;
@@ -254,10 +264,15 @@ export default defineComponent({
     background: $gray-400;
   }
 
-  &.headroom {
+  & .headroom {
     will-change: transform;
     transition: transform 200ms linear;
 
+    @include media-breakpoint-up(lg) {
+      display: flex;
+    }
+
+    flex-grow: 1;
     &--unpinned {
       transform: translateY(-100%) !important;
     }
@@ -275,12 +290,11 @@ export default defineComponent({
     position: relative;
     font-weight: bolder;
     padding-right: $spacer * 1.5;
-
     &:after {
       content: '';
       background: $body-color;
       width: 2px;
-      height: 32px;
+      height: 30px;
       position: absolute;
       right: 0;
       top: 50%;
