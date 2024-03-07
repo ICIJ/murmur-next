@@ -136,7 +136,6 @@ export default defineComponent({
     const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
 
     function toggleConfirmationTooltip(): void {
-      console.log("hey")
       showTooltip.value = !showTooltip.value
       /**
        * Emitted when the confirmation is toggled.
