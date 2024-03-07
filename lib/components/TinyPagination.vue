@@ -14,7 +14,7 @@
       </slot>
     </b-button>
     <form class="tiny-pagination__form form-inline" @submit.prevent="applyPageForm">
-      <label v-show="!compact" class="tiny-pagination__form__label mr-1 mb-0">
+      <label v-show="!compact" class="tiny-pagination__form__label me-1 mb-0">
         <!-- @slot Display page label -->
         <slot name="page" v-bind="{ modelValue, numberOfPages }">
           {{ t('tiny-pagination.page') }}
@@ -23,7 +23,7 @@
       <b-form-input
         v-model="currentPageInput"
         :size="size"
-        class="tiny-pagination__form__input mr-1"
+        class="tiny-pagination__form__input me-1"
         type="number"
         step="1"
         :min="1"
