@@ -71,7 +71,6 @@ import {
   ref,
   onBeforeMount,
   watch,
-  nextTick,
   ComponentPublicInstance
 } from 'vue'
 
@@ -81,7 +80,7 @@ import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
 import {BrandMode} from '@/enums'
 import {useI18n} from "vue-i18n";
-import {BPopover, vBPopover} from "bootstrap-vue-next";
+import {BPopover} from "bootstrap-vue-next";
 
 type BrandOptions = {
   noBorder: boolean

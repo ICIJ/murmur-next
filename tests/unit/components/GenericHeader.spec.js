@@ -1,8 +1,7 @@
-import { shallowMount} from '@vue/test-utils'
+import { shallowMount, mount} from '@vue/test-utils'
 import GenericHeader from '@/components/GenericHeader.vue'
 
 describe('GenericHeader.vue', () => {
-  const global = { renderStubDefaultSlot:true }
 
 
   it('is a Vue instance', () => {
@@ -46,14 +45,14 @@ describe('GenericHeader.vue', () => {
 
   it('renders home link to the default value', () => {
     const homeUrl = "http://localhost:3000/"
-    const wrapper = shallowMount(GenericHeader,{global})
+    const wrapper = shallowMount(GenericHeader,{global:{renderStubDefaultSlot:true}})
     expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
   })
 
   it('renders home link to https://icij.org/', () => {
     const homeUrl = 'https://icij.org/'
     const wrapper = shallowMount(GenericHeader, {
-      propsData: { homeUrl }, global
+      propsData: { homeUrl }, global:{renderStubDefaultSlot:true}
     })
     expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
   })
@@ -61,18 +60,18 @@ describe('GenericHeader.vue', () => {
   it('renders home link to https://pirhoo.com/', () => {
     const homeUrl = 'https://pirhoo.com/'
     const wrapper = shallowMount(GenericHeader, {
-      propsData: { homeUrl }, global
+      propsData: { homeUrl }, global:{renderStubDefaultSlot:true}
     })
     expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
   })
 
   it('renders the navbar as `collapse` by default', () => {
-    const wrapper = shallowMount(GenericHeader, {global})
+    const wrapper = shallowMount(GenericHeader, {global:{renderStubDefaultSlot:true}})
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
   })
 
   it('toggles the navbar on navbarToggler click', async () => {
-    const wrapper = shallowMount(GenericHeader, {global})
+    const wrapper = shallowMount(GenericHeader, {global:{renderStubDefaultSlot:true}})
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
     const navbarToggler = wrapper.find(".navbar-toggler");
     await navbarToggler.trigger("click")
@@ -81,11 +80,10 @@ describe('GenericHeader.vue', () => {
     await navbarToggler.trigger("click")
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
   })
-  it('hides popover if shown when navbard is collapsed', async () => {
-    const wrapper = shallowMount(GenericHeader, {global})
-    const $popover= wrapper.find("#follow-us-popover")
-    await $popover.trigger("show")
-
+  it('hides popover if shown when navbar is collapsed', async () => {
+    const wrapper = mount(GenericHeader, {global:{renderStubDefaultSlot:true,  stubs: { teleport: true, BPopover:true , FollowUsPopover:true}}})
+    const popovertoggler = wrapper.find("#follow-us-toggler")
+    await popovertoggler.trigger("mouseenter")
     //given popover shown
     expect(wrapper.vm.showFollowUsPopover).toBe(true)
     const navbarToggler = wrapper.find(".navbar-toggler");
@@ -95,9 +93,9 @@ describe('GenericHeader.vue', () => {
     expect(wrapper.vm.showFollowUsPopover).toBe(false)
   })
   it('should hide popover  `showFollowUsPopover` to `true`', async () => {
-    const wrapper = shallowMount(GenericHeader, {global})
-    const $popover= wrapper.find("#follow-us-popover")
-    await $popover.trigger("show")
+    const wrapper = mount(GenericHeader, {global:{renderStubDefaultSlot:true,  stubs: { teleport: true, BPopover:true , FollowUsPopover:true}}})
+    const popovertoggler = wrapper.find("#follow-us-toggler")
+    await popovertoggler.trigger("mouseenter")
     expect(wrapper.vm.showFollowUsPopover).toBe(true)
 
     wrapper.vm.closeFollowUsPopover()
