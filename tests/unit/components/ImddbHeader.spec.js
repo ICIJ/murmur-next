@@ -2,7 +2,7 @@ import { mount,shallowMount } from '@vue/test-utils'
 import ImddbHeader from '@/components/ImddbHeader.vue'
 
 describe('ImddbHeader.vue', () => {
-  const global = {renderStubDefaultSlot: true}
+  //const global = {renderStubDefaultSlot: true}
   it('is a Vue instance', () => {
     const wrapper = shallowMount(ImddbHeader)
     expect(wrapper.vm).toBeTruthy()
@@ -10,7 +10,7 @@ describe('ImddbHeader.vue', () => {
 
   it('renders the header as a `headroom` component', () => {
     const wrapper = shallowMount(ImddbHeader)
-    expect(wrapper.findComponent('#imddb-header').vm.$options.name).toBe('headroom')
+    expect(wrapper.findComponent('headroom-stub').exists()).toBe(true)
   })
 
   it('renders the header as a div', () => {
@@ -44,14 +44,14 @@ describe('ImddbHeader.vue', () => {
 
   it('renders home link to the default value', () => {
     const homeUrl = "http://localhost:3000/"
-    const wrapper = shallowMount(ImddbHeader, {global})
+    const wrapper = shallowMount(ImddbHeader, {global:{renderStubDefaultSlot: true}})
     expect(wrapper.find('.imddb-header__brand').element.href).toBe(homeUrl)
   })
 
   it('renders home link to https://icij.org/', () => {
     const homeUrl = 'https://icij.org/'
     const wrapper = shallowMount(ImddbHeader, {
-      propsData: { homeUrl }, global
+      propsData: { homeUrl }, global:{renderStubDefaultSlot: true}
     })
     expect(wrapper.find('.imddb-header__brand').element.href).toBe(homeUrl)
   })
@@ -59,18 +59,18 @@ describe('ImddbHeader.vue', () => {
   it('renders home link to https://pirhoo.com/', () => {
     const homeUrl = 'https://pirhoo.com/'
     const wrapper = shallowMount(ImddbHeader, {
-      propsData: { homeUrl }, global
+      propsData: { homeUrl }, global:{renderStubDefaultSlot: true}
     })
     expect(wrapper.find('.imddb-header__brand').element.href).toBe(homeUrl)
   })
 
   it('renders the navbar as `collapse` by default', () => {
-    const wrapper = shallowMount(ImddbHeader,{global})
+    const wrapper = shallowMount(ImddbHeader,{global:{renderStubDefaultSlot: true}})
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
   })
 
   it('toggles the navbar', async () => {
-    const wrapper = shallowMount(ImddbHeader, {global})
+    const wrapper = shallowMount(ImddbHeader, {global:{renderStubDefaultSlot: true}})
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
     wrapper.vm.toggleNavbar()
@@ -81,11 +81,15 @@ describe('ImddbHeader.vue', () => {
     expect(wrapper.find('.navbar-collapse').classes('collapse')).toBeTruthy()
   })
 
-  it('should change `showFollowUsPopover` to `true`',async () => {
-    const wrapper = shallowMount(ImddbHeader,{global})
+  it('should show on mouseenter then hide popover\'',async () => {
+    const wrapper = mount(ImddbHeader,{global:{renderStubDefaultSlot: true},
+      stubs: { teleport: true, BPopover:true , FollowUsPopover:true}})
+
     expect(wrapper.vm.showFollowUsPopover).toBe(false)
-    wrapper.findComponent("follow-us-popover-stub").vm.$emit("update:show",true)
+    const popovertoggler = wrapper.find("#follow-icij")
+    await popovertoggler.trigger("mouseenter")
     expect(wrapper.vm.showFollowUsPopover).toBe(true)
+
     wrapper.vm.closeFollowUsPopover()
     expect(wrapper.vm.showFollowUsPopover).toBe(false)
   })
