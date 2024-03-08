@@ -252,8 +252,7 @@ export default defineComponent({
   render(): void | VNode | null {
     const click = this.hasPopup() ? preventDefault(this.click) : noop
     const href = this.href
-    const children =
-      this.$slots.default || ([this.renderIcon(), h('span', { class: 'visually-hidden' }, this.name)])
+    const children = this.$slots.default? this.$slots.default() : ([this.renderIcon(), h('span', { class: 'visually-hidden' }, this.name)])
     return h(this.tag, { attrs: { href },  onClick: click  }, children)
   }
 })
