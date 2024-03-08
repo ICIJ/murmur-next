@@ -43,7 +43,7 @@ export default defineComponent({
       default: () => config.get('sharing-options.url', null) || IframeResizer.deletePymParams()
     },
     /**
-     * URL to use specificaly with the embed form
+     * URL to use specifically with the embed form
      */
     embedUrl: {
       type: String,
