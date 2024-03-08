@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import type { CSSProperties } from 'vue/types/jsx'
+import type { CSSProperties } from 'vue'
 
 type StyleTransition = Pick<CSSProperties, 'overflow' | 'transition-property' | 'transition-duration' | 'height'>
 const STATE = {
