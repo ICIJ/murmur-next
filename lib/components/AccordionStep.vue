@@ -14,7 +14,7 @@
       </slot>
     </h4>
     <b-collapse :visible="isActive">
-      <div class="accordion-wrapper__content__step__main card-body row no-gutters">
+      <div class="accordion-wrapper__content__step__main card-body row g-0">
         <!-- @slot Content of the step with props {isFirst:boolean, isLast:boolean, step:Step, nextStep:Function}-->
         <slot name="content" v-bind="{ isFirst, isLast, step, previousStep, nextStep }">
           {{ content }}

@@ -1,6 +1,6 @@
 <template>
   <div class="accordion-wrapper">
-    <div class="accordion-wrapper__content ml-5">
+    <div class="accordion-wrapper__content ms-5">
       <!-- @slot Content with all the steps declarations -->
       <slot />
     </div>
@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import {ref, computed, PropType, provide, defineComponent} from 'vue';
+import {computed, PropType, provide, defineComponent} from 'vue';
 import { AccordionKey } from '@/keys';
 import {Accordion, Step} from '@/types';
 
@@ -77,15 +77,13 @@ export default defineComponent({
   &__content {
     counter-reset: step 0;
     max-width: 550px;
-
     &__step {
       margin-bottom: $spacer;
       position: relative;
       opacity: $btn-disabled-opacity;
       transition: $transition-base;
 
-      &--active,
-      &--previous {
+      &--active,&--previous {
         opacity: 1;
       }
 
