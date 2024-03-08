@@ -214,7 +214,7 @@ export default defineComponent({
           <fa v-if="tooltipTimeout" class="haptic-copy__icon" icon="clipboard-check"/>
         </transition>
       </font-awesome-layers>
-      <span :class="{ 'sr-only': hideLabel }" class="ml-1 haptic-copy__label">
+      <span :class="{ 'sr-only': hideLabel }" class="ms-1 haptic-copy__label">
           {{ label || t('haptic-copy.label') }}
         </span>
     </slot>

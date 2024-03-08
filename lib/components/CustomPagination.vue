@@ -77,7 +77,7 @@ export default defineComponent({
       return Number(props.pages)
     })
     const paginationClassList = computed((): string[] => {
-      return props.size === Size.sm ? ['float-end', 'mr-1'] : []
+      return props.size === Size.sm ? ['float-end', 'me-1'] : []
     })
 
     function applyJumpFormPage(): void {
@@ -167,10 +167,10 @@ export default defineComponent({
             </b-input-group>
           </form>
           <template v-if="!compact">
-            <small v-if="errors.length" id="invalid-number-error" class="float-start mt-1 ml-1 text-danger">
+            <small v-if="errors.length" id="invalid-number-error" class="float-start mt-1 ms-1 text-danger">
               {{ errors[0] }}
             </small>
-            <small v-else class="float-start mt-1 ml-1 text-muted">
+            <small v-else class="float-start mt-1 ms-1 text-muted">
               {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
             </small>
           </template>

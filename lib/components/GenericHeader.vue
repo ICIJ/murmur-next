@@ -23,7 +23,7 @@
         <fa icon="bars" size="xl" class="text-primary" />
       </button>
       <div class="navbar-collapse" :class="{ collapse: collapseNavbar }">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a href="https://www.icij.org/investigations/" target="_blank" class="nav-link text-uppercase">
               {{ t('generic-header.navbar.investigations') }}
@@ -39,7 +39,7 @@
               {{ t('generic-header.navbar.follow') }}
             </a>
           </li>
-          <li class="nav-item mr-lg-3">
+          <li class="nav-item me-lg-3">
             <slot name="donate-link">
               <a class="text-uppercase btn btn-primary fw-bold" target="_blank" :href="donateUrl">
                 {{ t('generic-header.navbar.support') }}
