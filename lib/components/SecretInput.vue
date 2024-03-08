@@ -70,7 +70,7 @@ export default defineComponent({
       /**
        * Emitted when the visibility of the input changes.
        *
-       * @event update:modelValue
+       * @event update:visible
        * @type {Boolean}
        */
       emit("update:visible", !props.visible)
