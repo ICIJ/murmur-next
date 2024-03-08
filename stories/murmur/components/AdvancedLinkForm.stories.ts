@@ -1,12 +1,11 @@
 import {AdvancedLinkForm} from "@/components";
-import {BCard, BModal, BPopover, useModal} from "bootstrap-vue-next";
+import {BCard, BModal} from "bootstrap-vue-next";
 import {StoryObj} from "@storybook/vue3";
-import {ref} from "vue";
 import {Size} from "@/enums";
-import {modalDecorator} from "../decorators";
+import {modalDecorator, popoverDecorator} from "../decorators";
 
 export default {
-    components: {AdvancedLinkForm, BModal},
+    components: {AdvancedLinkForm},
     title: 'Murmur/components/AdvancedLinkForm',
     component: AdvancedLinkForm,
     tags: ['autodocs'],
@@ -18,9 +17,7 @@ type Story = StoryObj<typeof AdvancedLinkForm>;
 const Template: Story = (args: any) => ({
     components: { AdvancedLinkForm },
     setup() {
-        const showModal = ref(false)
-        const {show} = useModal('my-modal')
-        return {args, showModal, show};
+        return {args};
     },
     template: '<AdvancedLinkForm v-bind="args" />',
 });
@@ -33,26 +30,14 @@ Default.args = {
 };
 
 export const InsideModal = Template.bind({});
-InsideModal.decorators= [modalDecorator.bind(this,"Click to see the form",null,Size.md)]
+InsideModal.decorators= [modalDecorator.bind(this,"Click to see the form","Advanced Link",Size.md)]
 InsideModal.args = {
     title:"Medtronic spends millions each year on lobbying in the US",
     link:"https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying",
     card:true
 };
 
-const popoverDecorator = () => ({
-    components: { BPopover },
-    template:`    <div>
-        <div class="p-4 text-center">
-            <button class="btn btn-info fw-bold" id="popover-button-sample">
-                Click to see the form
-            </button>
-        </div>
-        <b-popover target="popover-button-sample" placement="right" >
-            <story id="popover-button-sample"/>
-        </b-popover>
-    </div>`
-})
+
 
 export const InsidePopover = Template.bind({});
 InsidePopover.decorators= [popoverDecorator]
