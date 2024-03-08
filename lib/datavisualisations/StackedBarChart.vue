@@ -405,7 +405,7 @@ export default defineComponent({
           :class="{ 'flex-column': labelAbove }"
           class="stacked-bar-chart__groups__item border-bottom flex-fill d-flex align-items-center"
       >
-        <div :class="{ 'w-100': labelAbove }" class="stacked-bar-chart__groups__item__label mr-1 small">
+        <div :class="{ 'w-100': labelAbove }" class="stacked-bar-chart__groups__item__label me-1 small">
           {{ datum[labelField] }}
         </div>
         <div class="stacked-bar-chart__groups__item__bars my-1 d-flex flex-grow-1 align-items-center">

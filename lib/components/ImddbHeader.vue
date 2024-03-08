@@ -13,7 +13,7 @@
       <!-- @slot Redefines brand -->
       <slot name="brand">
         <a :href="homeUrl" class="navbar-brand imddb-header__brand ">
-          <img alt="ICIJ logo" class="mr-3" height="25" src="../assets/images/icij@2x.png"/>
+          <img alt="ICIJ logo" class="me-3" height="25" src="../assets/images/icij@2x.png"/>
           {{ project }}
         </a>
       </slot>
@@ -63,7 +63,7 @@
               {{ t('imddb-header.navbar.leak') }}
             </a>
           </li>
-          <li class="nav-item mr-lg-3">
+          <li class="nav-item me-lg-3">
             <slot name="donate-link">
               <a target="_blank" :href="donateUrl" class="nav-link">
                 {{ t('imddb-header.navbar.support') }}
