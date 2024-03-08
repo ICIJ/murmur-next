@@ -220,7 +220,8 @@ export default defineComponent({
     },
     renderIcon(): void | VNode | null {
       if (!this.noIcon) {
-        return h('fa', { props: { icon: this.icon } })
+        //@ts-ignore
+        return h( Fa, {icon: this.icon})
       }
     },
     openPopup(): void {
@@ -252,7 +253,7 @@ export default defineComponent({
     const click = this.hasPopup() ? preventDefault(this.click) : noop
     const href = this.href
     const children =
-      this.$slots.default || ([this.renderIcon(h), h('span', { class: 'sr-only' }, this.name)])
+      this.$slots.default || ([this.renderIcon(), h('span', { class: 'visually-hidden' }, this.name)])
     return h(this.tag, { attrs: { href },  onClick: click  }, children)
   }
 })
