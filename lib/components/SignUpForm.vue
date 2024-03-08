@@ -4,20 +4,18 @@
       <label v-if="!noLabel" class="text-uppercase text-muted fw-bold" for="input-email">
         {{ t('sign-up-form.label') }}
       </label>
-      <div class="sign-up-form__fieldset__group" :class="{ 'input-group': horizontal }">
+      <div class="sign-up-form__fieldset__group " :class="{'input-group': horizontal}">
         <input
-          id="input-email"
-          v-model="email"
-          name="EMAIL"
-          type="email"
-          class="form-control"
-          :placeholder="t('sign-up-form.placeholder').toString()"
+            id="input-email"
+            v-model="email"
+            name="EMAIL"
+            type="email"
+            class="form-control"
+            :placeholder="t('sign-up-form.placeholder').toString()"
         />
-        <div class="sign-up-form__fieldset__group__addon" :class="{ 'input-group-append': horizontal }">
-          <button class="btn text-uppercase fw-bold" :class="variantColorClass" type="submit">
-            {{ t('sign-up-form.submit') }}
-          </button>
-        </div>
+        <button class="sign-up-form__fieldset__group__addon btn text-uppercase fw-bold input-group-text"  :class="{ [variantColorClass] :true }"  type="submit">
+          {{ t('sign-up-form.submit') }}
+        </button>
       </div>
     </fieldset>
     <p v-if="errorMessage" class="alert alert-danger p-2 m-0 mt-2">
@@ -96,14 +94,14 @@ name: 'SignUpForm',
       default: () => config.get('signup-form.tracker')
     },
     /**
-     * Referrer URL cant be passed explicitely
+     * Referrer URL cant be passed explicitly
      */
     referrer: {
       type: String,
       default: null
     },
     /**
-     * Color variant of the sign up button
+     * Color variant of the sign-up button
      */
     variant: {
       type: String,
@@ -169,12 +167,12 @@ name: 'SignUpForm',
 @import '../styles/lib.scss';
 
 .sign-up-form {
-  .sign-up-form__fieldset__group__addon .btn {
+  .sign-up-form__fieldset__group__addon.btn {
     font-size: 0.9em;
   }
 
   &:not(&--horizontal) {
-    .sign-up-form__fieldset__group__addon .btn {
+    .sign-up-form__fieldset__group__addon.btn {
       display: block;
       width: 100%;
     }
