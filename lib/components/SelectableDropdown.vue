@@ -333,7 +333,7 @@ export default defineComponent({
         <!-- @slot Item content -->
         <slot name="item" :item="item">
           <div v-if="multiple" class="selectable-dropdown__item__check">
-            <fa :icon="indexIcon(item)" class="mr-2" />
+            <fa :icon="indexIcon(item)" class="me-2" />
           </div>
           <div class="flex-grow-1 text-truncate selectable-dropdown__item__label">
             <!-- @slot Item's label content -->
@@ -351,7 +351,7 @@ export default defineComponent({
 @import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
 .selectable-dropdown {
-  --scroller-height: 200px;
+  --scroller-height: 'inherit';
   user-select: none;
 
   &.dropdown-menu {
