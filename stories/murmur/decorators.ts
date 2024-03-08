@@ -53,3 +53,5 @@ export const toggleDecorator = (_storyFn:any,context:any) => ({
     </div>`
 })
 
+
+export const bgStripedDecorator = () => ({ template: '<div class="p-2 bg-striped"><story/></div>' })
