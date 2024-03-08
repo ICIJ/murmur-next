@@ -1,5 +1,6 @@
 import { ActiveTextTruncate } from "@/components";
 import { StoryObj } from "@storybook/vue3";
+import {bgStripedDecorator} from "../decorators";
 
 
 type Story = StoryObj<typeof ActiveTextTruncate>;
@@ -20,7 +21,7 @@ RightToLeft.args = {direction:'rtl'};
 export default {
     title: 'Murmur/components/ActiveTextTruncate',
     component: ActiveTextTruncate,
-    decorators: [() => ({ template: '<div class="p-2 bg-striped"><story/></div>' })],
+    decorators: [bgStripedDecorator],
     tags: ['autodocs'],
     argTypes: {
         direction: { control: 'inline-radio', options: ['ltr', 'rtl']},
