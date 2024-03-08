@@ -1,32 +1,35 @@
 <template>
   <div class="embeddable-footer p-2 text-nowrap">
     <a :href="homeUrl" target="_blank" class="text-white embeddable-footer__brand">
-      <brand :size="40" no-border class="mr-2" color="white" />
-      {{ title }}
+      <brand :size="40" no-border class="me-2" color="white" />
+      <!-- @slot Slot to redefine title display -->
+      <slot name="title">
+        <span v-html="title"></span>
+      </slot>
     </a>
     <div class="embeddable-footer__lead small text-truncate">
       <!-- @slot Main slot to redefine lead text display -->
       <slot :lead="lead">
-        {{ lead }}
+        <span v-html="lead"></span>
       </slot>
     </div>
     <!-- @slot Overide the sharing button -->
     <slot name="sharing-button" v-bind="{ sharingOptionsValues }">
       <button
-        class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
-        :class="{ active: showShareOptions }"
-        @click="showShareOptions = !showShareOptions"
+          class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
+          :class="{ active: showShareOptions }"
+          @click="showShareOptions = !showShareOptions"
       >
         <fa icon="share-alt" />
         <span class="sr-only">{{ $t('embeddable-footer.share') }}</span>
       </button>
     </slot>
     <sharing-options
-      v-if="showShareOptions"
-      :values="sharingOptionsValues"
-      direction="column-reverse"
-      :iframe-min-height="iframeMinHeight"
-      :iframe-min-width="iframeMinWidth"
+        v-if="showShareOptions"
+        :values="sharingOptionsValues"
+        direction="column-reverse"
+        :iframe-min-height="iframeMinHeight"
+        :iframe-min-width="iframeMinWidth"
     />
   </div>
 </template>
@@ -92,7 +95,7 @@ name: 'EmbeddableFooter',
       default: () => config.get('app.home')
     },
     /**
-     * Sharing option values to bind to the sharing-options component on the bottom-right corner.
+     * Sharing option values to bind to the sharing-options component in the bottom-right corner.
      */
     sharingOptionsValues: {
       type: Object,
