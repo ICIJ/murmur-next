@@ -74,15 +74,19 @@ export default defineComponent({
     },
     ...chartProps()
   },
-  emits:["loaded","resized"],
   setup(props,{emit}){
-    const el= ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const width =ref(0)
     const height= ref(0)
+    const el= ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const line= ref<d3.Line<[number,number]>|null>(null)
     const isLoaded = ref(false)
 
-    const {loadedData, elementsMaxBBox,xAxisYearFormat,d3Formatter,baseHeightRatio}=useChart(el,getChartProps(props),{emit},isLoaded,setSizes)
+    const {loadedData,
+      elementsMaxBBox,
+      d3Formatter,
+      xAxisYearFormat,
+      baseHeightRatio
+    } = useChart(el,getChartProps(props),{emit},isLoaded,setSizes)
 
 
     const labelWidth = computed(()=> {
@@ -144,7 +148,7 @@ export default defineComponent({
     function setSizes() {
       if(el.value){
         width.value = el.value.offsetWidth
-        height.value = props.fixedHeight !== null ? props.fixedHeight : el.value.offsetWidth * baseHeightRatio
+        height.value = props.fixedHeight !== null ? props.fixedHeight : el.value.offsetWidth * baseHeightRatio.value
       }
     }
     function update() {
@@ -208,8 +212,7 @@ export default defineComponent({
       height,
       margin,
       padded,
-      line,
-      setSizes
+      line
     }
   }
 })
