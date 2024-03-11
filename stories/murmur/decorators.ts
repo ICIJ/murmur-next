@@ -55,3 +55,14 @@ export const toggleDecorator = (_storyFn:any,context:any) => ({
 
 
 export const bgStripedDecorator = () => ({ template: '<div class="p-2 bg-striped"><story/></div>' })
+export const leakSizeDecorator = () => ({
+  template: `
+  <h4>Leaks size</h4>
+  <p class="text-muted">
+    Size of each ICIJ's leak.
+  </p>
+  <story/>
+  <p class="text-muted small">
+    Source: ICIJ. 
+  </p>`
+})
