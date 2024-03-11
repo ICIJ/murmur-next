@@ -501,13 +501,12 @@ export default defineComponent({
         color: $tooltip-color;
         margin: 0;
         padding: $tooltip-padding-y $tooltip-padding-x;
-
         &.fade-enter-active,
         &.fade-leave-active {
           transition: $transition-fade;
         }
 
-        &.fade-enter,
+        &.fade-enter-from,
         &.fade-leave-to {
           opacity: 0;
         }
