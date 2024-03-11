@@ -9,10 +9,10 @@ import without from 'lodash/without'
 import sortBy from 'lodash/sortBy'
 import {ComponentPublicInstance, computed, defineComponent, nextTick, PropType, ref, watch} from 'vue'
 import {chartProps, getChartProps, useChart} from "@/composables/chart.js";
+import {isArray} from "lodash";
 
 export default defineComponent({
   name: 'StackedBarChart',
-  //mixins: [chart],
   props: {
     /**
      * Colors of each bar group
@@ -226,7 +226,7 @@ export default defineComponent({
 
     function isRowHighlighted(i: number | string) {
       const row = get(sortedData.value, [i, props.labelField], null)
-      return props.rowHighlights.includes(row) && !highlightedKeys.value.length
+      return (isArray(props.rowHighlights) && props.rowHighlights?.includes(row)) && !highlightedKeys.value.length
     }
 
     function barStyle(i: number | string, key: string) {
