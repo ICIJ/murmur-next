@@ -131,8 +131,8 @@ export default defineComponent({
     })
 
     const padded = computed(() => {
-      const widthP = width.value - margin.left - margin.right
-      const heightP = height.value - margin.top - margin.bottom
+      const widthP = width.value - margin.value.left - margin.value.right
+      const heightP = height.value - margin.value.top - margin.value.bottom
       return { width:widthP, height:heightP }
     })
     const scale = computed(() => {
