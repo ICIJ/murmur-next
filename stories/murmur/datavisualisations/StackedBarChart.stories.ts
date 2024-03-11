@@ -125,7 +125,7 @@ const leaksSizeDecorator = () => ({
 })
 
 export const FixedHeightHideLegend = Template.bind({});
-FixedHeightHideLegend.decorators=[leakIncidentsDecorator]
+FixedHeightHideLegend.decorators=[leaksSizeDecorator]
 FixedHeightHideLegend.args = {
   data:data.leakSizes,
   fixedHeight:400,

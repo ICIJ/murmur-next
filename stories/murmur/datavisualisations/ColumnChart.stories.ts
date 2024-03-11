@@ -2,6 +2,7 @@ import {ColumnChart} from "@/datavisualisations";
 import {StoryObj} from "@storybook/vue3";
 import {ref} from "vue";
 import {humanReadableGb} from "../utils";
+import {leakSizeDecorator} from "../decorators";
 
 export default {
   title: 'Murmur/datavisualisations/ColumnChart',
@@ -31,18 +32,7 @@ const discreteData = [
 ]
 
 
-const leakSizeDecorator = () => ({
-  template: `
-<h4>Breast implant patients kept in the dark about potential risks</h4>
-  <h4>Leaks size</h4>
-  <p class="text-muted">
-    Size of each ICIJ's leak.
-  </p>
-  <story/>
-  <p class="text-muted small">
-    Source: ICIJ. 
-  </p>`
-})
+
 const leakInjuriesDecorator = () => ({
     template: `
   <h4>Breast implant companies buried evidence of injuries for years</h4>
