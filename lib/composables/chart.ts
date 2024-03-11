@@ -112,7 +112,6 @@ export function useChart(resizableRef: Ref<ComponentPublicInstance<HTMLElement> 
             }
 
              if(isLoaded.value && onResized){
-
                 onResized()
                 emit('resized')
              }
