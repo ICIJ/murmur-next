@@ -17,10 +17,12 @@ const Template: Story = (args: any) => ({
     },
     template: `<BarChart v-bind="args" />`
 });
-const breastImplantDecorator=()=>({template:`  <h4>Breast implant patients kept in the dark about potential risks</h4>
-  <p class="text-muted">
+const breastImplantDecorator=()=>({template:`
+    <h4>Breast implant patients kept in the dark about potential risks</h4>
+    <p class="text-muted">
     More than 300 people around the world who responded to an ICIJ survey said they were not aware of the dangers of breast implants prior to their surgeries.
-  </p><story/>`})
+    </p>
+    <story/>`})
 export const Default = Template.bind({});
 Default.decorators=[breastImplantDecorator]
 Default.args = {

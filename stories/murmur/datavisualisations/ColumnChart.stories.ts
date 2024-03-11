@@ -1,6 +1,7 @@
 import {ColumnChart} from "@/datavisualisations";
 import {StoryObj} from "@storybook/vue3";
 import {ref} from "vue";
+import {humanReadableGb} from "../utils";
 
 export default {
   title: 'Murmur/datavisualisations/ColumnChart',
@@ -29,13 +30,6 @@ const discreteData = [
   {leak: 'Offshore Leaks', size: 260}
 ]
 
-function humanReadableGb(size: number) {
-  if (size >= 1e3) {
-    return `${size / 1e3}TB`
-  } else {
-    return `${size}GB`
-  }
-}
 
 const leakSizeDecorator = () => ({
   template: `
@@ -100,6 +94,5 @@ DynamicHeight.args = {
     yAxisYTicks: 4,
     maxValue: 3000,
     stripped:true,
-    fixedHeight:fixedHeight,
-    vOnSelect:(e)=>clicked.value=e
+    fixedHeight:fixedHeight
 }
