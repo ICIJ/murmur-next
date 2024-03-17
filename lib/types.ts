@@ -37,7 +37,9 @@ export type Variant = 'primary' | 'secondary' | 'danger' | 'info' | 'warning' | 
 export type MapTransform = { k: number, x: number, y: number, rotateX: number, rotateY : number }
 
 export type ParentMap = {
-  mapRect:Ref<DOMRect>, mapTransform:Ref<MapTransform>, rotatingMapProjection:ComputedRef<GeoProjection|Function>
+  mapRect:Ref<DOMRect>,
+  mapTransform:Ref<MapTransform>,
+  rotatingMapProjection:ComputedRef<GeoProjection|Function>
 }
 export type ParentMapProvide = {
   [ParentKey]: ParentMap
