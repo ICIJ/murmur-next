@@ -8,7 +8,7 @@ import {geoGraticule} from 'd3-geo'
 import {feature} from 'topojson'
 import {GeometryCollection} from "topojson-specification";
 
-import {ComponentPublicInstance, computed, defineComponent, PropType, provide, ref, watch} from 'vue'
+import {ComponentPublicInstance, computed, defineComponent, PropType, provide, reactive, ref, watch} from 'vue'
 
 import {ParentKey} from "@/keys";
 import {MapTransform, ParentMap} from "@/types";
@@ -194,7 +194,7 @@ export default defineComponent({
     const resizable = ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const topojson = ref<any>(null)
     const topojsonPromise = ref<any | null>(null)
-    const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
+    const mapRect = reactive<DOMRect>(new DOMRect(0, 0, 0, 0))
     const featureCursor = ref<{ [cursor: string]: string } | null>(null)
     const featureZoom = ref<string | null>(null)
     const isLoaded = ref<boolean>(false)
