@@ -1,16 +1,13 @@
-
-
-<script>
+<script lang="ts">
 import * as d3 from 'd3'
 import identity from 'lodash/identity'
 import sortBy from 'lodash/sortBy'
 import {defineComponent, computed, ref, watch} from "vue"
-import {chartProps, getChartProps, useChart} from "@/composables/chart.ts";
+import {chartProps, getChartProps, useChart} from "@/composables/chart"
 
 
 export default defineComponent({
   name: 'BarChart',
-  //mixins: [chart],
   props: {
     /**
      * Height of each bar
