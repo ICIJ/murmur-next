@@ -2,7 +2,7 @@
 import {isFunction, isString} from 'lodash'
 import * as d3 from 'd3'
 import * as scaleFunctions from 'd3-scale'
-import {defineComponent, PropType, ref, computed, onMounted, watch, nextTick} from 'vue'
+import {defineComponent, PropType, ref, computed, onMounted, watch, nextTick, toRef} from 'vue'
 
 type ClassListLegend = { 'scale-legend--has-cursor': boolean }
 // eslint-disable-next-line no-unused-vars
@@ -63,13 +63,14 @@ export default defineComponent({
         'scale-legend--has-cursor': hasCursor.value
       }
     })
-
+    const cursorValue = toRef(props.cursorValue)
     onMounted(async () => {
       await nextTick()
       setCursorWrapperOffset()
       setColorScaleCanvas()
       mounted.value = true
     })
+
     const cursorLeft = computed((): string => {
       const left = cursorLeftScale.value(props.cursorValue)
       return isNaN(left) ? '0%' : `${left}%`
@@ -138,10 +139,7 @@ export default defineComponent({
       }
     }
 
-    watch(
-        () => {
-          props.cursorValue
-        },
+    watch(cursorValue,
         async () => {
           await nextTick()
           setCursorWrapperOffset()
