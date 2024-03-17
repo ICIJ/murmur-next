@@ -5,7 +5,7 @@ import isString from 'lodash/isString'
 import max from 'lodash/max'
 import some from 'lodash/some'
 import {ComponentPublicInstance, computed, onMounted, ref} from 'vue'
-import {isUrl} from '../utils/strings'
+import {isUrl} from '@/utils/strings'
 import { Ref, SetupContext} from "@vue/runtime-core";
 import useResizeObserver from "@/composables/resizeObserver";
 import { watchEffect } from 'vue'
@@ -115,13 +115,13 @@ export function useChart(resizableRef: Ref<ComponentPublicInstance<HTMLElement> 
                 onResized()
                 emit('resized')
              }
-
         })
 
 
     })
     function elementsMaxBBox({selector = 'text', defaultWidth = null, defaultHeight = null} = {}) {
-        const elements: SVGGraphicsElement[] = isLoaded.value? resizeRef.value?.querySelectorAll(selector) : []
+
+        const elements = isLoaded.value? resizeRef.value?.querySelectorAll(selector) : []
         if (elements.length == 0) {
             return {width: defaultWidth, height: defaultHeight}
         }
@@ -171,6 +171,6 @@ export function useChart(resizableRef: Ref<ComponentPublicInstance<HTMLElement> 
         xAxisYearFormat,
         d3Formatter,
         baseHeightRatio,
-        dataHasHighlights
+        dataHasHighlights,
     }
 }
