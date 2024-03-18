@@ -2,10 +2,7 @@
 name: Build and Publish Storybook to GitHub Pages
 
 on:
-  # Event for the workflow to run on
   push:
-    branches:
-      - 'main' # Replace with the branch you want to deploy from
 
 permissions:
   contents: read
@@ -14,15 +11,15 @@ permissions:
 
 # List of jobs
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    # Job steps
-    steps:
-      # Manual Checkout
-      - uses: actions/checkout@v3
 
-      # Set up Node
-      - uses: actions/setup-node@v3
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: 'yarn'
@@ -32,16 +29,30 @@ jobs:
 
       - name: Run tests
         run: yarn test
+        
+
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'yarn'
 
       - name: Build storybook artifacts
         run: yarn build-storybook
 
-      # Upload storybook to repository's artifacts
       - name: Upload storybook artifacts
         uses: actions/upload-pages-artifact@v3
         with:
           path: storybook-static
 
-      - uses: actions/deploy-pages@v4
+      - name: Deploy artifact to Github Pages
+        uses: actions/deploy-pages@v4
 
 
