@@ -27,7 +27,7 @@ const config:StorybookConfig = {
       // This is needed because the copy plugin can't copy files outside of the root directory
       // The files are copied back to the root by the post script
       build: {
-        outDir: 'storybook-static/dist'
+        outDir: 'storybook-static'
       }
     });
   }
