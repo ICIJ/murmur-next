@@ -4,7 +4,7 @@ import isObject from 'lodash/isObject'
 import isString from 'lodash/isString'
 import max from 'lodash/max'
 import some from 'lodash/some'
-import {ComponentPublicInstance, computed, onMounted, ref} from 'vue'
+import {ComponentPublicInstance, computed, onMounted, ref, watch} from 'vue'
 import {isUrl} from '@/utils/strings'
 import { Ref, SetupContext} from "@vue/runtime-core";
 import useResizeObserver from "@/composables/resizeObserver";
@@ -163,6 +163,12 @@ export function useChart(resizableRef: Ref<ComponentPublicInstance<HTMLElement> 
         return false
     })
 
+    watch(resizeState.dimensions, () => {
+        if(isLoaded.value && onResized){
+            onResized()
+            emit('resized')
+        }
+    })
 
 
     return {

@@ -42,9 +42,9 @@ export default defineConfig({
     outDir: 'dist/lib',
     sourcemap: true,
     lib: {
-      entry: resolve(__dirname, 'lib/main.js'),
+      entry: resolve(__dirname, 'lib/main.ts'),
       name: '@icij/murmur',
-      fileName: 'lib/murmur'
+      fileName: 'murmur'
     },
     rollupOptions: {
       external: ['bootstrap','vue',{ 'bootstrap-vue-next': 'bootstrap-vue-next' }],
@@ -53,10 +53,9 @@ export default defineConfig({
           vue: 'Vue'
         },
         exports: 'named',
-        preserveModules: true,
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') {
-            return 'lib/murmur.css'
+            return 'murmur.css'
           }
           return assetInfo.name ?? ''
         }

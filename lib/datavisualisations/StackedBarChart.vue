@@ -258,7 +258,7 @@ export default defineComponent({
         const barWidth = bar.offsetWidth
         const rowEdge = row.getBoundingClientRect().left + row.offsetWidth
         const valueWidth = value.offsetWidth
-        return {key, barEdge, barWidth, rowEdge, valueWidth, overflow: false, pushed: false}
+        return  {key, barEdge, barWidth, rowEdge, valueWidth}
       })
       // Infer value's display
       return stack.map((desc, index) => {
@@ -288,28 +288,52 @@ export default defineComponent({
       return {bar, row, value}
     }
 
-    function hasValueOverflow(i: number | string, key: string) {
-      const stack = stackBarAndValue(i)
+     async function hasValueOverflow(i: number | string, key: string) {
+      const stack =  await stackBarAndValue(i)
       return get(find(stack, {key}), 'overflow')
     }
 
-    function hasValuePushed(i: number | string, key: string) {
-      const stack = stackBarAndValue(i)
+    async function hasValuePushed(i: number | string, key: string) {
+      const stack = await stackBarAndValue(i)
       return get(find(stack, {key}), 'pushed')
     }
 
-    function hasValueHidden(i: number | string, key: string) {
+    async function hasValueHidden(i: number | string, key: string) {
       const keyIndex = discoveredKeys.value.indexOf(key)
       const nextKey = discoveredKeys.value[keyIndex + 1]
       if (!nextKey) {
         return false
       }
-      return hasValueOverflow(i, key) && hasValueOverflow(i, nextKey)
+      const keyC = await hasValueOverflow(i, key)
+      const keyN = await hasValueOverflow(i, nextKey)
+      return keyC && keyN
     }
 
     function isHidden(i: number | string, key: string) {
       return props.hideEmptyValues && !sortedData.value[i][key]
     }
+
+    // async function barItemClasses(i,key){
+    //   const stack = await stackBarAndValue(i)
+    //   const hasOv = get(find(stack, {key}), 'overflow')
+    //   const hasPu = get(find(stack, {key}), 'pushed')
+    //
+    //   const keyIndex = discoveredKeys.value.indexOf(key)
+    //   const nextKey = discoveredKeys.value[keyIndex + 1]
+    //   let hasNextOv= false
+    //   if(nextKey){
+    //     const stackNext = await stackBarAndValue(keyIndex + 1)
+    //     hasNextOv = get(find(stackNext, {key}), 'overflow')
+    //   }
+    //   const hasHiddenV = hasOv && hasNextOv
+    //   const classes = {
+    //     hiddenValue:isHidden(keyIndex, key),
+    //     overflow:hasOv,
+    //     pushed:hasPu,
+    //     hidden:hasHiddenV
+    //   }
+    //   return classes
+    // }
 
     function formatXDatum(d: string) {
       return d3Formatter(d, props.xAxisTickFormat)
@@ -318,6 +342,7 @@ export default defineComponent({
     watch(() => props.highlights, (newHighlights) => {
       highlightedKeys.value = newHighlights
     })
+
     return {
       colorScale,
       dataHasHighlights,
