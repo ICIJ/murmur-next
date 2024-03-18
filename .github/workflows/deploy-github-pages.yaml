@@ -35,6 +35,6 @@ jobs:
       # Upload storybook to repository's artifacts
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: storybook-static
+          path: storybook-static/dist
 
       - uses: actions/deploy-pages@v4
