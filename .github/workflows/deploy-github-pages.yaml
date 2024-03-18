@@ -1,35 +1,34 @@
-# Workflow name
-name: Build and Publish Storybook to GitHub Pages
+name: Release
 
 on:
-  # Event for the workflow to run on
   push:
     branches:
-      - 'main' # Replace with the branch you want to deploy from
+      - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# List of jobs
 jobs:
-  deploy:
+  release:
     runs-on: ubuntu-latest
-    # Job steps
+
     steps:
-      # Manual Checkout
       - uses: actions/checkout@v3
 
-      # Set up Node
       - uses: actions/setup-node@v3
         with:
+          cache: yarn
           node-version: '18.x'
 
-      #👇 Add Storybook build and deploy to GitHub Pages as a step in the workflow
-      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.1
+      - run: yarn
+
+      - uses: actions/setup-node@v3
         with:
-          install_command: yarn install # default: npm ci
-          build_command: yarn build-storybook # default: npm run build-storybook
-          path: storybook-static # default: dist/storybook
-          checkout: false # default: true
+          cache: yarn
+          node-version: 18
+          registry-url: https://npm.pkg.github.com/
+
+
+      - run: yarn storybook-build
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
