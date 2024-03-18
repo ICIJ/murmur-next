@@ -33,9 +33,6 @@ jobs:
       - name: Run tests
         run: yarn test
 
-      - name: Build Murmur
-        run: yarn build
-
       - name: Build storybook artifacts
         run: yarn build-storybook
 
