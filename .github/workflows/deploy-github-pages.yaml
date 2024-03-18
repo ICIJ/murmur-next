@@ -25,16 +25,23 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+          cache: 'yarn'
 
-      - name: install
-        run: yarn
+      - name: Install Node dependencies
+        run: yarn --frozen-lockfile
 
-      - name: Build storybook
+      - name: Build Murmur library
+        run: yarn build
+
+      - name: Build storybook artifacts
         run: yarn build-storybook
 
       # Upload storybook to repository's artifacts
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload storybook artifacts
+        uses: actions/upload-pages-artifact@v3
         with:
           path: storybook-static
 
       - uses: actions/deploy-pages@v4
+
+
