@@ -9,7 +9,6 @@ permissions:
   pages: write
   id-token: write
 
-# List of jobs
 jobs:
 
   test:
@@ -30,9 +29,9 @@ jobs:
       - name: Run tests
         run: yarn test
         
-
   publish:
     if: github.ref == 'refs/heads/main'
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -43,6 +42,9 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'yarn'
+
+      - name: Install Node dependencies
+        run: yarn --frozen-lockfile
 
       - name: Build storybook artifacts
         run: yarn build-storybook
