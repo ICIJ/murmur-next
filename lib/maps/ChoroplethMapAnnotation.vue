@@ -1,7 +1,7 @@
 <script lang="ts">
 import {values} from 'lodash'
 import {geoDistance, GeoProjection} from 'd3-geo'
-import {computed, defineComponent, inject} from "vue";
+import {computed, defineComponent, inject, toRaw} from "vue";
 import {ParentKey} from "@/keys";
 import {ParentMap} from "@/types";
 
@@ -91,10 +91,20 @@ export default defineComponent({
     }
   },
   setup(props) {
+
     const parent = inject<ParentMap>(ParentKey)
+
     if (!parent) {
       throw new Error("parent is undefined")
     }
+
+    const mapRect = parent.mapRect
+    const mapTransform1 = parent.mapTransform
+    const rotatingMapProjection = parent.rotatingMapProjection
+    const mapTransform= computed(()=>{
+      return toRaw(parent.mapTransform)
+    })
+
     const translateY = computed(() => {
       if (isTop.value) {
         return 0 - props.height
@@ -128,7 +138,7 @@ export default defineComponent({
     })
 
     const projection = computed(() => {
-      return parent.rotatingMapProjection.value as GeoProjection
+      return rotatingMapProjection.value as GeoProjection
     })
 
     const position = computed(() => {
@@ -137,7 +147,7 @@ export default defineComponent({
     })
 
     const mapK = computed(() => {
-      return parent?.mapTransform.value.k
+      return mapTransform.value.k
     })
 
     const translateX = computed(() => {
@@ -231,7 +241,7 @@ export default defineComponent({
         if (!projection.value?.invert) {
           return 0
         }
-        const mapCenter = projection.value.invert([parent.mapRect.value.width / 2, parent.mapRect.value.height / 2])
+        const mapCenter = projection.value.invert([mapRect.value.width / 2, mapRect.value.height / 2])
         return geoDistance(center.value, mapCenter)
       } catch (_) {
         return 0
@@ -259,7 +269,8 @@ export default defineComponent({
       wrapperTransformOriginX,
       wrapperTransformOriginY,
       wrapperTransformOrigin,
-      geoDistanceFromCenter
+      geoDistanceFromCenter,
+      mapTransform
     }
   }
 

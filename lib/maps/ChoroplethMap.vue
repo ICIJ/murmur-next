@@ -8,7 +8,15 @@ import {geoGraticule} from 'd3-geo'
 import {feature} from 'topojson'
 import {GeometryCollection} from "topojson-specification";
 
-import {ComponentPublicInstance, computed, defineComponent, PropType, provide, reactive, ref, watch} from 'vue'
+import {
+  ComponentPublicInstance,
+  computed,
+  defineComponent,
+  PropType,
+  provide,
+  ref,
+  watch
+} from 'vue'
 
 import {ParentKey} from "@/keys";
 import {MapTransform, ParentMap} from "@/types";
@@ -194,12 +202,11 @@ export default defineComponent({
     const resizable = ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const topojson = ref<any>(null)
     const topojsonPromise = ref<any | null>(null)
-    const mapRect = reactive<DOMRect>(new DOMRect(0, 0, 0, 0))
+    const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
     const featureCursor = ref<{ [cursor: string]: string } | null>(null)
     const featureZoom = ref<string | null>(null)
     const isLoaded = ref<boolean>(false)
     const mapTransform = ref<MapTransform>({k: 1, x: 0, y: 0, rotateX: 0, rotateY: 0})
-
     const debouncedDraw = debounce(function () {
       draw()
     }, 10)
@@ -313,10 +320,18 @@ export default defineComponent({
     })
     const rotatingMapProjection = computed(() => {
       const {rotateX = null, rotateY = null} = mapTransform.value
+      let proj
+      let text
       if (rotateX !== null && rotateY !== null) {
-        return mapProjection.value.rotate([rotateX, rotateY]) ?? null
+        text="rotate"
+        proj= mapProjection.value.rotate([rotateX, rotateY]) ?? null
+      }else {
+        text="normal"
+        proj= mapProjection.value
+
       }
-      return mapProjection.value
+      return proj
+
     })
 
     const mapCenter = computed(() => {
@@ -469,25 +484,6 @@ export default defineComponent({
           .on('click', mapClicked)
           .style('color', featureColor.value)
     }
-
-    // function draw() {
-    //   // Bind geojson features to path
-    //   prepare()
-    //       .append('g')
-    //       .attr('class', 'choropleth-map__main__features')
-    //       .selectAll('.choropleth-map__main__features__item')
-    //       .data(geojson.value.features)
-    //       // Add the path with the correct class
-    //       .enter()
-    //       .append('path')
-    //       .attr('class', featureClass)
-    //       .attr('d', featurePath.value)
-    //       .on('mouseover', featureMouseOver)
-    //       .on('mouseleave', featureMouseLeave)
-    //       .on('click', mapClicked)
-    //       .style('color', featureColor.value)
-    //   prepareZoom()
-    // }
 
     function update() {
       // Bind geojson features to path
@@ -709,9 +705,11 @@ export default defineComponent({
     watch(() => featureCursor.value, () => {
       setFeaturesClasses()
     })
+
     provide<ParentMap>(ParentKey, {
       mapRect, mapTransform, rotatingMapProjection
     })
+
     return {
       cursorValue,
       debouncedDraw,

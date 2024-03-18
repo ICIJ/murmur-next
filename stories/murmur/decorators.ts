@@ -1,6 +1,14 @@
 import {BModal, BPopover, useModal} from "bootstrap-vue-next";
 import {Size} from "@/enums";
-import {h, reactive, ref, toRef, toRefs} from "vue";
+import {toRefs} from "vue";
+import {geoOrthographic} from "d3-geo";
+import {defineComponent} from "vue";
+import {ChoroplethMap} from "@/maps";
+
+export default defineComponent({
+  components: {ChoroplethMap}
+})
+
 
 export const modalDecorator = (buttonLabel:string="Click to see the form",modalTitle:string|null,size:Size=Size.md) => ({
   components: {BModal},
@@ -65,4 +73,36 @@ export const leakSizeDecorator = () => ({
   <p class="text-muted small">
     Source: ICIJ. 
   </p>`
+})
+
+export const icijOfficesDecorator = ()=>({
+ template:`
+    <h4>ICIJ Offices</h4>
+    <p class="mb-4">A non-exhaustive list of ICIJ offices and operations.</p>
+    <story/>
+ `
+})
+export const choroplethDecorator = (fn,ctx)=>({
+  components:[ChoroplethMap],
+  decorators:[icijOfficesDecorator],
+  setup(){
+    const props = {
+      color:"#faa",
+      outlineColor:"#000",
+      graticuleColor:"#eee",
+      graticule:true ,
+      outline:true ,
+      hideLegend:true ,
+      zoomable:true ,
+      spherical:true,
+      zoomMin:0.9,
+      projection:geoOrthographic
+    }
+    return {props}
+  },
+  template:`
+  <choropleth-map v-bind="props"  >
+   <story/>
+  </choropleth-map>
+  `
 })
