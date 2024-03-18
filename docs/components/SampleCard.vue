@@ -14,12 +14,12 @@
         </template>
       </slide-up-down>
       <div class="sample-card__body__actions border-top row no-gutters">
-        <button class="btn btn-sm font-weight-bold btn col" :class="{ active: !collapseCode }" @click="toggleCode()">
-          <fa icon="code" class="mr-1" />
+        <button class="btn btn-sm fw-bold btn col" :class="{ active: !collapseCode }" @click="toggleCode()">
+          <fa icon="code" class="me-1" />
           <span v-if="collapseCode">Show code</span>
           <span v-if="!collapseCode">Hide code</span>
         </button>
-        <haptic-copy v-if="extractedCode" class="btn-sm font-weight-bold btn col" :text="extractedCode" />
+        <haptic-copy v-if="extractedCode" class="btn-sm fw-bold btn col" :text="extractedCode" />
       </div>
       <slide-up-down :active="!collapseCode" class="sample-card__body__code bg-dark">
         <slot name="code">

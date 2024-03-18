@@ -9,7 +9,7 @@
           height="30px"
         />
       </router-link>
-      <button class="btn btn-link text-white float-right" @click="toggleMenu">
+      <button class="btn btn-link text-white float-end" @click="toggleMenu">
         <fa icon="bars" />
       </button>
     </div>
