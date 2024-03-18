@@ -21,7 +21,7 @@ Inside a modal (the modal's body is set to have no body):
 :::sample-card
 <div>
   <div class="p-4 text-center">
-    <button class="btn btn-info font-weight-bold" @click="$refs.formModal.show()">
+    <button class="btn btn-info fw-bold" @click="$refs.formModal.show()">
       Click to see the form
     </button>
   </div>
@@ -41,7 +41,7 @@ and `markdown` forms, using no fading animation, and using a `small` layout:
 <template>
   <div>
     <div class="p-4 text-center">
-      <button class="btn btn-info font-weight-bold" id="popover-button-sample">
+      <button class="btn btn-info fw-bold" id="popover-button-sample">
         Click to see the form
       </button>
     </div>
@@ -80,7 +80,7 @@ With tabs as pills and a different active class:
     <advanced-link-form
       card
       pills
-      active-nav-item-class="bg-primary font-weight-bold"
+      active-nav-item-class="bg-primary fw-bold"
       title="Medtronic spends millions each year on lobbying in the US"
       link="https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying" />
   </b-card>

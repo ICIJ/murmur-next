@@ -2,14 +2,14 @@
   <div class="palette-presenter">
     <ul class="list-unstyled palette-presenter__list">
       <li v-for="(value, name) in colors" :key="name" :style="bgStyle(name)" class="palette-presenter__list__item">
-        <span class="font-weight-bold palette-presenter__list__item__name">
+        <span class="fw-bold palette-presenter__list__item__name">
           {{ name }}
         </span>
-        <span class="font-weight-bold palette-presenter__list__item__value d-flex align-items-center">
+        <span class="fw-bold palette-presenter__list__item__value d-flex align-items-center">
           <span class="palette-presenter__list__item__value__hex">
             {{ value }}
           </span>
-          <haptic-copy class="btn-sm btn-link ml-2" hide-label :text="value.hex" />
+          <haptic-copy class="btn-sm btn-link ms-2" hide-label :text="value.hex" />
         </span>
       </li>
     </ul>

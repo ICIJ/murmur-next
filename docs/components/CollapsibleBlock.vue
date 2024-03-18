@@ -6,7 +6,7 @@
       </a>
       <div class="flex-grow-1">
         <slot name="label" v-bind:label="label">
-          <a v-if="label" class="py-3 pr-4 collapsible-block__label d-block" @click="toggle">
+          <a v-if="label" class="py-3 pe-4 collapsible-block__label d-block" @click="toggle">
             {{ label }}
           </a>
         </slot>

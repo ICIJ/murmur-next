@@ -15,7 +15,7 @@
     </div>
     <div class="docs-menu__footer d-flex align-items-center justify-content-between">
       <a href="https://icij.org" target="_blank" class="d-flex align-items-center">
-        <brand-expansion dark mode="medium" size="26" class="docs-menu__footer__logo mr-2" />
+        <brand-expansion dark mode="medium" size="26" class="docs-menu__footer__logo me-2" />
         <span class="sr-only">A project by ICIJ</span>
       </a>
       <a :href="repository.url" target="_blank">

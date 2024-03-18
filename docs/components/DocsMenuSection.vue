@@ -1,7 +1,7 @@
 <template>
   <div class="docs-menu__section pb-2" :class="{ 'docs-menu__section--show-menu': showMenu }">
     <h4 class="docs-menu__section__heading" @click="showMenu = !showMenu">
-      <fa :icon="headingIcon" class="float-right" />
+      <fa :icon="headingIcon" class="float-end" />
       {{ name }}
     </h4>
     <b-collapse :visible="active" tag="ul" class="list-unstyled mb-0 pb-0">
@@ -11,7 +11,7 @@
         class="docs-menu__section__item d-flex justify-content-between align-items-center mb-2"
       >
         <router-link :to="route.path" class="docs-menu__link">
-          <fa :icon="route.icon || icon" class="docs-menu__link__icon mr-1" />
+          <fa :icon="route.icon || icon" class="docs-menu__link__icon me-1" />
           {{ routeTitle(route) }}
         </router-link>
         <span v-if="routeHasBadge(route)" class="badge badge-secondary docs-menu__badge">
