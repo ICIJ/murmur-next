@@ -23,6 +23,20 @@
     "test": "vitest",
     "test:unit": "vitest run"
   },
+  "main": "./dist/lib/murmur.umd.cjs",
+  "module": "./dist/lib/murmur.js",
+  "files": [
+    "lib/**/*",
+    "dist/lib/**/*"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/lib/murmur.js",
+      "require": "./dist/lib/murmur.umd.cjs"
+    },
+    "./lib/": "./lib/",
+    "./dist/": "./dist/"
+  },
   "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
