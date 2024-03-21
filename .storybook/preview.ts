@@ -23,21 +23,21 @@ export const decorators = [
    * @see {@link https://craigbaldwin.com/blog/updating-args-storybook-vue/}
    */
   (story, context) => {
-    const [args, updateArgs] = useArgs();
+    const [args, updateArgs] = useArgs()
     if ('modelValue' in args) {
-      const update = args['onUpdate:model-value'] || args['onUpdate:modelValue'];
-      args['onUpdate:model-value'] = undefined;
+      const update = args['onUpdate:model-value'] || args['onUpdate:modelValue']
+      args['onUpdate:model-value'] = undefined
       args['onUpdate:modelValue'] = (...vals) => {
-        update?.(...vals);
+        update?.(...vals)
         /**
          * Arg with `undefined` will be deleted by `deleteUndefined()`, then loss of reactive
          * @see {@link https://github.com/storybookjs/storybook/blob/next/code/lib/preview-api/src/modules/store/ArgsStore.ts#L63}
          */
-        const modelValue = vals[0] === undefined ? null : vals[0];
-        updateArgs({ modelValue });
-      };
+        const modelValue = vals[0] === undefined ? null : vals[0]
+        updateArgs({ modelValue })
+      }
     }
-    return story({ ...context, updateArgs });
+    return story({ ...context, updateArgs })
   }
 ]
 
