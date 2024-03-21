@@ -181,7 +181,8 @@ export default defineComponent({
           'update:modelValue',
           props.multiple ? activeItems.value : activeItems.value[0]
         )
-      }
+      },
+      { deep: true }
     )
     watch(
       () => props.modelValue,
