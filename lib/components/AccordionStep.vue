@@ -13,7 +13,7 @@
         {{ title }}
       </slot>
     </h4>
-    <b-collapse :visible="isActive">
+    <slide-up-down :active="isActive">
       <div class="accordion-wrapper__content__step__main card-body row g-0">
         <!-- @slot Content of the step with props {isFirst:boolean, isLast:boolean, step:Step, nextStep:Function}-->
         <slot name="content" v-bind="{ isFirst, isLast, step, previousStep, nextStep }">
@@ -46,16 +46,21 @@
           </b-button>
         </slot>
       </div>
-    </b-collapse>
+    </slide-up-down>
   </b-card>
 </template>
 
 <script lang="ts">
 import {computed, defineComponent, inject, PropType} from 'vue';
+
+import SlideUpDown from '@/components/SlideUpDown.vue';
 import {AccordionKey} from '@/keys'
 import {Accordion, Step} from '@/types'
 
 export default defineComponent({
+  components: {
+    SlideUpDown
+  },
   props: {
     /**
      * Step name

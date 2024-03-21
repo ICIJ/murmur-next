@@ -9,7 +9,7 @@ import {Mocked} from "vitest";
 let mockAccordion: Mocked<Accordion>
 describe('AccordionStep', () => {
     // Stubs Bootstrap Vue components
-    const stubs = {'b-card': true, 'b-collapse': true, 'b-button': true}
+    const stubs = {'b-card': true, 'slide-up-down': true, 'b-button': true}
     const step = Symbol("Accordion")
     const steps = [step, Symbol("step2")]
 
@@ -106,13 +106,13 @@ describe('AccordionStep', () => {
                 const propsData = {step}
                 let wrapper = mount(AccordionStep, {propsData, global: {provide, stubs, renderStubDefaultSlot: true}})
 
-                const notActiveElement = wrapper.find('.accordion-wrapper__content__step b-collapse-stub')
-                expect(notActiveElement.attributes().visible).toBe("false")
+                const notActiveElement = wrapper.find('.accordion-wrapper__content__step slide-up-down-stub')
+                expect(notActiveElement.attributes().active).toBe("false")
 
                 mockAccordion.isActiveStep.mockReturnValueOnce(true)
                 wrapper = mount(AccordionStep, {propsData, global: {provide, stubs, renderStubDefaultSlot: true}})
-                const activeElement = wrapper.find('.accordion-wrapper__content__step b-collapse-stub')
-                expect(activeElement.attributes().visible).toBe("true")
+                const activeElement = wrapper.find('.accordion-wrapper__content__step slide-up-down-stub')
+                expect(activeElement.attributes().active).toBe("true")
             })
 
         })
