@@ -4,10 +4,12 @@ import brandImage from  '../lib/assets/images/murmur-dark.svg'
 export default create({
   base: 'dark',
   brandTitle: 'Murmur',
-  brandUrl: 'https://icij.github.io/murmur/',
+  brandUrl: 'https://icij.github.io/murmur-next/',
   brandTarget: '_self',
   brandImage,
   appBg: '#000000',
+  appBorderColor: '#212121',
+  appBorderRadius: 0,
   barBg: '#212121',
   colorPrimary: '#FF0000',
   colorSecondary: '#999999',
@@ -20,5 +22,5 @@ export default create({
   inputBg: '#FFFFFF',
   inputBorder: '#696969',
   inputTextColor: '#000000',
-  inputBorderRadius: 4
+  inputBorderRadius: 0
 })
