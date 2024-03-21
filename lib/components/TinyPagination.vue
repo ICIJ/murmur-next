@@ -62,14 +62,7 @@
 
 <script lang="ts">
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import {
-  defineComponent,
-  PropType,
-  ref,
-  computed,
-  watch,
-  onBeforeMount
-} from 'vue'
+import { defineComponent, PropType, ref, computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { library, default as Fa } from './Fa'
@@ -169,16 +162,14 @@ export default defineComponent({
     })
 
     const { t } = useI18n()
-    const pageValue = computed(() => {
-      return +props.modelValue
-    })
-    const currentPageInput = ref<number | string>(pageValue.value)
+
     const numberOfPages = computed((): number => {
       if (props.pages === null) {
         return Math.ceil(props.totalRows / props.perPage)
       }
       return Number(props.pages)
     })
+
     const paginationClassList = computed((): object => {
       return {
         [`tiny-pagination--${props.size}`]: true,
@@ -187,12 +178,15 @@ export default defineComponent({
         [`tiny-pagination--compact`]: props.compact
       }
     })
-    const hasPrevious = computed((): boolean => {
-      return pageValue.value > 1
-    })
-    const hasNext = computed((): boolean => {
-      return pageValue.value < numberOfPages.value
-    })
+
+    const hasPrevious = computed((): boolean => pageValue.value > 1)
+    const hasNext = computed(
+      (): boolean => pageValue.value < numberOfPages.value
+    )
+    const pageValue = computed(() => +props.modelValue)
+
+    const currentPageInput = ref<number | string>(pageValue.value)
+
     function applyPageForm(): void {
       if (!isNaN(currentPageInput.value as number)) {
         emit('update:modelValue', +currentPageInput.value)
@@ -200,11 +194,13 @@ export default defineComponent({
     }
 
     function applyNextPage(): void {
-      emit('update:modelValue', pageValue.value - 1)
-    }
-    function applyPreviousPage(): void {
       emit('update:modelValue', pageValue.value + 1)
     }
+
+    function applyPreviousPage(): void {
+      emit('update:modelValue', pageValue.value - 1)
+    }
+
     return {
       t,
       currentPageInput,
