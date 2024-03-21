@@ -1,10 +1,10 @@
-@import '@/styles/variables.scss';
+@import "@/styles/variables.scss";
 
 $pre-color: $light;
 $app-menu-max-width: 300px;
 $app-main-max-width: 770px;
 
-$modal-backdrop-bg: rgba(darken($dark, 10%), .5);
+$modal-backdrop-bg: rgba(darken($dark, 10%), 0.5);
 $code-color: $info;
 
 $link-color: #000;

@@ -1,19 +1,19 @@
-import {setup, Preview} from '@storybook/vue3'
-import './app.scss';
+import { setup, Preview } from "@storybook/vue3";
+import "./app.scss";
 import Murmur from "@/main";
-import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
 
-setup((app)=>{
-  app.use(Murmur)
-})
+setup((app) => {
+  app.use(Murmur);
+});
 export const decorators = [
   withThemeByDataAttribute({
     themes: {
-      light: 'light',
-      dark: 'dark',
+      light: "light",
+      dark: "dark",
     },
-    defaultTheme: 'light',
-    attributeName: 'data-bs-theme',
+    defaultTheme: "light",
+    attributeName: "data-bs-theme",
   }),
 ];
 export const parameters = {
@@ -27,6 +27,6 @@ export const parameters = {
 };
 
 const preview: Preview = {
-  parameters
+  parameters,
 };
 export default preview;
