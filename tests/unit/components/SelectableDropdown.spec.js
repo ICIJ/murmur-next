@@ -22,9 +22,11 @@ describe('SelectableDropdown.vue', () => {
     })
     window.IntersectionObserver = mockIntersectionObserver
   })
+
   afterAll(() => {
     window.IntersectionObserver.mockClear()
   })
+
   it('is a Vue instance', () => {
     const wrapper = mount(SelectableDropdown)
     expect(wrapper.vm).toBeTruthy()

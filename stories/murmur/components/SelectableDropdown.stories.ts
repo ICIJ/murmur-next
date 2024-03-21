@@ -39,12 +39,18 @@ export default {
 }
 
 type Story = StoryObj<typeof SelectableDropdown>
-const Template: Story = (args: any) => ({
+const Template: Story = (args: any, { updateArgs }) => ({
   components: { SelectableDropdown },
   setup() {
     return { args }
   },
-  template: '<SelectableDropdown v-bind="args" />'
+  template:
+    '<SelectableDropdown @update:modelValue="handleModelValue" v-bind="args" />',
+  methods: {
+    handleModelValue(modelValue) {
+      updateArgs({ ...args, modelValue })
+    }
+  }
 })
 
 export const Default = Template.bind({})
