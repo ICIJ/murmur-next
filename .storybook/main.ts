@@ -1,5 +1,5 @@
-import type { StorybookConfig } from "@storybook/vue3-vite";
-import { mergeConfig } from "vite";
+import type { StorybookConfig } from "@storybook/vue3-vite"
+import { mergeConfig } from "vite"
 
 const config:StorybookConfig = {
   core: {
@@ -29,7 +29,8 @@ const config:StorybookConfig = {
       build: {
         outDir: 'storybook-static'
       }
-    });
+    })
   }
-};
-export default config;
+}
+
+export default config

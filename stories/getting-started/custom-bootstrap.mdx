@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/blocks';
+import { Meta, Source } from '@storybook/blocks';
 import rawVariables from '../../lib/styles/variables.scss?raw';
 
 <Meta title="Customize Boostrap"/>
@@ -8,6 +8,7 @@ import rawVariables from '../../lib/styles/variables.scss?raw';
 This guide comes with a set of pre-configured SCSS variables that can be used in
 conjunction with Boostrap. It is **not mandatory** to uses a custom build of Boostrap
 with these variables. Yet some components might have a better display with this configuration.
+
 ```scss
 // You can easily override every variables
 $link-color: #c10448;
@@ -18,6 +19,7 @@ $link-color: #c10448;
 // Optional but recommended: Bootstrap Vue Next CSS additions
 @import 'node_modules/bootstrap-vue-next/dist/bootstrap-vue-next';
 ```
+
 Here are all the variables defined in <repository-link path="lib/styles/variables.scss">lib/styles/variables.scss</repository-link>:
 
-<pre ><code>{rawVariables}</code></pre>
+<Source code={rawVariables} language="scss" />
