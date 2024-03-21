@@ -4,7 +4,7 @@
     :style="style"
     :class="{
       'brand-expansion--dark': dark,
-      'brand-expansion--animated': animated,
+      'brand-expansion--animated': animated
     }"
   >
     <svg
@@ -83,85 +83,85 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { isString } from "lodash";
+import { defineComponent, PropType } from 'vue'
+import { isString } from 'lodash'
 
-import { BrandMode } from "@/enums";
-import type { BrandExpansionStyle } from "@/types";
+import { BrandMode } from '@/enums'
+import type { BrandExpansionStyle } from '@/types'
 
 /**
  * A component to create variations of ICIJ logo with text
  */
 export default defineComponent({
-  name: "BrandExpansion",
+  name: 'BrandExpansion',
   props: {
     /**
      * Add a balancing effect to the globe
      */
     animated: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Monochromatic logo's color
      */
     color: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Logo's background color
      */
     background: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Logo's size
      */
     size: {
       type: [Number, String],
-      default: "70px",
+      default: '70px'
     },
     /**
      * Brand mode ("short", "medium", "long")
      */
     mode: {
       type: String as PropType<BrandMode>,
-      default: BrandMode.Short,
+      default: BrandMode.Short
     },
     /**
      * Reverse color of the main text to white if no `color` is given
      */
     dark: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   computed: {
     baseWidth(): number {
       const widths = {
         [BrandMode.Short]: 401.256,
         [BrandMode.Medium]: 901.24,
-        [BrandMode.Long]: 1047.01,
-      };
-      return widths[this.mode];
+        [BrandMode.Long]: 1047.01
+      }
+      return widths[this.mode]
     },
     width(): string {
-      return `${(this.baseWidth / 200) * this.sizeAsNumber}px`;
+      return `${(this.baseWidth / 200) * this.sizeAsNumber}px`
     },
     height(): string {
-      return `${this.sizeAsNumber}px`;
+      return `${this.sizeAsNumber}px`
     },
     sizeAsNumber(): number {
-      return isString(this.size) ? parseInt(this.size) : this.size;
+      return isString(this.size) ? parseInt(this.size) : this.size
     },
     style(): BrandExpansionStyle {
       return {
-        "--monochrome-color": this.color,
-        background: this.background,
-      };
-    },
-  },
-});
+        '--monochrome-color': this.color,
+        background: this.background
+      }
+    }
+  }
+})
 </script>
 
 <style scoped lang="scss">

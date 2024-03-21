@@ -1,8 +1,8 @@
 <script lang="ts">
-import * as d3 from "d3";
-import { GeoPermissibleObjects } from "d3";
-import { geoRobinson } from "d3-geo-projection";
-import { feature } from "topojson";
+import * as d3 from 'd3'
+import { GeoPermissibleObjects } from 'd3'
+import { geoRobinson } from 'd3-geo-projection'
+import { feature } from 'topojson'
 import {
   debounce,
   find,
@@ -14,139 +14,139 @@ import {
   pickBy,
   set,
   uniq,
-  uniqueId,
-} from "lodash";
+  uniqueId
+} from 'lodash'
 
-import config from "../config";
-import OrdinalLegend from "../components/OrdinalLegend.vue";
+import config from '../config'
+import OrdinalLegend from '../components/OrdinalLegend.vue'
 import {
   chartEmits,
   chartProps,
   getChartProps,
-  useChart,
-} from "@/composables/chart.js";
+  useChart
+} from '@/composables/chart.js'
 import {
   ComponentPublicInstance,
   computed,
   defineComponent,
   PropType,
   ref,
-  watch,
-} from "vue";
-import { GeometryCollection } from "topojson-specification";
+  watch
+} from 'vue'
+import { GeometryCollection } from 'topojson-specification'
 
 export default defineComponent({
   components: {
-    OrdinalLegend,
+    OrdinalLegend
   },
-  name: "SymbolMap",
+  name: 'SymbolMap',
   props: {
     categoryObjectsPath: {
       type: [String, Array],
-      default: "category",
+      default: 'category'
     },
     clickable: {
-      type: Boolean,
+      type: Boolean
     },
     hideLegend: {
-      type: Boolean,
+      type: Boolean
     },
     hideTooltip: {
-      type: Boolean,
+      type: Boolean
     },
     horizontalLegend: {
-      type: Boolean,
+      type: Boolean
     },
     featureColor: {
       type: [String, Function],
-      default: "currentColor",
+      default: 'currentColor'
     },
     fitToMarkers: {
-      type: Boolean,
+      type: Boolean
     },
     labelObjectsPath: {
       type: [String, Array],
-      default: "label",
+      default: 'label'
     },
     mapPadding: {
       type: Number,
-      default: 15,
+      default: 15
     },
     markerObjectsPath: {
       type: [String, Array],
-      default: "id",
+      default: 'id'
     },
     markerPath: {
       type: [String, Function],
       default:
-        "M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256z",
+        'M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256z'
     },
     markerColor: {
       type: String,
-      default: null,
+      default: null
     },
     markerWidth: {
       type: [Number, Function],
-      default: 10,
+      default: 10
     },
     noMarkersScale: {
-      type: Boolean,
+      type: Boolean
     },
     tooltipCustomClass: {
       type: String,
-      default: null,
+      default: null
     },
     tooltipPlacement: {
       type: String,
-      default: "top",
+      default: 'top'
     },
     tooltipFallbackPlacement: {
       type: [Array, String],
-      default: "flip",
+      default: 'flip'
     },
     topojsonObjects: {
       type: String,
-      default: "countries1",
+      default: 'countries1'
     },
     topojsonObjectsPath: {
       type: [String, Array] as PropType<string | string[]>,
-      default: "id",
+      default: 'id'
     },
     topojsonUrl: {
       type: String,
-      default: () => config.get("map.topojson.world-countries-sans-antarctica"),
+      default: () => config.get('map.topojson.world-countries-sans-antarctica')
     },
     transitionDuration: {
       type: Number,
-      default: 750,
+      default: 750
     },
     zoomable: {
-      type: Boolean,
+      type: Boolean
     },
     zoomMin: {
       type: Number,
-      default: 1,
+      default: 1
     },
     zoomMax: {
       type: Number,
-      default: 8,
+      default: 8
     },
-    ...chartProps(),
+    ...chartProps()
   },
-  emits: ["click", "reset", "zoomed", ...chartEmits],
+  emits: ['click', 'reset', 'zoomed', ...chartEmits],
   setup(props, { emit }) {
-    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null);
-    const topojson = ref<any>(null);
-    const topojsonPromise = ref<Promise<void> | null>(null);
-    const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0));
-    const markerCursor = ref<{ [cursor: string]: string } | null>(null);
-    const categoryHighlight = ref<any | null>(null);
-    const featureZoom = ref<string | null>(null);
+    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
+    const topojson = ref<any>(null)
+    const topojsonPromise = ref<Promise<void> | null>(null)
+    const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
+    const markerCursor = ref<{ [cursor: string]: string } | null>(null)
+    const categoryHighlight = ref<any | null>(null)
+    const featureZoom = ref<string | null>(null)
 
-    const isLoaded = ref<boolean>(false);
+    const isLoaded = ref<boolean>(false)
     const debouncedDraw = debounce(function () {
-      draw();
-    }, 10);
+      draw()
+    }, 10)
 
     const { loadedData } = useChart(
       el,
@@ -154,271 +154,271 @@ export default defineComponent({
       { emit },
       isLoaded,
       debouncedDraw,
-      afterLoaded,
-    );
+      afterLoaded
+    )
 
     function afterLoaded() {
       return new Promise<void>(async (resolve) => {
-        await loadTopojson();
-        draw();
-        resolve();
-      });
+        await loadTopojson()
+        draw()
+        resolve()
+      })
     }
 
     //computed
     const featurePath = computed(() => {
-      return d3.geoPath().projection(mapProjection.value);
-    });
+      return d3.geoPath().projection(mapProjection.value)
+    })
     const hasCursor = computed(() => {
-      return !!markerCursor.value;
-    });
+      return !!markerCursor.value
+    })
     const hasHighlight = computed(() => {
-      return !!categoryHighlight.value;
-    });
+      return !!categoryHighlight.value
+    })
     const hasZoom = computed(() => {
-      return !!featureZoom.value;
-    });
+      return !!featureZoom.value
+    })
     const geojson = computed(() => {
-      return props.fitToMarkers ? markersGeojson.value : featuresGeojson.value;
-    });
+      return props.fitToMarkers ? markersGeojson.value : featuresGeojson.value
+    })
     const featuresGeojson = computed(() => {
       const object = get(
         topojson.value,
-        ["objects", props.topojsonObjects],
-        null,
-      );
-      return feature(topojson.value, object as GeometryCollection);
-    });
+        ['objects', props.topojsonObjects],
+        null
+      )
+      return feature(topojson.value, object as GeometryCollection)
+    })
     const markersGeojson = computed(() => {
       return {
-        type: "Feature",
+        type: 'Feature',
         geometry: {
-          type: "Polygon",
-          coordinates: [coordinates.value],
-        },
-      };
-    });
+          type: 'Polygon',
+          coordinates: [coordinates.value]
+        }
+      }
+    })
     const coordinates = computed(() => {
       return (loadedData.value || []).map(({ longitude, latitude }) => {
-        return [longitude, latitude];
-      });
-    });
+        return [longitude, latitude]
+      })
+    })
     const mapId = computed(() => {
-      return uniqueId("symbol-map-");
-    });
+      return uniqueId('symbol-map-')
+    })
     const mapClass = computed(() => {
       return {
-        "symbol-map--has-cursor": hasCursor.value,
-        "symbol-map--has-highlight": hasHighlight.value,
-        "symbol-map--has-zoom": hasZoom.value,
-        "symbol-map--has-markers-scale": !props.noMarkersScale,
-      };
-    });
+        'symbol-map--has-cursor': hasCursor.value,
+        'symbol-map--has-highlight': hasHighlight.value,
+        'symbol-map--has-zoom': hasZoom.value,
+        'symbol-map--has-markers-scale': !props.noMarkersScale
+      }
+    })
     const mapProjection = computed(() => {
-      const { height, width } = mapRect.value;
-      const padding = props.mapPadding;
+      const { height, width } = mapRect.value
+      const padding = props.mapPadding
       return geoRobinson().fitExtent(
         [
           [padding, padding],
-          [width - padding, height - padding],
+          [width - padding, height - padding]
         ],
-        geojson.value,
-      );
-    });
+        geojson.value
+      )
+    })
     const mapZoom = computed(() => {
       return d3
         .zoom()
         .scaleExtent([props.zoomMin, props.zoomMax])
         .translateExtent([
           [0, 0],
-          [mapWidth.value, mapHeight.value],
+          [mapWidth.value, mapHeight.value]
         ])
-        .on("zoom", mapZoomed);
-    });
+        .on('zoom', mapZoomed)
+    })
     const mapHeight = computed(() => {
-      return mapRect.value.height;
-    });
+      return mapRect.value.height
+    })
     const mapWidth = computed(() => {
-      return mapRect.value.width;
-    });
+      return mapRect.value.width
+    })
     const map = computed(() => {
       const selection = d3
         .select(el.value)
-        .select<SVGElement>(".symbol-map__main");
+        .select<SVGElement>('.symbol-map__main')
       if (!selection) {
-        throw new Error("Empty SVG selection");
+        throw new Error('Empty SVG selection')
       }
-      return selection;
-    });
+      return selection
+    })
     const markerCursorValue = computed(() => {
       return find(loadedDataWithIds.value, (d) => {
-        return get(d, props.markerObjectsPath) === markerCursor.value;
-      });
-    });
+        return get(d, props.markerObjectsPath) === markerCursor.value
+      })
+    })
     const loadedDataWithIds = computed(() => {
       return loadedData.value?.map((d) => {
         return {
           ...set({}, props.markerObjectsPath, uniqueId()),
-          ...d,
-        };
-      });
-    });
+          ...d
+        }
+      })
+    })
     const categories = computed(() => {
       const categories = (loadedData.value || []).map((d) => {
-        return get(d, props.categoryObjectsPath);
-      });
-      return uniq(categories).map(String);
-    });
+        return get(d, props.categoryObjectsPath)
+      })
+      return uniq(categories).map(String)
+    })
     const legendData = computed(() => {
       const categories = groupBy(loadedData.value || [], (d) => {
-        return get(d, props.categoryObjectsPath);
-      });
+        return get(d, props.categoryObjectsPath)
+      })
       return Object.entries(categories).map((entry) => {
-        const [label, [{ color: firstColor }]] = entry;
-        const color = firstColor || categoryColor(label);
-        return { label, color };
-      });
-    });
+        const [label, [{ color: firstColor }]] = entry
+        const color = firstColor || categoryColor(label)
+        return { label, color }
+      })
+    })
     const hasTooltip = computed(() => {
-      return !props.hideTooltip && loadedData.value && markerCursor.value;
-    });
+      return !props.hideTooltip && loadedData.value && markerCursor.value
+    })
     const tooltipTarget = computed(() => {
       if (hasTooltip.value) {
-        return markerId(markerCursor.value);
+        return markerId(markerCursor.value)
       }
-      return null;
-    });
+      return null
+    })
 
     //methods
 
     function prepare() {
       if (!map.value) {
-        throw new Error("Map is null");
+        throw new Error('Map is null')
       }
       // Set the map sizes
-      mapRect.value = map.value.node()?.getBoundingClientRect() as DOMRect;
+      mapRect.value = map.value.node()?.getBoundingClientRect() as DOMRect
       // Remove any existing country
-      map.value.selectAll("g").remove();
+      map.value.selectAll('g').remove()
       // Return the map to allow chaining
-      return map.value;
+      return map.value
     }
 
     function prepareZoom() {
       if (props.zoomable) {
-        map.value?.call(mapZoom.value);
+        map.value?.call(mapZoom.value)
       }
     }
 
     function categoryColor(category: string) {
       if (el.value && loadedData.value) {
-        const index = categories.value.indexOf(category);
-        const style = window.getComputedStyle(el.value);
-        return style.getPropertyValue(`--category-color-${index}n`) || "#000";
+        const index = categories.value.indexOf(category)
+        const style = window.getComputedStyle(el.value)
+        return style.getPropertyValue(`--category-color-${index}n`) || '#000'
       }
-      return null;
+      return null
     }
 
     function draw() {
-      prepare();
+      prepare()
       if (!map.value) {
-        throw new Error("map is not defined");
+        throw new Error('map is not defined')
       }
-      update();
+      update()
       // Bind a group for marker paths
       map.value
-        ?.append("g")
-        .attr("class", "symbol-map__main__markers")
-        .selectAll(".symbol-map__main__markers__item")
+        ?.append('g')
+        .attr('class', 'symbol-map__main__markers')
+        .selectAll('.symbol-map__main__markers__item')
         .data(loadedDataWithIds.value)
         .enter()
-        .append("g")
-        .attr("id", markerId)
-        .attr("class", markerClass)
-        .attr("transform", markerTransform)
-        .append("path")
-        .on("mouseover", markerMouseOver)
-        .on("mouseleave", markerMouseLeave)
-        .attr("d", markerPathFunction)
-        .attr("fill", markerColorFunction);
-      prepareZoom();
+        .append('g')
+        .attr('id', markerId)
+        .attr('class', markerClass)
+        .attr('transform', markerTransform)
+        .append('path')
+        .on('mouseover', markerMouseOver)
+        .on('mouseleave', markerMouseLeave)
+        .attr('d', markerPathFunction)
+        .attr('fill', markerColorFunction)
+      prepareZoom()
     }
 
     function featureClass(d) {
-      return keys(pickBy(featureClassObject(d), (value) => value)).join(" ");
+      return keys(pickBy(featureClassObject(d), (value) => value)).join(' ')
     }
 
     function featureClassObject(d) {
-      const pathClass = "symbol-map__main__features__item";
-      const id = get(d, props.topojsonObjectsPath, null);
+      const pathClass = 'symbol-map__main__features__item'
+      const id = get(d, props.topojsonObjectsPath, null)
       return {
         [pathClass]: true,
         [`${pathClass}--identifier-${kebabCase(id)}`]: id !== null,
-        [`${pathClass}--zoomed`]: featureZoom.value === id,
-      };
+        [`${pathClass}--zoomed`]: featureZoom.value === id
+      }
     }
 
     async function loadTopojson() {
       if (!topojsonPromise.value) {
         if (!props.topojsonUrl?.length) {
-          throw new Error("Empty topojsonUrl");
+          throw new Error('Empty topojsonUrl')
         }
-        topojsonPromise.value = d3.json(props.topojsonUrl);
-        topojson.value = await topojsonPromise.value;
+        topojsonPromise.value = d3.json(props.topojsonUrl)
+        topojson.value = await topojsonPromise.value
       }
-      return topojsonPromise.value;
+      return topojsonPromise.value
     }
 
     function mapZoomed({ transform }) {
-      markerCursor.value = null;
+      markerCursor.value = null
       map.value
-        ?.style("--map-scale", transform.k)
-        .selectAll(".symbol-map__main__features, .symbol-map__main__markers")
-        .attr("transform", transform);
+        ?.style('--map-scale', transform.k)
+        .selectAll('.symbol-map__main__features, .symbol-map__main__markers')
+        .attr('transform', transform)
     }
 
     function markerBoundingClientRect(d) {
-      const marker = map.value?.append("path").attr("d", markerPathFunction(d));
-      const rect = marker?.node()?.getBoundingClientRect();
-      marker?.remove();
-      return rect as DOMRect;
+      const marker = map.value?.append('path').attr('d', markerPathFunction(d))
+      const rect = marker?.node()?.getBoundingClientRect()
+      marker?.remove()
+      return rect as DOMRect
     }
 
     function markerMouseLeave() {
-      markerCursor.value = null;
+      markerCursor.value = null
     }
 
     function markerMouseOver(_, d) {
-      markerCursor.value = get(d, props.markerObjectsPath);
+      markerCursor.value = get(d, props.markerObjectsPath)
     }
 
     function markerClass(d) {
-      return keys(pickBy(markerClassObject(d), (value) => value)).join(" ");
+      return keys(pickBy(markerClassObject(d), (value) => value)).join(' ')
     }
 
     function markerId(d) {
-      const id = get(d, props.markerObjectsPath);
-      return `${mapId.value}-marker-${id}`;
+      const id = get(d, props.markerObjectsPath)
+      return `${mapId.value}-marker-${id}`
     }
 
     function markerClassObject(d) {
-      const category = String(get(d, props.categoryObjectsPath));
-      const categoryIndex = categories.value.indexOf(category);
-      const id = get(d, props.markerObjectsPath);
-      const pathClass = "symbol-map__main__markers__item";
+      const category = String(get(d, props.categoryObjectsPath))
+      const categoryIndex = categories.value.indexOf(category)
+      const id = get(d, props.markerObjectsPath)
+      const pathClass = 'symbol-map__main__markers__item'
       return {
         [pathClass]: true,
         [`${pathClass}--category-${kebabCase(category)}`]: category !== null,
         [`${pathClass}--category-${categoryIndex}n`]: category !== null,
         [`${pathClass}--cursored`]: markerCursor.value === id,
         [`${pathClass}--identifier-${kebabCase(id)}`]: id !== null,
-        [`${pathClass}--highlighted`]: categoryHighlight.value === category,
-      };
+        [`${pathClass}--highlighted`]: categoryHighlight.value === category
+      }
     }
 
     function markerPathFunction(d) {
       return isFunction(props.markerPath)
         ? props.markerPath(d)
-        : props.markerPath;
+        : props.markerPath
     }
 
     function markerColorFunction({ color, ...d }) {
@@ -427,120 +427,120 @@ export default defineComponent({
         (isFunction(props.markerColor)
           ? props.markerColor(d)
           : props.markerColor)
-      );
+      )
     }
 
     function markerWidthFunction(d) {
       return isFunction(props.markerWidth)
         ? props.markerWidth(d)
-        : props.markerWidth;
+        : props.markerWidth
     }
 
     function markerLabel(d) {
-      return get(d, props.labelObjectsPath);
+      return get(d, props.labelObjectsPath)
     }
 
     function markerTransform(d) {
-      const { latitude, longitude } = d;
-      const { height, width } = markerBoundingClientRect(d);
-      const [x, y] = mapProjection.value([longitude, latitude]);
-      const scale = markerWidthFunction(d) / Math.max(1, width);
-      const cx = x - (width / 2) * scale;
-      const cy = y - (height / 2) * scale;
-      return `translate(${cx}, ${cy}) scale(${scale})`;
+      const { latitude, longitude } = d
+      const { height, width } = markerBoundingClientRect(d)
+      const [x, y] = mapProjection.value([longitude, latitude])
+      const scale = markerWidthFunction(d) / Math.max(1, width)
+      const cx = x - (width / 2) * scale
+      const cy = y - (height / 2) * scale
+      return `translate(${cx}, ${cy}) scale(${scale})`
     }
 
     async function featureClicked(
       event: MouseEvent,
-      d: d3.GeoPermissibleObjects,
+      d: d3.GeoPermissibleObjects
     ) {
       /**
        * A click on a feature
        * @event click
        * @param Clicked feature
        */
-      emit("click", d);
+      emit('click', d)
       // Don't zoom on the map feature
       if (!props.clickable) {
-        return;
+        return
       }
       if (featureZoom.value === get(d, props.topojsonObjectsPath)) {
-        return resetZoom(event, d);
+        return resetZoom(event, d)
       }
-      setFeatureZoom(d, d3.pointer(event, map.value?.node()));
+      setFeatureZoom(d, d3.pointer(event, map.value?.node()))
       /**
        * A zoom on a feature ended
        * @event zoomed
        * @param Zoomed feature
        */
-      emit("zoomed", d);
+      emit('zoomed', d)
     }
 
     function resetZoom(_event: MouseEvent, _d: number) {
       map.value
-        ?.style("--map-scale", 1)
+        ?.style('--map-scale', 1)
         .transition()
         .duration(props.transitionDuration)
-        .call(mapZoom.value.transform, d3.zoomIdentity);
-      featureZoom.value = null;
+        .call(mapZoom.value.transform, d3.zoomIdentity)
+      featureZoom.value = null
 
       /**
        * The zomm on the map was reset to its initial <slot ate></slot>
        * @event reset
        */
-      emit("reset");
+      emit('reset')
     }
 
     function setMarkersClasses() {
       map.value
-        ?.selectAll(".symbol-map__main__markers__item")
-        .attr("class", markerClass);
+        ?.selectAll('.symbol-map__main__markers__item')
+        .attr('class', markerClass)
     }
 
     function setFeatureZoom(d: GeoPermissibleObjects, pointer = [0, 0]) {
       if (!loadedData.value) {
-        return;
+        return
       }
-      featureZoom.value = get(d, props.topojsonObjectsPath);
+      featureZoom.value = get(d, props.topojsonObjectsPath)
 
-      const { height, width } = mapRect.value;
-      const [[x0, y0], [x1, y1]] = featurePath.value.bounds(d);
+      const { height, width } = mapRect.value
+      const [[x0, y0], [x1, y1]] = featurePath.value.bounds(d)
       const scale = Math.min(
         8,
-        0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height),
-      );
-      const x = -(x0 + x1) / 2;
-      const y = -(y0 + y1) / 2;
+        0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)
+      )
+      const x = -(x0 + x1) / 2
+      const y = -(y0 + y1) / 2
       const zoomIdentity = d3.zoomIdentity
         .translate(width / 2, height / 2)
         .scale(scale)
-        .translate(x, y);
+        .translate(x, y)
       return map.value
-        ?.style("--map-scale", scale)
+        ?.style('--map-scale', scale)
         .transition()
         .duration(props.transitionDuration)
         .call(mapZoom.value?.transform, zoomIdentity, pointer)
-        .end();
+        .end()
     }
 
     function update() {
       // Bind geojson features to path
       if (!map.value) {
-        return;
+        return
       }
       // Bind a group for geojson features to path
       map.value
-        ?.append("g")
-        .attr("class", "symbol-map__main__features")
-        .selectAll(".symbol-map__main__features__item")
+        ?.append('g')
+        .attr('class', 'symbol-map__main__features')
+        .selectAll('.symbol-map__main__features__item')
         .data(featuresGeojson.value.features)
         // Add the path with the correct class
         .enter()
-        .append("path")
-        .attr("class", featureClass)
-        .attr("d", featurePath.value)
-        .on("click", featureClicked)
-        .style("color", props.featureColor);
+        .append('path')
+        .attr('class', featureClass)
+        .attr('d', featurePath.value)
+        .on('click', featureClicked)
+        .style('color', props.featureColor)
     }
 
     //watch
@@ -548,28 +548,28 @@ export default defineComponent({
       () => props.data,
       () => {
         //draw()
-        update();
-      },
-    );
+        update()
+      }
+    )
     watch(
       () => props.socialMode,
       () => {
-        draw();
-      },
-    );
+        draw()
+      }
+    )
     watch(
       () => markerCursor.value,
       () => {
-        setMarkersClasses();
-      },
-    );
+        setMarkersClasses()
+      }
+    )
 
     watch(
       () => categoryHighlight.value,
       () => {
-        setMarkersClasses();
-      },
-    );
+        setMarkersClasses()
+      }
+    )
 
     return {
       el,
@@ -580,10 +580,10 @@ export default defineComponent({
       markerCursorValue,
       markerLabel,
       tooltipTarget,
-      loadTopojson,
-    };
-  },
-});
+      loadTopojson
+    }
+  }
+})
 </script>
 
 <template>
@@ -622,8 +622,8 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@use "sass:math";
-@import "../styles/lib";
+@use 'sass:math';
+@import '../styles/lib';
 
 .symbol-map {
   $muted-item-opacity: 0.2;

@@ -1,109 +1,109 @@
 <script>
-import keys from "lodash/keys";
-import map from "lodash/map";
-import sortBy from "lodash/sortBy";
-import forEach from "lodash/forEach";
+import keys from 'lodash/keys'
+import map from 'lodash/map'
+import sortBy from 'lodash/sortBy'
+import forEach from 'lodash/forEach'
 
-import config from "../config";
-import { useI18n } from "vue-i18n";
-import { computed, ref, watch } from "vue";
+import config from '../config'
+import { useI18n } from 'vue-i18n'
+import { computed, ref, watch } from 'vue'
 
 /**
  * A form to encourage donations. We usually put this form inside a modal
  */
 export default {
-  name: "DonateForm",
+  name: 'DonateForm',
   props: {
     /**
      * Title of the form.
      */
     noTitle: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   setup() {
-    const { t, locale, messages } = useI18n();
-    const amount = ref(10);
+    const { t, locale, messages } = useI18n()
+    const amount = ref(10)
     // True if the amount wasn't changed by the user yet
-    const amountIsPristine = ref(true);
-    const installmentPeriod = ref("monthly");
-    const level = ref("conversation");
-    const campaign = ref(config.get("donate-form.tracker"));
+    const amountIsPristine = ref(true)
+    const installmentPeriod = ref('monthly')
+    const level = ref('conversation')
+    const campaign = ref(config.get('donate-form.tracker'))
     const labelForChange = ref({
       monthly: {
-        1: t("donate-form.result.conversation"),
-        15: t("donate-form.result.rules"),
-        50: t("donate-form.result.world"),
+        1: t('donate-form.result.conversation'),
+        15: t('donate-form.result.rules'),
+        50: t('donate-form.result.world')
       },
       yearly: {
-        1: t("donate-form.result.conversation"),
-        180: t("donate-form.result.rules"),
-        600: t("donate-form.result.world"),
-      },
-    });
+        1: t('donate-form.result.conversation'),
+        180: t('donate-form.result.rules'),
+        600: t('donate-form.result.world')
+      }
+    })
 
     const suggestedAmount = ref(
-      messages.value[locale.value]["donate-form"]["suggesteddonation"],
-    );
+      messages.value[locale.value]['donate-form']['suggesteddonation']
+    )
     const listBenefits = ref(
-      messages.value[locale.value]["donate-form"]["benefits"]["list"],
-    );
+      messages.value[locale.value]['donate-form']['benefits']['list']
+    )
     const ranges = computed(() => {
-      if (installmentPeriod.value === "onetime") {
-        return labelForChange.value["yearly"];
+      if (installmentPeriod.value === 'onetime') {
+        return labelForChange.value['yearly']
       }
-      return labelForChange.value[installmentPeriod.value];
-    });
+      return labelForChange.value[installmentPeriod.value]
+    })
     const firstRange = computed(() => {
-      const key = keys(ranges.value)[0];
-      return ranges.value[key];
-    });
+      const key = keys(ranges.value)[0]
+      return ranges.value[key]
+    })
     const changeThe = computed(() => {
       // Final label
-      let label = null;
+      let label = null
       forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
-        label = amount.value >= amountV ? ranges.value[amountV] : label;
-      });
-      return label;
-    });
+        label = amount.value >= amountV ? ranges.value[amountV] : label
+      })
+      return label
+    })
     watch(installmentPeriod, () => {
       if (!amountIsPristine.value) {
-        return;
+        return
       }
 
       // Set suggested amount
-      amount.value = getSuggestedAmount();
-    });
+      amount.value = getSuggestedAmount()
+    })
     watch(
       () => amount.value,
       (v) => {
-        level.value = changeThe.value;
+        level.value = changeThe.value
 
         // Set manual amount
-        return (amount.value = v);
-      },
-    );
+        return (amount.value = v)
+      }
+    )
     function getSuggestedAmount() {
       if (!amountIsPristine.value) {
-        return;
+        return
       }
 
       if (!level.value) {
-        level.value = firstRange.value;
+        level.value = firstRange.value
       }
 
       // Return suggested amount
-      return suggestedAmount.value[level.value][installmentPeriod.value];
+      return suggestedAmount.value[level.value][installmentPeriod.value]
     }
     function selectLevel(levelSelected) {
       // Set chose level
-      level.value = levelSelected;
+      level.value = levelSelected
 
       // Set suggested amount
-      amount.value = getSuggestedAmount();
+      amount.value = getSuggestedAmount()
     }
     function amountIsNotPristine() {
-      amountIsPristine.value = false;
+      amountIsPristine.value = false
     }
 
     return {
@@ -116,10 +116,10 @@ export default {
       changeThe,
       listBenefits,
       selectLevel,
-      amountIsNotPristine,
-    };
-  },
-};
+      amountIsNotPristine
+    }
+  }
+}
 </script>
 
 <template>
@@ -128,7 +128,7 @@ export default {
       v-if="!noTitle"
       class="donate-form__title text-uppercase fw-bold text-primary h5"
     >
-      {{ t("donate-form.support") }}
+      {{ t('donate-form.support') }}
     </h2>
     <!-- @slot Description of the form (bellow the title). -->
     <slot name="introduction">
@@ -156,7 +156,7 @@ export default {
             <h3
               class="donate-form__payment__heading text-uppercase fw-bold text-primary h5"
             >
-              {{ t("donate-form.benefits.impacts.conversation.heading") }}
+              {{ t('donate-form.benefits.impacts.conversation.heading') }}
             </h3>
             <div class="Article">
               <div>
@@ -179,7 +179,7 @@ export default {
             <h3
               class="donate-form__payment__heading text-uppercase fw-bold text-primary h5"
             >
-              {{ t("donate-form.benefits.impacts.rules.heading") }}
+              {{ t('donate-form.benefits.impacts.rules.heading') }}
             </h3>
             <div class="Article">
               <div>
@@ -200,7 +200,7 @@ export default {
             <h3
               class="donate-form__payment__heading text-uppercase fw-bold text-primary h5"
             >
-              {{ t("donate-form.benefits.impacts.world.heading") }}
+              {{ t('donate-form.benefits.impacts.world.heading') }}
             </h3>
             <div class="Article">
               <div>
@@ -224,7 +224,7 @@ export default {
                 :class="{ 'btn-primary': installmentPeriod === 'monthly' }"
                 @click="installmentPeriod = 'monthly'"
               >
-                {{ t("donate-form.frequency.monthly") }}
+                {{ t('donate-form.frequency.monthly') }}
               </button>
               <button
                 type="button"
@@ -232,7 +232,7 @@ export default {
                 :class="{ 'btn-primary': installmentPeriod === 'yearly' }"
                 @click="installmentPeriod = 'yearly'"
               >
-                {{ t("donate-form.frequency.yearly") }}
+                {{ t('donate-form.frequency.yearly') }}
               </button>
               <button
                 type="button"
@@ -240,12 +240,12 @@ export default {
                 :class="{ 'btn-primary': installmentPeriod === null }"
                 @click="installmentPeriod = 'onetime'"
               >
-                {{ t("donate-form.frequency.onetime") }}
+                {{ t('donate-form.frequency.onetime') }}
               </button>
             </span>
           </div>
           <div class="mt-4">
-            <span>{{ t("donate-form.label") }}&nbsp;</span>
+            <span>{{ t('donate-form.label') }}&nbsp;</span>
             <label
               class="donate-form__payment__unit input-group input-group-sm d-inline-flex"
             >
@@ -274,7 +274,7 @@ export default {
               type="submit"
               class="btn btn-primary rounded-pill text-uppercase fw-bold"
             >
-              {{ t("donate-form.submit") }}
+              {{ t('donate-form.submit') }}
             </button>
             <a
               target="_blank"
@@ -288,10 +288,10 @@ export default {
 
     <div class="donate-form__insider">
       <h2 class="donate-form__insider__title">
-        {{ t("donate-form.benefits.heading") }}
+        {{ t('donate-form.benefits.heading') }}
       </h2>
       <p>
-        {{ t("donate-form.benefits.introduction") }}
+        {{ t('donate-form.benefits.introduction') }}
       </p>
       <div>
         <ul class="donate-form__insider__list">
@@ -311,7 +311,7 @@ export default {
             href="https://icij.org/donate"
             class="btn btn-primary rounded-pill text-uppercase fw-bold py-2"
           >
-            {{ t("donate-form.benefits.more") }}
+            {{ t('donate-form.benefits.more') }}
           </a>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../styles/lib";
+@import '../styles/lib';
 
 .donate-form {
   font-size: 0.9rem;
@@ -374,7 +374,7 @@ export default {
         list-style: none;
 
         &:before {
-          content: "\2713";
+          content: '\2713';
           position: absolute;
           left: -16px;
           font-size: 14px;

@@ -22,10 +22,10 @@ $dark: #000 !default;
 $brand-grays: () !default;
 $brand-grays: map-merge(
   (
-    "gray-lighter": $gray-400,
-    "gray-light": $gray-500,
-    "gray-dark": $gray-600,
-    "gray-darker": $gray-800,
+    'gray-lighter': $gray-400,
+    'gray-light': $gray-500,
+    'gray-dark': $gray-600,
+    'gray-darker': $gray-800
   ),
   $brand-grays
 );
@@ -45,21 +45,21 @@ $enable-shadows: true !default;
 $enable-gradients: false !default;
 
 $font-family-sans-serif:
-  "Poppins",
+  'Poppins',
   -apple-system,
   BlinkMacSystemFont,
-  "Segoe UI",
+  'Segoe UI',
   Roboto,
-  "Helvetica Neue",
+  'Helvetica Neue',
   Arial,
   sans-serif !default;
-$font-family-serif: "Merriweather", Georgia, "Times New Roman", Times, serif !default;
+$font-family-serif: 'Merriweather', Georgia, 'Times New Roman', Times, serif !default;
 
 $headings-font-family: $font-family-sans-serif !default;
 $headings-font-weight: 700 !default;
 
 $jumbotron-bg: $gray-200 !default;
-$jumbotron-font-family: "Anton", $font-family-sans-serif !default;
+$jumbotron-font-family: 'Anton', $font-family-sans-serif !default;
 $jumbotron-font-weight: 400 !default;
 
 $fade-bg: $gray-400 !default;
@@ -92,8 +92,8 @@ $tooltip-opacity: 1 !default;
 $alert-border-width: 0;
 
 // Bootstrap variables and functions must be available everywhere
-@import "node_modules/bootstrap/scss/_functions.scss";
-@import "node_modules/bootstrap/scss/_variables.scss";
+@import 'node_modules/bootstrap/scss/_functions.scss';
+@import 'node_modules/bootstrap/scss/_variables.scss';
 
 // Get theses variables to make them available in the doc
 $theme-colors: none !default;

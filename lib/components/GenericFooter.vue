@@ -83,7 +83,7 @@
             </div>
             <div class="col-6 col-lg-4">
               <h5 class="text-uppercase mb-3">
-                {{ $t("generic-footer.investigations") }}
+                {{ $t('generic-footer.investigations') }}
               </h5>
 
               <!-- @slot List of investigations -->
@@ -142,7 +142,7 @@
             </div>
             <div class="col-6 col-lg-4">
               <h5 class="text-uppercase mb-3">
-                {{ $t("generic-footer.follow-us") }}
+                {{ $t('generic-footer.follow-us') }}
               </h5>
               <ul class="list-unstyled">
                 <li class="list-unstyled-item">
@@ -183,10 +183,10 @@
           © <span class="generic-footer__year">{{ year }}</span> — The
           International Consortium of Investigative Journalists.
         </strong>
-        {{ $t("generic-footer.all-rights") }}
+        {{ $t('generic-footer.all-rights') }}
         <br />
         <span v-if="version" class="text-muted generic-footer__version">
-          {{ $t("generic-footer.version", { version }) }}
+          {{ $t('generic-footer.version', { version }) }}
         </span>
       </p>
     </div>
@@ -194,18 +194,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
-import config from "../config";
-import BrandExpansion from "./BrandExpansion.vue";
+import config from '../config'
+import BrandExpansion from './BrandExpansion.vue'
 
-import { BrandMode } from "@/enums";
+import { BrandMode } from '@/enums'
 
 /**
  * GenericFooter
  */
 export default defineComponent({
-  name: "GenericFooter",
+  name: 'GenericFooter',
   components: { BrandExpansion },
   props: {
     /**
@@ -213,35 +213,35 @@ export default defineComponent({
      */
     version: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Whether to show the About Us column or not
      */
     showAboutUs: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
-    return { mode: BrandMode.Long };
+    return { mode: BrandMode.Long }
   },
   computed: {
     year(): number {
-      return new Date().getFullYear();
+      return new Date().getFullYear()
     },
     contactEmail(): string {
-      return config.get("contact-email");
+      return config.get('contact-email')
     },
     contactEmailMailto(): string {
-      return `mailto:${this.contactEmail}`;
-    },
-  },
-});
+      return `mailto:${this.contactEmail}`
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/lib";
+@import '../styles/lib';
 
 .generic-footer {
   background: $black;

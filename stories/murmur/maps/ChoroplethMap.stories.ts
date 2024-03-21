@@ -1,7 +1,7 @@
-import { ChoroplethMap, ChoroplethMapAnnotation } from "@/maps";
-import { StoryObj } from "@storybook/vue3";
-import { scaleThreshold } from "d3";
-import { geoOrthographic } from "d3-geo";
+import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
+import { StoryObj } from '@storybook/vue3'
+import { scaleThreshold } from 'd3'
+import { geoOrthographic } from 'd3-geo'
 const motorVehiclesPer1000people = {
   MCO: 899,
   USA: 797,
@@ -192,162 +192,162 @@ const motorVehiclesPer1000people = {
   BGD: 3,
   SLB: 3,
   SOM: 3,
-  TGO: 2,
-};
+  TGO: 2
+}
 const wineStockByDepartment = {
-  "01": 10155,
-  "02": 686,
-  "03": 851,
-  "04": 1786,
-  "05": 225,
-  "06": 66,
-  "07": 21156,
-  "08": 165,
-  "09": 0,
-  "10": 7731,
-  "11": 207334,
-  "12": 0,
-  "13": 1699268,
-  "14": 325321,
-  "15": 4002,
-  "16": 11038,
-  "17": 493,
-  "18": 2712,
-  "19": 29,
-  "2A": 0,
-  "2B": 22518,
-  "21": 147630,
-  "22": 170,
-  "23": 0,
-  "24": 40713,
-  "25": 0,
-  "26": 1115,
-  "27": 410,
-  "28": 0,
-  "29": 0,
-  "30": 168319,
-  "31": 14023,
-  "32": 23450,
-  "33": 2416742,
-  "34": 856268,
-  "35": 9899,
-  "36": 267,
-  "37": 7179,
-  "38": 68,
-  "39": 17025,
-  "40": 986,
-  "41": 53451,
-  "42": 8154,
-  "43": 1576,
-  "44": 120456,
-  "45": 4569,
-  "46": 15274,
-  "47": 1061,
-  "48": 62,
-  "49": 48127,
-  "50": 0,
-  "51": 146309,
-  "52": 506,
-  "53": 906,
-  "54": 0,
-  "55": 0,
-  "56": 0,
-  "57": 642,
-  "58": 960,
-  "59": 3355,
-  "60": 424,
-  "61": 44,
-  "62": 101972,
-  "63": 1001,
-  "64": 8380,
-  "65": 0,
-  "66": 80076,
-  "67": 219631,
-  "68": 6173,
-  "69": 232683,
-  "70": 0,
-  "71": 431251,
-  "72": 23,
-  "73": 1,
-  "74": 29,
-  "75": 1486,
-  "76": 26255,
-  "77": 118021,
-  "78": 74781,
-  "79": 103690,
-  "80": 413,
-  "81": 7780,
-  "82": 31273,
-  "83": 160518,
-  "84": 218890,
-  "85": 0,
-  "86": 3688,
-  "87": 803,
-  "88": 0,
-  "89": 26907,
-  "90": 0,
-  "91": 8749,
-  "92": 11208,
-  "93": 4595,
-  "94": 13394,
-  "95": 840,
-};
+  '01': 10155,
+  '02': 686,
+  '03': 851,
+  '04': 1786,
+  '05': 225,
+  '06': 66,
+  '07': 21156,
+  '08': 165,
+  '09': 0,
+  '10': 7731,
+  '11': 207334,
+  '12': 0,
+  '13': 1699268,
+  '14': 325321,
+  '15': 4002,
+  '16': 11038,
+  '17': 493,
+  '18': 2712,
+  '19': 29,
+  '2A': 0,
+  '2B': 22518,
+  '21': 147630,
+  '22': 170,
+  '23': 0,
+  '24': 40713,
+  '25': 0,
+  '26': 1115,
+  '27': 410,
+  '28': 0,
+  '29': 0,
+  '30': 168319,
+  '31': 14023,
+  '32': 23450,
+  '33': 2416742,
+  '34': 856268,
+  '35': 9899,
+  '36': 267,
+  '37': 7179,
+  '38': 68,
+  '39': 17025,
+  '40': 986,
+  '41': 53451,
+  '42': 8154,
+  '43': 1576,
+  '44': 120456,
+  '45': 4569,
+  '46': 15274,
+  '47': 1061,
+  '48': 62,
+  '49': 48127,
+  '50': 0,
+  '51': 146309,
+  '52': 506,
+  '53': 906,
+  '54': 0,
+  '55': 0,
+  '56': 0,
+  '57': 642,
+  '58': 960,
+  '59': 3355,
+  '60': 424,
+  '61': 44,
+  '62': 101972,
+  '63': 1001,
+  '64': 8380,
+  '65': 0,
+  '66': 80076,
+  '67': 219631,
+  '68': 6173,
+  '69': 232683,
+  '70': 0,
+  '71': 431251,
+  '72': 23,
+  '73': 1,
+  '74': 29,
+  '75': 1486,
+  '76': 26255,
+  '77': 118021,
+  '78': 74781,
+  '79': 103690,
+  '80': 413,
+  '81': 7780,
+  '82': 31273,
+  '83': 160518,
+  '84': 218890,
+  '85': 0,
+  '86': 3688,
+  '87': 803,
+  '88': 0,
+  '89': 26907,
+  '90': 0,
+  '91': 8749,
+  '92': 11208,
+  '93': 4595,
+  '94': 13394,
+  '95': 840
+}
 function featureColorScale() {
   const scale = scaleThreshold()
     .domain([100, 300, 700])
-    .range(["#ffffcc", "#c2e699", "#78c679", "#238443"]);
-  return scale;
+    .range(['#ffffcc', '#c2e699', '#78c679', '#238443'])
+  return scale
 }
 export default {
-  title: "Murmur/maps/ChoroplethMap",
+  title: 'Murmur/maps/ChoroplethMap',
   component: ChoroplethMap,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof ChoroplethMap>;
+type Story = StoryObj<typeof ChoroplethMap>
 const Template: Story = (args: any) => ({
   components: { ChoroplethMap },
   setup() {
-    return { args };
+    return { args }
   },
-  template: `<ChoroplethMap v-bind="args" />`,
-});
+  template: `<ChoroplethMap v-bind="args" />`
+})
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 Default.args = {
-  data: motorVehiclesPer1000people,
-};
-export const hatchEmpty = Template.bind({});
+  data: motorVehiclesPer1000people
+}
+export const hatchEmpty = Template.bind({})
 hatchEmpty.args = {
   data: motorVehiclesPer1000people,
-  hatchEmpty: true,
-};
-export const Zoomable = Template.bind({});
+  hatchEmpty: true
+}
+export const Zoomable = Template.bind({})
 Zoomable.args = {
   data: motorVehiclesPer1000people,
   hatchEmpty: true,
-  zoomable: true,
-};
-export const FeatureColorScale = Template.bind({});
+  zoomable: true
+}
+export const FeatureColorScale = Template.bind({})
 FeatureColorScale.args = {
   data: motorVehiclesPer1000people,
-  featureColorScale: featureColorScale(),
-};
+  featureColorScale: featureColorScale()
+}
 
-export const Topojson = Template.bind({});
+export const Topojson = Template.bind({})
 Topojson.args = {
   data: wineStockByDepartment,
   clickable: true,
   zoomable: true,
-  topojsonUrl: "./assets/topojson/france-departments.json",
-  topojsonObjects: "departements",
-  topojsonObjectsPath: "properties.code",
-};
+  topojsonUrl: './assets/topojson/france-departments.json',
+  topojsonObjects: 'departements',
+  topojsonObjectsPath: 'properties.code'
+}
 const TemplateLegend: Story = (args: any) => ({
   components: { ChoroplethMap },
   setup() {
-    return { args };
+    return { args }
   },
   template: `
     <choropleth-map v-bind="args">
@@ -357,27 +357,27 @@ const TemplateLegend: Story = (args: any) => ({
         </div>
       </template>
  
-    </choropleth-map>`,
-});
-export const TopojsonLegend = TemplateLegend.bind({});
+    </choropleth-map>`
+})
+export const TopojsonLegend = TemplateLegend.bind({})
 TopojsonLegend.args = {
   data: wineStockByDepartment,
   clickable: true,
   zoomable: true,
-  topojsonUrl: "./assets/topojson/france-departments.json",
-  topojsonObjects: "departements",
-  topojsonObjectsPath: "properties.code",
-};
+  topojsonUrl: './assets/topojson/france-departments.json',
+  topojsonObjects: 'departements',
+  topojsonObjectsPath: 'properties.code'
+}
 const TemplateAnnotation: Story = (args: any) => ({
   components: { ChoroplethMap, ChoroplethMapAnnotation },
   setup() {
     const annotation = {
       latitude: 44.836151,
       longitude: -0.580816,
-      placement: "righttop",
-      class: "text-center",
-    };
-    return { args, annotation };
+      placement: 'righttop',
+      class: 'text-center'
+    }
+    return { args, annotation }
   },
   template: `
     <choropleth-map v-bind="args">
@@ -389,50 +389,50 @@ const TemplateAnnotation: Story = (args: any) => ({
       <choropleth-map-annotation v-bind="annotation">
         Bordeaux<br /><img src="/assets/img/arrow-bottom.svg" width="16px" />
       </choropleth-map-annotation>
-    </choropleth-map>`,
-});
-export const TopojsonAnnotation = TemplateAnnotation.bind({});
+    </choropleth-map>`
+})
+export const TopojsonAnnotation = TemplateAnnotation.bind({})
 TopojsonAnnotation.args = {
   data: wineStockByDepartment,
   clickable: true,
   zoomable: true,
-  topojsonUrl: "./assets/topojson/france-departments.json",
-  topojsonObjects: "departements",
-  topojsonObjectsPath: "properties.code",
-};
+  topojsonUrl: './assets/topojson/france-departments.json',
+  topojsonObjects: 'departements',
+  topojsonObjectsPath: 'properties.code'
+}
 const TemplateCustomProjection: Story = (args: any) => ({
   components: { ChoroplethMap, ChoroplethMapAnnotation },
   setup() {
     const annotation = {
-      class: "text-center",
+      class: 'text-center',
       height: 15,
       latitude: 35.167406,
       longitude: 33.435499,
       width: 15,
-      dropShadow: "none",
-      scale: true,
-    };
-    return { args, annotation };
+      dropShadow: 'none',
+      scale: true
+    }
+    return { args, annotation }
   },
   template: `
     <choropleth-map v-bind="args">
       <choropleth-map-annotation v-bind="annotation">
         <div class="border border-warning" style="height: 15px; width: 15px"></div>
       </choropleth-map-annotation>
-    </choropleth-map>`,
-});
+    </choropleth-map>`
+})
 
-export const CustomProjection = TemplateCustomProjection.bind({});
+export const CustomProjection = TemplateCustomProjection.bind({})
 CustomProjection.args = {
   center: [33.435499, 35.167406],
   projection: geoOrthographic,
   zoomMin: 0.9,
-  color: "#aaf",
-  outlineColor: "#fff",
-  graticuleColor: "#333",
+  color: '#aaf',
+  outlineColor: '#fff',
+  graticuleColor: '#333',
   graticule: true,
   hideLegend: true,
   outline: true,
   spherical: true,
-  zoomable: true,
-};
+  zoomable: true
+}

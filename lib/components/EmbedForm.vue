@@ -2,12 +2,12 @@
   <div class="embed-form">
     <div class="container-fluid">
       <h4 v-if="!noTitle" class="embed-form__heading">
-        {{ t("embed-form.heading") }}
+        {{ t('embed-form.heading') }}
       </h4>
       <div class="row">
         <div class="col">
           <p>
-            {{ t("embed-form.introduction") }}
+            {{ t('embed-form.introduction') }}
           </p>
           <textarea
             ref="embed-form__code"
@@ -26,7 +26,7 @@
                 v-model="responsiveCheck"
               />
               <label class="form-check-label fw-bold" for="responsiveOptin">
-                {{ t("embed-form.responsive-optin") }}
+                {{ t('embed-form.responsive-optin') }}
               </label>
             </div>
 
@@ -52,107 +52,107 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from 'vue'
 
-import { useI18n } from "vue-i18n";
-import HapticCopy from "@/components/HapticCopy.vue";
-import IframeResizer from "@/utils/iframe-resizer";
+import { useI18n } from 'vue-i18n'
+import HapticCopy from '@/components/HapticCopy.vue'
+import IframeResizer from '@/utils/iframe-resizer'
 
 interface ComponentInterface {
-  currentUrl: string;
-  responsiveCheck: boolean;
-  width: string;
-  minWidth: number;
-  height: number;
-  minHeight: number;
-  iframeCodeFor: Function;
-  pymCodeFor: Function;
+  currentUrl: string
+  responsiveCheck: boolean
+  width: string
+  minWidth: number
+  height: number
+  minHeight: number
+  iframeCodeFor: Function
+  pymCodeFor: Function
 }
 /**
  * Embed Form
  */
 export default defineComponent({
-  name: "EmbedForm",
+  name: 'EmbedForm',
   components: {
-    HapticCopy,
+    HapticCopy
   },
   props: {
     /**
      * Hide the form title
      */
     noTitle: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Hide the preview panel
      */
     noPreview: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Default width of the iframe code
      */
     width: {
       type: [Number, String],
-      default: "100%",
+      default: '100%'
     },
     /**
      * Default height of the iframe code
      */
     height: {
       type: Number,
-      default: () => window.innerHeight,
+      default: () => window.innerHeight
     },
     /**
      * Default minimal width of the iframe code (if extract from window\'s size)
      */
     minWidth: {
       type: Number,
-      default: 0,
+      default: 0
     },
     /**
      * Default minimal height of the iframe code (if extract from window\'s size)
      */
     minHeight: {
       type: Number,
-      default: 0,
+      default: 0
     },
     /**
      * URL of the iframe code
      */
     url: {
       type: String,
-      default: null,
-    },
+      default: null
+    }
   },
   setup(props) {
-    const { t } = useI18n();
+    const { t } = useI18n()
 
-    const responsiveCheck = ref(false);
-    const embedFormCode = ref<HTMLTextAreaElement | null>(null);
+    const responsiveCheck = ref(false)
+    const embedFormCode = ref<HTMLTextAreaElement | null>(null)
     const currentUrl = computed(() => {
-      return props.url || window.location.href;
-    });
+      return props.url || window.location.href
+    })
     function iframeCodeFor(_url = currentUrl, width: string, height: string) {
       return `<iframe width="${width}" height="${height}" src="${IframeResizer.deletePymParams(
-        props.url,
-      )}" frameborder="0" allowfullscreen></iframe>`;
+        props.url
+      )}" frameborder="0" allowfullscreen></iframe>`
     }
     function pymCodeFor(url = currentUrl): string {
-      return IframeResizer.template(url.value);
+      return IframeResizer.template(url.value)
     }
     function selectCode(): void {
-      embedFormCode.value?.select();
+      embedFormCode.value?.select()
     }
     function embedCode(withPym = responsiveCheck.value): string {
       const width =
-        typeof props.width === "string"
+        typeof props.width === 'string'
           ? props.width
-          : Math.max(props.width, props.minWidth).toString();
-      const height = Math.max(props.height, props.minHeight).toString();
+          : Math.max(props.width, props.minWidth).toString()
+      const height = Math.max(props.height, props.minHeight).toString()
       return withPym
         ? pymCodeFor(currentUrl)
-        : iframeCodeFor(currentUrl, width, height);
+        : iframeCodeFor(currentUrl, width, height)
     }
 
     return {
@@ -160,14 +160,14 @@ export default defineComponent({
       responsiveCheck,
       embedFormCode,
       selectCode,
-      embedCode,
-    };
-  },
-});
+      embedCode
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/lib";
+@import '../styles/lib';
 
 .embed-form {
   font-size: 0.9rem;

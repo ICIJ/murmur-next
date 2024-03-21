@@ -1,35 +1,35 @@
-import { SharingOptions } from "@/components";
-import { StoryObj } from "@storybook/vue3";
+import { SharingOptions } from '@/components'
+import { StoryObj } from '@storybook/vue3'
 
 export default {
-  title: "Murmur/components/SharingOptions",
+  title: 'Murmur/components/SharingOptions',
   component: SharingOptions,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     direction: {
-      control: "select",
-      options: ["row", "row-reverse", "column", "column-reverse"],
-    },
-  },
-};
+      control: 'select',
+      options: ['row', 'row-reverse', 'column', 'column-reverse']
+    }
+  }
+}
 
-type Story = StoryObj<typeof SharingOptions>;
+type Story = StoryObj<typeof SharingOptions>
 const Template: Story = (args: any) => ({
   components: { SharingOptions },
   setup() {
-    return { args };
+    return { args }
   },
-  template: `<SharingOptions v-bind="args" />`,
-});
+  template: `<SharingOptions v-bind="args" />`
+})
 
-export const Default = Template.bind({});
-Default.args = {};
-export const WithUrl = Template.bind({});
+export const Default = Template.bind({})
+Default.args = {}
+export const WithUrl = Template.bind({})
 WithUrl.args = {
-  url: "https://www.icij.org/",
-  class: "justify-content-center",
-};
-export const DirectionColumn = Template.bind({});
+  url: 'https://www.icij.org/',
+  class: 'justify-content-center'
+}
+export const DirectionColumn = Template.bind({})
 DirectionColumn.args = {
-  direction: "column",
-};
+  direction: 'column'
+}

@@ -25,62 +25,62 @@
 /**
  * A component to create variations of ICIJ logo
  */
-import { computed, ref } from "vue";
-import isString from "lodash/isString";
+import { computed, ref } from 'vue'
+import isString from 'lodash/isString'
 
 interface BrandProps {
   /**
    * Add a balancing effect to the globe
    */
-  animated?: boolean;
+  animated?: boolean
   /**
    * Monochromatic logo's color
    */
-  color?: string | null;
+  color?: string | null
   /**
    * Logo's background color
    */
-  background?: string | null;
+  background?: string | null
   /**
    * Logo's size
    */
-  size?: number | string;
+  size?: number | string
   /**
    * Force the width of the logo to be the same as the height
    */
-  square?: boolean;
+  square?: boolean
 }
 
 interface BrandStyle {
-  "--monochrome-color": string | null;
-  color: string | null;
-  background: string | null;
-  width: string | number;
+  '--monochrome-color': string | null
+  color: string | null
+  background: string | null
+  width: string | number
 }
 
 const props = withDefaults(defineProps<BrandProps>(), {
   color: null,
   background: null,
-  size: "70px",
-});
+  size: '70px'
+})
 const sizeAsNumber = ref(
-  isString(props.size) ? parseInt(props.size) : props.size,
-);
+  isString(props.size) ? parseInt(props.size) : props.size
+)
 
-const width = computed(() => `${(147.151 / 200) * sizeAsNumber.value}px`);
-const height = computed(() => `${sizeAsNumber.value}px`);
+const width = computed(() => `${(147.151 / 200) * sizeAsNumber.value}px`)
+const height = computed(() => `${sizeAsNumber.value}px`)
 
 const style = computed<BrandStyle>(() => {
-  const { square } = props;
-  const widthValue = square ? height.value : "auto";
+  const { square } = props
+  const widthValue = square ? height.value : 'auto'
 
   return {
-    "--monochrome-color": props.color,
+    '--monochrome-color': props.color,
     color: props.color,
     background: props.background,
-    width: widthValue,
-  };
-});
+    width: widthValue
+  }
+})
 </script>
 
 <style scoped lang="scss">

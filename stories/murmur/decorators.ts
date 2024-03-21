@@ -1,23 +1,23 @@
-import { BModal, BPopover, useModal } from "bootstrap-vue-next";
-import { Size } from "@/enums";
-import { toRefs } from "vue";
-import { geoOrthographic } from "d3-geo";
-import { defineComponent } from "vue";
-import { ChoroplethMap } from "@/maps";
+import { BModal, BPopover, useModal } from 'bootstrap-vue-next'
+import { Size } from '@/enums'
+import { toRefs } from 'vue'
+import { geoOrthographic } from 'd3-geo'
+import { defineComponent } from 'vue'
+import { ChoroplethMap } from '@/maps'
 
 export default defineComponent({
-  components: { ChoroplethMap },
-});
+  components: { ChoroplethMap }
+})
 
 export const modalDecorator = (
-  buttonLabel: string = "Click to see the form",
+  buttonLabel: string = 'Click to see the form',
   modalTitle: string | null,
-  size: Size = Size.md,
+  size: Size = Size.md
 ) => ({
   components: { BModal },
   setup() {
-    const { show } = useModal("formModal");
-    return { show, buttonLabel, modalTitle, size };
+    const { show } = useModal('formModal')
+    return { show, buttonLabel, modalTitle, size }
   },
   template: `
     <div class="p-4 text-center">
@@ -27,8 +27,8 @@ export const modalDecorator = (
     </div>
     <b-modal hide-footer lazy :title="modalTitle" id="formModal" :size="size" no-headings>
       <story/>
-    </b-modal>`,
-});
+    </b-modal>`
+})
 
 export const popoverDecorator = () => ({
   components: { BPopover },
@@ -41,16 +41,16 @@ export const popoverDecorator = () => ({
         <b-popover target="popover-button-sample" placement="right" >
             <story id="popover-button-sample"/>
         </b-popover>
-    </div>`,
-});
+    </div>`
+})
 
 export const toggleDecorator = (_storyFn: any, context: any) => ({
   setup() {
-    const { active } = toRefs(context.args);
+    const { active } = toRefs(context.args)
     function onClick() {
-      active.value = !active.value;
+      active.value = !active.value
     }
-    return { onClick };
+    return { onClick }
   },
   template: `
     <div class="card card-xs mx-auto m-4" >
@@ -60,12 +60,12 @@ export const toggleDecorator = (_storyFn: any, context: any) => ({
           Click to toggle 
         </button>
       </div>
-    </div>`,
-});
+    </div>`
+})
 
 export const bgStripedDecorator = () => ({
-  template: '<div class="p-2 bg-striped"><story/></div>',
-});
+  template: '<div class="p-2 bg-striped"><story/></div>'
+})
 export const leakSizeDecorator = () => ({
   template: `
   <h4>Leaks size</h4>
@@ -75,37 +75,37 @@ export const leakSizeDecorator = () => ({
   <story/>
   <p class="text-muted small">
     Source: ICIJ. 
-  </p>`,
-});
+  </p>`
+})
 
 export const icijOfficesDecorator = () => ({
   template: `
     <h4>ICIJ Offices</h4>
     <p class="mb-4">A non-exhaustive list of ICIJ offices and operations.</p>
     <story/>
- `,
-});
+ `
+})
 export const choroplethDecorator = (fn, ctx) => ({
   components: [ChoroplethMap],
   decorators: [icijOfficesDecorator],
   setup() {
     const props = {
-      color: "#faa",
-      outlineColor: "#000",
-      graticuleColor: "#eee",
+      color: '#faa',
+      outlineColor: '#000',
+      graticuleColor: '#eee',
       graticule: true,
       outline: true,
       hideLegend: true,
       zoomable: true,
       spherical: true,
       zoomMin: 0.9,
-      projection: geoOrthographic,
-    };
-    return { props };
+      projection: geoOrthographic
+    }
+    return { props }
   },
   template: `
   <choropleth-map v-bind="props"  >
    <story/>
   </choropleth-map>
-  `,
-});
+  `
+})

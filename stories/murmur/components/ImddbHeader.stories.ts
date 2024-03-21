@@ -1,28 +1,28 @@
-import { ImddbHeader } from "@/components";
-import { StoryObj } from "@storybook/vue3";
+import { ImddbHeader } from '@/components'
+import { StoryObj } from '@storybook/vue3'
 
 export default {
-  title: "Murmur/components/ImddbHeader",
+  title: 'Murmur/components/ImddbHeader',
   component: ImddbHeader,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof ImddbHeader>;
+type Story = StoryObj<typeof ImddbHeader>
 const Template: Story = (args: any) => ({
   components: { ImddbHeader },
   setup() {
-    return { args };
+    return { args }
   },
-  template: '<ImddbHeader v-bind="args" />',
-});
+  template: '<ImddbHeader v-bind="args" />'
+})
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}
 Default.decorators = [
-  () => ({ template: '<div style="height: 1800px"><story/></div>' }),
-];
-Default.parameters = { layout: "fullscreen" };
+  () => ({ template: '<div style="height: 1800px"><story/></div>' })
+]
+Default.parameters = { layout: 'fullscreen' }
 
-export const NoHeadroom = Template.bind({});
-NoHeadroom.args = { noHeadroom: true, position: "relative" };
+export const NoHeadroom = Template.bind({})
+NoHeadroom.args = { noHeadroom: true, position: 'relative' }

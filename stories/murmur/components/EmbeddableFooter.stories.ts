@@ -1,49 +1,49 @@
-import { EmbeddableFooter } from "@/components";
-import { StoryObj } from "@storybook/vue3";
-import { BButton } from "bootstrap-vue-next";
+import { EmbeddableFooter } from '@/components'
+import { StoryObj } from '@storybook/vue3'
+import { BButton } from 'bootstrap-vue-next'
 
 export default {
-  title: "Murmur/components/EmbeddableFooter",
+  title: 'Murmur/components/EmbeddableFooter',
   decorators: [
-    () => ({ template: `<div style='margin-top:200px;'><story/></div>` }),
+    () => ({ template: `<div style='margin-top:200px;'><story/></div>` })
   ],
   component: EmbeddableFooter,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof EmbeddableFooter>;
+type Story = StoryObj<typeof EmbeddableFooter>
 const Template: Story = (args: any) => ({
   components: { EmbeddableFooter },
   setup() {
-    return { args };
+    return { args }
   },
-  template: '<EmbeddableFooter v-bind="args" ></EmbeddableFooter>',
-});
+  template: '<EmbeddableFooter v-bind="args" ></EmbeddableFooter>'
+})
 
-export const Default = Template.bind({});
-Default.args = { class: "position-relative card" };
-export const LeadText = Template.bind({});
-LeadText.args = { lead: "Secret project", class: "position-relative card" };
-export const Title = Template.bind({});
-Title.args = { title: "Secret project", class: "position-relative card" };
+export const Default = Template.bind({})
+Default.args = { class: 'position-relative card' }
+export const LeadText = Template.bind({})
+LeadText.args = { lead: 'Secret project', class: 'position-relative card' }
+export const Title = Template.bind({})
+Title.args = { title: 'Secret project', class: 'position-relative card' }
 export const TitleSlot: Story = (args: any) => ({
   components: { EmbeddableFooter },
   setup() {
-    return { args };
+    return { args }
   },
   template: `<EmbeddableFooter v-bind="args" >
         <template #title>
             <span class="small">Demo<br />Project</span>
         </template>
-    </EmbeddableFooter>`,
-});
+    </EmbeddableFooter>`
+})
 
-TitleSlot.args = { class: "position-relative card" };
+TitleSlot.args = { class: 'position-relative card' }
 export const MainSlot: Story = (args: any) => ({
   components: { EmbeddableFooter, BButton },
   setup() {
-    return { args };
+    return { args }
   },
   template: `<EmbeddableFooter v-bind="args" >
         <div class="d-flex align-items-center">
@@ -54,7 +54,7 @@ export const MainSlot: Story = (args: any) => ({
                 Help
             </b-button>
         </div>
-    </EmbeddableFooter>`,
-});
+    </EmbeddableFooter>`
+})
 
-MainSlot.args = { class: "position-relative card" };
+MainSlot.args = { class: 'position-relative card' }

@@ -10,7 +10,7 @@
       :on-unpin="closeFollowUsPopover"
       :class="{
         'headroom--frozen': !collapseNavbar,
-        'generic-header--collapsed': collapseNavbar,
+        'generic-header--collapsed': collapseNavbar
       }"
       :style="{ position: position }"
     >
@@ -48,7 +48,7 @@
               target="_blank"
               class="nav-link text-uppercase"
             >
-              {{ t("generic-header.navbar.investigations") }}
+              {{ t('generic-header.navbar.investigations') }}
             </a>
           </li>
           <li class="nav-item">
@@ -57,7 +57,7 @@
               target="_blank"
               class="nav-link text-uppercase"
             >
-              {{ t("generic-header.navbar.leak") }}
+              {{ t('generic-header.navbar.leak') }}
             </a>
           </li>
           <li class="nav-item">
@@ -66,7 +66,7 @@
               class="nav-link text-uppercase"
               @mouseenter="showFollowUsPopover = true"
             >
-              {{ t("generic-header.navbar.follow") }}
+              {{ t('generic-header.navbar.follow') }}
             </a>
           </li>
           <li class="nav-item me-lg-3">
@@ -76,7 +76,7 @@
                 target="_blank"
                 :href="donateUrl"
               >
-                {{ t("generic-header.navbar.support") }}
+                {{ t('generic-header.navbar.support') }}
               </a>
             </slot>
           </li>
@@ -99,8 +99,8 @@
 </template>
 
 <script lang="ts">
-import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
-import headroom from "vue-headroom/src/headroom.vue";
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
+import headroom from 'vue-headroom/src/headroom.vue'
 import {
   computed,
   defineComponent,
@@ -108,35 +108,35 @@ import {
   ref,
   onBeforeMount,
   watch,
-  ComponentPublicInstance,
-} from "vue";
+  ComponentPublicInstance
+} from 'vue'
 
-import config from "@/config";
-import Fa, { library } from "@/components/Fa";
-import BrandExpansion from "@/components/BrandExpansion.vue";
-import FollowUsPopover from "@/components/FollowUsPopover.vue";
-import { BrandMode } from "@/enums";
-import { useI18n } from "vue-i18n";
-import { BPopover } from "bootstrap-vue-next";
+import config from '@/config'
+import Fa, { library } from '@/components/Fa'
+import BrandExpansion from '@/components/BrandExpansion.vue'
+import FollowUsPopover from '@/components/FollowUsPopover.vue'
+import { BrandMode } from '@/enums'
+import { useI18n } from 'vue-i18n'
+import { BPopover } from 'bootstrap-vue-next'
 
 type BrandOptions = {
-  noBorder: boolean;
-  size: number;
-  color: string;
-  background: string;
-};
+  noBorder: boolean
+  size: number
+  color: string
+  background: string
+}
 
 /**
  * GenericHeader
  */
 export default defineComponent({
-  name: "GenericHeader",
+  name: 'GenericHeader',
   components: {
     BPopover,
     BrandExpansion,
     Fa,
     FollowUsPopover,
-    headroom,
+    headroom
   },
   props: {
     /**
@@ -144,74 +144,74 @@ export default defineComponent({
      */
     position: {
       type: String,
-      default: "fixed",
+      default: 'fixed'
     },
     /**
      * Disable Headroom for hiding header until needed.
      */
     noHeadroom: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Target link of the ICIJ logo and project name.
      */
     homeUrl: {
       type: String,
-      default: () => config.get("app.home"),
+      default: () => config.get('app.home')
     },
     /**
      * Default options to pass to the brand component
      */
     brandOptions: {
       type: Object as PropType<BrandOptions>,
-      default: () => ({}),
+      default: () => ({})
     },
     /**
      * Target link of the donate button.
      */
     donateUrl: {
       type: String,
-      default: () => config.get("app.donate-url"),
-    },
+      default: () => config.get('app.donate-url')
+    }
   },
   setup(props) {
     onBeforeMount((): void => {
-      library.add(faBars);
-    });
+      library.add(faBars)
+    })
 
-    const { t } = useI18n();
+    const { t } = useI18n()
     const followUsPopover = ref<ComponentPublicInstance<
       typeof BPopover
-    > | null>(null);
-    const closable = ref(false);
-    const showFollowUsPopover = ref<boolean>(false);
-    const collapseNavbar = ref(true);
-    const shortMode = ref(BrandMode.Short);
-    const longMode = ref(BrandMode.Long);
+    > | null>(null)
+    const closable = ref(false)
+    const showFollowUsPopover = ref<boolean>(false)
+    const collapseNavbar = ref(true)
+    const shortMode = ref(BrandMode.Short)
+    const longMode = ref(BrandMode.Long)
     const rootElement = computed((): string => {
-      return props.noHeadroom ? "div" : "headroom";
-    });
+      return props.noHeadroom ? 'div' : 'headroom'
+    })
     const appliedBrandOptions = computed((): BrandOptions => {
-      return { ...defaultBrandOptions.value, ...props.brandOptions };
-    });
+      return { ...defaultBrandOptions.value, ...props.brandOptions }
+    })
     const defaultBrandOptions = computed((): BrandOptions => {
       return {
         noBorder: true,
         size: 50,
-        color: "white",
-        background: "#A10207",
-      };
-    });
+        color: 'white',
+        background: '#A10207'
+      }
+    })
     function closeFollowUsPopover() {
       if (followUsPopover.value?.hide) {
-        followUsPopover.value?.hide(new Event("forceHide"));
+        followUsPopover.value?.hide(new Event('forceHide'))
       }
-      showFollowUsPopover.value = false;
+      showFollowUsPopover.value = false
     }
     function toggleNavbar(): void {
-      collapseNavbar.value = !collapseNavbar.value;
-      closeFollowUsPopover();
+      collapseNavbar.value = !collapseNavbar.value
+      closeFollowUsPopover()
     }
 
     return {
@@ -225,14 +225,14 @@ export default defineComponent({
       appliedBrandOptions,
       closable,
       closeFollowUsPopover,
-      toggleNavbar,
-    };
-  },
-});
+      toggleNavbar
+    }
+  }
+})
 </script>
 
 <style lang="scss">
-@import "../styles/lib";
+@import '../styles/lib';
 
 .generic-header {
   background: white;

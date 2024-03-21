@@ -1,21 +1,21 @@
-import { ChoroplethMapAnnotation } from "@/maps";
-import { StoryObj } from "@storybook/vue3";
+import { ChoroplethMapAnnotation } from '@/maps'
+import { StoryObj } from '@storybook/vue3'
 
 export default {
-  title: "Murmur/maps/ChoroplethMapAnnotation",
+  title: 'Murmur/maps/ChoroplethMapAnnotation',
   component: ChoroplethMapAnnotation,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof ChoroplethMapAnnotation>;
+type Story = StoryObj<typeof ChoroplethMapAnnotation>
 const Template: Story = (args: any) => ({
   components: { ChoroplethMapAnnotation },
   setup() {
-    return { args };
+    return { args }
   },
-  template: `<ChoroplethMapAnnotation v-bind="args" />`,
-});
+  template: `<ChoroplethMapAnnotation v-bind="args" />`
+})
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}

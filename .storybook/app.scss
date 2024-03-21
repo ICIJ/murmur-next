@@ -1,7 +1,7 @@
-@import "./doc_variables.scss";
-@import "../lib/styles/lib";
-@import "node_modules/bootstrap/scss/bootstrap";
-@import "node_modules/bootstrap-vue-next/dist/bootstrap-vue-next";
+@import './doc_variables.scss';
+@import '../lib/styles/lib';
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue-next/dist/bootstrap-vue-next';
 
 .bg-striped {
   background: repeating-linear-gradient(

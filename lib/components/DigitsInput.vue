@@ -1,88 +1,81 @@
 <script lang="ts">
-import { filter } from "lodash";
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import { filter } from 'lodash'
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue'
 
 type DigitsInputData = {
-  mounted: boolean;
-  values: string[] | number[] | null[];
-};
+  mounted: boolean
+  values: string[] | number[] | null[]
+}
 
 /**
  * Create an input for digits.
  */
 export default defineComponent({
-  name: "DigitsInput",
-  emits: ["update:modelValue", "update:values"],
+  name: 'DigitsInput',
+  emits: ['update:modelValue', 'update:values'],
   props: {
     /**
      * Number of digits to display
      */
     length: {
       type: Number,
-      default: 6,
+      default: 6
     },
     /**
      * Value of the input
      */
     modelValue: {
       type: [String, Number],
-      default: "",
+      default: ''
     },
     /**
      * Name of the input
      */
     name: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
   setup(props, { emit }) {
-    const inputs = ref<HTMLInputElement[]>([]);
+    const inputs = ref<HTMLInputElement[]>([])
 
     onMounted(async () => {
-      await nextTick();
-    });
+      await nextTick()
+    })
 
     const values = ref(
-      String(props.modelValue).split("").slice(0, props.length),
-    );
+      String(props.modelValue).split('').slice(0, props.length)
+    )
     const joinedValues = computed((): string => {
-      return filter(values.value, (v) => !isNaN(v as any)).join("");
-    });
+      return filter(values.value, (v) => !isNaN(v as any)).join('')
+    })
 
     const nextInput = computed((): HTMLInputElement | null => {
       if (joinedValues.value.length === props.length) {
-        return null;
+        return null
       }
 
       // Next input is the first non-empty input or the last input
-      return inputs.value[joinedValues.value.length] || lastInput.value;
-    });
+      return inputs.value[joinedValues.value.length] || lastInput.value
+    })
 
     const hasNextInput = computed((): boolean => {
-      return !!nextInput.value;
-    });
+      return !!nextInput.value
+    })
 
     const lastInput = computed((): HTMLElement | null => {
-      const index = inputs.value.length - 1;
-      return inputs.value[index];
-    });
+      const index = inputs.value.length - 1
+      return inputs.value[index]
+    })
 
     function focusToNextInput() {
       if (hasNextInput.value) {
-        nextInput.value?.focus();
+        nextInput.value?.focus()
       }
     }
     function focusToPreviousWhenEmpty(d: number) {
       if (!values.value[d]) {
-        inputs.value[d - 1]?.focus();
+        inputs.value[d - 1]?.focus()
       }
     }
     watch(
@@ -90,8 +83,8 @@ export default defineComponent({
       (values) => {
         // Copy and remove values that are not numbers
         const formattedValues = values.value.map((value) =>
-          String(value).replace(/\D/g, ""),
-        );
+          String(value).replace(/\D/g, '')
+        )
         // Iterate over the values to be sure
         // they are not exceeding 10 and should
         // be spread to the next inputs
@@ -101,40 +94,40 @@ export default defineComponent({
           if (value !== null && Number(value) > 9) {
             // Split the number into an array of strings
             String(value)
-              .split("")
+              .split('')
               .forEach((nextValue, n) => {
                 // Spread the value to the next inputs of the array
-                formattedValues[d + n] = String(Number(nextValue));
-              });
+                formattedValues[d + n] = String(Number(nextValue))
+              })
           }
-        });
+        })
         // We update the values data attribute only if they changed
         // to avoid an infinite update cycle
         if (JSON.stringify(values.value) !== JSON.stringify(formattedValues)) {
-          values.value = formattedValues.slice(0, props.length);
+          values.value = formattedValues.slice(0, props.length)
         }
-        focusToNextInput();
+        focusToNextInput()
       },
-      { deep: true },
-    );
+      { deep: true }
+    )
 
     watch(
       () => joinedValues,
       () => {
-        emit("update:modelValue", joinedValues.value);
+        emit('update:modelValue', joinedValues.value)
       },
-      { deep: true },
-    );
+      { deep: true }
+    )
 
     watch(
       () => props.modelValue,
       () => {
         const formattedValues = String(props.modelValue)
-          .split("")
-          .slice(0, props.length);
-        emit("update:values", formattedValues);
-      },
-    );
+          .split('')
+          .slice(0, props.length)
+        emit('update:values', formattedValues)
+      }
+    )
     return {
       values,
       joinedValues,
@@ -142,10 +135,10 @@ export default defineComponent({
       nextInput,
       hasNextInput,
       lastInput,
-      focusToPreviousWhenEmpty,
-    };
-  },
-});
+      focusToPreviousWhenEmpty
+    }
+  }
+})
 </script>
 
 <template>
@@ -166,7 +159,7 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-@import "../styles/lib";
+@import '../styles/lib';
 
 .digits-input {
   &__container {

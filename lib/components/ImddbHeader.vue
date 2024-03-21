@@ -70,13 +70,13 @@
         </li>
         <li class="nav-item">
           <a href="https://www.icij.org/leak/" target="_blank" class="nav-link">
-            {{ t("imddb-header.navbar.leak") }}
+            {{ t('imddb-header.navbar.leak') }}
           </a>
         </li>
         <li class="nav-item me-lg-3">
           <slot name="donate-link">
             <a target="_blank" :href="donateUrl" class="nav-link">
-              {{ t("imddb-header.navbar.support") }}
+              {{ t('imddb-header.navbar.support') }}
             </a>
           </slot>
         </li>
@@ -86,7 +86,7 @@
             class="btn btn-primary btn-block fw-bold"
             @mouseenter="showFollowUsPopover = true"
           >
-            {{ t("imddb-header.navbar.follow") }}
+            {{ t('imddb-header.navbar.follow') }}
           </button>
           <b-popover
             v-model="showFollowUsPopover"
@@ -107,14 +107,14 @@
 </template>
 
 <script lang="ts">
-import headroom from "vue-headroom/src/headroom.vue";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons/faGlobe";
-import find from "lodash/find";
-import get from "lodash/get";
+import headroom from 'vue-headroom/src/headroom.vue'
+import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
+import find from 'lodash/find'
+import get from 'lodash/get'
 
-import { default as Fa, library } from "./Fa";
-import FollowUsPopover from "./FollowUsPopover.vue";
-import config from "../config";
+import { default as Fa, library } from './Fa'
+import FollowUsPopover from './FollowUsPopover.vue'
+import config from '../config'
 import {
   computed,
   ComponentPublicInstance,
@@ -122,28 +122,28 @@ import {
   PropType,
   ref,
   onMounted,
-  onBeforeMount,
-} from "vue";
-import { useI18n } from "vue-i18n";
+  onBeforeMount
+} from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   BDropdownItem,
   BModal,
   BNavItemDropdown,
-  BPopover,
-} from "bootstrap-vue-next";
+  BPopover
+} from 'bootstrap-vue-next'
 
-type CssPosition = "absolute" | "relative" | "fixed" | "static";
-type ImddHeaderItem = { label: string; href: string; active: boolean };
+type CssPosition = 'absolute' | 'relative' | 'fixed' | 'static'
+type ImddHeaderItem = { label: string; href: string; active: boolean }
 interface ImddHeaderData {
-  showFollowUsPopover: boolean;
-  collapseNavbar: boolean;
-  languages: ImddHeaderItem[];
+  showFollowUsPopover: boolean
+  collapseNavbar: boolean
+  languages: ImddHeaderItem[]
 }
 /**
  * ImddbHeader
  */
 export default defineComponent({
-  name: "ImddbHeader",
+  name: 'ImddbHeader',
   components: {
     BDropdownItem,
     BModal,
@@ -151,7 +151,7 @@ export default defineComponent({
     BPopover,
     headroom,
     FollowUsPopover,
-    Fa,
+    Fa
   },
   props: {
     /**
@@ -159,91 +159,91 @@ export default defineComponent({
      */
     position: {
       type: String as PropType<CssPosition>,
-      default: "fixed",
+      default: 'fixed'
     },
     /**
      * Disable Headroom for hiding header until needed.
      */
     noHeadroom: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Project name, to display next to ICIJ logo
      */
     project: {
       type: String,
-      default: () => config.get("project.name"),
+      default: () => config.get('project.name')
     },
     /**
      * App name, to display next to project name
      */
     title: {
       type: String,
-      default: () => config.get("app.name"),
+      default: () => config.get('app.name')
     },
     /**
      * An array of objects defining dropdown items. Each item defines a <em>label</em> and a <em>href</em>.
      */
     dropdownItems: {
       type: Array as PropType<ImddHeaderItem[]>,
-      default: () => config.get("imddb-header.dropdown.items"),
+      default: () => config.get('imddb-header.dropdown.items')
     },
     /**
      * Target link of the ICIJ logo and project name.
      */
     homeUrl: {
       type: String,
-      default: () => config.get("app.home"),
+      default: () => config.get('app.home')
     },
     /**
      * Target link of the donate button.
      */
     donateUrl: {
       type: String,
-      default: () => config.get("app.donate-url"),
-    },
+      default: () => config.get('app.donate-url')
+    }
   },
   setup(props) {
-    const { t } = useI18n();
+    const { t } = useI18n()
     const followUsPopover = ref<ComponentPublicInstance<
       typeof BPopover
-    > | null>(null);
-    const showFollowUsPopover = ref(false);
-    const collapseNavbar = ref(true);
-    const languages = ref<ImddHeaderItem[]>([]);
-    const root = ref<ComponentPublicInstance | null>(null);
+    > | null>(null)
+    const showFollowUsPopover = ref(false)
+    const collapseNavbar = ref(true)
+    const languages = ref<ImddHeaderItem[]>([])
+    const root = ref<ComponentPublicInstance | null>(null)
     const rootElement = computed((): string => {
-      return props.noHeadroom ? "div" : "headroom";
-    });
+      return props.noHeadroom ? 'div' : 'headroom'
+    })
     const hasLanguagesDropdown = computed((): boolean => {
-      return !!languages.value?.length;
-    });
+      return !!languages.value?.length
+    })
     const currentLanguage = computed((): string => {
-      return get(find(languages.value, { active: true }), "label", "Language");
-    });
+      return get(find(languages.value, { active: true }), 'label', 'Language')
+    })
     onBeforeMount(() => {
-      library.add(faGlobe);
-    });
+      library.add(faGlobe)
+    })
     onMounted(() => {
-      languages.value = config.get("imddb-header.languages.items");
-    });
+      languages.value = config.get('imddb-header.languages.items')
+    })
     function closeFollowUsPopover() {
       if (followUsPopover.value?.hide) {
-        followUsPopover.value?.hide(new Event("forceHide"));
+        followUsPopover.value?.hide(new Event('forceHide'))
       }
-      showFollowUsPopover.value = false;
+      showFollowUsPopover.value = false
     }
     function hidePopover() {
-      root.value?.$emit("bv::hide::popover");
-      closeFollowUsPopover();
+      root.value?.$emit('bv::hide::popover')
+      closeFollowUsPopover()
     }
     function hideDropdown() {
-      root.value?.$emit("bv::hide::dropdown");
+      root.value?.$emit('bv::hide::dropdown')
     }
     function toggleNavbar(): void {
-      collapseNavbar.value = !collapseNavbar.value;
-      hidePopover();
-      hideDropdown();
+      collapseNavbar.value = !collapseNavbar.value
+      hidePopover()
+      hideDropdown()
     }
 
     return {
@@ -258,14 +258,14 @@ export default defineComponent({
       showFollowUsPopover,
       closeFollowUsPopover,
       hidePopover,
-      toggleNavbar,
-    };
-  },
-});
+      toggleNavbar
+    }
+  }
+})
 </script>
 
 <style lang="scss">
-@import "../styles/lib";
+@import '../styles/lib';
 
 .imddb-header {
   background: rgba($gray-400, 0.8);
@@ -312,7 +312,7 @@ export default defineComponent({
     font-weight: bolder;
     padding-right: $spacer * 1.5;
     &:after {
-      content: "";
+      content: '';
       background: $body-color;
       width: 2px;
       height: 30px;

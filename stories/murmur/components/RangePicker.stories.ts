@@ -1,37 +1,37 @@
-import { RangePicker } from "@/components";
-import { StoryObj } from "@storybook/vue3";
-import { BBadge } from "bootstrap-vue-next";
-import { ColumnChart } from "../../../lib/main";
-import { range } from "lodash";
-import { computed } from "vue";
+import { RangePicker } from '@/components'
+import { StoryObj } from '@storybook/vue3'
+import { BBadge } from 'bootstrap-vue-next'
+import { ColumnChart } from '../../../lib/main'
+import { range } from 'lodash'
+import { computed } from 'vue'
 
 export default {
-  title: "Murmur/components/RangePicker",
+  title: 'Murmur/components/RangePicker',
   component: RangePicker,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof RangePicker>;
+type Story = StoryObj<typeof RangePicker>
 const Template: Story = (args: any) => ({
   components: { RangePicker, BBadge },
   setup() {
-    return { args };
+    return { args }
   },
-  template: `<RangePicker v-bind="args" ></RangePicker>`,
-});
-export const Default = Template.bind({});
+  template: `<RangePicker v-bind="args" ></RangePicker>`
+})
+export const Default = Template.bind({})
 Default.decorators = [
-  () => ({ template: `<div style="width:500px;"><story/></div>` }),
-];
+  () => ({ template: `<div style="width:500px;"><story/></div>` })
+]
 Default.args = {
-  range: [5, 10],
-};
+  range: [5, 10]
+}
 
 export const WithOffsets = (args: any) => ({
   components: { RangePicker, BBadge },
   setup() {
-    return { args };
+    return { args }
   },
   template: `
         <RangePicker v-bind="args" >
@@ -39,28 +39,28 @@ export const WithOffsets = (args: any) => ({
                 <b-badge>{{ args.range[0] * 100 }}%</b-badge> - <b-badge>{{ args.range[1] * 100 }}%</b-badge>
             </div>
         </RangePicker>
-    `,
-});
+    `
+})
 WithOffsets.args = {
-  range: [5, 10],
-};
+  range: [5, 10]
+}
 export const WithColumnChart = (args: any) => ({
   components: { RangePicker, ColumnChart },
   setup() {
     const rangeStartYear = computed(() => {
-      const start = args.rangeYears[0];
-      const year = Math.ceil(start * (args.dataPerYear.length - 1));
-      return args.dataPerYear[year].date;
-    });
+      const start = args.rangeYears[0]
+      const year = Math.ceil(start * (args.dataPerYear.length - 1))
+      return args.dataPerYear[year].date
+    })
     const rangeEndYear = computed(() => {
-      const end = args.rangeYears[1];
+      const end = args.rangeYears[1]
       return args.dataPerYear[Math.floor(end * (args.dataPerYear.length - 1))]
-        .date;
-    });
+        .date
+    })
     const highlightedYears = computed(() => {
-      return range(rangeStartYear.value, rangeEndYear.value + 1);
-    });
-    return { args, highlightedYears };
+      return range(rangeStartYear.value, rangeEndYear.value + 1)
+    })
+    return { args, highlightedYears }
   },
   template: `
         <div class="bg-light p-5">
@@ -69,31 +69,31 @@ export const WithColumnChart = (args: any) => ({
             </range-picker>
         </div>
 
-    `,
-});
+    `
+})
 WithColumnChart.args = {
   range: [0.2, 0.8],
   rangeYears: [0, 1 / 5],
   dataPerYear: [
     {
       date: 2018,
-      value: 120,
+      value: 120
     },
     {
       date: 2019,
-      value: 100,
+      value: 100
     },
     {
       date: 2020,
-      value: 80,
+      value: 80
     },
     {
       date: 2021,
-      value: 110,
+      value: 110
     },
     {
       date: 2022,
-      value: 130,
-    },
-  ],
-};
+      value: 130
+    }
+  ]
+}

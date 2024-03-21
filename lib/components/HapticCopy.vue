@@ -1,10 +1,10 @@
 <script lang="ts">
-import { FontAwesomeLayers } from "@fortawesome/vue-fontawesome";
-import { faClipboard } from "@fortawesome/free-solid-svg-icons/faClipboard";
-import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons/faClipboardCheck";
-import { BTooltip, PopoverPlacement } from "bootstrap-vue-next";
+import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
+import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
+import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardCheck'
+import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
 
-import noop from "lodash/noop";
+import noop from 'lodash/noop'
 import {
   ComponentPublicInstance,
   computed,
@@ -13,26 +13,26 @@ import {
   onBeforeMount,
   onUnmounted,
   PropType,
-  ref,
-} from "vue";
-import { TranslateResult, useI18n } from "vue-i18n";
+  ref
+} from 'vue'
+import { TranslateResult, useI18n } from 'vue-i18n'
 
-import { default as Fa, library } from "./Fa";
+import { default as Fa, library } from './Fa'
 
-import { copyHtml, copyText } from "@/utils/clipboard";
+import { copyHtml, copyText } from '@/utils/clipboard'
 
 type HapticCopyData = {
-  mounted: boolean;
-  succeed: boolean;
-  tooltipContent: TranslateResult | string;
-  tooltipTimeout: ReturnType<typeof setTimeout> | undefined;
-};
+  mounted: boolean
+  succeed: boolean
+  tooltipContent: TranslateResult | string
+  tooltipTimeout: ReturnType<typeof setTimeout> | undefined
+}
 export default defineComponent({
-  name: "HapticCopy",
+  name: 'HapticCopy',
   components: {
     BTooltip,
     FontAwesomeLayers,
-    Fa,
+    Fa
   },
   props: {
     /**
@@ -40,34 +40,34 @@ export default defineComponent({
      */
     text: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Plain text to use as an alternative text for HTML copy (uses `text` by default)
      */
     plain: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Hide the button label (still visible for screen reader)
      */
     hideLabel: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Button label
      */
     label: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Delay after which we hide the tooltip
      */
     tooltipHideDelay: {
       type: Number,
-      default: 1e3,
+      default: 1e3
     },
     /**
      * Placement of the tooltip. Can be: top, topleft, topright, right,<br />
@@ -76,51 +76,51 @@ export default defineComponent({
      */
     tooltipPlacement: {
       type: String as PropType<PopoverPlacement>,
-      default: "top",
+      default: 'top'
     },
     /**
      * Copy HTML content
      */
     html: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Deactivate haptic tooltip display
      */
     noTooltip: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
-  emits: ["attempt", "success", "error", "hideClipboardTooltip"],
+  emits: ['attempt', 'success', 'error', 'hideClipboardTooltip'],
   setup(props, { emit, expose }) {
-    const { t, te } = useI18n();
-    const tooltip = ref<ComponentPublicInstance | null>(null);
-    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null);
-    const tooltipContent = ref<string>("");
-    const tooltipTimeout = ref<NodeJS.Timeout | undefined>(undefined);
-    const showClipboardTooltip = ref(false);
+    const { t, te } = useI18n()
+    const tooltip = ref<ComponentPublicInstance | null>(null)
+    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
+    const tooltipContent = ref<string>('')
+    const tooltipTimeout = ref<NodeJS.Timeout | undefined>(undefined)
+    const showClipboardTooltip = ref(false)
     onBeforeMount(() => {
-      library.add(faClipboard);
-      library.add(faClipboardCheck);
-    });
+      library.add(faClipboard)
+      library.add(faClipboardCheck)
+    })
     const tooltipContainer = computed((): string | null => {
       // By default we append the tooltip in the root container using its
       // id (if any) because BootstrapVue doesn't like HTMLElement for some
       // reasons.
 
-      return el.value?.id.length ? `#${el.value.id}` : null;
-    });
+      return el.value?.id.length ? `#${el.value.id}` : null
+    })
 
     function copyTextToClipboard(): Promise<void> {
-      return el.value ? copyText(props.text, el.value) : Promise.resolve();
+      return el.value ? copyText(props.text, el.value) : Promise.resolve()
     }
 
     function copyHtmlToClipboard(): void {
-      return copyHtml(props.text, props.plain || props.text);
+      return copyHtml(props.text, props.plain || props.text)
     }
 
     function copyTextOrHtml() {
-      return props.html ? copyHtmlToClipboard() : copyTextToClipboard();
+      return props.html ? copyHtmlToClipboard() : copyTextToClipboard()
     }
 
     async function copy(): Promise<void> {
@@ -130,60 +130,60 @@ export default defineComponent({
          *
          * @event attempt
          */
-        emit("attempt");
+        emit('attempt')
         // Use clipboard.js internally
-        await copyTextOrHtml();
+        await copyTextOrHtml()
         // Then option the tooltip in case of success
-        await openTooltip("haptic-copy.tooltip.succeed");
+        await openTooltip('haptic-copy.tooltip.succeed')
         /**
          * Emitted when the text has been copied successfully
          *
          * @event success
          */
-        emit("success");
+        emit('success')
       } catch (error) {
-        await openTooltip("haptic-copy.tooltip.failed");
+        await openTooltip('haptic-copy.tooltip.failed')
         /**
          * Emitted when the text couldn't be copied
          *
          * @event error
          */
-        emit("error", error);
+        emit('error', error)
       }
       // And close the tooltip after a short delay
-      nextTimeout(closeTooltip, props.tooltipHideDelay);
+      nextTimeout(closeTooltip, props.tooltipHideDelay)
     }
 
     function getTooltipContent(msg: string) {
-      return te(msg) ? t(msg) : msg;
+      return te(msg) ? t(msg) : msg
     }
 
-    async function openTooltip(msg = "haptic-copy.tooltip.succeed") {
-      tooltipContent.value = getTooltipContent(msg);
-      showClipboardTooltip.value = true;
+    async function openTooltip(msg = 'haptic-copy.tooltip.succeed') {
+      tooltipContent.value = getTooltipContent(msg)
+      showClipboardTooltip.value = true
     }
 
     async function closeTooltip() {
-      showClipboardTooltip.value = false;
-      tooltipTimeout.value = undefined;
-      emit("hideClipboardTooltip");
+      showClipboardTooltip.value = false
+      tooltipTimeout.value = undefined
+      emit('hideClipboardTooltip')
     }
 
     function nextTimeout(fn = noop, delay = 0) {
-      clearTimeout(tooltipTimeout.value);
+      clearTimeout(tooltipTimeout.value)
       return new Promise((resolve) => {
-        tooltipTimeout.value = setTimeout(resolve, delay);
+        tooltipTimeout.value = setTimeout(resolve, delay)
       })
         .finally(nextTick)
-        .then(fn);
+        .then(fn)
     }
 
     onUnmounted(() => {
-      closeTooltip();
-    });
+      closeTooltip()
+    })
     expose({
-      hide: closeTooltip,
-    });
+      hide: closeTooltip
+    })
     return {
       t,
       tooltip,
@@ -195,10 +195,10 @@ export default defineComponent({
       copy,
       closeTooltip,
       openTooltip,
-      nextTimeout,
-    };
-  },
-});
+      nextTimeout
+    }
+  }
+})
 </script>
 
 <template>
@@ -228,7 +228,7 @@ export default defineComponent({
         </transition>
       </font-awesome-layers>
       <span :class="{ 'sr-only': hideLabel }" class="ms-1 haptic-copy__label">
-        {{ label || t("haptic-copy.label") }}
+        {{ label || t('haptic-copy.label') }}
       </span>
     </slot>
     <b-tooltip

@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/blocks";
+import { Meta } from '@storybook/blocks'
 
 <Meta title="Installation Guide" />
 
@@ -26,20 +26,20 @@ yarn add @icij/murmur
 Then, register Murmur as a plugin in your app entry point:
 
 ```js
-import Vue from "vue";
-import Murmur from "@icij/murmur";
+import Vue from 'vue'
+import Murmur from '@icij/murmur'
 
-import { createApp } from "vue";
+import { createApp } from 'vue'
 
-const app = createApp({});
+const app = createApp({})
 
-app.use(Murmur);
+app.use(Murmur)
 ```
 
 And import the Murmur's stylesheet:
 
 ```scss
-@import "@icij/murmur";
+@import '@icij/murmur';
 ```
 
 Now all components will be globally available in your app. Murmur also exposes a
@@ -54,11 +54,11 @@ An alternative to installing all components with a pluggin is to import only
 a specific component.
 
 ```js
-import { EmbedForm } from "@icij/murmur";
+import { EmbedForm } from '@icij/murmur'
 export default {
-  name: "component-name",
+  name: 'component-name',
   components: {
-    EmbedForm,
-  },
-};
+    EmbedForm
+  }
+}
 ```

@@ -8,38 +8,38 @@ import {
   watch,
   computed,
   onBeforeMount,
-  toRef,
-} from "vue";
-import { faGripLinesVertical } from "@fortawesome/free-solid-svg-icons/faGripLinesVertical";
-import { clamp, get, has, invoke, round } from "lodash";
+  toRef
+} from 'vue'
+import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons/faGripLinesVertical'
+import { clamp, get, has, invoke, round } from 'lodash'
 
-import Fa, { library } from "./Fa";
+import Fa, { library } from './Fa'
 
-import type { Variant } from "@/types";
+import type { Variant } from '@/types'
 
 /**
  * A component to wrap an HTML element with a range picker overlay.
  */
 export default defineComponent({
-  name: "RangePicker",
+  name: 'RangePicker',
   components: {
-    Fa,
+    Fa
   },
   directives: {
     draggable: {
       mounted(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
-        let startX: number, initialClientX: number;
-        const relative = binding.modifiers?.relative ?? false;
+        let startX: number, initialClientX: number
+        const relative = binding.modifiers?.relative ?? false
 
         // Emit an event to the parent component
         function emitEvent({
           name,
-          data = null,
+          data = null
         }: {
-          name: string;
-          data?: any;
+          name: string
+          data?: any
         }) {
-          vnode.el.dispatchEvent(new CustomEvent(name, { detail: data }));
+          vnode.el.dispatchEvent(new CustomEvent(name, { detail: data }))
           //const handlers = get(vnode, 'data.on') ?? get(vnode, 'componentOptions.listeners')
           /*if (has(handlers, name)) {
             invoke(handlers, `${name}.fns`, data)
@@ -51,47 +51,47 @@ export default defineComponent({
           const clientX =
             event instanceof MouseEvent
               ? event.clientX
-              : event.touches[0].clientX;
-          const offset = relative ? el.offsetWidth : 0;
-          const maxX = binding.instance?.rangeWidth() - offset;
-          const data = clamp(startX + clientX - initialClientX, 0, maxX);
-          emitEvent({ name: "dragged", data });
-          return false;
+              : event.touches[0].clientX
+          const offset = relative ? el.offsetWidth : 0
+          const maxX = binding.instance?.rangeWidth() - offset
+          const data = clamp(startX + clientX - initialClientX, 0, maxX)
+          emitEvent({ name: 'dragged', data })
+          return false
         }
 
         // Clean up listeners once the dragging ends
         function end(event: MouseEvent | TouchEvent) {
-          emitEvent({ name: "ended" });
+          emitEvent({ name: 'ended' })
           if (event instanceof MouseEvent) {
-            document.removeEventListener("mousemove", move);
-            document.removeEventListener("mouseup", end);
+            document.removeEventListener('mousemove', move)
+            document.removeEventListener('mouseup', end)
           } else {
-            document.removeEventListener("touchmove", move);
-            document.removeEventListener("touchend", end);
+            document.removeEventListener('touchmove', move)
+            document.removeEventListener('touchend', end)
           }
         }
 
         // Register listeners when dragging start
         function start(event: MouseEvent | TouchEvent) {
-          emitEvent({ name: "started" });
-          startX = el.offsetLeft;
+          emitEvent({ name: 'started' })
+          startX = el.offsetLeft
           if (event instanceof MouseEvent) {
-            initialClientX = event.clientX;
-            document.addEventListener("mousemove", move);
-            document.addEventListener("mouseup", end);
+            initialClientX = event.clientX
+            document.addEventListener('mousemove', move)
+            document.addEventListener('mouseup', end)
           } else {
-            initialClientX = event.touches[0].clientX;
-            document.addEventListener("touchmove", move);
-            document.addEventListener("touchend", end);
+            initialClientX = event.touches[0].clientX
+            document.addEventListener('touchmove', move)
+            document.addEventListener('touchend', end)
           }
-          return false;
+          return false
         }
 
         // Register the drag and touch event handlers
-        el.addEventListener("mousedown", start);
-        el.addEventListener("touchstart", start);
-      },
-    },
+        el.addEventListener('mousedown', start)
+        el.addEventListener('touchstart', start)
+      }
+    }
   },
   props: {
     /**
@@ -100,14 +100,14 @@ export default defineComponent({
      */
     range: {
       type: Array as unknown as PropType<[number, number]>,
-      required: true,
+      required: true
     },
     /**
      * Enables hover styling on rows.
      */
     hover: {
       type: Boolean as PropType<boolean>,
-      default: false,
+      default: false
     },
     /**
      * Offset from the left side of the component
@@ -115,7 +115,7 @@ export default defineComponent({
      */
     startOffset: {
       type: [Number, String] as PropType<number | string>,
-      default: 0,
+      default: 0
     },
     /**
      * Offset from the right side of the component where
@@ -123,14 +123,14 @@ export default defineComponent({
      */
     endOffset: {
       type: [Number, String] as PropType<number | string>,
-      default: 0,
+      default: 0
     },
     /**
      * Number of decimal places to which values should be rounded.
      */
     precision: {
       type: Number as PropType<number>,
-      default: 4,
+      default: 4
     },
     /**
      * Snap increment value. For instance,
@@ -138,7 +138,7 @@ export default defineComponent({
      */
     snap: {
       type: Number as PropType<number>,
-      default: 0.0001,
+      default: 0.0001
     },
     /**
      * Minimum distance between the two range bounds to ensure they
@@ -146,7 +146,7 @@ export default defineComponent({
      */
     minDistance: {
       type: Number as PropType<number>,
-      default: 0.01,
+      default: 0.01
     },
     /**
      * Variant style of the component. Expected to be one
@@ -154,7 +154,7 @@ export default defineComponent({
      */
     variant: {
       type: String as PropType<Variant>,
-      default: "primary",
+      default: 'primary'
     },
     /**
      * Rounds corner edges of the range boundaries. If
@@ -162,112 +162,112 @@ export default defineComponent({
      */
     rounded: {
       type: Boolean as PropType<boolean>,
-      default: false,
-    },
+      default: false
+    }
   },
-  emits: ["update:range"],
+  emits: ['update:range'],
   setup(props, { emit }) {
     onBeforeMount(() => {
-      library.add(faGripLinesVertical);
-    });
-    const rangePickerBounds = ref<HTMLElement | null>(null);
-    const start = toRef(props.range[0] ?? 0);
-    const end = toRef(props.range[1] ?? 0);
-    const moving = ref(false);
-    const resizing = ref(false);
+      library.add(faGripLinesVertical)
+    })
+    const rangePickerBounds = ref<HTMLElement | null>(null)
+    const start = toRef(props.range[0] ?? 0)
+    const end = toRef(props.range[1] ?? 0)
+    const moving = ref(false)
+    const resizing = ref(false)
     const disabled = computed(() => {
-      return props.range.length < 2;
-    });
+      return props.range.length < 2
+    })
     const overlayStyle = computed((): { left: string; right: string } => {
       return {
         left: `${start.value * 100}%`,
-        right: `${(1 - end.value) * 100}%`,
-      };
-    });
+        right: `${(1 - end.value) * 100}%`
+      }
+    })
     const boundsStyle = computed((): { left: string; right: string } => {
       return {
         left: startOffsetWithUnit.value,
-        right: endOffsetWithUnit.value,
-      };
-    });
+        right: endOffsetWithUnit.value
+      }
+    })
 
     const startOffsetWithUnit = computed((): string => {
-      return valueWithUnit(props.startOffset);
-    });
+      return valueWithUnit(props.startOffset)
+    })
     const endOffsetWithUnit = computed((): string => {
-      return valueWithUnit(props.endOffset);
-    });
+      return valueWithUnit(props.endOffset)
+    })
 
     const startBoundStyle = computed((): { left: string } => {
-      return { left: `${start.value * 100}% ` };
-    });
+      return { left: `${start.value * 100}% ` }
+    })
 
     const endBoundStyle = computed((): { left: string } => {
-      return { left: `${end.value * 100}%` };
-    });
+      return { left: `${end.value * 100}%` }
+    })
     const classList = computed((): { [key: string]: boolean } => {
       return {
         [`range-picker--${props.variant}`]: !!props.variant,
-        "range-picker--hover": props.hover,
-        "range-picker--disabled": disabled.value,
-        "range-picker--rounded": props.rounded,
-        "range-picker--resizing": resizing.value,
-        "range-picker--moving": moving.value,
-      };
-    });
+        'range-picker--hover': props.hover,
+        'range-picker--disabled': disabled.value,
+        'range-picker--rounded': props.rounded,
+        'range-picker--resizing': resizing.value,
+        'range-picker--moving': moving.value
+      }
+    })
 
     function toggleMoving(value) {
-      moving.value = value ?? !moving.value;
+      moving.value = value ?? !moving.value
     }
     function toggleResizing(value) {
-      resizing.value = value ?? !resizing.value;
+      resizing.value = value ?? !resizing.value
     }
     function snapValue(value): number {
-      return round(value / props.snap) * props.snap;
+      return round(value / props.snap) * props.snap
     }
     function rangeWidth(): number {
-      return rangePickerBounds.value?.getBoundingClientRect().width ?? 0;
+      return rangePickerBounds.value?.getBoundingClientRect().width ?? 0
     }
     function dragStartBound({ detail: dx }) {
-      const newValue = snapValue(dx / rangeWidth());
+      const newValue = snapValue(dx / rangeWidth())
       // Ensure start value doesn't get too close to end value
       if (newValue < end.value - props.minDistance) {
-        start.value = round(newValue, props.precision);
+        start.value = round(newValue, props.precision)
         /**
          * Update the values of the range (both start and end)
          * @event update
          * @param Number[] New value of the range
          */
-        emit("update:range", [start.value, end.value]);
+        emit('update:range', [start.value, end.value])
       }
     }
     function dragEndBound({ detail: dx }) {
-      const newValue = snapValue(dx / rangeWidth());
+      const newValue = snapValue(dx / rangeWidth())
       // Ensure end value doesn't get too close to start value
       if (newValue > start.value + props.minDistance) {
-        end.value = round(newValue, props.precision);
+        end.value = round(newValue, props.precision)
         /**
          * Update the values of the range (both start and end)
          * @event update
          * @param Number[] New value of the range
          */
-        emit("update:range", [start.value, end.value]);
+        emit('update:range', [start.value, end.value])
       }
     }
     function dragBounds({ detail: dx }) {
-      const diff = snapValue(end.value - start.value);
-      const newValue = snapValue(dx / rangeWidth());
-      start.value = round(newValue, props.precision);
-      end.value = round(newValue + diff, props.precision);
+      const diff = snapValue(end.value - start.value)
+      const newValue = snapValue(dx / rangeWidth())
+      start.value = round(newValue, props.precision)
+      end.value = round(newValue + diff, props.precision)
       /**
        * Update the values of the range (both start and end)
        * @event update
        * @param Number[] New value of the range
        */
-      emit("update:range", [start.value, end.value]);
+      emit('update:range', [start.value, end.value])
     }
     function valueWithUnit(value: number | string): string {
-      return typeof value === "number" ? `${value}px` : `${value}`;
+      return typeof value === 'number' ? `${value}px` : `${value}`
     }
     return {
       rangePickerBounds,
@@ -284,10 +284,10 @@ export default defineComponent({
       dragEndBound,
       dragBounds,
       toggleMoving,
-      toggleResizing,
-    };
-  },
-});
+      toggleResizing
+    }
+  }
+})
 </script>
 
 <template>
@@ -334,7 +334,7 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-@import "../styles/lib";
+@import '../styles/lib';
 
 .range-picker {
   min-height: 1rem;
@@ -356,7 +356,7 @@ export default defineComponent({
 
   &--hover:hover &__bounds:after {
     pointer-events: none;
-    content: "";
+    content: '';
     z-index: -1;
     width: 100%;
     height: 100%;
@@ -408,7 +408,7 @@ export default defineComponent({
       overflow: hidden;
 
       &:after {
-        content: "";
+        content: '';
         width: 100%;
         height: 100%;
         display: block;

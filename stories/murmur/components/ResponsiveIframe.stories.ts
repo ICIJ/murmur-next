@@ -1,23 +1,23 @@
-import { ResponsiveIframe } from "@/components";
-import { StoryObj } from "@storybook/vue3";
+import { ResponsiveIframe } from '@/components'
+import { StoryObj } from '@storybook/vue3'
 
 export default {
-  title: "Murmur/components/ResponsiveIframe",
+  title: 'Murmur/components/ResponsiveIframe',
   component: ResponsiveIframe,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof ResponsiveIframe>;
+type Story = StoryObj<typeof ResponsiveIframe>
 const Template: Story = (args: any) => ({
   components: { ResponsiveIframe },
   setup() {
-    return { args };
+    return { args }
   },
-  template: `<ResponsiveIframe v-bind="args" />`,
-});
+  template: `<ResponsiveIframe v-bind="args" />`
+})
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 Default.args = {
-  url: "https://projects.icij.org/the-implant-files/graphics/#/adverse-events?no-embeddable-footer=1",
-};
+  url: 'https://projects.icij.org/the-implant-files/graphics/#/adverse-events?no-embeddable-footer=1'
+}

@@ -1,43 +1,43 @@
 <script lang="ts">
-import { computed, defineComponent, ref, Ref, toRef } from "vue";
+import { computed, defineComponent, ref, Ref, toRef } from 'vue'
 import {
   BTabs,
   BTab,
   BInputGroup,
   BInputGroupAppend,
-  BFormInput,
-} from "bootstrap-vue-next";
+  BFormInput
+} from 'bootstrap-vue-next'
 
-import HapticCopy from "./HapticCopy.vue";
+import HapticCopy from './HapticCopy.vue'
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n'
 
-type AdvancedLinkedFormClassName = `${"advanced-link-form--"}${string}`;
+type AdvancedLinkedFormClassName = `${'advanced-link-form--'}${string}`
 interface AdvancedLinkedFormClasses {
-  [prop: AdvancedLinkedFormClassName]: boolean;
+  [prop: AdvancedLinkedFormClassName]: boolean
 }
 
 interface TextRange {
-  moveToElementText: Function;
-  select: Function;
+  moveToElementText: Function
+  select: Function
 }
 
 interface HTMLElementSupportingCreateRange extends HTMLElement {
-  createTextRange(): TextRange;
+  createTextRange(): TextRange
 }
 
 /**
  * A form with tabs to offer several copy formats to users.
  */
 export default defineComponent({
-  name: "AdvancedLinkForm",
+  name: 'AdvancedLinkForm',
   components: {
     BTabs,
     BTab,
     BInputGroup,
     BInputGroupAppend,
     BFormInput,
-    HapticCopy,
+    HapticCopy
   },
   props: {
     /**
@@ -45,134 +45,134 @@ export default defineComponent({
      */
     link: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Title associated with the link
      */
     title: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * The forms to display
      */
     forms: {
       type: Array,
-      default: () => ["raw", "markdown", "rich", "html"],
+      default: () => ['raw', 'markdown', 'rich', 'html']
     },
     /**
      * Index of the selected tab
      */
     modelValue: {
       type: Number,
-      default: 0,
+      default: 0
     },
     /**
      * Activate the card integration for the tabs
      */
     card: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Renders the tabs with the appearance of pill buttons
      */
     pills: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Makes the tabs and the panels smaller.
      */
     small: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Makes the tabs and the panels vertical.
      */
     vertical: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * CSS class (or classes) to apply to the currently active tab.
      */
     activeNavItemClass: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * When set to 'true', disables the fade animation on the tabs.
      */
     noFade: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
-  emits: ["update:modelValue"],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const { t } = useI18n();
-    const rawInput = ref<HTMLTextAreaElement | null>(null);
-    const richInput = ref<HTMLElement | null>(null);
-    const markdownInput = ref<HTMLTextAreaElement | null>(null);
-    const htmlInput = ref<HTMLTextAreaElement | null>(null);
-    const titleOrLink = computed(() => props.title || props.link);
+    const { t } = useI18n()
+    const rawInput = ref<HTMLTextAreaElement | null>(null)
+    const richInput = ref<HTMLElement | null>(null)
+    const markdownInput = ref<HTMLTextAreaElement | null>(null)
+    const htmlInput = ref<HTMLTextAreaElement | null>(null)
+    const titleOrLink = computed(() => props.title || props.link)
 
     const linkAsMarkdown = computed(
-      () => `[${titleOrLink.value}](${props.link})`,
-    );
+      () => `[${titleOrLink.value}](${props.link})`
+    )
 
     const linkAsHtml = computed(
-      () => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`,
-    );
+      () => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`
+    )
     const formClasses = computed(() => {
-      const propsToCheck = ["card", "pills", "small", "vertical"];
+      const propsToCheck = ['card', 'pills', 'small', 'vertical']
       return propsToCheck.reduce((classes, prop) => {
         //@ts-ignore
-        classes[`advanced-link-form--${prop}`] = props[prop];
-        return classes;
-      }, {});
-    });
+        classes[`advanced-link-form--${prop}`] = props[prop]
+        return classes
+      }, {})
+    })
 
-    const size = computed(() => (props.small ? "sm" : "md"));
+    const size = computed(() => (props.small ? 'sm' : 'md'))
 
     const showForm = computed(() => {
-      return (name: string) => props.forms.indexOf(name) > -1;
-    });
+      return (name: string) => props.forms.indexOf(name) > -1
+    })
 
     const selectInput = (target: Ref<HTMLElement | null>) => {
       // if(!target.value){
       //   throw new Error("no target")
       // }
       if (target.value instanceof HTMLTextAreaElement) {
-        target.value.select();
+        target.value.select()
       }
-    };
+    }
 
-    const selectRaw = () => selectInput(rawInput);
+    const selectRaw = () => selectInput(rawInput)
 
     function selectRich() {
-      if (!richInput.value) return;
+      if (!richInput.value) return
 
-      const selection = window.getSelection ? window.getSelection() : null;
+      const selection = window.getSelection ? window.getSelection() : null
       if (selection) {
-        const range = document.createRange();
-        range.selectNodeContents(richInput.value);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        const range = document.createRange()
+        range.selectNodeContents(richInput.value)
+        selection.removeAllRanges()
+        selection.addRange(range)
       } else if (
         (document.body as HTMLElementSupportingCreateRange).createTextRange
       ) {
         const range = (
           document.body as HTMLElementSupportingCreateRange
-        ).createTextRange();
-        range.moveToElementText(richInput.value);
-        range.select();
+        ).createTextRange()
+        range.moveToElementText(richInput.value)
+        range.select()
       }
     }
     function selectMarkdown() {
-      selectInput(markdownInput);
+      selectInput(markdownInput)
     }
 
     function selectHtml() {
-      selectInput(htmlInput);
+      selectInput(htmlInput)
     }
 
     return {
@@ -186,10 +186,10 @@ export default defineComponent({
       selectRaw,
       selectRich,
       selectMarkdown,
-      selectHtml,
-    };
-  },
-});
+      selectHtml
+    }
+  }
+})
 </script>
 
 <template>
@@ -247,7 +247,7 @@ export default defineComponent({
           </b-input-group-append>
         </b-input-group>
         <p class="text-muted mt-2 mb-0">
-          {{ t("advanced-link-form.rich.description") }}
+          {{ t('advanced-link-form.rich.description') }}
         </p>
       </div>
     </b-tab>
@@ -273,7 +273,7 @@ export default defineComponent({
           </b-input-group-append>
         </b-input-group>
         <p class="text-muted mt-2 mb-0">
-          {{ t("advanced-link-form.markdown.description") }}
+          {{ t('advanced-link-form.markdown.description') }}
         </p>
       </div>
     </b-tab>
@@ -301,7 +301,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@import "../styles/lib";
+@import '../styles/lib';
 
 .advanced-link-form {
   text-align: left;

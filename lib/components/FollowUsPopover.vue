@@ -8,7 +8,7 @@
     </button>
     <sign-up-form class="p-3" />
     <div class="px-3 pb-1 text-uppercase text-muted fw-bold">
-      {{ t("follow-us-popover.heading") }}
+      {{ t('follow-us-popover.heading') }}
     </div>
     <div class="p-3 bg-light d-flex justify-content-between text-center">
       <div class="col">
@@ -49,30 +49,30 @@
 </template>
 
 <script lang="ts">
-import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
-import { faTwitter } from "@fortawesome/free-brands-svg-icons/faTwitter";
-import { faFacebook } from "@fortawesome/free-brands-svg-icons/faFacebook";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons/faLinkedin";
-import { defineComponent, onBeforeMount } from "vue";
-import { useI18n } from "vue-i18n";
-import SignUpForm from "./SignUpForm.vue";
-import { library, default as Fa } from "./Fa";
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter'
+import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook'
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin'
+import { defineComponent, onBeforeMount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import SignUpForm from './SignUpForm.vue'
+import { library, default as Fa } from './Fa'
 
 /**
  * FollowUsPopover
  */
 export default defineComponent({
-  name: "FollowUsPopover",
+  name: 'FollowUsPopover',
   components: {
     Fa,
-    SignUpForm,
+    SignUpForm
   },
-  emits: ["update:close"],
+  emits: ['update:close'],
   setup(_props, { emit }) {
-    const { t } = useI18n();
+    const { t } = useI18n()
     onBeforeMount((): void => {
-      library.add(faTimes, faTwitter, faFacebook, faLinkedin);
-    });
+      library.add(faTimes, faTwitter, faFacebook, faLinkedin)
+    })
     function closeSignupPopover(): void {
       /**
        * Fired when user click on the `close` button
@@ -80,19 +80,19 @@ export default defineComponent({
        * @event update:close
        * @type {boolean}
        */
-      emit("update:close", false);
+      emit('update:close', false)
     }
 
     return {
       t,
-      closeSignupPopover,
-    };
-  },
-});
+      closeSignupPopover
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/lib";
+@import '../styles/lib';
 
 .follow-us {
   position: relative;

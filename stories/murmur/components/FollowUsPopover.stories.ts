@@ -1,23 +1,23 @@
-import { FollowUsPopover } from "@/components";
-import { StoryObj } from "@storybook/vue3";
+import { FollowUsPopover } from '@/components'
+import { StoryObj } from '@storybook/vue3'
 
 export default {
-  title: "Murmur/components/FollowUsPopover",
+  title: 'Murmur/components/FollowUsPopover',
   component: FollowUsPopover,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof FollowUsPopover>;
+type Story = StoryObj<typeof FollowUsPopover>
 const Template: Story = (args: any) => ({
   components: { FollowUsPopover },
   setup() {
-    return { args };
+    return { args }
   },
-  template: '<FollowUsPopover v-bind="args" />',
-});
+  template: '<FollowUsPopover v-bind="args" />'
+})
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 Default.args = {
-  class: "card card-xs my-4 mx-auto border border-primary",
-};
+  class: 'card card-xs my-4 mx-auto border border-primary'
+}

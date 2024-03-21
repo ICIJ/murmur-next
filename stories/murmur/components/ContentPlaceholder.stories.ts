@@ -1,39 +1,39 @@
-import { ContentPlaceholder } from "@/components";
-import { StoryObj } from "@storybook/vue3";
-import { ContentPlaceholderRows } from "@/utils/placeholderTypes";
+import { ContentPlaceholder } from '@/components'
+import { StoryObj } from '@storybook/vue3'
+import { ContentPlaceholderRows } from '@/utils/placeholderTypes'
 
 export default {
-  title: "Murmur/components/ContentPlaceholder",
+  title: 'Murmur/components/ContentPlaceholder',
   component: ContentPlaceholder,
-  tags: ["autodocs"],
-  argTypes: {},
-};
+  tags: ['autodocs'],
+  argTypes: {}
+}
 
-type Story = StoryObj<typeof ContentPlaceholder>;
+type Story = StoryObj<typeof ContentPlaceholder>
 const Template: Story = (args: any) => ({
   components: { ContentPlaceholder },
   setup() {
-    return { args };
+    return { args }
   },
-  template: '<ContentPlaceholder v-bind="args" />',
-});
+  template: '<ContentPlaceholder v-bind="args" />'
+})
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}
 
-export const Columns = Template.bind({});
+export const Columns = Template.bind({})
 const rows: ContentPlaceholderRows = [
   {
-    height: "1em",
+    height: '1em',
     boxes: [
-      [0, "40%"],
-      ["5%", "30%"],
-      ["5%", "10%"],
-    ],
-  },
-];
-Columns.args = { rows };
-export const FourRows = Template.bind({});
+      [0, '40%'],
+      ['5%', '30%'],
+      ['5%', '10%']
+    ]
+  }
+]
+Columns.args = { rows }
+export const FourRows = Template.bind({})
 const fourRowsDecorator = () => ({
   components: { ContentPlaceholder },
   template: `
@@ -43,7 +43,7 @@ const fourRowsDecorator = () => ({
             <story/>
             <story/>
         </div>
-    `,
-});
-FourRows.decorators = [fourRowsDecorator];
-FourRows.args = { class: "my-1" };
+    `
+})
+FourRows.decorators = [fourRowsDecorator]
+FourRows.args = { class: 'my-1' }

@@ -1,11 +1,11 @@
-@import "./variables";
-@import "./variables_dark";
-@import "./mixins";
-@import "./functions";
-@import "./utilities";
-@import "bootstrap/scss/_mixins";
+@import './variables';
+@import './variables_dark';
+@import './mixins';
+@import './functions';
+@import './utilities';
+@import 'bootstrap/scss/_mixins';
 :root,
-[data-bs-theme="light"] {
+[data-bs-theme='light'] {
   --input-bg: #{$bs-input-bg};
 }
 @if $enable-dark-mode {

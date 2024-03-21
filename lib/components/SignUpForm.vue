@@ -10,7 +10,7 @@
         class="text-uppercase text-muted fw-bold"
         for="input-email"
       >
-        {{ t("sign-up-form.label") }}
+        {{ t('sign-up-form.label') }}
       </label>
       <div
         class="sign-up-form__fieldset__group"
@@ -29,7 +29,7 @@
           :class="{ [variantColorClass]: true }"
           type="submit"
         >
-          {{ t("sign-up-form.submit") }}
+          {{ t('sign-up-form.submit') }}
         </button>
       </div>
     </fieldset>
@@ -43,130 +43,130 @@
 </template>
 
 <script lang="ts">
-import jsonp from "jsonp";
-import castArray from "lodash/castArray";
-import flatten from "lodash/flatten";
-import last from "lodash/last";
-import { computed, defineComponent, PropType, ref } from "vue";
+import jsonp from 'jsonp'
+import castArray from 'lodash/castArray'
+import flatten from 'lodash/flatten'
+import last from 'lodash/last'
+import { computed, defineComponent, PropType, ref } from 'vue'
 
-import config from "../config";
-import { useI18n } from "vue-i18n";
-import { useSendEmail } from "@/composables/sendEmail";
+import config from '../config'
+import { useI18n } from 'vue-i18n'
+import { useSendEmail } from '@/composables/sendEmail'
 
 type SignUpFormData = {
-  email: string;
-  frozen: boolean;
-  response: any;
-  errorMessage: string | null;
-  successMessage: string | null;
-};
+  email: string
+  frozen: boolean
+  response: any
+  errorMessage: string | null
+  successMessage: string | null
+}
 
 /**
  * SignUpForm
  */
 export default defineComponent({
-  name: "SignUpForm",
+  name: 'SignUpForm',
   props: {
     /**
      * Mailchimp URL to send the data to.
      */
     action: {
       type: String,
-      default: () => config.get("signup-form.action"),
+      default: () => config.get('signup-form.action')
     },
     /**
      * Malchimp email field parameter
      */
     emailField: {
       type: String,
-      default: () => config.get("signup-form.email-field"),
+      default: () => config.get('signup-form.email-field')
     },
     /**
      * Malchimp default groups. Can be an array or a commat-separated list of groups.
      */
     defaultGroups: {
       type: [String, Array] as PropType<string | string[]>,
-      default: () => config.get("signup-form.default-groups"),
+      default: () => config.get('signup-form.default-groups')
     },
     /**
      * Disable the main label.
      */
     noLabel: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Horizontal layout of the form.
      */
     horizontal: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Mailchimp tracker tag to identify the origin.
      */
     tracker: {
       type: String,
-      default: () => config.get("signup-form.tracker"),
+      default: () => config.get('signup-form.tracker')
     },
     /**
      * Referrer URL cant be passed explicitly
      */
     referrer: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Color variant of the sign-up button
      */
     variant: {
       type: String,
-      default: "primary",
-    },
+      default: 'primary'
+    }
   },
   setup(props) {
-    const { t } = useI18n();
-    const email = ref("");
-    const frozen = ref(false);
-    const response = ref({});
-    const errorMessage = ref(null);
-    const successMessage = ref(null);
+    const { t } = useI18n()
+    const email = ref('')
+    const frozen = ref(false)
+    const response = ref({})
+    const errorMessage = ref(null)
+    const successMessage = ref(null)
     const { send } = useSendEmail(
       email,
       props.action,
       props.emailField,
       props.tracker,
       props.referrer,
-      props.defaultGroups,
-    );
+      props.defaultGroups
+    )
 
     const variantColorClass = computed(() => {
-      return `btn-${props.variant}`;
-    });
+      return `btn-${props.variant}`
+    })
     async function subscribe() {
-      resetMessages();
-      freeze();
+      resetMessages()
+      freeze()
       // Send the data, catch the result no matter what and unfreeze the form
-      await send().then(done, done).finally(unfreeze);
+      await send().then(done, done).finally(unfreeze)
     }
 
     function done({ result, msg }: any): void {
-      if (result === "success") {
-        email.value = "";
-        successMessage.value = msg;
+      if (result === 'success') {
+        email.value = ''
+        successMessage.value = msg
       } else {
         // Mailchimp formats errors in list
         errorMessage.value =
-          last((msg || "Something's wrong").split("0 -")) ?? null;
+          last((msg || "Something's wrong").split('0 -')) ?? null
       }
     }
     function resetMessages() {
-      errorMessage.value = null;
-      successMessage.value = null;
+      errorMessage.value = null
+      successMessage.value = null
     }
     function freeze() {
-      frozen.value = true;
+      frozen.value = true
     }
     function unfreeze() {
-      frozen.value = false;
+      frozen.value = false
     }
 
     return {
@@ -178,14 +178,14 @@ export default defineComponent({
       successMessage,
       variantColorClass,
       subscribe,
-      send,
-    };
-  },
-});
+      send
+    }
+  }
+})
 </script>
 
 <style lang="scss">
-@import "../styles/lib.scss";
+@import '../styles/lib.scss';
 
 .sign-up-form {
   .sign-up-form__fieldset__group__addon.btn {
