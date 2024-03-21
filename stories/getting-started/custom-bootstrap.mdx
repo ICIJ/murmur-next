@@ -1,7 +1,7 @@
-import { Meta, Source } from '@storybook/blocks';
-import rawVariables from '../../lib/styles/variables.scss?raw';
+import { Meta, Source } from "@storybook/blocks";
+import rawVariables from "../../lib/styles/variables.scss?raw";
 
-<Meta title="Customize Boostrap"/>
+<Meta title="Customize Boostrap" />
 
 ## Use pre-configured variables to build Boostrap.
 
@@ -14,10 +14,10 @@ with these variables. Yet some components might have a better display with this 
 $link-color: #c10448;
 
 // Then, simply import the variables before you import Bootstrap sources
-@import '@icij/murmur/lib/styles/variables.scss';
-@import 'node_modules/bootstrap/scss/bootstrap';
+@import "@icij/murmur/lib/styles/variables.scss";
+@import "node_modules/bootstrap/scss/bootstrap";
 // Optional but recommended: Bootstrap Vue Next CSS additions
-@import 'node_modules/bootstrap-vue-next/dist/bootstrap-vue-next';
+@import "node_modules/bootstrap-vue-next/dist/bootstrap-vue-next";
 ```
 
 Here are all the variables defined in <repository-link path="lib/styles/variables.scss">lib/styles/variables.scss</repository-link>:

@@ -1,10 +1,12 @@
-import en from '@/locales/en.json';
-import { Meta, Source } from '@storybook/blocks';
+import en from "@/locales/en.json";
+import { Meta, Source } from "@storybook/blocks";
 
-<Meta title="Internationalization"/>
+<Meta title="Internationalization" />
 
 # Internationalization
+
 ## Translate your components
+
 ### How it work
 
 Murmur can be translated using [vue-i18n](https://github.com/kazupon/vue-i18n).
@@ -17,23 +19,23 @@ translation received a `i18n` attribute.
 Murmur exposes a static method to add new locales:
 
 ```js
-import Murmur from '@icij/murmur'
+import Murmur from "@icij/murmur";
 
-Murmur.setLocaleMessage('fr', {
+Murmur.setLocaleMessage("fr", {
   "imddb-header": {
-    "navbar": {
-      "leak": "Contact confidentiel",
-      "support": "Soutenez nous",
-      "follow": "Suivez l'ICIJ"
-    }
-  }
-})
+    navbar: {
+      leak: "Contact confidentiel",
+      support: "Soutenez nous",
+      follow: "Suivez l'ICIJ",
+    },
+  },
+});
 ```
 
 Then you can switch to a new language easily:
 
 ```js
-Murmur.setLocale('fr')
+Murmur.setLocale("fr");
 ```
 
 ### Overiding locales
@@ -41,17 +43,17 @@ Murmur.setLocale('fr')
 In the very same fashion, you can modify existing locales:
 
 ```js
-import Murmur from '@icij/murmur'
+import Murmur from "@icij/murmur";
 
-Murmur.mergeLocaleMessage('en', {
+Murmur.mergeLocaleMessage("en", {
   "imddb-header": {
-    "navbar": {
-      "leak": "SecureDrop",
-      "support": "Buy us a beer 🍺",
-      "follow": "Follow ICIJ"
-    }
-  }
-})
+    navbar: {
+      leak: "SecureDrop",
+      support: "Buy us a beer 🍺",
+      follow: "Follow ICIJ",
+    },
+  },
+});
 ```
 
 ### Default locales

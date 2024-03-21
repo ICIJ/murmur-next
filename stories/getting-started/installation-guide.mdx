@@ -1,8 +1,9 @@
-import { Meta } from '@storybook/blocks';
+import { Meta } from "@storybook/blocks";
 
-<Meta title="Installation Guide"/>
+<Meta title="Installation Guide" />
 
 # Installation Guide
+
 The <a href="https://icij.org">International Consortium of Investigative Journalists</a>
 aims to build efficient and innovative tools for the biggest cross-border investigations in the world.
 In order to build stable, consistent and user-friendly webapps, our team
@@ -21,17 +22,18 @@ npm i @icij/murmur
 # or with Yarn:
 yarn add @icij/murmur
 ```
+
 Then, register Murmur as a plugin in your app entry point:
 
 ```js
-import Vue from 'vue'
-import Murmur from '@icij/murmur'
+import Vue from "vue";
+import Murmur from "@icij/murmur";
 
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
-const app = createApp({})
+const app = createApp({});
 
-app.use(Murmur)
+app.use(Murmur);
 ```
 
 And import the Murmur's stylesheet:
@@ -52,11 +54,11 @@ An alternative to installing all components with a pluggin is to import only
 a specific component.
 
 ```js
-import { EmbedForm } from '@icij/murmur'
+import { EmbedForm } from "@icij/murmur";
 export default {
-    name:'component-name',
-    components: {
-        EmbedForm
-    }
-}
+  name: "component-name",
+  components: {
+    EmbedForm,
+  },
+};
 ```

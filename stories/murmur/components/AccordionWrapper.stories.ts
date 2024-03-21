@@ -1,34 +1,32 @@
 import { AccordionWrapper } from "@/components";
 import { StoryObj } from "@storybook/vue3";
-import {BButton} from "bootstrap-vue-next";
-import {bgStripedDecorator} from "../decorators";
+import { BButton } from "bootstrap-vue-next";
+import { bgStripedDecorator } from "../decorators";
 
 export default {
-    title: 'Murmur/components/AccordionWrapper',
-    component: AccordionWrapper,
-    tags: ['autodocs'],
-    argTypes: {
-    }
+  title: "Murmur/components/AccordionWrapper",
+  component: AccordionWrapper,
+  tags: ["autodocs"],
+  argTypes: {},
 };
 
 type Story = StoryObj<typeof AccordionWrapper>;
 const stepsEnum = Object.freeze({
-    MAILVELOPE: Symbol("MAILVELOPE"),
-    EXPORT_PUBLIC_KEY: Symbol("EXPORT_PUBLIC_KEY"),
-    UPLOAD_PUBLIC_KEY: Symbol("UPLOAD_PGP"),
-})
+  MAILVELOPE: Symbol("MAILVELOPE"),
+  EXPORT_PUBLIC_KEY: Symbol("EXPORT_PUBLIC_KEY"),
+  UPLOAD_PUBLIC_KEY: Symbol("UPLOAD_PGP"),
+});
 const data = {
-    step: stepsEnum.MAILVELOPE,
-    steps: Object.values(stepsEnum),
-    active: false,
-
-}
+  step: stepsEnum.MAILVELOPE,
+  steps: Object.values(stepsEnum),
+  active: false,
+};
 const Template: Story = (args: any) => ({
-    components: { AccordionWrapper,BButton },
-    setup() {
-        return { stepsEnum,args };
-    },
-    template: `<AccordionWrapper v-bind="args" @step-change="args.step=$event">
+  components: { AccordionWrapper, BButton },
+  setup() {
+    return { stepsEnum, args };
+  },
+  template: `<AccordionWrapper v-bind="args" @step-change="args.step=$event">
         <accordion-step
           :step="stepsEnum.MAILVELOPE"
           class="accordion-step__mailvelope"
@@ -59,11 +57,10 @@ const Template: Story = (args: any) => ({
     </AccordionWrapper>`,
 });
 
-
 export const Default = Template.bind({});
-Default.decorators=[bgStripedDecorator]
+Default.decorators = [bgStripedDecorator];
 Default.args = {
-    steps:data.steps,
-    step:data.step,
-    class:"p-2"
+  steps: data.steps,
+  step: data.step,
+  class: "p-2",
 };
