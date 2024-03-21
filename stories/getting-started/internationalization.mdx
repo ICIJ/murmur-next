@@ -1,5 +1,5 @@
 import en from '@/locales/en.json';
-import { Meta } from '@storybook/blocks';
+import { Meta, Source } from '@storybook/blocks';
 
 <Meta title="Internationalization"/>
 
@@ -58,6 +58,4 @@ Murmur.mergeLocaleMessage('en', {
 
 Here are English locales defined in <repository-link path="lib/locales/en.json">lib/locales/en.json</repository-link>:
 
-<collapsible-block label="All English locales">
-    <pre className=" p-3 m-0"><code>{ JSON.stringify(en, null, 2) } </code></pre>
-</collapsible-block>
+<Source code={JSON.stringify(en, null, 2)} language="json" />
