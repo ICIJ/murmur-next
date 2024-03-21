@@ -1,6 +1,10 @@
 <template>
   <div class="embeddable-footer p-2 text-nowrap">
-    <a :href="homeUrl" target="_blank" class="text-white embeddable-footer__brand">
+    <a
+      :href="homeUrl"
+      target="_blank"
+      class="text-white embeddable-footer__brand"
+    >
       <brand :size="40" no-border class="me-2" color="white" />
       <!-- @slot Slot to redefine title display -->
       <slot name="title">
@@ -16,47 +20,47 @@
     <!-- @slot Overide the sharing button -->
     <slot name="sharing-button" v-bind="{ sharingOptionsValues }">
       <button
-          class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
-          :class="{ active: showShareOptions }"
-          @click="showShareOptions = !showShareOptions"
+        class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
+        :class="{ active: showShareOptions }"
+        @click="showShareOptions = !showShareOptions"
       >
         <fa icon="share-alt" />
-        <span class="sr-only">{{ $t('embeddable-footer.share') }}</span>
+        <span class="sr-only">{{ $t("embeddable-footer.share") }}</span>
       </button>
     </slot>
     <sharing-options
-        v-if="showShareOptions"
-        :values="sharingOptionsValues"
-        direction="column-reverse"
-        :iframe-min-height="iframeMinHeight"
-        :iframe-min-width="iframeMinWidth"
+      v-if="showShareOptions"
+      :values="sharingOptionsValues"
+      direction="column-reverse"
+      :iframe-min-height="iframeMinHeight"
+      :iframe-min-width="iframeMinWidth"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons/faShareAlt'
-import { defineComponent } from 'vue'
+import { faShareAlt } from "@fortawesome/free-solid-svg-icons/faShareAlt";
+import { defineComponent } from "vue";
 
-import { library, default as Fa } from './Fa'
+import { library, default as Fa } from "./Fa";
 
-import IframeResizer from '@/utils/iframe-resizer'
-import Brand from '@/components/Brand.vue'
-import SharingOptions from '@/components/SharingOptions.vue'
-import config from '@/config'
+import IframeResizer from "@/utils/iframe-resizer";
+import Brand from "@/components/Brand.vue";
+import SharingOptions from "@/components/SharingOptions.vue";
+import config from "@/config";
 
 type EmbeddableFooterData = {
-  showShareOptions: boolean
-}
+  showShareOptions: boolean;
+};
 /**
  * EmbeddableFooter
  */
 export default defineComponent({
-name: 'EmbeddableFooter',
+  name: "EmbeddableFooter",
   components: {
     Fa,
     SharingOptions,
-    Brand
+    Brand,
   },
   props: {
     /**
@@ -64,61 +68,61 @@ name: 'EmbeddableFooter',
      */
     title: {
       type: String,
-      default: () => config.get('project.name')
+      default: () => config.get("project.name"),
     },
     /**
      * Lead sentence to display next to the title.
      */
     lead: {
       type: String,
-      default: ''
+      default: "",
     },
     /**
      * Minimum height for the iframe generated in the embed form.
      */
     iframeMinHeight: {
       type: Number,
-      default: 100
+      default: 100,
     },
     /**
      * Minimum width for the iframe generated in the embed form.
      */
     iframeMinWidth: {
       type: Number,
-      default: 100
+      default: 100,
     },
     /**
      * Target of the ICIJ logo and title links.
      */
     homeUrl: {
       type: String,
-      default: () => config.get('app.home')
+      default: () => config.get("app.home"),
     },
     /**
      * Sharing option values to bind to the sharing-options component in the bottom-right corner.
      */
     sharingOptionsValues: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data(): EmbeddableFooterData {
     return {
-      showShareOptions: false
-    }
+      showShareOptions: false,
+    };
   },
   beforeMount(): void {
-    library.add(faShareAlt)
+    library.add(faShareAlt);
   },
   mounted(): void {
-    IframeResizer.create()
-  }
-})
+    IframeResizer.create();
+  },
+});
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
-@import '../styles/mixins';
+@import "../styles/lib";
+@import "../styles/mixins";
 
 @include keyframes(slideup) {
   0% {

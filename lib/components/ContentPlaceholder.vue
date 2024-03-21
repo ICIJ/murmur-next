@@ -16,45 +16,49 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType} from 'vue'
+import { computed, defineComponent, PropType } from "vue";
 
-import config from '@/config'
-import { formatRows } from '@/utils/placeholder'
-import type { ContentPlaceholderRows, ContentPlaceholderStyledRows } from '@/utils/placeholderTypes'
+import config from "@/config";
+import { formatRows } from "@/utils/placeholder";
+import type {
+  ContentPlaceholderRows,
+  ContentPlaceholderStyledRows,
+} from "@/utils/placeholderTypes";
 
 /**
  * A component to fill empty spaces with animated placeholders until content is loaded.
  */
 export default defineComponent({
-  name: 'ContentPlaceholder',
+  name: "ContentPlaceholder",
   props: {
     /**
      * An array of lines describing a series of cell sizes and margin sizes.
      */
     rows: {
       type: Array as PropType<ContentPlaceholderRows>,
-      default: () => config.get('content-placeholder.rows')
+      default: () => config.get("content-placeholder.rows"),
     },
     /**
      * The size of the background gradient with the elapsing effect.
      */
     size: {
       type: String,
-      default: '250%'
-    }
+      default: "250%",
+    },
   },
-  setup(props){
-    const formattedRows = computed(():ContentPlaceholderStyledRows=>{
-      return props.rows ? formatRows(props.rows, 'content-placeholder__wrapper__row__box'):[]
-
-    })
-    return {formattedRows}
-  }
-})
+  setup(props) {
+    const formattedRows = computed((): ContentPlaceholderStyledRows => {
+      return props.rows
+        ? formatRows(props.rows, "content-placeholder__wrapper__row__box")
+        : [];
+    });
+    return { formattedRows };
+  },
+});
 </script>
 
 <style scoped lang="scss">
-@import '../styles/lib';
+@import "../styles/lib";
 
 @keyframes placeHolderShimmer {
   0% {

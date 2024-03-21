@@ -1,25 +1,26 @@
 <template>
   <component
-      :is="tag"
-      :id="uniqComponentId"
-      class="confirm-button"
-      @click.stop="toggleConfirmationTooltip">
+    :is="tag"
+    :id="uniqComponentId"
+    class="confirm-button"
+    @click.stop="toggleConfirmationTooltip"
+  >
     <!-- @slot Main content of the button -->
     <slot>-</slot>
     <b-tooltip
-        ref="confirmationTooltip"
-        :model-value="showTooltip"
-        :placement="placement"
-        :target="uniqComponentId"
-        manual
+      ref="confirmationTooltip"
+      :model-value="showTooltip"
+      :placement="placement"
+      :target="uniqComponentId"
+      manual
     >
       <div class="confirm-button__tooltip">
         <button
-            v-if="!noCloseButton"
-            class="confirm-button__tooltip__cancel btn btn-sm btn-link text-light p-0 float-end"
-            @click="cancel"
+          v-if="!noCloseButton"
+          class="confirm-button__tooltip__cancel btn btn-sm btn-link text-light p-0 float-end"
+          @click="cancel"
         >
-          <fa icon="times"/>
+          <fa icon="times" />
         </button>
         <p class="confirm-button__tooltip__label mb-2">
           {{ label }}
@@ -28,12 +29,15 @@
           {{ description }}
         </p>
         <div class="confirm-button__tooltip__actions text-end">
-          <button class="confirm-button__tooltip__actions__cancel btn btn-sm btn-link text-light" @click="cancel">
+          <button
+            class="confirm-button__tooltip__actions__cancel btn btn-sm btn-link text-light"
+            @click="cancel"
+          >
             {{ no }}
           </button>
           <button
-              class="confirm-button__tooltip__actions__confirm btn btn-sm btn-link text-light fw-bold"
-              @click="confirm"
+            class="confirm-button__tooltip__actions__confirm btn btn-sm btn-link text-light fw-bold"
+            @click="confirm"
           >
             {{ yes }}
           </button>
@@ -44,23 +48,23 @@
 </template>
 
 <script lang="ts">
-import noop from 'lodash/noop'
-import uniqueId from 'lodash/uniqueId'
-import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes'
-import {BTooltip, PopoverPlacement} from 'bootstrap-vue-next'
-import {ComponentPublicInstance, defineComponent, PropType, ref} from 'vue'
+import noop from "lodash/noop";
+import uniqueId from "lodash/uniqueId";
+import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
+import { BTooltip, PopoverPlacement } from "bootstrap-vue-next";
+import { ComponentPublicInstance, defineComponent, PropType, ref } from "vue";
 
-import {default as Fa, library} from './Fa'
-import {onBeforeMount} from "@vue/runtime-core";
+import { default as Fa, library } from "./Fa";
+import { onBeforeMount } from "@vue/runtime-core";
 
 /**
  * ConfirmButton
  */
 export default defineComponent({
-  name: 'ConfirmButton',
+  name: "ConfirmButton",
   components: {
     BTooltip,
-    Fa
+    Fa,
   },
   props: {
     /**
@@ -68,101 +72,101 @@ export default defineComponent({
      */
     label: {
       type: String,
-      default: 'Are you sure?'
+      default: "Are you sure?",
     },
     /**
      * A description text to show under the confirmation label
      */
     description: {
       type: String,
-      default: null
+      default: null,
     },
     /**
      * Disable the closing button
      */
     noCloseButton: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * The confirmation callback
      */
     confirmed: {
       type: Function,
-      default: noop
+      default: noop,
     },
     /**
      * The cancellation callback
      */
     cancelled: {
       type: Function,
-      default: noop
+      default: noop,
     },
     /**
      * Label for 'Yes' button
      */
     yes: {
       type: String,
-      default: 'Yes'
+      default: "Yes",
     },
     /**
      * Label for 'No' button
      */
     no: {
       type: String,
-      default: 'No'
+      default: "No",
     },
     /**
      * Tooltip position
      */
     placement: {
       type: String as PropType<PopoverPlacement>,
-      default: "top"
+      default: "top",
     },
     /**
      * HTML tag to render this component to.
      */
     tag: {
       type: String,
-      default: 'button'
-    }
+      default: "button",
+    },
   },
-  emits: ['toggled', 'cancelled', "confirmed"],
-  setup(props, {emit}) {
+  emits: ["toggled", "cancelled", "confirmed"],
+  setup(props, { emit }) {
     onBeforeMount(() => {
-      library.add(faTimes)
-    })
+      library.add(faTimes);
+    });
     const showTooltip = ref<Boolean>(false);
-    const uniqComponentId = uniqueId('murmur-confirm-button-');
-    const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
+    const uniqComponentId = uniqueId("murmur-confirm-button-");
+    const confirmationTooltip = ref<ComponentPublicInstance | null>(null);
 
     function toggleConfirmationTooltip(): void {
-      showTooltip.value = !showTooltip.value
+      showTooltip.value = !showTooltip.value;
       /**
        * Emitted when the confirmation is toggled.
        * @event toggled
        * @param Boolean True if the button is shown.
        */
-      emit('toggled', showTooltip.value)
+      emit("toggled", showTooltip.value);
     }
 
     function cancel(): void {
       // showTooltip.value = false
-      props.cancelled()
+      props.cancelled();
       /**
        * Emitted when the confirmation is cancelled.
        * @event cancelled
        */
-      emit('cancelled')
+      emit("cancelled");
     }
 
     function confirm(): void {
       // showTooltip.value = false
-      props.confirmed()
+      props.confirmed();
       /**
        * Emitted when the confirmation is confirmed.
        * @event confirmed
        */
-      emit('confirmed')
+      emit("confirmed");
     }
 
     return {
@@ -171,14 +175,14 @@ export default defineComponent({
       cancel,
       confirm,
       confirmationTooltip,
-      toggleConfirmationTooltip
-    }
-  }
-})
+      toggleConfirmationTooltip,
+    };
+  },
+});
 </script>
 
 <style lang="scss">
-@import '../styles/lib';
+@import "../styles/lib";
 
 .confirm-button {
   &__tooltip {

@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import {computed, PropType, provide, defineComponent} from 'vue';
-import { AccordionKey } from '@/keys';
-import {Accordion, Step} from '@/types';
+import { computed, PropType, provide, defineComponent } from "vue";
+import { AccordionKey } from "@/keys";
+import { Accordion, Step } from "@/types";
 
-const STEP_CHANGE_EVENT: string = 'step-change';
+const STEP_CHANGE_EVENT: string = "step-change";
 export default defineComponent({
-  props:{
+  props: {
     step: {
       type: [String, Symbol, Object as () => Step],
       required: true,
@@ -24,24 +24,25 @@ export default defineComponent({
       required: true,
     },
   },
-  emits:['step-change'],
-  setup(props,{emit}){
-
+  emits: ["step-change"],
+  setup(props, { emit }) {
     const emitAccordionNextStepEvent = () => {
-      emit('step-change', props.steps[activeStepIndex.value + 1] || props.step);
+      emit("step-change", props.steps[activeStepIndex.value + 1] || props.step);
     };
 
     const emitAccordionPreviousStepEvent = () => {
-      emit('step-change', props.steps[activeStepIndex.value - 1] || props.step);
+      emit("step-change", props.steps[activeStepIndex.value - 1] || props.step);
     };
 
     const activeStepIndex = computed(() => props.steps?.indexOf(props.step));
 
-    const isFirstStep = (step: Step): boolean => props.steps?.indexOf(step) === 0;
-    const isLastStep = (step: Step): boolean => props.steps?.indexOf(step) === props.steps?.length - 1;
+    const isFirstStep = (step: Step): boolean =>
+      props.steps?.indexOf(step) === 0;
+    const isLastStep = (step: Step): boolean =>
+      props.steps?.indexOf(step) === props.steps?.length - 1;
     const isActiveStep = (step: Step): boolean => props.step === step;
-    const isPreviousStep = (step: Step): boolean => props.steps?.indexOf(step) < activeStepIndex.value;
-
+    const isPreviousStep = (step: Step): boolean =>
+      props.steps?.indexOf(step) < activeStepIndex.value;
 
     provide<Accordion>(AccordionKey, {
       emitAccordionNextStepEvent,
@@ -52,23 +53,22 @@ export default defineComponent({
       isLastStep,
       step: props.step,
       steps: props.steps,
-    })
+    });
     return {
       emitAccordionNextStepEvent,
       emitAccordionPreviousStepEvent,
       isActiveStep,
       isPreviousStep,
       isFirstStep,
-      isLastStep
-    }
-  }
-})
+      isLastStep,
+    };
+  },
+});
 </script>
 
-
 <style lang="scss" scoped>
-@use 'sass:math';
-@import '../styles/variables.scss';
+@use "sass:math";
+@import "../styles/variables.scss";
 
 .accordion-wrapper {
   $step-bullet-size: 2rem;
@@ -83,7 +83,8 @@ export default defineComponent({
       opacity: $btn-disabled-opacity;
       transition: $transition-base;
 
-      &--active,&--previous {
+      &--active,
+      &--previous {
         opacity: 1;
       }
 
@@ -117,7 +118,7 @@ export default defineComponent({
       }
 
       &:not(:last-of-type):after {
-        content: '';
+        content: "";
         z-index: 0;
         position: absolute;
         top: $spacer * 1.25;

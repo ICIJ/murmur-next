@@ -8,16 +8,22 @@
       @click="applyPreviousPage"
     >
       <!-- @slot Previous button content -->
-      <slot name="previous" v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }">
+      <slot
+        name="previous"
+        v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
+      >
         <fa :icon="previousPageIcon" />
-        <span class="sr-only">{{ t('tiny-pagination.previous') }}</span>
+        <span class="sr-only">{{ t("tiny-pagination.previous") }}</span>
       </slot>
     </b-button>
-    <form class="tiny-pagination__form form-inline" @submit.prevent="applyPageForm">
+    <form
+      class="tiny-pagination__form form-inline"
+      @submit.prevent="applyPageForm"
+    >
       <label v-show="!compact" class="tiny-pagination__form__label me-1 mb-0">
         <!-- @slot Display page label -->
         <slot name="page" v-bind="{ modelValue, numberOfPages }">
-          {{ t('tiny-pagination.page') }}
+          {{ t("tiny-pagination.page") }}
         </slot>
       </label>
       <b-form-input
@@ -32,7 +38,7 @@
       />
       <!-- @slot Display number of pages -->
       <slot name="number-of-pages" v-bind="{ modelValue, numberOfPages }">
-        {{ t('tiny-pagination.total', { numberOfPages }) }}
+        {{ t("tiny-pagination.total", { numberOfPages }) }}
       </slot>
     </form>
     <b-button
@@ -43,30 +49,40 @@
       @click="applyNextPage"
     >
       <!-- @slot Next button content -->
-      <slot name="next" v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }">
+      <slot
+        name="next"
+        v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
+      >
         <fa :icon="nextPageIcon" />
-        <span class="sr-only">{{ t('tiny-pagination.next') }}</span>
+        <span class="sr-only">{{ t("tiny-pagination.next") }}</span>
       </slot>
     </b-button>
   </div>
 </template>
 
 <script lang="ts">
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import { defineComponent, PropType, ref, computed, watch, onBeforeMount } from 'vue'
-import {useI18n} from "vue-i18n";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  defineComponent,
+  PropType,
+  ref,
+  computed,
+  watch,
+  onBeforeMount,
+} from "vue";
+import { useI18n } from "vue-i18n";
 
-import { library, default as Fa } from './Fa'
+import { library, default as Fa } from "./Fa";
 
-import { Size } from '@/enums'
-import { ButtonVariant, BFormInput, BButton } from 'bootstrap-vue-next'
+import { Size } from "@/enums";
+import { ButtonVariant, BFormInput, BButton } from "bootstrap-vue-next";
 
 export default defineComponent({
-  name: 'TinyPagination',
+  name: "TinyPagination",
   components: {
     Fa,
     BFormInput,
-    BButton
+    BButton,
   },
   props: {
     /**
@@ -74,21 +90,21 @@ export default defineComponent({
      */
     totalRows: {
       type: Number,
-      default: 0
+      default: 0,
     },
     /**
      * Sets the quantity of items per page
      */
     perPage: {
       type: Number,
-      default: 20
+      default: 20,
     },
     /**
      * Grabs and syncs the currentPage variable passed down from the parent in v-model
      */
     modelValue: {
       type: [Number, String],
-      default: 1
+      default: 1,
     },
     /**
      * Set the size of the input: 'sm', 'md' (default), or 'lg'.
@@ -96,7 +112,7 @@ export default defineComponent({
     size: {
       type: String as PropType<Size>,
       default: Size.md,
-      validator: (value: Size) => Object.values(Size).includes(value)
+      validator: (value: Size) => Object.values(Size).includes(value),
     },
     /**
      * (Optional) Number of page. Property `size` is required for this to work
@@ -104,89 +120,90 @@ export default defineComponent({
      */
     pages: {
       type: [Number, String],
-      default: null
+      default: null,
     },
     /**
      * Hide navigation buttons (next and previous)
      */
     noNav: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * FontAwesome icon of the previous page button
      */
     previousPageIcon: {
       type: [String, Array, Object],
-      default: 'angle-left'
+      default: "angle-left",
     },
     /**
      * FontAwesome icon of the next page button
      */
     nextPageIcon: {
       type: [String, Array, Object],
-      default: 'angle-right'
+      default: "angle-right",
     },
     /**
      * Navigation button variants
      */
     navVariant: {
       type: String as PropType<ButtonVariant>,
-      default: 'link'
+      default: "link",
     },
     /**
      * Display pagination as a block (full width)
      */
     block: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * Compact mode with a grouped nav
      */
     compact: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
-  emits:['update:modelValue'],
-  setup(props,{emit}) {
+  emits: ["update:modelValue"],
+  setup(props, { emit }) {
+    onBeforeMount(() => {
+      library.add(faAngleLeft, faAngleRight);
+    });
 
-    onBeforeMount(()=> {
-      library.add(faAngleLeft, faAngleRight)
-    })
-
-    const { t } = useI18n()
-    const pageValue = computed(()=>{return +props.modelValue})
-    const currentPageInput = ref<number|string>(pageValue.value)
-    const numberOfPages = computed((): number =>{
+    const { t } = useI18n();
+    const pageValue = computed(() => {
+      return +props.modelValue;
+    });
+    const currentPageInput = ref<number | string>(pageValue.value);
+    const numberOfPages = computed((): number => {
       if (props.pages === null) {
-        return Math.ceil(props.totalRows / props.perPage)
+        return Math.ceil(props.totalRows / props.perPage);
       }
-      return Number(props.pages)
-    })
-    const paginationClassList = computed((): object =>{
+      return Number(props.pages);
+    });
+    const paginationClassList = computed((): object => {
       return {
         [`tiny-pagination--${props.size}`]: true,
         [`tiny-pagination--no-nav`]: props.noNav,
         [`tiny-pagination--block`]: props.block,
-        [`tiny-pagination--compact`]: props.compact
-      }
-    })
-    const hasPrevious = computed((): boolean =>{
-      return pageValue.value > 1
-    })
-    const hasNext = computed((): boolean =>{
-      return pageValue.value < numberOfPages.value
-    })
+        [`tiny-pagination--compact`]: props.compact,
+      };
+    });
+    const hasPrevious = computed((): boolean => {
+      return pageValue.value > 1;
+    });
+    const hasNext = computed((): boolean => {
+      return pageValue.value < numberOfPages.value;
+    });
     function applyPageForm(): void {
       if (!isNaN(currentPageInput.value as number)) {
-        emit('update:modelValue', +currentPageInput.value)
+        emit("update:modelValue", +currentPageInput.value);
       }
     }
 
-    function   applyNextPage(): void {
-      emit('update:modelValue', pageValue.value - 1)
+    function applyNextPage(): void {
+      emit("update:modelValue", pageValue.value - 1);
     }
     function applyPreviousPage(): void {
-      emit('update:modelValue', pageValue.value + 1)
+      emit("update:modelValue", pageValue.value + 1);
     }
     return {
       t,
@@ -197,14 +214,14 @@ export default defineComponent({
       hasNext,
       applyPreviousPage,
       applyNextPage,
-      applyPageForm
-    }
-  }
-})
+      applyPageForm,
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+@import "../styles/lib";
 
 .tiny-pagination {
   display: inline-flex;
@@ -253,7 +270,7 @@ export default defineComponent({
       padding-right: 0.2rem;
       text-align: center;
 
-      &[type='number'] {
+      &[type="number"] {
         -moz-appearance: textfield;
 
         &::-webkit-outer-spin-button,

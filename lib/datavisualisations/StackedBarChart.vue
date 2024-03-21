@@ -1,128 +1,136 @@
 <script lang="ts">
-import * as d3 from 'd3'
-import find from 'lodash/find'
-import get from 'lodash/get'
-import identity from 'lodash/identity'
-import kebabCase from 'lodash/kebabCase'
-import keys from 'lodash/keys'
-import without from 'lodash/without'
-import sortBy from 'lodash/sortBy'
-import {ComponentPublicInstance, computed, defineComponent, nextTick, PropType, ref, watch} from 'vue'
-import {chartProps, getChartProps, useChart} from "@/composables/chart.js";
-import {isArray} from "lodash";
+import * as d3 from "d3";
+import find from "lodash/find";
+import get from "lodash/get";
+import identity from "lodash/identity";
+import kebabCase from "lodash/kebabCase";
+import keys from "lodash/keys";
+import without from "lodash/without";
+import sortBy from "lodash/sortBy";
+import {
+  ComponentPublicInstance,
+  computed,
+  defineComponent,
+  nextTick,
+  PropType,
+  ref,
+  watch,
+} from "vue";
+import { chartProps, getChartProps, useChart } from "@/composables/chart.js";
+import { isArray } from "lodash";
 
 export default defineComponent({
-  name: 'StackedBarChart',
+  name: "StackedBarChart",
   props: {
     /**
      * Colors of each bar group
      */
     barColors: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     /**
      * Enforce the height of the chart (regardless of the width or number of row)
      */
     fixedHeight: {
       type: Number as PropType<number | null>,
-      default: null
+      default: null,
     },
     /**
      * Group name to display in the legend
      */
     groups: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     /**
      * Hide bars that have no values.
      */
     hideEmptyValues: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * Hide the legend.
      */
     hideLegend: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * A list of highlighted groups
      */
     highlights: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     /**
      * Delay to apply when set the first highlight
      */
     highlightDelay: {
       type: Number,
-      default: 400
+      default: 400,
     },
     /**
      * Field of each object containing data (for each group)
      */
     keys: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     /**
      * Switch labels above bars
      */
     labelAbove: {
       type: Boolean,
-      default: false
+      default: false,
     },
     /**
      * Field containing the label for each row
      */
     labelField: {
       type: String,
-      default: 'label'
+      default: "label",
     },
     /**
      * Set a minimal height for the bars
      */
     minBarHeight: {
       type: Number,
-      default: 16
+      default: 16,
     },
     /**
      * Set a maximal height for the bars
      */
     maxBarHeight: {
       type: Number,
-      default: 60
+      default: 60,
     },
     /**
      * Bar width is relative to each group's total
      */
     relative: {
       type: Boolean,
-      default: false
+      default: false,
     },
     /**
      * Delay to apply when restoring hightlights to initial state
      */
     restoreHighlightDelay: {
       type: Number,
-      default: 50
+      default: 50,
     },
     /**
      * A list of entire row to highlight
      */
     rowHighlights: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     /**
      * Sort groups by one or several keys.
      */
     sortBy: {
       type: [Array, String],
-      default: null
+      default: null,
     },
     /**
      * Function to apply to format x axis ticks (bar value). It can be a
@@ -130,114 +138,124 @@ export default defineComponent({
      */
     xAxisTickFormat: {
       type: [Function, String] as PropType<Function | string>,
-      default: () => identity
+      default: () => identity,
     },
-    ...chartProps()
+    ...chartProps(),
   },
-  setup(props, {emit}) {
-    const highlightedKeys = ref(props.highlights)
-    const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
-    const isLoaded = ref(false)
-    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-    const {
-      loadedData,
-      baseHeightRatio,
-      d3Formatter,
-      dataHasHighlights
-    } = useChart(el, getChartProps(props), {emit}, isLoaded)
+  setup(props, { emit }) {
+    const highlightedKeys = ref(props.highlights);
+    const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined);
+    const isLoaded = ref(false);
+    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null);
+    const { loadedData, baseHeightRatio, d3Formatter, dataHasHighlights } =
+      useChart(el, getChartProps(props), { emit }, isLoaded);
 
     const hasConstraintHeight = computed(() => {
-      return props.fixedHeight !== null || props.socialMode
-    })
+      return props.fixedHeight !== null || props.socialMode;
+    });
 
     const sortedData = computed(() => {
       if (!isLoaded.value) {
-        return []
+        return [];
       }
-      return !props.sortBy ? loadedData.value : sortBy(loadedData.value, props.sortBy)
-    })
+      return !props.sortBy
+        ? loadedData.value
+        : sortBy(loadedData.value, props.sortBy);
+    });
     const discoveredKeys = computed((): any[] => {
       if (props.keys.length) {
-        return props.keys
+        return props.keys;
       }
       if (!loadedData.value) {
-        return []
+        return [];
       }
-      return without(keys(loadedData.value[0]), props.labelField)
-    })
+      return without(keys(loadedData.value[0]), props.labelField);
+    });
     const colorScale = computed(() => {
-      return d3.scaleOrdinal().domain(discoveredKeys.value).range(props.barColors)
-    })
+      return d3
+        .scaleOrdinal()
+        .domain(discoveredKeys.value)
+        .range(props.barColors);
+    });
     const maxValue = computed(() => {
       return d3.max(loadedData.value || [], (datum, i) => {
-        return totalRowValue(i)
-      })
-    })
+        return totalRowValue(i);
+      });
+    });
     const hasHighlights = computed(() => {
-      return !!highlightedKeys.value.length
-    })
+      return !!highlightedKeys.value.length;
+    });
     const hasRowHighlights = computed(() => {
-      return !!props.rowHighlights.length
-    })
+      return !!props.rowHighlights.length;
+    });
     const height = computed(() => {
       if (props.fixedHeight !== null) {
-        return `${props.fixedHeight}px`
+        return `${props.fixedHeight}px`;
       }
-      return props.socialMode && el.value ? `${el.value.offsetWidth * baseHeightRatio.value}px` : 'auto'
-    })
+      return props.socialMode && el.value
+        ? `${el.value.offsetWidth * baseHeightRatio.value}px`
+        : "auto";
+    });
 
     function normalizeKey(key: string) {
-      return kebabCase(key)
+      return kebabCase(key);
     }
 
     function totalRowValue(i: number | string) {
       return d3.sum(discoveredKeys.value, (key) => {
-        return sortedData.value[i][key]
-      })
+        return sortedData.value[i][key];
+      });
     }
 
     function groupName(key: string) {
-      const index = discoveredKeys.value.indexOf(key)
-      return props.groups[index] || key
+      const index = discoveredKeys.value.indexOf(key);
+      return props.groups[index] || key;
     }
 
     function highlight(key: string) {
-      highlightedKeys.value = [key]
+      highlightedKeys.value = [key];
     }
 
     function restoreHighlights() {
-      clearTimeout(highlightTimeout.value)
-      const delay = props.restoreHighlightDelay
+      clearTimeout(highlightTimeout.value);
+      const delay = props.restoreHighlightDelay;
       // Delay the restoration so it can be cancelled by a new highlight
-      highlightTimeout.value = setTimeout(() => (highlightedKeys.value = props.highlights), delay)
+      highlightTimeout.value = setTimeout(
+        () => (highlightedKeys.value = props.highlights),
+        delay,
+      );
     }
 
     function delayHighlight(key: string) {
-      clearTimeout(highlightTimeout.value)
+      clearTimeout(highlightTimeout.value);
       // Reduce the delay to zero if there is already an highlighted key
-      const isDelayed = !hasHighlights.value
-      const delay = isDelayed ? props.highlightDelay : 0
-      highlightTimeout.value = setTimeout(() => highlight(key), delay)
+      const isDelayed = !hasHighlights.value;
+      const delay = isDelayed ? props.highlightDelay : 0;
+      highlightTimeout.value = setTimeout(() => highlight(key), delay);
     }
 
     function isHighlighted(key: string) {
-      return highlightedKeys.value.indexOf(key) > -1
+      return highlightedKeys.value.indexOf(key) > -1;
     }
 
     function isRowHighlighted(i: number | string) {
-      const row = get(sortedData.value, [i, props.labelField], null)
-      return (isArray(props.rowHighlights) && props.rowHighlights?.includes(row)) && !highlightedKeys.value.length
+      const row = get(sortedData.value, [i, props.labelField], null);
+      return (
+        isArray(props.rowHighlights) &&
+        props.rowHighlights?.includes(row) &&
+        !highlightedKeys.value.length
+      );
     }
 
     function barStyle(i: number | string, key: string) {
-      const value = sortedData.value[i][key]
-      const totalWidth = props.relative ? totalRowValue(i) : maxValue.value
+      const value = sortedData.value[i][key];
+      const totalWidth = props.relative ? totalRowValue(i) : maxValue.value;
       if (!totalWidth) {
-        throw new Error("Total width is not correct" + totalWidth)
+        throw new Error("Total width is not correct" + totalWidth);
       }
-      const width = `${100 * (value / totalWidth)}%`
-      const backgroundColor = colorScale.value(key)
-      return {width, backgroundColor}
+      const width = `${100 * (value / totalWidth)}%`;
+      const backgroundColor = colorScale.value(key);
+      return { width, backgroundColor };
     }
 
     // function barHeightBounds(height:number) {
@@ -245,72 +263,75 @@ export default defineComponent({
     // }
     async function stackBarAndValue(i: number | string) {
       if (!sortedData.value) {
-        return []
+        return [];
       }
-      await nextTick()
+      await nextTick();
       // Collect sizes first
       const stack = discoveredKeys.value.map((key: string) => {
-        const {bar, row, value} = queryBarAndValue(i as number, key)
+        const { bar, row, value } = queryBarAndValue(i as number, key);
         if (!bar || !row || !value) {
-          throw new Error("Values not retrieved")
+          throw new Error("Values not retrieved");
         }
-        const barEdge = bar.getBoundingClientRect().left + bar.offsetWidth
-        const barWidth = bar.offsetWidth
-        const rowEdge = row.getBoundingClientRect().left + row.offsetWidth
-        const valueWidth = value.offsetWidth
-        return  {key, barEdge, barWidth, rowEdge, valueWidth}
-      })
+        const barEdge = bar.getBoundingClientRect().left + bar.offsetWidth;
+        const barWidth = bar.offsetWidth;
+        const rowEdge = row.getBoundingClientRect().left + row.offsetWidth;
+        const valueWidth = value.offsetWidth;
+        return { key, barEdge, barWidth, rowEdge, valueWidth };
+      });
       // Infer value's display
       return stack.map((desc, index) => {
-        desc.overflow = desc.valueWidth >= desc.barWidth
+        desc.overflow = desc.valueWidth >= desc.barWidth;
         if (index > 0) {
-          const prevDesc = stack[index - 1]
-          const bothValuesWidth = desc.valueWidth + prevDesc.valueWidth
-          desc.overflow = desc.overflow || (prevDesc.overflow && desc.barWidth < bothValuesWidth)
+          const prevDesc = stack[index - 1];
+          const bothValuesWidth = desc.valueWidth + prevDesc.valueWidth;
+          desc.overflow =
+            desc.overflow ||
+            (prevDesc.overflow && desc.barWidth < bothValuesWidth);
         }
-        desc.pushed = desc.barEdge + desc.valueWidth > desc.rowEdge && desc.overflow
-        return desc
-      })
+        desc.pushed =
+          desc.barEdge + desc.valueWidth > desc.rowEdge && desc.overflow;
+        return desc;
+      });
     }
 
     function queryBarAndValue(i: number, key: string) {
       if (!sortedData.value) {
-        return {}
+        return {};
       }
-      const barClass = 'stacked-bar-chart__groups__item__bars__item'
-      const rowSelector = '.stacked-bar-chart__groups__item'
-      const row = el.value?.querySelectorAll(rowSelector)[i] as HTMLElement
-      const normalizedKey = normalizeKey(key)
-      const barSelector = `.${barClass}--${normalizedKey}`
-      const bar = row?.querySelector(barSelector) as HTMLElement
-      const valueSelector = `.${barClass}__value`
-      const value = bar?.querySelector(valueSelector) as HTMLElement
-      return {bar, row, value}
+      const barClass = "stacked-bar-chart__groups__item__bars__item";
+      const rowSelector = ".stacked-bar-chart__groups__item";
+      const row = el.value?.querySelectorAll(rowSelector)[i] as HTMLElement;
+      const normalizedKey = normalizeKey(key);
+      const barSelector = `.${barClass}--${normalizedKey}`;
+      const bar = row?.querySelector(barSelector) as HTMLElement;
+      const valueSelector = `.${barClass}__value`;
+      const value = bar?.querySelector(valueSelector) as HTMLElement;
+      return { bar, row, value };
     }
 
-     async function hasValueOverflow(i: number | string, key: string) {
-      const stack =  await stackBarAndValue(i)
-      return get(find(stack, {key}), 'overflow')
+    async function hasValueOverflow(i: number | string, key: string) {
+      const stack = await stackBarAndValue(i);
+      return get(find(stack, { key }), "overflow");
     }
 
     async function hasValuePushed(i: number | string, key: string) {
-      const stack = await stackBarAndValue(i)
-      return get(find(stack, {key}), 'pushed')
+      const stack = await stackBarAndValue(i);
+      return get(find(stack, { key }), "pushed");
     }
 
     async function hasValueHidden(i: number | string, key: string) {
-      const keyIndex = discoveredKeys.value.indexOf(key)
-      const nextKey = discoveredKeys.value[keyIndex + 1]
+      const keyIndex = discoveredKeys.value.indexOf(key);
+      const nextKey = discoveredKeys.value[keyIndex + 1];
       if (!nextKey) {
-        return false
+        return false;
       }
-      const keyC = await hasValueOverflow(i, key)
-      const keyN = await hasValueOverflow(i, nextKey)
-      return keyC && keyN
+      const keyC = await hasValueOverflow(i, key);
+      const keyN = await hasValueOverflow(i, nextKey);
+      return keyC && keyN;
     }
 
     function isHidden(i: number | string, key: string) {
-      return props.hideEmptyValues && !sortedData.value[i][key]
+      return props.hideEmptyValues && !sortedData.value[i][key];
     }
 
     // async function barItemClasses(i,key){
@@ -336,12 +357,15 @@ export default defineComponent({
     // }
 
     function formatXDatum(d: string) {
-      return d3Formatter(d, props.xAxisTickFormat)
+      return d3Formatter(d, props.xAxisTickFormat);
     }
 
-    watch(() => props.highlights, (newHighlights) => {
-      highlightedKeys.value = newHighlights
-    })
+    watch(
+      () => props.highlights,
+      (newHighlights) => {
+        highlightedKeys.value = newHighlights;
+      },
+    );
 
     return {
       colorScale,
@@ -365,10 +389,9 @@ export default defineComponent({
       isRowHighlighted,
       loadedData,
       normalizeKey,
-      restoreHighlights
-    }
-
-  }
+      restoreHighlights,
+    };
+  },
 
   // watch: {
   //   relative() {
@@ -387,69 +410,88 @@ export default defineComponent({
   //     }
   //   }
   // },
-
-})
+});
 </script>
 <template>
   <div
-      ref="el"
-      :class="{
+    ref="el"
+    :class="{
       'stacked-bar-chart--social-mode': socialMode,
       'stacked-bar-chart--label-above': labelAbove,
-      'stacked-bar-chart--has-highlights': hasHighlights || hasRowHighlights || dataHasHighlights,
+      'stacked-bar-chart--has-highlights':
+        hasHighlights || hasRowHighlights || dataHasHighlights,
       'stacked-bar-chart--has-constraint-height': hasConstraintHeight,
-      'stacked-bar-chart--has-label-above': labelAbove
+      'stacked-bar-chart--has-label-above': labelAbove,
     }"
-      :style="{ height }"
-      class="stacked-bar-chart d-flex flex-column"
+    :style="{ height }"
+    class="stacked-bar-chart d-flex flex-column"
   >
     <div class="d-flex align-items-center">
       <slot name="header-left">
-        <ul v-if="!hideLegend" class="stacked-bar-chart__legend list-inline mx-0 mt-0 mb-2">
+        <ul
+          v-if="!hideLegend"
+          class="stacked-bar-chart__legend list-inline mx-0 mt-0 mb-2"
+        >
           <li
-              v-for="key in discoveredKeys"
-              :key="key"
-              :class="{
-              'stacked-bar-chart__legend__item--highlighted': isHighlighted(key)
+            v-for="key in discoveredKeys"
+            :key="key"
+            :class="{
+              'stacked-bar-chart__legend__item--highlighted':
+                isHighlighted(key),
             }"
-              class="stacked-bar-chart__legend__item list-inline-item d-inline-flex"
-              @mouseleave="restoreHighlights()"
-              @mouseover="delayHighlight(key)"
+            class="stacked-bar-chart__legend__item list-inline-item d-inline-flex"
+            @mouseleave="restoreHighlights()"
+            @mouseover="delayHighlight(key)"
           >
-            <span :style="{ 'background-color': colorScale(key) }" class="stacked-bar-chart__legend__item__box"/>
+            <span
+              :style="{ 'background-color': colorScale(key) }"
+              class="stacked-bar-chart__legend__item__box"
+            />
             {{ groupName(key) }}
           </li>
         </ul>
       </slot>
-      <slot name="header-right"/>
+      <slot name="header-right" />
     </div>
     <div class="stacked-bar-chart__groups">
       <div
-          v-for="(datum, i) in sortedData"
-          :key="i"
-          :class="{ 'flex-column': labelAbove }"
-          class="stacked-bar-chart__groups__item border-bottom flex-fill d-flex align-items-center"
+        v-for="(datum, i) in sortedData"
+        :key="i"
+        :class="{ 'flex-column': labelAbove }"
+        class="stacked-bar-chart__groups__item border-bottom flex-fill d-flex align-items-center"
       >
-        <div :class="{ 'w-100': labelAbove }" class="stacked-bar-chart__groups__item__label me-1 small">
+        <div
+          :class="{ 'w-100': labelAbove }"
+          class="stacked-bar-chart__groups__item__label me-1 small"
+        >
           {{ datum[labelField] }}
         </div>
-        <div class="stacked-bar-chart__groups__item__bars my-1 d-flex flex-grow-1 align-items-center">
+        <div
+          class="stacked-bar-chart__groups__item__bars my-1 d-flex flex-grow-1 align-items-center"
+        >
           <div
-              v-for="(key, j) in discoveredKeys"
-              :key="j"
-              :class="{
+            v-for="(key, j) in discoveredKeys"
+            :key="j"
+            :class="{
               [`stacked-bar-chart__groups__item__bars__item--${normalizeKey(key)}`]: true,
               [`stacked-bar-chart__groups__item__bars__item--${j}n`]: true,
-              'stacked-bar-chart__groups__item__bars__item--highlighted': isHighlighted(key) || isRowHighlighted(i),
-              'stacked-bar-chart__groups__item__bars__item--hidden': isHidden(i, key),
-              'stacked-bar-chart__groups__item__bars__item--value-overflow': hasValueOverflow(i, key),
-              'stacked-bar-chart__groups__item__bars__item--value-pushed': hasValuePushed(i, key),
-              'stacked-bar-chart__groups__item__bars__item--value-hidden': hasValueHidden(i, key)
+              'stacked-bar-chart__groups__item__bars__item--highlighted':
+                isHighlighted(key) || isRowHighlighted(i),
+              'stacked-bar-chart__groups__item__bars__item--hidden': isHidden(
+                i,
+                key,
+              ),
+              'stacked-bar-chart__groups__item__bars__item--value-overflow':
+                hasValueOverflow(i, key),
+              'stacked-bar-chart__groups__item__bars__item--value-pushed':
+                hasValuePushed(i, key),
+              'stacked-bar-chart__groups__item__bars__item--value-hidden':
+                hasValueHidden(i, key),
             }"
-              :style="barStyle(i, key)"
-              class="stacked-bar-chart__groups__item__bars__item"
-              @mouseleave="restoreHighlights()"
-              @mouseover="delayHighlight(key)"
+            :style="barStyle(i, key)"
+            class="stacked-bar-chart__groups__item__bars__item"
+            @mouseleave="restoreHighlights()"
+            @mouseover="delayHighlight(key)"
           >
             <div class="stacked-bar-chart__groups__item__bars__item__value p-1">
               {{ formatXDatum(datum[key]) }}
@@ -461,13 +503,15 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-@use 'sass:math';
-@import '../styles/lib';
+@use "sass:math";
+@import "../styles/lib";
 
 .stacked-bar-chart {
   $muted-group-opacity: 0.2;
   $muted-group-filter: grayscale(30%) brightness(10%);
-  $muted-group-transition: opacity 0.3s, filter 0.3s;
+  $muted-group-transition:
+    opacity 0.3s,
+    filter 0.3s;
   $colors: $primary, $info, $warning;
   $quantile: 3;
 
@@ -541,7 +585,8 @@ export default defineComponent({
           min-height: calc(100% - 1.5rem);
         }
 
-        .stacked-bar-chart--has-constraint-height.stacked-bar-chart--label-above & {
+        .stacked-bar-chart--has-constraint-height.stacked-bar-chart--label-above
+          & {
           height: auto;
           min-height: auto;
         }
@@ -581,8 +626,12 @@ export default defineComponent({
             visibility: hidden;
           }
 
-          .stacked-bar-chart:not(.stacked-bar-chart--has-highlights) &--value-hidden &__value,
-          .stacked-bar-chart:not(.stacked-bar-chart--has-highlights) &--value-pushed &__value {
+          .stacked-bar-chart:not(.stacked-bar-chart--has-highlights)
+            &--value-hidden
+            &__value,
+          .stacked-bar-chart:not(.stacked-bar-chart--has-highlights)
+            &--value-pushed
+            &__value {
             visibility: hidden;
           }
 

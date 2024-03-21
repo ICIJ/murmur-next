@@ -1,76 +1,75 @@
 <script lang="ts">
-import * as d3 from 'd3'
-import identity from 'lodash/identity'
-import sortBy from 'lodash/sortBy'
-import {defineComponent, computed, ref, watch} from "vue"
-import {chartProps, getChartProps, useChart} from "@/composables/chart"
-
+import * as d3 from "d3";
+import identity from "lodash/identity";
+import sortBy from "lodash/sortBy";
+import { defineComponent, computed, ref, watch } from "vue";
+import { chartProps, getChartProps, useChart } from "@/composables/chart";
 
 export default defineComponent({
-  name: 'BarChart',
+  name: "BarChart",
   props: {
     /**
      * Height of each bar
      */
     barHeight: {
       type: Number,
-      default: 30
+      default: 30,
     },
     /**
      * Distance between each bar
      */
     barGap: {
       type: Number,
-      default: 15
+      default: 15,
     },
     /**
      * Color of each bar (uses the CSS variable --bar-color by default)
      */
     barColor: {
       type: String,
-      default: null
+      default: null,
     },
     /**
      * Color of each highlighted bar (uses the CSS variable --bar-highlight-color by default)
      */
     barHighlightColor: {
       type: String,
-      default: null
+      default: null,
     },
     /**
      * Enforce a width for each bar's label
      */
     fixedLabelWidth: {
       type: Number,
-      default: null
+      default: null,
     },
     /**
      * Enforce a width for each bar's value
      */
     fixedValueWidth: {
       type: Number,
-      default: null
+      default: null,
     },
     /**
      * Distance between a bar and its label
      */
     labelGap: {
       type: Number,
-      default: 10
+      default: 10,
     },
     /**
      * Distande between a bar and its value
      */
     valueGap: {
       type: Number,
-      default: 5
+      default: 5,
     },
     /**
      * Sort bars by one or several keys.
      */
     sortBy: {
       type: [Array, String],
-      default: null
+      default: null,
     },
     /**
      * Function to apply to format x axis ticks (bar value). It can be a
@@ -78,16 +77,17 @@ export default defineComponent({
      */
     xAxisTickFormat: {
       type: [Function, String],
-      default: ()=>identity
+      default: () => identity,
     },
-    ...chartProps()
+    ...chartProps(),
   },
-  emits:["loaded","resized"],
-  setup(props,{emit}){
-    const el = ref(null)
-    const width=ref(0)
-    const isLoaded = ref(false)
-    const {loadedData, elementsMaxBBox,dataHasHighlights,d3Formatter}=useChart(el,getChartProps(props),{emit},isLoaded,onResize,null)
+  emits: ["loaded", "resized"],
+  setup(props, { emit }) {
+    const el = ref(null);
+    const width = ref(0);
+    const isLoaded = ref(false);
+    const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter } =
+      useChart(el, getChartProps(props), { emit }, isLoaded, onResize, null);
     // onMounted(() => {
     //   window.addEventListener('resize', onResize)
     //   onResize()
@@ -98,47 +98,49 @@ export default defineComponent({
 
     const sortedData = computed(() => {
       if (!loadedData.value) {
-        return []
+        return [];
       }
-      return !props.sortBy ? loadedData.value : sortBy(sortedData.value, props.sortBy)
-    })
+      return !props.sortBy
+        ? loadedData.value
+        : sortBy(sortedData.value, props.sortBy);
+    });
     const labelWidth = computed(() => {
       if (props.fixedLabelWidth) {
-        return props.fixedLabelWidth
+        return props.fixedLabelWidth;
       }
-      const selector = '.bar-chart__labels__item'
-      const defaultWidth = 100
-      return elementsMaxBBox({ selector, defaultWidth }).width
-    })
+      const selector = ".bar-chart__labels__item";
+      const defaultWidth = 100;
+      return elementsMaxBBox({ selector, defaultWidth }).width;
+    });
     const valueWidth = computed(() => {
       if (props.fixedValueWidth) {
-        return props.fixedValueWidth
+        return props.fixedValueWidth;
       }
-      const selector = '.bar-chart__bars__item__value'
-      const defaultWidth = 0
-      return elementsMaxBBox({ selector, defaultWidth }).width + props.valueGap
-    })
+      const selector = ".bar-chart__bars__item__value";
+      const defaultWidth = 0;
+      return elementsMaxBBox({ selector, defaultWidth }).width + props.valueGap;
+    });
 
     const margin = computed(() => {
-      const left = labelWidth.value + props.labelGap
-      const right = 0
-      const top = 0
-      const bottom = 0
-      return { left, right, top, bottom }
-    })
+      const left = labelWidth.value + props.labelGap;
+      const right = 0;
+      const top = 0;
+      const bottom = 0;
+      return { left, right, top, bottom };
+    });
 
     const padded = computed(() => {
-      const widthP = width.value - margin.value.left - margin.value.right
-      const heightP = height.value - margin.value.top - margin.value.bottom
-      return { width:widthP, height:heightP }
-    })
+      const widthP = width.value - margin.value.left - margin.value.right;
+      const heightP = height.value - margin.value.top - margin.value.bottom;
+      return { width: widthP, height: heightP };
+    });
     const scale = computed(() => {
       const x = d3
-          .scaleLinear()
-          .domain([0, d3.max(sortedData.value, (d) => d.value)])
-          .range([0, padded.value.width - valueWidth.value])
-      return { x }
-    })
+        .scaleLinear()
+        .domain([0, d3.max(sortedData.value, (d) => d.value)])
+        .range([0, padded.value.width - valueWidth.value]);
+      return { x };
+    });
     const bars = computed(() => {
       return sortedData.value.map((d, i) => {
         return {
@@ -147,39 +149,38 @@ export default defineComponent({
           value: d.value,
           highlight: d.highlight,
           x: 0,
-          y: (props.barHeight + props.barGap) * i
-        }
-      })
-    })
+          y: (props.barHeight + props.barGap) * i,
+        };
+      });
+    });
     const labels = computed(() => {
       return sortedData.value.map((d, i) => {
         return {
           label: d.label,
           x: labelWidth.value,
-          y: 4 + props.barHeight / 2 + (props.barHeight + props.barGap) * i
-        }
-      })
-    })
+          y: 4 + props.barHeight / 2 + (props.barHeight + props.barGap) * i,
+        };
+      });
+    });
     const height = computed(() => {
-          return (props.barHeight + props.barGap) * sortedData.value.length
-        }
-    )
+      return (props.barHeight + props.barGap) * sortedData.value.length;
+    });
 
-    function formatXDatum(d){
-      return d3Formatter(d,props.xAxisTickFormat)
+    function formatXDatum(d) {
+      return d3Formatter(d, props.xAxisTickFormat);
     }
     function onResize() {
-      if(el.value){
-        width.value = el.value.offsetWidth
+      if (el.value) {
+        width.value = el.value.offsetWidth;
       }
     }
     function initialize() {
-      d3.axisBottom().scale(scale.value.x)
+      d3.axisBottom().scale(scale.value.x);
     }
 
-    watch(width,()=> {
-      initialize()
-    })
+    watch(width, () => {
+      initialize();
+    });
 
     return {
       el,
@@ -189,53 +190,58 @@ export default defineComponent({
       margin,
       labels,
       bars,
-      formatXDatum
-    }
-  }
-})
+      formatXDatum,
+    };
+  },
+});
 </script>
-
 
 <template>
   <div
-      ref="el"
-      class="bar-chart"
-      :style="{
+    ref="el"
+    class="bar-chart"
+    :style="{
       '--bar-color': barColor,
-      '--bar-highlight-color': barHighlightColor
+      '--bar-highlight-color': barHighlightColor,
     }"
-      :class="{
+    :class="{
       'bar-chart--has-highlights': dataHasHighlights,
-      'bar-chart--social-mode': socialMode
+      'bar-chart--social-mode': socialMode,
     }"
   >
     <svg :width="width" :height="height">
-      <g :style="{ transform: `translate(0, ${margin.top}px)` }" class="bar-chart__labels">
+      <g
+        :style="{ transform: `translate(0, ${margin.top}px)` }"
+        class="bar-chart__labels"
+      >
         <text
-            v-for="(label, i) in labels"
-            :key="i"
-            :x="label.x"
-            :y="label.y"
-            text-anchor="end"
-            class="bar-chart__labels__item"
+          v-for="(label, i) in labels"
+          :key="i"
+          :x="label.x"
+          :y="label.y"
+          text-anchor="end"
+          class="bar-chart__labels__item"
         >
           {{ label.label }}
         </text>
       </g>
-      <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }" class="bar-chart__bars">
+      <g
+        :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }"
+        class="bar-chart__bars"
+      >
         <g
-            v-for="(bar, i) in bars"
-            :key="i"
-            class="bar-chart__bars__item"
-            :class="{ 'bar-chart__bars__item--highlight': bar.highlight }"
+          v-for="(bar, i) in bars"
+          :key="i"
+          class="bar-chart__bars__item"
+          :class="{ 'bar-chart__bars__item--highlight': bar.highlight }"
         >
           <rect :width="bar.width" :height="bar.height" :x="bar.x" :y="bar.y" />
           <text
-              class="bar-chart__bars__item__value"
-              :x="bar.width + valueGap"
-              :y="bar.y + bar.height / 2"
-              text-anchor="start"
-              dominant-baseline="middle"
+            class="bar-chart__bars__item__value"
+            :x="bar.width + valueGap"
+            :y="bar.y + bar.height / 2"
+            text-anchor="start"
+            dominant-baseline="middle"
           >
             {{ formatXDatum(bar.value) }}
           </text>
@@ -246,7 +252,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-@import '../styles/lib';
+@import "../styles/lib";
 
 .bar-chart {
   text {

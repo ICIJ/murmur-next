@@ -1,11 +1,11 @@
 <template>
   <b-card
-      :class="{
+    :class="{
       'accordion-wrapper__content__step--active': isActive,
-      'accordion-wrapper__content__step--previous': isPrevious
+      'accordion-wrapper__content__step--previous': isPrevious,
     }"
-      class="accordion-wrapper__content__step"
-      no-body
+    class="accordion-wrapper__content__step"
+    no-body
   >
     <h4 class="card-body accordion-wrapper__content__step__heading m-0">
       <!-- @slot Title of the step -->
@@ -16,31 +16,40 @@
     <slide-up-down :active="isActive">
       <div class="accordion-wrapper__content__step__main card-body row g-0">
         <!-- @slot Content of the step with props {isFirst:boolean, isLast:boolean, step:Step, nextStep:Function}-->
-        <slot name="content" v-bind="{ isFirst, isLast, step, previousStep, nextStep }">
+        <slot
+          name="content"
+          v-bind="{ isFirst, isLast, step, previousStep, nextStep }"
+        >
           {{ content }}
         </slot>
       </div>
       <div class="card-footer">
         <!-- @slot Previous step button with props {isFirst:boolean, isLast:boolean, step:Step, nextStep:Function} -->
-        <slot name="previousStepButton" v-bind="{ isFirst, isLast, step, previousStep }">
+        <slot
+          name="previousStepButton"
+          v-bind="{ isFirst, isLast, step, previousStep }"
+        >
           <b-button
-              v-if="!isFirst"
-              class="accordion-wrapper__content__step__back-button"
-              type="button"
-              variant="link"
-              @click="previousStep"
+            v-if="!isFirst"
+            class="accordion-wrapper__content__step__back-button"
+            type="button"
+            variant="link"
+            @click="previousStep"
           >
             Back
           </b-button>
         </slot>
         <!-- @slot Next step button with props {isFirst:boolean, isLast:boolean, step:Step, nextStep:Function} }-->
-        <slot name="nextStepButton" v-bind="{ isFirst, isLast, step, nextStep }">
+        <slot
+          name="nextStepButton"
+          v-bind="{ isFirst, isLast, step, nextStep }"
+        >
           <b-button
-              v-if="!isLast"
-              class="accordion-wrapper__content__step__continue-button"
-              type="button"
-              variant="primary"
-              @click="nextStep"
+            v-if="!isLast"
+            class="accordion-wrapper__content__step__continue-button"
+            type="button"
+            variant="primary"
+            @click="nextStep"
           >
             Continue
           </b-button>
@@ -51,39 +60,38 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, inject, PropType} from 'vue';
+import { computed, defineComponent, inject, PropType } from "vue";
 
-import SlideUpDown from '@/components/SlideUpDown.vue';
-import {AccordionKey} from '@/keys'
-import {Accordion, Step} from '@/types'
+import SlideUpDown from "@/components/SlideUpDown.vue";
+import { AccordionKey } from "@/keys";
+import { Accordion, Step } from "@/types";
 
 export default defineComponent({
   components: {
-    SlideUpDown
+    SlideUpDown,
   },
   props: {
     /**
      * Step name
      */
-    step: {type: [String, Object as () => Step, Symbol], required: true},
+    step: { type: [String, Object as () => Step, Symbol], required: true },
     /**
      * Title of the step card
      */
-    title: {type: String, default: "Step"},
+    title: { type: String, default: "Step" },
 
     /**
      * Content of the step card
      */
-    content: {type: String, default: "Step"},
+    content: { type: String, default: "Step" },
     /**
      * Force card expansion/collapse
      */
-    active: {type: Boolean as PropType<boolean|undefined>, default: false},
+    active: { type: Boolean as PropType<boolean | undefined>, default: false },
   },
-  emits: ['next-step', 'previous-step'],
-  setup(props: { step: Step, active: boolean|undefined }, {emit}: any) {
-
-    const accordion = inject<Accordion>(AccordionKey)
+  emits: ["next-step", "previous-step"],
+  setup(props: { step: Step; active: boolean | undefined }, { emit }: any) {
+    const accordion = inject<Accordion>(AccordionKey);
     const isActive = computed(() => {
       const fromAccordion = !!accordion?.isActiveStep(props.step);
       const fromSelf = props.active !== undefined ? props.active : false;
@@ -94,7 +102,6 @@ export default defineComponent({
     const isFirst = computed(() => !!accordion?.isFirstStep(props.step));
     const isLast = computed(() => !!accordion?.isLastStep(props.step));
 
-
     const nextStep = () => {
       accordion?.emitAccordionNextStepEvent();
       /**
@@ -104,7 +111,7 @@ export default defineComponent({
        * @event next-step
        * @param Mixed New step value.
        */
-      emit('next-step');
+      emit("next-step");
     };
 
     const previousStep = () => {
@@ -116,7 +123,7 @@ export default defineComponent({
        * @event previous-step
        * @param Mixed New step value.
        */
-      emit('previous-step');
+      emit("previous-step");
     };
     return {
       isFirst,
@@ -125,9 +132,8 @@ export default defineComponent({
       isPrevious,
       nextStep,
       previousStep,
-      accordion
-    }
-  }
-})
-
+      accordion,
+    };
+  },
+});
 </script>

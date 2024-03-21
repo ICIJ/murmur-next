@@ -1,24 +1,24 @@
 export class RequestAnimationFrameWrapper {
-  live: boolean
-  callback: () => void
+  live: boolean;
+  callback: () => void;
 
-  constructor () {
-    this.live = false
-    this.callback = () => null
+  constructor() {
+    this.live = false;
+    this.callback = () => null;
   }
-  start (callback: () => void) {
-    this.live = true
-    this.callback = callback
-    this.schedule()
+  start(callback: () => void) {
+    this.live = true;
+    this.callback = callback;
+    this.schedule();
   }
-  stop () {
-    this.live = false
-    this.callback = () => null
+  stop() {
+    this.live = false;
+    this.callback = () => null;
   }
-  schedule () {
-    this.callback()
+  schedule() {
+    this.callback();
     if (this.live) {
-      window.requestAnimationFrame(this.schedule.bind(this))
+      window.requestAnimationFrame(this.schedule.bind(this));
     }
   }
 }

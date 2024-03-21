@@ -1,1 +1,1 @@
-declare module 'querystring-es3'
+declare module "querystring-es3";

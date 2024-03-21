@@ -3,46 +3,53 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import type { Parent } from 'pym.js'
+import { defineComponent } from "vue";
+import type { Parent } from "pym.js";
 
-import { injectAssets } from '@/utils/assets'
+import { injectAssets } from "@/utils/assets";
 
-let iframeUniqueIdCounter = 0
-type StartsWithIcijIframe = `icij-iframe-${string}`
-type ResponsiveIframeData = { iframeId: StartsWithIcijIframe; pymParent: null | Parent }
+let iframeUniqueIdCounter = 0;
+type StartsWithIcijIframe = `icij-iframe-${string}`;
+type ResponsiveIframeData = {
+  iframeId: StartsWithIcijIframe;
+  pymParent: null | Parent;
+};
 
 /**
  * ResponsiveIframe
  */
 export default defineComponent({
-  name: 'ResponsiveIframe',
+  name: "ResponsiveIframe",
   props: {
     /**
      * URL of the generated iframe code.
      */
     url: {
       type: String,
-      required: true
+      required: true,
     },
     /**
      * Option to pass to the constructor of the pymParent instance
      */
     options: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data(): ResponsiveIframeData {
     return {
       iframeId: `icij-iframe-${++iframeUniqueIdCounter}`,
-      pymParent: null
-    }
+      pymParent: null,
+    };
   },
   async mounted(): Promise<void> {
-    await injectAssets('https://pym.nprapps.org/pym.v1.min.js')
+    await injectAssets("https://pym.nprapps.org/pym.v1.min.js");
     //@ts-ignore
-    this.pymParent = new window.pym.Parent(this.iframeId, this.url, this.options)
-  }
-})
+    this.pymParent = new window.pym.Parent(
+      this.iframeId,
+      this.url,
+      this.options,
+    );
+  },
+});
 </script>

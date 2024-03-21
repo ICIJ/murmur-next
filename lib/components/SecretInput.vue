@@ -1,70 +1,69 @@
 <script lang="ts">
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 
-import { computed,ref,onBeforeMount, watch,defineComponent} from 'vue'
-import { library, default as Fa } from './Fa'
-import HapticCopy from './HapticCopy.vue'
+import { computed, ref, onBeforeMount, watch, defineComponent } from "vue";
+import { library, default as Fa } from "./Fa";
+import HapticCopy from "./HapticCopy.vue";
 
 export default defineComponent({
-  name: 'SecretInput',
+  name: "SecretInput",
   components: { Fa, HapticCopy },
   props: {
     /**
      * If true the value is visible by default
      */
     visible: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * Value of the input
      */
     value: {
       type: [String, Number],
-      default: ''
+      default: "",
     },
     /**
      * Size of the input form
      */
     size: {
       type: String,
-      default: 'md'
+      default: "md",
     },
     /**
      * Bootstrap variant of the haptic copy button
      */
     hapticCopyVariant: {
       type: String,
-      default: 'primary'
+      default: "primary",
     },
     /**
      * Hide toggler button
      */
     noToggler: {
-      type: Boolean
+      type: Boolean,
     },
     /**
      * Hide haptic copy button
      */
     noHapticCopy: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
-  emits:['update:visible'],
-  setup(props,{emit}){
-    onBeforeMount(() =>{
-      library.add(faEye, faEyeSlash)
-    })
-    const secretInput = ref<HTMLInputElement|null>(null)
+  emits: ["update:visible"],
+  setup(props, { emit }) {
+    onBeforeMount(() => {
+      library.add(faEye, faEyeSlash);
+    });
+    const secretInput = ref<HTMLInputElement | null>(null);
     const inputType = computed(() => {
-      return props.visible ? 'text' : 'password'
-    })
+      return props.visible ? "text" : "password";
+    });
     const togglerIcon = computed(() => {
-      return props.visible ? ['far', 'eye-slash'] : ['far', 'eye']
-    })
+      return props.visible ? ["far", "eye-slash"] : ["far", "eye"];
+    });
     const hapticCopyClassList = computed(() => {
-          return `btn-${props.hapticCopyVariant}`
-    })
-
+      return `btn-${props.hapticCopyVariant}`;
+    });
 
     function toggle() {
       /**
@@ -73,11 +72,11 @@ export default defineComponent({
        * @event update:visible
        * @type {Boolean}
        */
-      emit("update:visible", !props.visible)
+      emit("update:visible", !props.visible);
     }
     function selectInput() {
       if (props.visible) {
-        secretInput.value?.select()
+        secretInput.value?.select();
       }
     }
     return {
@@ -85,10 +84,10 @@ export default defineComponent({
       toggle,
       togglerIcon,
       inputType,
-      hapticCopyClassList
-    }
-  }
-})
+      hapticCopyClassList,
+    };
+  },
+});
 </script>
 
 <template>
@@ -120,7 +119,7 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-@import '../styles/lib.scss';
+@import "../styles/lib.scss";
 
 .secret-input {
   &__toggler {

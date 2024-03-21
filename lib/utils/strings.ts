@@ -1,8 +1,8 @@
 export function isUrl(value: string): boolean {
   try {
-    new URL(value)
+    new URL(value);
   } catch (_) {
-    return false
+    return false;
   }
-  return true
+  return true;
 }
