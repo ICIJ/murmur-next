@@ -16,7 +16,7 @@ import { geoRobinson } from 'd3-geo-projection'
 import type { GeoProjection } from 'd3-geo'
 import { geoGraticule } from 'd3-geo'
 import { feature } from 'topojson'
-import { GeometryCollection } from 'topojson-specification'
+import type { GeometryCollection } from 'topojson-specification'
 
 import {
   ComponentPublicInstance,

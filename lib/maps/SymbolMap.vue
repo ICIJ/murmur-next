@@ -1,6 +1,6 @@
 <script lang="ts">
 import * as d3 from 'd3'
-import { GeoPermissibleObjects } from 'd3'
+import type { GeoPermissibleObjects } from 'd3'
 import { geoRobinson } from 'd3-geo-projection'
 import { feature } from 'topojson'
 import {
@@ -33,7 +33,7 @@ import {
   ref,
   watch
 } from 'vue'
-import { GeometryCollection } from 'topojson-specification'
+import type { GeometryCollection } from 'topojson-specification'
 
 export default defineComponent({
   components: {
