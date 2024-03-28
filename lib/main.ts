@@ -4,7 +4,7 @@ import * as components from './components'
 import * as datavisualisations from './datavisualisations'
 import * as maps from './maps'
 import config from './config'
-import { type App } from 'vue'
+import { App,Component,DefineComponent } from 'vue'
 
 export { default as AccordionWrapper } from './components/AccordionWrapper.vue'
 export { default as AccordionStep } from './components/AccordionStep.vue'
@@ -46,6 +46,9 @@ export { default as StackedBarChart } from './datavisualisations/StackedBarChart
 export { default as ChoroplethMap } from './maps/ChoroplethMap.vue'
 export { default as SymbolMap } from './maps/SymbolMap.vue'
 
+type ComponentMap = {[name:string]:Component|DefineComponent}
+
+
 const Murmur = {
   get i18n() {
     return i18n
@@ -53,8 +56,14 @@ const Murmur = {
   get config() {
     return config
   },
-  get components() {
+  get components() :ComponentMap{
     return components
+  },
+  get datavisualisations() : ComponentMap{
+    return datavisualisations
+  },
+  get maps() : ComponentMap{
+    return maps
   },
   setLocaleMessage(lang: string, message: any) {
     return Murmur.i18n.global.setLocaleMessage(lang, message)
@@ -75,16 +84,13 @@ const Murmur = {
     app.use(i18n)
 
     app.config.globalProperties.$config = Murmur.config
-    // @ts-ignore
-    Object.keys(components).forEach((key) =>
-      app.component(key, components[key])
+    Object.keys(this.components).forEach((key) =>
+      app.component(key, this.components[key])
     )
-    // @ts-ignore
-    Object.keys(datavisualisations).forEach((key) =>
-      app.component(key, datavisualisations[key])
+    Object.keys(this.datavisualisations).forEach((key) =>
+      app.component(key, this.datavisualisations[key])
     )
-    // @ts-ignore
-    Object.keys(maps).forEach((key) => app.component(key, maps[key]))
+    Object.keys(this.maps).forEach((key) => app.component(key, this.maps[key]))
   }
 }
 
