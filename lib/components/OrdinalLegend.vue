@@ -3,7 +3,7 @@ import { get, isFunction, kebabCase, uniqueId } from 'lodash'
 import * as d3 from 'd3'
 import { defineComponent, PropType, computed } from 'vue'
 
-type Datum = { id: string; color: string; path: string; label: string }
+type Datum = { id?: string; color: string; path?: string; label: string }
 type Category = 'id' | 'color' | 'path' | 'label'
 export default defineComponent({
   name: 'OrdinalLegend',

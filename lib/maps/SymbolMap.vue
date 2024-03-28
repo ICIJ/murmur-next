@@ -34,6 +34,7 @@ import {
   watch
 } from 'vue'
 import type { GeometryCollection } from 'topojson-specification'
+import { PopoverPlacement } from 'bootstrap-vue-next'
 
 export default defineComponent({
   components: {
@@ -73,7 +74,7 @@ export default defineComponent({
       default: 15
     },
     markerObjectsPath: {
-      type: [String, Array],
+      type: [String, Array] as PropType<string | string[]>,
       default: 'id'
     },
     markerPath: {
@@ -97,7 +98,7 @@ export default defineComponent({
       default: null
     },
     tooltipPlacement: {
-      type: String,
+      type: String as PropType<PopoverPlacement>,
       default: 'top'
     },
     tooltipFallbackPlacement: {
