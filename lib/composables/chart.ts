@@ -102,7 +102,7 @@ export function useChart(
   afterLoaded?: () => Promise<any>
 ): Chart {
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
-  const loadedData = ref([])
+  const loadedData = ref<unknown|unknown[]>([])
 
   onMounted(async () => {
     await document.fonts?.ready
@@ -134,11 +134,14 @@ export function useChart(
     defaultWidth = null,
     defaultHeight = null
   } = {}) {
-    const elements = isLoaded.value
-      ? resizeRef.value?.querySelectorAll(selector)
-      : []
+    const returnDefault = { width: defaultWidth, height: defaultHeight }
+    if(!isLoaded.value || !resizeRef.value){
+      return returnDefault
+    }
+    const elements: NodeListOf<SVGGraphicsElement> = resizeRef.value.querySelectorAll(selector)
+   
     if (elements.length == 0) {
-      return { width: defaultWidth, height: defaultHeight }
+      return returnDefault
     }
     const width = max(
       [...elements].map((l) => {
