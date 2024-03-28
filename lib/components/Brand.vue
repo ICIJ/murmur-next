@@ -27,6 +27,7 @@
  */
 import { computed, ref } from 'vue'
 import isString from 'lodash/isString'
+import { CSSProperties } from 'vue';
 
 interface BrandProps {
   /**
@@ -36,11 +37,11 @@ interface BrandProps {
   /**
    * Monochromatic logo's color
    */
-  color?: string | null
+  color?: string | undefined
   /**
    * Logo's background color
    */
-  background?: string | null
+  background?: string | undefined
   /**
    * Logo's size
    */
@@ -51,16 +52,15 @@ interface BrandProps {
   square?: boolean
 }
 
-interface BrandStyle {
-  '--monochrome-color': string | null
-  color: string | null
-  background: string | null
-  width: string | number
+interface BrandStyle extends CSSProperties{
+  '--monochrome-color': string | undefined;
+  width: string | number;
 }
 
+
 const props = withDefaults(defineProps<BrandProps>(), {
-  color: null,
-  background: null,
+  color: undefined,
+  background: undefined,
   size: '70px'
 })
 const sizeAsNumber = ref(
