@@ -15,7 +15,7 @@ export default class IframeResizer {
   constructor() {
     this.initializer = injectAssets('//pym.nprapps.org/pym.v1.min.js').then(
       () => {
-        pymChild = pymChild || new window.pym.Child({ polling: 300 })
+        pymChild = pymChild || new (window as any).pym.Child({ polling: 300 })
         return pymChild
       }
     )
