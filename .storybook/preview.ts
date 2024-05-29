@@ -50,4 +50,8 @@ export const parameters = {
   }
 }
 
-export default { parameters, decorators }
+export default {
+  parameters,
+  decorators,
+  tags: ['autodocs']
+};

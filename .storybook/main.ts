@@ -13,15 +13,14 @@ const config: StorybookConfig = {
     '@storybook/addon-interactions',
     '@storybook/addon-mdx-gfm',
     '@storybook/preset-scss',
-    '@storybook/addon-themes'
+    '@storybook/addon-themes',
+    '@chromatic-com/storybook'
   ],
   framework: {
     name: '@storybook/vue3-vite',
     options: {}
   },
-  docs: {
-    autodocs: 'tag'
-  },
+  docs: {},
   viteFinal: (config, options) => {
     return mergeConfig(config, {
       // This is needed because the copy plugin can't copy files outside of the root directory
