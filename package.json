@@ -107,8 +107,5 @@
     "singleQuote": true,
     "semi": false,
     "trailingComma": "none"
-  },
-  "resolutions": {
-    "jackspeak": "2.1.1"
   }
 }
