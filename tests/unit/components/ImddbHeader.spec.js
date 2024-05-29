@@ -90,9 +90,8 @@ describe('ImddbHeader.vue', () => {
   })
 
   it("should show on mouseenter then hide popover'", async () => {
-    const wrapper = mount(ImddbHeader, {
-      global: { renderStubDefaultSlot: true },
-      stubs: { teleport: true, BPopover: true, FollowUsPopover: true }
+    const wrapper = shallowMount(ImddbHeader,{
+      global: { renderStubDefaultSlot: true }
     })
 
     expect(wrapper.vm.showFollowUsPopover).toBe(false)
