@@ -30,7 +30,7 @@
     "investigations": "Enquêtes",
     "follow-us": "Suivez nous",
     "all-rights": "Tous droits réservés",
-    "version": "Version %{version}"
+    "version": "Version {version}"
   },
   "donate-form": {
     "support": "Soutenez nous",

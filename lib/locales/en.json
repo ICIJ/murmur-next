@@ -46,7 +46,7 @@
     "investigations": "Investigations",
     "follow-us": "Follow us",
     "all-rights": "All rights reserved",
-    "version": "Version %{version}"
+    "version": "Version {version}"
   },
   "donate-form": {
     "support": "Support us",
