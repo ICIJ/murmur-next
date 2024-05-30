@@ -26,12 +26,11 @@ export default [
       ...tsConfigs.configs.recommended.rules,
       ...vitestPlugin.configs.recommended.rules,
       ...storybookPlugin.configs.recommended.rules,
+      ...icijPlugin.rules,
       '@typescript-eslint/no-explicit-any': 'off',
       'vitest/no-identical-title': 'error',
       'vitest/expect-expect': 'error',
-      "vue/multi-word-component-names": "off",
       "import/no-named-default": "off",
-      ...icijPlugin.rules
     },
   },
   {
