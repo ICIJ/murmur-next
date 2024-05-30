@@ -14,14 +14,16 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:lib": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write lib/ stories/ .storybook/ tests/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build:storybook": "storybook build",
     "test": "vitest",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "prepublish": "yarn build:lib",
+    "predeploy": "yarn build:storybook"
   },
   "main": "./dist/lib/murmur.umd.cjs",
   "module": "./dist/lib/murmur.js",
