@@ -16,7 +16,8 @@ import { clamp, get, has, invoke, round } from 'lodash'
 import Fa, { library } from './Fa'
 
 import type { Variant } from '@/types'
-
+import isEqual from "lodash/isEqual";
+type DragDropValue = {detail:number}
 /**
  * A component to wrap an HTML element with a range picker overlay.
  */
@@ -39,7 +40,7 @@ export default defineComponent({
           name: string
           data?: any
         }) {
-          vnode.el.dispatchEvent(new CustomEvent(name, { detail: data }))
+          vnode.el?.dispatchEvent(new CustomEvent(name, { detail: data }))
           //const handlers = get(vnode, 'data.on') ?? get(vnode, 'componentOptions.listeners')
           /*if (has(handlers, name)) {
             invoke(handlers, `${name}.fns`, data)
@@ -216,19 +217,19 @@ export default defineComponent({
       }
     })
 
-    function toggleMoving(value) {
+    function toggleMoving(value:boolean) {
       moving.value = value ?? !moving.value
     }
-    function toggleResizing(value) {
+    function toggleResizing(value:boolean) {
       resizing.value = value ?? !resizing.value
     }
-    function snapValue(value): number {
+    function snapValue(value:number): number {
       return round(value / props.snap) * props.snap
     }
     function rangeWidth(): number {
       return rangePickerBounds.value?.getBoundingClientRect().width ?? 0
     }
-    function dragStartBound({ detail: dx }) {
+    function dragStartBound({ detail: dx }:DragDropValue) {
       const newValue = snapValue(dx / rangeWidth())
       // Ensure start value doesn't get too close to end value
       if (newValue < end.value - props.minDistance) {
@@ -241,7 +242,7 @@ export default defineComponent({
         emit('update:range', [start.value, end.value])
       }
     }
-    function dragEndBound({ detail: dx }) {
+    function dragEndBound({ detail: dx }:DragDropValue) {
       const newValue = snapValue(dx / rangeWidth())
       // Ensure end value doesn't get too close to start value
       if (newValue > start.value + props.minDistance) {
@@ -254,7 +255,7 @@ export default defineComponent({
         emit('update:range', [start.value, end.value])
       }
     }
-    function dragBounds({ detail: dx }) {
+    function dragBounds({ detail: dx }:DragDropValue) {
       const diff = snapValue(end.value - start.value)
       const newValue = snapValue(dx / rangeWidth())
       start.value = round(newValue, props.precision)
@@ -269,6 +270,12 @@ export default defineComponent({
     function valueWithUnit(value: number | string): string {
       return typeof value === 'number' ? `${value}px` : `${value}`
     }
+
+    watch(()=>props.range, (newRange) => {
+      start.value = newRange[0] ?? 0 ;
+      end.value = newRange[1] ?? 0;
+    })
+
     return {
       rangePickerBounds,
       start,

@@ -83,4 +83,16 @@ describe('RangePicker.vue', () => {
 
     expect(wrapper.vm.start).toBe(0.1)
   })
+
+  it('updates start and end when updating props', async () => {
+    const wrapper = shallowMount(RangePicker, {
+      propsData: { range: [0.1, 0.9] }
+    })
+
+    expect(wrapper.vm.start).toBe(0.1)
+    expect(wrapper.vm.end).toBe(0.9)
+    await wrapper.setProps({range: [0.3, 0.7]})
+    expect(wrapper.vm.start).toBe(0.3)
+    expect(wrapper.vm.end).toBe(0.7)
+  })
 })
