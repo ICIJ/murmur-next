@@ -11,12 +11,11 @@ import {
   toRef
 } from 'vue'
 import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons/faGripLinesVertical'
-import { clamp, get, has, invoke, round } from 'lodash'
+import { clamp, round } from 'lodash'
 
 import Fa, { library } from './Fa'
 
 import type { Variant } from '@/types'
-import isEqual from "lodash/isEqual";
 type DragDropValue = {detail:number}
 /**
  * A component to wrap an HTML element with a range picker overlay.
@@ -272,8 +271,8 @@ export default defineComponent({
     }
 
     watch(()=>props.range, (newRange) => {
-      start.value = newRange[0] ?? 0 ;
-      end.value = newRange[1] ?? 0;
+      start.value = newRange[0] ?? 0
+      end.value = newRange[1] ?? 0
     })
 
     return {
