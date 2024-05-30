@@ -1,6 +1,5 @@
 import { ColumnChart } from '@/datavisualisations'
 import { StoryObj } from '@storybook/vue3'
-import { ref } from 'vue'
 import { humanReadableGb } from '../utils'
 import { leakSizeDecorator } from '../decorators'
 
@@ -73,7 +72,6 @@ TooltipSlot.args = {
   maxValue: 3000
 }
 export const DynamicHeight = TooltipSlot.bind({})
-const clicked = ref(null)
 DynamicHeight.args = {
   data: discreteData,
   seriesName: 'size',

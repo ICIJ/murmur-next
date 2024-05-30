@@ -1,5 +1,5 @@
 import hljs from 'highlight.js'
-// @ts-ignore
+// @ts-expect-error typings are not available
 import container from 'markdown-it-container'
 
 import { TokenMap } from '../MdPluginTypes'

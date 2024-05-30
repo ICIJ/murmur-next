@@ -19,6 +19,7 @@ const Template: Story = (args: any) => ({
 
 const dataUrl =
   'https://gist.githubusercontent.com/pirhoo/a2cdb6de5e3e816c0e9d80226806a688/raw/da3fdf3488d6bd68c6cfd9b89943b750ac65fd33/line-approvals.json'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const data = [
   {
     date: '1995',

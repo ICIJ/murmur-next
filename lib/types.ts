@@ -45,17 +45,17 @@ export type Variant =
   | 'light'
 
 export type MapTransform = {
-  k: number
-  x: number
-  y: number
-  rotateX: number
+  k: number,
+  x: number,
+  y: number,
+  rotateX: number,
   rotateY: number
 }
 
 export type ParentMap = {
   mapRect: Ref<DOMRect>
   mapTransform: Ref<MapTransform>
-  rotatingMapProjection: ComputedRef<GeoProjection | Function>
+  rotatingMapProjection: ComputedRef<GeoProjection | (()=>number[])>
 }
 export type ParentMapProvide = {
   [ParentKey]: ParentMap

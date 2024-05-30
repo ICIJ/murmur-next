@@ -1,7 +1,6 @@
 import { StackedBarChart } from '@/datavisualisations'
 import { StoryObj } from '@storybook/vue3'
 import { humanReadableGb } from '../utils'
-import { h } from 'vue'
 
 export default {
   title: 'Murmur/datavisualisations/StackedBarChart',

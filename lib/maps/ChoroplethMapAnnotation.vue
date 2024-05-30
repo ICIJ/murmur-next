@@ -142,11 +142,11 @@ export default defineComponent({
     })
 
     const position = computed(() => {
-      const [x, y] = projection.value(center.value)
+      const [x, y] = projection.value(center.value) || []
       return { x, y }
     })
 
-    const mapK = computed(() => {
+    const mapK = computed(():number => {
       return mapTransform.value.k
     })
 

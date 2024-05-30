@@ -38,7 +38,7 @@ describe('AccordionStep', () => {
     mockAccordion.emitAccordionNextStepEvent.mockClear()
   })
 
-  describe('should display a title ', () => {
+  describe('should display a title', () => {
     it('using title property', () => {
       const propsData = { step, title: 'Titre' }
       const wrapper = shallowMount(AccordionStep, {
@@ -59,7 +59,7 @@ describe('AccordionStep', () => {
       expect(element.text()).toBe('Titre test')
     })
   })
-  describe('should display a content ', () => {
+  describe('should display a content', () => {
     it('using content property', () => {
       const propsData = { step, content: 'content to show' }
       const wrapper = shallowMount(AccordionStep, {

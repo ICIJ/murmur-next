@@ -2,7 +2,6 @@ import jsonp from 'jsonp'
 import { computed, MaybeRefOrGetter, toValue } from 'vue'
 import flatten from 'lodash/flatten'
 import castArray from 'lodash/castArray'
-import { Ref } from 'react'
 
 type FormDataResult = { result: string; msg: string }
 // by convention, composable function names start with "use"

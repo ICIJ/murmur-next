@@ -1,6 +1,6 @@
 import get from 'lodash/get'
 import each from 'lodash/each'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import defaultValues from './config.default'
 import { Ref } from '@vue/runtime-core'
 
@@ -32,7 +32,7 @@ export class Config {
     }
     return value
   }
-  get(key: string, defaultValue?: Object | null) {
+  get(key: string, defaultValue?: NonNullable<unknown> | null) {
     return get(this._VALUES.value, key, defaultValue)
   }
   is(key: string) {

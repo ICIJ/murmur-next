@@ -18,10 +18,9 @@ const config: StorybookConfig = {
   ],
   framework: {
     name: '@storybook/vue3-vite',
-    options: {}
   },
   docs: {},
-  viteFinal: (config, options) => {
+  viteFinal: (config) => {
     return mergeConfig(config, {
       // This is needed because the copy plugin can't copy files outside of the root directory
       // The files are copied back to the root by the post script

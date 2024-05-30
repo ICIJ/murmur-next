@@ -19,7 +19,7 @@ describe('ChoroplethMapAnnotation', () => {
     height = 500,
     k = 1
   }) => ({
-    rotatingMapProjection: computed((): GeoProjection | Function => {
+    rotatingMapProjection: computed((): GeoProjection | (()=>number[]) => {
       if (rX && rY) {
         return () => [rX, rY]
       }
@@ -67,7 +67,7 @@ describe('ChoroplethMapAnnotation', () => {
   describe('placements', () => {
     const mockParentMap: ParentMap = generateParentMock({})
     const provide: ParentMapProvide = { [ParentKey]: mockParentMap }
-    const testPlacement = (placement, expectedResults) => {
+    const testPlacement = (placement:string|undefined, expectedResults: any) => {
       it(`computes placement correctly for ${placement}`, () => {
         const wrapper = shallowMount(ChoroplethMapAnnotation, {
           propsData: {
@@ -98,7 +98,7 @@ describe('ChoroplethMapAnnotation', () => {
     testPlacement(PLACEMENTS.LEFT, { isLeft: true })
     testPlacement(PLACEMENTS.LEFTTOP, { isLeft: true, isTop: true })
     testPlacement(PLACEMENTS.LEFTBOTTOM, { isLeft: true, isBottom: true })
-    testPlacement(null, { isCenter: true })
+    testPlacement(undefined, { isCenter: true })
   })
 
   describe('wrapperTransformOrigin', () => {

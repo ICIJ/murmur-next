@@ -9,7 +9,7 @@ describe('AccordionStep', () => {
   const step3: Step = Symbol('step3')
 
   const steps: Step[] = [step1, step2, step3]
-  describe('should update the current step ', () => {
+  describe('should update the current step', () => {
     it('has step2 has current step', () => {
       const propsData = { step: step2, steps }
       const wrapper = shallowMount(AccordionWrapper, { propsData })

@@ -30,7 +30,7 @@ export function Delete(options: ConfigOptions = {}): Plugin {
         name: 'vite-plugin-clean',
         enforce: 'pre',
         apply: 'build',
-        buildStart: (_config) => {
+        buildStart: () => {
             const rootDirectory = process.cwd();
 
             if (Array.isArray(targetFiles)) {

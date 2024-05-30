@@ -2,7 +2,6 @@ import {
   BoxStyle,
   ContentPlaceholderStyledRow,
   ContentPlaceholderRow,
-  ContentPlaceholderRowBoxes,
   ContentPlaceholderStyledRows,
   ContentPlaceholderRows
 } from '@/utils/placeholderTypes'

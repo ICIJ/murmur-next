@@ -98,7 +98,7 @@ export function useChart(
   props: ChartProps,
   { emit }: ChartEmit,
   isLoaded: Ref<boolean>,
-  onResized?: Function,
+  onResized?: ()=>void,
   afterLoaded?: () => Promise<any>
 ): Chart {
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
@@ -110,7 +110,7 @@ export function useChart(
     watchEffect(async () => {
       if (!isLoaded.value) {
         if (isString(props.data)) {
-          // @ts-ignore
+          // @ts-expect-error introspection in typescript is tricky
           loadedData.value = await d3[props.dataUrlType](props.data)
         } else {
           loadedData.value = props.data as unknown as []
@@ -139,7 +139,7 @@ export function useChart(
       return returnDefault
     }
     const elements: NodeListOf<SVGGraphicsElement> = resizeRef.value.querySelectorAll(selector)
-   
+
     if (elements.length == 0) {
       return returnDefault
     }

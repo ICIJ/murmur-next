@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error no typings available
 import container from 'markdown-it-container'
 
 import { TokenMap } from '../MdPluginTypes'

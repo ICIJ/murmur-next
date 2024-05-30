@@ -286,7 +286,6 @@ describe('ColumnChart.vue', () => {
     let wrapper
 
     beforeAll(() => {
-      // eslint-disable-next-line no-import-assign
       d3.json = vi.fn().mockResolvedValue([
         { date: 2019, value: 30 },
         { date: 2020, value: 60 },

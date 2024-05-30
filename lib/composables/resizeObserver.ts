@@ -1,5 +1,5 @@
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
-import { Ref, nextTick } from 'vue'
+import { Ref } from 'vue'
 import ResizeObserver from 'resize-observer-polyfill'
 
 export const useResizeObserver = (resizableRef?: Ref) => {

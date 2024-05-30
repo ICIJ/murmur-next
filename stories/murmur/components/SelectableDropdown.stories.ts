@@ -1,6 +1,6 @@
 import { SelectableDropdown } from '@/components'
 import { StoryObj } from '@storybook/vue3'
-import { onBeforeMount, reactive, ref, toRef, toRefs, watch } from 'vue'
+import { onBeforeMount, toRefs } from 'vue'
 
 const data = {
   country: 'Peru',
@@ -131,7 +131,6 @@ export const BigList = Template.bind({})
 BigList.decorators = [
   (fn: any, ctx: any) => ({
     setup() {
-      const frenchCities = ref<any>([])
       const args = toRefs(ctx.args)
       onBeforeMount(async () => {
         const url =

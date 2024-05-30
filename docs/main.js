@@ -34,7 +34,7 @@ Vue.component('SampleCard', SampleCard)
 
 Murmur.config.set('project.name', 'Demo Project')
 
-/* eslint-disable no-new */
+ 
 new Vue({
   store,
   render: h => h(App),

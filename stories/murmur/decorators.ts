@@ -85,7 +85,7 @@ export const icijOfficesDecorator = () => ({
     <story/>
  `
 })
-export const choroplethDecorator = (fn, ctx) => ({
+export const choroplethDecorator = () => ({
   components: [ChoroplethMap],
   decorators: [icijOfficesDecorator],
   setup() {
