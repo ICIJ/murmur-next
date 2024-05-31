@@ -52,10 +52,9 @@ import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
-import { ComponentPublicInstance, defineComponent, PropType, ref } from 'vue'
+import { ComponentPublicInstance, defineComponent, PropType, ref, onBeforeMount } from 'vue'
 
 import { default as Fa, library } from './Fa'
-import { onBeforeMount } from '@vue/runtime-core'
 
 /**
  * ConfirmButton
