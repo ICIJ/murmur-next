@@ -48,7 +48,7 @@ export default defineConfig({
       fileName: 'murmur'
     },
     rollupOptions: {
-      external: ['bootstrap', 'vue', 'vue-i18n', 'bootstrap-vue-next'],
+      external: ['bootstrap', 'vue', 'bootstrap-vue-next'],
       output: {
         globals: {
           vue: 'Vue'
