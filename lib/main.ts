@@ -51,7 +51,8 @@ type ComponentMap = {[name:string]:Component|DefineComponent}
 type PluginOptions = {
   useI18n?: boolean,
   useBootstrap?: boolean,
-  useConfig?: boolean
+  useConfig?: boolean,
+  registerComponents?: boolean
 }
 
 const Murmur = {
@@ -84,7 +85,12 @@ const Murmur = {
     // @ts-expect-error not sure why typescript sees an error here
     return Murmur.i18n.global.locale.value
   },
-  install(app: App<Element>, { useI18n = true, useBootstrap = true, useConfig = true }: PluginOptions = {}) {
+  install(app: App<Element>, { 
+    useI18n = true, 
+    useBootstrap = true, 
+    useConfig = true, 
+    registerComponents = true 
+  }: PluginOptions = {}) {
 
     if (useBootstrap) {
       app.use(createBootstrap())
@@ -97,16 +103,19 @@ const Murmur = {
     if (useConfig) {
       app.config.globalProperties.$config = Murmur.config
     }
+
+    if (registerComponents) {
+      Object.keys(this.components).forEach((key) =>
+        app.component(key, this.components[key])
+      )
+      Object.keys(this.datavisualisations).forEach((key) =>
+        app.component(key, this.datavisualisations[key])
+      )
+      Object.keys(this.maps).forEach((key) => 
+        app.component(key, this.maps[key])
+      )
+    }
     
-    Object.keys(this.components).forEach((key) =>
-      app.component(key, this.components[key])
-    )
-    Object.keys(this.datavisualisations).forEach((key) =>
-      app.component(key, this.datavisualisations[key])
-    )
-    Object.keys(this.maps).forEach((key) => 
-      app.component(key, this.maps[key])
-    )
   }
 }
 
