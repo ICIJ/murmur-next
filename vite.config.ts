@@ -38,7 +38,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    target: 'modules',
+    target: 'es2015',
     copyPublicDir: false,
     outDir: 'dist/lib',
     sourcemap: true,
