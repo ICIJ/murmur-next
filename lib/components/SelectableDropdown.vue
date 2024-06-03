@@ -7,6 +7,7 @@ import identity from 'lodash/identity'
 import isEqual from 'lodash/isEqual'
 import uniqueId from 'lodash/uniqueId'
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons'
+//@ts-expect-error no typings available
 import { RecycleScroller } from 'vue-virtual-scroller'
 
 import Fa from './Fa'
@@ -126,7 +127,7 @@ export default defineComponent({
       unbindKeys()
     })
     const scroller = ref(null)
-    const activeItems = ref<Item[]>(props.modelValue)
+    const activeItems = ref<Item[]>([])
     const cssProps = computed(() => {
       return {
         '--scroller-height': props.scrollerHeight
@@ -168,8 +169,18 @@ export default defineComponent({
       }
     )
     watch(
+      () => props.modelValue,
+      (itemOrItems) => {
+        const items = castArray(itemOrItems)
+        if (!isEqual(activeItems.value, items)) {
+          activateItemOrItems(itemOrItems)
+        }
+      },
+      { deep: true, immediate: true}
+    )
+    watch(
       () => activeItems.value,
-      () => {
+      (itemOrItems) => {
         /**
          * Fired when the selected value change. It will pass a canonical value
          * or an array of values if the property `multiple` is set to true.
@@ -179,18 +190,9 @@ export default defineComponent({
          */
         emit(
           'update:modelValue',
-          props.multiple ? activeItems.value : activeItems.value[0]
-        )
-      },
-      { deep: true }
-    )
-    watch(
-      () => props.modelValue,
-      (itemOrItems) => {
-        const items = castArray(itemOrItems)
-        if (!isEqual(activeItems.value, items)) {
-          activateItemOrItems(items)
-        }
+          props.multiple ? itemOrItems : itemOrItems[0]
+          )
+
       },
       { deep: true }
     )
@@ -251,7 +253,7 @@ export default defineComponent({
       if (itemActivated(item)) {
         activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))
       } else {
-        activeItems.value = [...activeItems.value,item]
+        activeItems.value = [...activeItems.value, item]
       }
     }
     function selectRangeToItem(item: Item) {
