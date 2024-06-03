@@ -126,14 +126,11 @@ export default defineComponent({
       unbindKeys()
     })
     const scroller = ref(null)
-    const activeItems = ref<Item[]>([])
+    const activeItems = ref<Item[]>(props.modelValue)
     const cssProps = computed(() => {
       return {
         '--scroller-height': props.scrollerHeight
       }
-    })
-    const keyField = computed(() => {
-      return typeof items_.value[0] === 'string' ? null : 'recycle_scroller_id'
     })
     const items_ = computed((): Item[] => {
       if (typeof props.items[0] === 'string') {
@@ -143,6 +140,9 @@ export default defineComponent({
         ...item,
         recycle_scroller_id: `id-${uniqueId()}`
       }))
+    })
+    const keyField = computed(() => {
+      return typeof items_.value[0] === 'string' ? null : 'recycle_scroller_id'
     })
     const firstActiveItemIndex = computed(() => {
       return activeItems.value.length
@@ -251,7 +251,7 @@ export default defineComponent({
       if (itemActivated(item)) {
         activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))
       } else {
-        activeItems.value.push(item)
+        activeItems.value = [...activeItems.value,item]
       }
     }
     function selectRangeToItem(item: Item) {
@@ -329,6 +329,9 @@ export default defineComponent({
     function itemId(item: Item) {
       return `dropdown-item-${item.recycle_scroller_id ?? item.toLowerCase()}`
     }
+    function serialize(item: Item) {
+      return props.serializer?.(item)
+    }
 
     return {
       cssProps,
@@ -340,6 +343,7 @@ export default defineComponent({
       clickToAddItem,
       clickToSelectRangeToItem,
       indexIcon,
+      serialize,
       scroller,
       activeItems,
       itemId
@@ -384,7 +388,7 @@ export default defineComponent({
           >
             <!-- @slot Item's label content -->
             <slot name="item-label" :item="item">
-              {{ serializer(item) }}
+                {{ serialize(item) }}
             </slot>
           </div>
         </slot>

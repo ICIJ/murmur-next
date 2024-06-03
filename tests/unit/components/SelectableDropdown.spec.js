@@ -1,4 +1,4 @@
-import { shallowMount, mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import SelectableDropdown from '@/components/SelectableDropdown.vue'
 
 const KEY_UP_CODE = 38
