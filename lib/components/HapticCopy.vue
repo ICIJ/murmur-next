@@ -39,7 +39,7 @@ export default defineComponent({
      * Text to copy to the clipboard
      */
     text: {
-      type: String,
+      type: [String, Number],
       default: null
     },
     /**
