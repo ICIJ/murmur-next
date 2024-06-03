@@ -4,7 +4,10 @@ import identity from 'lodash/identity'
 import sortBy from 'lodash/sortBy'
 import { defineComponent, computed, ref, watch } from 'vue'
 import { chartProps, getChartProps, useChart } from '@/composables/chart'
+import { ComponentPublicInstance } from 'vue'
 
+type Datum = {value:number|number[],highlight?:boolean,label?:string}
+type Bar = {width:number,height:number, x:number,y:number} & Datum;
 export default defineComponent({
   name: 'BarChart',
   props: {
@@ -81,13 +84,12 @@ export default defineComponent({
     },
     ...chartProps()
   },
-  emits: ['loaded', 'resized'],
   setup(props, { emit }) {
-    const el = ref(null)
+    const el = ref<ComponentPublicInstance<HTMLElement> |null>(null)
     const width = ref(0)
     const isLoaded = ref(false)
     const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter } =
-      useChart(el, getChartProps(props), { emit }, isLoaded, onResize, null)
+      useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
     // onMounted(() => {
     //   window.addEventListener('resize', onResize)
     //   onResize()
@@ -96,7 +98,7 @@ export default defineComponent({
     //   window.removeEventListener('resize', onResize)
     // })
 
-    const sortedData = computed(() => {
+    const sortedData = computed(():[] => {
       if (!loadedData.value) {
         return []
       }
@@ -137,13 +139,15 @@ export default defineComponent({
     const scale = computed(() => {
       const x = d3
         .scaleLinear()
-        .domain([0, d3.max(sortedData.value, (d) => d.value)])
+        //@ts-expect-error D3 api
+        .domain([0, d3.max(sortedData.value, (d:Datum) => d.value)])
         .range([0, padded.value.width - valueWidth.value])
       return { x }
     })
-    const bars = computed(() => {
-      return sortedData.value.map((d, i) => {
+    const bars = computed(():Bar[] => {
+      return sortedData.value.map((d:Datum, i) => {
         return {
+          //@ts-expect-error D3 api
           width: Math.abs(scale.value.x(d.value)),
           height: Math.abs(props.barHeight),
           value: d.value,
@@ -154,7 +158,7 @@ export default defineComponent({
       })
     })
     const labels = computed(() => {
-      return sortedData.value.map((d, i) => {
+      return sortedData.value.map((d:Datum, i) => {
         return {
           label: d.label,
           x: labelWidth.value,
@@ -166,15 +170,16 @@ export default defineComponent({
       return (props.barHeight + props.barGap) * sortedData.value.length
     })
 
-    function formatXDatum(d) {
+    function formatXDatum(d:number|number[]) {
       return d3Formatter(d, props.xAxisTickFormat)
     }
     function onResize() {
       if (el.value) {
-        width.value = el.value.offsetWidth
+        width.value = el.value?.offsetWidth
       }
     }
     function initialize() {
+      // @ts-expect-error D3 api
       d3.axisBottom().scale(scale.value.x)
     }
 
