@@ -87,16 +87,6 @@ describe('SharingOptions', () => {
     ).toBe('none')
   })
 
-  it('hides the embed button when props.noEmbed is passed', () => {
-    const noEmbed = true
-    const wrapper = mount(SharingOptions, {
-      propsData: { noEmbed, ...propsData }
-    })
-    expect(
-      wrapper.find('.sharing-options__link--embed').element.style.display
-    ).toBe('none')
-  })
-
   it('uses a generic title', () => {
     const wrapper = mount(SharingOptions, { propsData })
     expect(wrapper.vm.valuesFor('facebook').title).toBe('A title to share')

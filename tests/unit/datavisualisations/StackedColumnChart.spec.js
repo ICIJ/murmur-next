@@ -539,7 +539,7 @@ describe('StackedColumnChart.vue', () => {
       expect(bazColumn.element.offsetHeight).toBe(5)
     })
 
-    it('creates the first group of columns with right height for each', () => {
+    it('creates the second group of columns with right height for each', () => {
       const secondGroup = wrapper
         .findAll('.stacked-column-chart__groups__item')
         .at(1)

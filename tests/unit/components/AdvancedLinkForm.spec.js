@@ -60,7 +60,7 @@ describe('AdvancedLinkForm.vue', () => {
     ).toBeTruthy()
   })
 
-  it('should create only 3 forms, markdown active by default ', async () => {
+  it('should create only 3 forms, markdown active by default', async () => {
     const propsData = { forms: ['raw', 'markdown', 'html'], modelValue: 1 }
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await flushPromises()

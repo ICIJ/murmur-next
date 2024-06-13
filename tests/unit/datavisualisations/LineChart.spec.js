@@ -57,7 +57,7 @@ describe('LineChart.vue', () => {
       expect(wrapper.findAll('.line-chart__axis--x .tick')).toHaveLength(5)
     })
 
-    it('creates x-axis ticks with the right years ', async () => {
+    it('creates x-axis ticks with the right years', async () => {
       const ticks = wrapper.findAll('.line-chart__axis--x .tick')
       expect(ticks.at(0).text()).toBe('2000')
       expect(ticks.at(1).text()).toBe('2001')
@@ -92,7 +92,7 @@ describe('LineChart.vue', () => {
       expect(wrapper.findAll('.line-chart__axis--x .tick')).toHaveLength(2)
     })
 
-    it('creates x-axis ticks with the right years ', async () => {
+    it('creates x-axis ticks with the right years', async () => {
       const ticks = wrapper.findAll('.line-chart__axis--x .tick')
       expect(ticks.at(0).text()).toBe('2019')
       expect(ticks.at(1).text()).toBe('2020')

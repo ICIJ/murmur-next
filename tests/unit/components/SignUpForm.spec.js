@@ -126,7 +126,7 @@ describe('SignUpForm', () => {
     expect(wrapper.vm.errorMessage).toBe("Something's wrong")
   })
 
-  it('changes the color variant of the button ', async () => {
+  it('changes the color variant of the button', async () => {
     const wrapper = mount(SignUpForm)
     // variant is primary
     let element = wrapper.find(

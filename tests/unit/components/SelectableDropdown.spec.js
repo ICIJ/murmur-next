@@ -183,7 +183,7 @@ describe('SelectableDropdown.vue', () => {
   })
 
   describe('Large number of selectable options', () => {
-    it('it displays only 7 items in the DOM on the 20 items given', async () => {
+    it('displays only 7 items in the DOM on the 20 items given', async () => {
       const twentyItems = Array.from(Array(20).keys())
       const propsData = { items: twentyItems }
       const wrapper = mount(SelectableDropdown, { propsData })

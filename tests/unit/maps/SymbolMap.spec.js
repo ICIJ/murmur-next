@@ -84,7 +84,7 @@ describe('SymbolMap.vue', () => {
       expect(fill).toBe('#ff5e63')
     })
 
-    it('activates the cursor when mouse is over a marker', async () => {
+    it('activates the cursor when mouse is over the finance marker', async () => {
       const feature = wrapper.find(
         '.symbol-map__main__markers__item--category-finance path'
       )
@@ -92,7 +92,7 @@ describe('SymbolMap.vue', () => {
       expect(wrapper.vm.markerCursor).toBe(2)
     })
 
-    it('deactivates the cursor when mouse leaves a marker', async () => {
+    it('deactivates the cursor when mouse leaves the edito marker', async () => {
       const feature = wrapper.find(
         '.symbol-map__main__markers__item--category-edito path'
       )

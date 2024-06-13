@@ -58,7 +58,7 @@ describe('ColumnChart.vue', () => {
       expect(wrapper.find('.column-chart__axis--x').exists()).toBeTruthy()
     })
 
-    it('creates x-axis ticks with the right years ', () => {
+    it('creates x-axis ticks with the right years', () => {
       const ticks = wrapper.findAll('.column-chart__axis--x .tick')
       expect(ticks.at(0).text()).toBe('2000')
       expect(ticks.at(1).text()).toBe('2001')
@@ -137,7 +137,7 @@ describe('ColumnChart.vue', () => {
       expect(wrapper.findAll('.column-chart__axis--x .tick')).toHaveLength(2)
     })
 
-    it('creates x-axis ticks with the right years ', () => {
+    it('creates x-axis ticks with the right years', () => {
       const ticks = wrapper.findAll('.column-chart__axis--x .tick')
       expect(ticks.at(0).text()).toBe('2019')
       expect(ticks.at(1).text()).toBe('2020')
@@ -210,7 +210,7 @@ describe('ColumnChart.vue', () => {
       expect(wrapper.findAll('.column-chart__axis--x .tick')).toHaveLength(10)
     })
 
-    it('creates x-axis ticks with the right years ', () => {
+    it('creates x-axis ticks with the right years', () => {
       const ticks = wrapper.findAll('.column-chart__axis--x .tick')
       expect(ticks.at(0).text()).toBe('2000')
       expect(ticks.at(1).text()).toBe('2001')

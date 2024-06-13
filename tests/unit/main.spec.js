@@ -22,7 +22,7 @@ describe('main.js', () => {
     expect(Murmur.getLocale).toBeDefined()
   })
 
-  it('use plugin to register Murmur components ', () => {
+  it('use plugin to register Murmur components', () => {
     const app = createApp()
     expect(app._context.components.ContentPlaceholder).toBeUndefined()
     app.use(Murmur)
