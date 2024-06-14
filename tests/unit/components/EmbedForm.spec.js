@@ -47,8 +47,7 @@ describe('EmbedForm.vue', () => {
   })
 
   it('shows a preview panel with an iframe targeting the passed props.url without pym params', () => {
-    const url =
-      'https://projects.icij.org/the-implant-files/graphics/?initialWidth=720&childId=example-graphic'
+    const url = 'https://projects.icij.org/the-implant-files/graphics/?initialWidth=720&childId=example-graphic'
     const wrapper = shallowMount(EmbedForm, {
       propsData: { url },
       global
@@ -62,9 +61,7 @@ describe('EmbedForm.vue', () => {
       propsData: { height: 150, ...propsData },
       global
     })
-    const height = wrapper.element.querySelector(
-      '.embed-form__preview iframe'
-    ).height
+    const height = wrapper.element.querySelector('.embed-form__preview iframe').height
     expect(height).toBe('150')
   })
 
@@ -73,17 +70,13 @@ describe('EmbedForm.vue', () => {
       propsData: { height: 250, ...propsData },
       global
     })
-    const height = wrapper.element.querySelector(
-      '.embed-form__preview iframe'
-    ).height
+    const height = wrapper.element.querySelector('.embed-form__preview iframe').height
     expect(height).toBe('250')
   })
 
   it('renders iframe width to 100% when no value is passed to props.width', () => {
     const wrapper = shallowMount(EmbedForm, { propsData, global })
-    const width = wrapper.element.querySelector(
-      '.embed-form__preview iframe'
-    ).width
+    const width = wrapper.element.querySelector('.embed-form__preview iframe').width
     expect(width).toBe('100%')
   })
 
@@ -92,9 +85,7 @@ describe('EmbedForm.vue', () => {
       propsData: { width: 150, ...propsData },
       global
     })
-    const width = wrapper.element.querySelector(
-      '.embed-form__preview iframe'
-    ).width
+    const width = wrapper.element.querySelector('.embed-form__preview iframe').width
     expect(width).toBe('150')
   })
 
@@ -103,9 +94,7 @@ describe('EmbedForm.vue', () => {
       propsData: { width: 250, ...propsData },
       global
     })
-    const width = wrapper.element.querySelector(
-      '.embed-form__preview iframe'
-    ).width
+    const width = wrapper.element.querySelector('.embed-form__preview iframe').width
     expect(width).toBe('250')
   })
 

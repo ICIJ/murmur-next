@@ -75,17 +75,13 @@ describe('SecretInput.vue', () => {
 
   it('uses haptic copy button primary variant by default', () => {
     const wrapper = shallowMount(SecretInput, { global })
-    expect(
-      wrapper.find('.secret-input__copy').classes('btn-primary')
-    ).toBeTruthy()
+    expect(wrapper.find('.secret-input__copy').classes('btn-primary')).toBeTruthy()
   })
 
   it('changes haptic copy button variant', () => {
     const propsData = { hapticCopyVariant: 'info' }
     const wrapper = shallowMount(SecretInput, { global, propsData })
-    expect(
-      wrapper.find('.secret-input__copy').classes('btn-primary')
-    ).toBeFalsy()
+    expect(wrapper.find('.secret-input__copy').classes('btn-primary')).toBeFalsy()
     expect(wrapper.find('.secret-input__copy').classes('btn-info')).toBeTruthy()
   })
 })

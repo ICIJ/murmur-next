@@ -60,9 +60,7 @@ describe('SharingOptionsLink', () => {
   it('should give a different `base` for Linkedin', () => {
     const propsData = { network: 'linkedin' }
     const wrapper = mount(SharingOptionsLink, { propsData })
-    expect(wrapper.vm.base).toBe(
-      'https://www.linkedin.com/sharing/share-offsite/?'
-    )
+    expect(wrapper.vm.base).toBe('https://www.linkedin.com/sharing/share-offsite/?')
   })
 
   it('should have a popup', () => {
@@ -127,12 +125,8 @@ describe('SharingOptionsLink', () => {
     const propsData = { network: 'twitter', title: 'Foo' }
     const wrapper = mount(SharingOptionsLink, { propsData })
     // Create two spies that must be called when clicking
-    const spyOpenPopup = vi
-      .spyOn(wrapper.vm, 'openPopup')
-      .mockImplementation(() => null)
-    const spyCleanExistingPopup = vi
-      .spyOn(wrapper.vm, 'cleanExistingPopupInstance')
-      .mockImplementation(() => null)
+    const spyOpenPopup = vi.spyOn(wrapper.vm, 'openPopup').mockImplementation(() => null)
+    const spyCleanExistingPopup = vi.spyOn(wrapper.vm, 'cleanExistingPopupInstance').mockImplementation(() => null)
     await wrapper.trigger('click')
     expect(spyOpenPopup).toBeCalled()
     expect(spyCleanExistingPopup).toBeCalled()

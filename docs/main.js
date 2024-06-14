@@ -34,9 +34,8 @@ Vue.component('SampleCard', SampleCard)
 
 Murmur.config.set('project.name', 'Demo Project')
 
- 
 new Vue({
   store,
-  render: h => h(App),
+  render: (h) => h(App),
   router: new VueRouter({ routes })
 }).$mount('#app')

@@ -11,9 +11,7 @@ describe('GenericFooter.vue', () => {
 
   it('renders the passed props.version', () => {
     const wrapper = mount(GenericFooter, { propsData })
-    expect(wrapper.find('.generic-footer__version').text()).toBe(
-      'Version 1.0.0'
-    )
+    expect(wrapper.find('.generic-footer__version').text()).toBe('Version 1.0.0')
   })
 
   it("doesn't render the version", () => {
@@ -24,8 +22,6 @@ describe('GenericFooter.vue', () => {
   it('renders the current year', () => {
     const wrapper = mount(GenericFooter)
     const currentYear = new Date().getFullYear()
-    expect(wrapper.find('.generic-footer__year').text()).toBe(
-      String(currentYear)
-    )
+    expect(wrapper.find('.generic-footer__year').text()).toBe(String(currentYear))
   })
 })

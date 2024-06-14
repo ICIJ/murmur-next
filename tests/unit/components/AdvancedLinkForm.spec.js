@@ -2,7 +2,6 @@ import { mount, flushPromises } from '@vue/test-utils'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
 
 describe('AdvancedLinkForm.vue', () => {
-
   const global = { stubs: { HapticCopy: true } }
   it('should be a Vue instance', () => {
     const wrapper = mount(AdvancedLinkForm, { global })
@@ -29,30 +28,20 @@ describe('AdvancedLinkForm.vue', () => {
     }
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await wrapper.vm.$nextTick()
-    expect(
-      wrapper.find('.tab-pane.active .advanced-link-form__raw__input').exists()
-    ).toBeTruthy()
-    expect(wrapper.find('.advanced-link-form__raw__input').element._value).toBe(
-      propsData.link
-    )
+    expect(wrapper.find('.tab-pane.active .advanced-link-form__raw__input').exists()).toBeTruthy()
+    expect(wrapper.find('.advanced-link-form__raw__input').element._value).toBe(propsData.link)
   })
 
   it('should create switch between form using `modelValue` property', async () => {
     const wrapper = mount(AdvancedLinkForm, { global })
     await wrapper.vm.$nextTick()
-    expect(
-      wrapper.find('.tab-pane.active .advanced-link-form__raw').exists()
-    ).toBeTruthy()
+    expect(wrapper.find('.tab-pane.active .advanced-link-form__raw').exists()).toBeTruthy()
     await wrapper.setProps({ modelValue: 1 })
     await flushPromises()
-    expect(
-      wrapper.find('.tab-pane.active .advanced-link-form__rich').exists()
-    ).toBeTruthy()
+    expect(wrapper.find('.tab-pane.active .advanced-link-form__rich').exists()).toBeTruthy()
     await wrapper.setProps({ modelValue: 2 })
     await flushPromises()
-    expect(
-      wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()
-    ).toBeTruthy()
+    expect(wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()).toBeTruthy()
   })
 
   it('should create only 3 forms, markdown active by default', async () => {
@@ -60,9 +49,7 @@ describe('AdvancedLinkForm.vue', () => {
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await flushPromises()
     expect(wrapper.findAll('.tab-pane').length).toBe(3)
-    expect(
-      wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()
-    ).toBeTruthy()
+    expect(wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()).toBeTruthy()
   })
 
   it('should not use card by default', async () => {
@@ -70,9 +57,7 @@ describe('AdvancedLinkForm.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.classes()).not.toContain('advanced-link-form--card')
     expect(wrapper.find('.nav').classes()).not.toContain('card-header-tabs')
-    expect(wrapper.find('.tab-pane.active').classes()).not.toContain(
-      'card-body'
-    )
+    expect(wrapper.find('.tab-pane.active').classes()).not.toContain('card-body')
   })
 
   it('should use card when property is set', async () => {
@@ -127,9 +112,7 @@ describe('AdvancedLinkForm.vue', () => {
     const markdown = `[${propsData.title}](${propsData.link})`
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await wrapper.vm.$nextTick()
-    expect(
-      wrapper.find('.advanced-link-form__markdown__input').element.value
-    ).toBe(markdown)
+    expect(wrapper.find('.advanced-link-form__markdown__input').element.value).toBe(markdown)
   })
 
   it('should use the title in rich input', () => {
@@ -138,11 +121,7 @@ describe('AdvancedLinkForm.vue', () => {
       title: 'A Great Website'
     }
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
-    expect(wrapper.find('.advanced-link-form__rich__input').text()).toBe(
-      propsData.title
-    )
-    expect(
-      wrapper.find('.advanced-link-form__rich__input').attributes('href')
-    ).toBe(propsData.link)
+    expect(wrapper.find('.advanced-link-form__rich__input').text()).toBe(propsData.title)
+    expect(wrapper.find('.advanced-link-form__rich__input').attributes('href')).toBe(propsData.link)
   })
 })

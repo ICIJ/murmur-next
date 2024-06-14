@@ -9,9 +9,7 @@ describe('GenericHeader.vue', () => {
 
   it('renders the header as a `headroom` component', () => {
     const wrapper = shallowMount(GenericHeader)
-    expect(wrapper.find('#generic-header').element.tagName).toBe(
-      'HEADROOM-STUB'
-    )
+    expect(wrapper.find('#generic-header').element.tagName).toBe('HEADROOM-STUB')
   })
 
   it('renders the header as a div', () => {
@@ -32,9 +30,7 @@ describe('GenericHeader.vue', () => {
     const wrapper = shallowMount(GenericHeader, {
       propsData: { position }
     })
-    expect(wrapper.find('#generic-header').element.style.position).toBe(
-      position
-    )
+    expect(wrapper.find('#generic-header').element.style.position).toBe(position)
   })
 
   it('sets the header position to `absolute`', () => {
@@ -42,9 +38,7 @@ describe('GenericHeader.vue', () => {
     const wrapper = shallowMount(GenericHeader, {
       propsData: { position }
     })
-    expect(wrapper.find('#generic-header').element.style.position).toBe(
-      position
-    )
+    expect(wrapper.find('#generic-header').element.style.position).toBe(position)
   })
 
   it('renders home link to the default value', () => {

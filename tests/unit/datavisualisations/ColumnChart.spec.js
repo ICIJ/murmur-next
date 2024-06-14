@@ -68,9 +68,7 @@ describe('ColumnChart.vue', () => {
     })
 
     it('creates five columns', () => {
-      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(
-        5
-      )
+      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(5)
     })
 
     it('creates the first column with minimum height', () => {
@@ -93,21 +91,11 @@ describe('ColumnChart.vue', () => {
 
     it('should highlight only the fourth column', () => {
       const columns = wrapper.findAll('.column-chart__columns__item')
-      expect(
-        columns.at(0).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(1).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(2).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(3).classes('column-chart__columns__item--highlight')
-      ).toBeTruthy()
-      expect(
-        columns.at(4).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
+      expect(columns.at(0).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(1).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(2).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(3).classes('column-chart__columns__item--highlight')).toBeTruthy()
+      expect(columns.at(4).classes('column-chart__columns__item--highlight')).toBeFalsy()
     })
   })
 
@@ -144,9 +132,7 @@ describe('ColumnChart.vue', () => {
     })
 
     it('creates two columns', () => {
-      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(
-        2
-      )
+      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(2)
     })
 
     it('creates the first column with medium height', () => {
@@ -163,12 +149,8 @@ describe('ColumnChart.vue', () => {
 
     it('should have no highlighted column', () => {
       const columns = wrapper.findAll('.column-chart__columns__item')
-      expect(
-        columns.at(0).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(1).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
+      expect(columns.at(0).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(1).classes('column-chart__columns__item--highlight')).toBeFalsy()
     })
   })
 
@@ -225,9 +207,7 @@ describe('ColumnChart.vue', () => {
     })
 
     it('creates ten columns', () => {
-      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(
-        10
-      )
+      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(10)
     })
 
     it('creates the first column with medium height', () => {
@@ -244,36 +224,16 @@ describe('ColumnChart.vue', () => {
 
     it('should have two highlighted columns', () => {
       const columns = wrapper.findAll('.column-chart__columns__item')
-      expect(
-        columns.at(0).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(1).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(2).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(3).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(4).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(5).classes('column-chart__columns__item--highlight')
-      ).toBeTruthy()
-      expect(
-        columns.at(6).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(7).classes('column-chart__columns__item--highlight')
-      ).toBeTruthy()
-      expect(
-        columns.at(8).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
-      expect(
-        columns.at(9).classes('column-chart__columns__item--highlight')
-      ).toBeFalsy()
+      expect(columns.at(0).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(1).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(2).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(3).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(4).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(5).classes('column-chart__columns__item--highlight')).toBeTruthy()
+      expect(columns.at(6).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(7).classes('column-chart__columns__item--highlight')).toBeTruthy()
+      expect(columns.at(8).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(9).classes('column-chart__columns__item--highlight')).toBeFalsy()
     })
 
     it('should have 0 tooltips', () => {
@@ -332,21 +292,14 @@ describe('ColumnChart.vue', () => {
     it('should have 3 tooltips, none visible', () => {
       const tooltips = wrapper.findAll('.column-chart__tooltips__item')
       expect(tooltips).toHaveLength(3)
-      const visibleTooltips = wrapper.findAll(
-        '.column-chart__tooltips__item__wrapper'
-      )
+      const visibleTooltips = wrapper.findAll('.column-chart__tooltips__item__wrapper')
       expect(visibleTooltips).toHaveLength(0)
     })
 
     it('should have one tooltip visible after the mouse overs a column', async () => {
-      await wrapper
-        .findAll('.column-chart__columns__item')
-        .at(0)
-        .trigger('mouseover') // TODO fix me
+      await wrapper.findAll('.column-chart__columns__item').at(0).trigger('mouseover') // TODO fix me
       await wrapper.vm.$nextTick()
-      const visibleTooltips = wrapper.findAll(
-        '.column-chart__tooltips__item__wrapper'
-      )
+      const visibleTooltips = wrapper.findAll('.column-chart__tooltips__item__wrapper')
       expect(visibleTooltips).toHaveLength(1)
     })
 
@@ -355,48 +308,31 @@ describe('ColumnChart.vue', () => {
 
       await firstColumn.trigger('mouseover')
       await wrapper.vm.$nextTick()
-      expect(
-        wrapper.findAll('.column-chart__tooltips__item__wrapper')
-      ).toHaveLength(1)
+      expect(wrapper.findAll('.column-chart__tooltips__item__wrapper')).toHaveLength(1)
 
       await firstColumn.trigger('mouseleave')
       await wrapper.vm.$nextTick()
-      expect(
-        wrapper.findAll('.column-chart__tooltips__item__wrapper')
-      ).toHaveLength(0)
+      expect(wrapper.findAll('.column-chart__tooltips__item__wrapper')).toHaveLength(0)
     })
 
     it('should position the first tooltip next to the first bar', () => {
-      const { element: firstTooltip } = wrapper
-        .findAll('.column-chart__tooltips__item')
-        .at(0)
-      const x =
-        wrapper.vm.bars[0].x +
-        wrapper.vm.bars[0].width / 2 +
-        wrapper.vm.margin.left
+      const { element: firstTooltip } = wrapper.findAll('.column-chart__tooltips__item').at(0)
+      const x = wrapper.vm.bars[0].x + wrapper.vm.bars[0].width / 2 + wrapper.vm.margin.left
       const y = wrapper.vm.bars[0].y + wrapper.vm.margin.top
       expect(firstTooltip.style.left).toBe(`${x}px`)
       expect(firstTooltip.style.top).toBe(`${y}px`)
     })
 
     it('should position the third tooltip before to the third bar', () => {
-      const { element: thirdTooltip } = wrapper
-        .findAll('.column-chart__tooltips__item')
-        .at(2)
-      const x =
-        wrapper.vm.bars[2].x +
-        wrapper.vm.bars[2].width / 2 +
-        wrapper.vm.margin.left
+      const { element: thirdTooltip } = wrapper.findAll('.column-chart__tooltips__item').at(2)
+      const x = wrapper.vm.bars[2].x + wrapper.vm.bars[2].width / 2 + wrapper.vm.margin.left
       const y = wrapper.vm.bars[2].y + wrapper.vm.margin.top
       expect(thirdTooltip.style.left).toBe(`${x}px`)
       expect(thirdTooltip.style.top).toBe(`${y}px`)
     })
 
     it('should emit a "select" event when clicking on an item', async () => {
-      await wrapper
-        .findAll('.column-chart__columns__item__bar')
-        .at(0)
-        .trigger('click')
+      await wrapper.findAll('.column-chart__columns__item__bar').at(0).trigger('click')
 
       expect(wrapper.emitted().select).toBeTruthy()
       expect(wrapper.emitted().select[0][0]).toBe(wrapper.vm.bars[0].datum)

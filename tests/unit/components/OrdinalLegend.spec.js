@@ -22,15 +22,11 @@ describe('OrdinalLegend.vue', () => {
     })
 
     it('should start with Paris', () => {
-      expect(wrapper.findAll('.ordinal-legend__item__label').at(0).text()).toBe(
-        'Paris, France'
-      )
+      expect(wrapper.findAll('.ordinal-legend__item__label').at(0).text()).toBe('Paris, France')
     })
 
     it('should end with DC', () => {
-      expect(wrapper.findAll('.ordinal-legend__item__label').at(2).text()).toBe(
-        'Washington DC, USA'
-      )
+      expect(wrapper.findAll('.ordinal-legend__item__label').at(2).text()).toBe('Washington DC, USA')
     })
 
     it('should create 3 legend items', () => {

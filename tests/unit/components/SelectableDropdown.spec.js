@@ -166,11 +166,7 @@ describe('SelectableDropdown.vue', () => {
     it('set item as activated for multiple and items is an array of objects', () => {
       const eq = (item, other) => item.label === other.label
       const propsData = {
-        items: [
-          { label: 'Lesotho' },
-          { label: 'Senegal' },
-          { label: 'Djibouti' }
-        ],
+        items: [{ label: 'Lesotho' }, { label: 'Senegal' }, { label: 'Djibouti' }],
         modelValue: [{ label: 'Lesotho' }],
         multiple: true,
         eq

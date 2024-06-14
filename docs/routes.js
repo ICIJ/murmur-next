@@ -16,10 +16,10 @@ const routes = [
     path: '/',
     redirect: '/getting-started/installation-guide'
   },
-  ...docsFrontMatter.map(doc => {
+  ...docsFrontMatter.map((doc) => {
     const component = loadComponent(doc.meta.section, doc.name)
     return { ...doc, component }
   })
 ]
 
-export default routes;
+export default routes

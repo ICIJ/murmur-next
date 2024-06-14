@@ -105,14 +105,7 @@ describe('config.ts', () => {
     const component = {
       setup() {
         const app = getCurrentInstance()
-        return () =>
-          h(
-            'div',
-            app.appContext.config.globalProperties.$config.get(
-              'reactiveProp',
-              'bar'
-            )
-          )
+        return () => h('div', app.appContext.config.globalProperties.$config.get('reactiveProp', 'bar'))
       }
     }
 
@@ -128,14 +121,7 @@ describe('config.ts', () => {
     const component = {
       setup() {
         const app = getCurrentInstance()
-        return () =>
-          h(
-            'div',
-            app.appContext.config.globalProperties.$config.get(
-              'nested.reactiveProp',
-              'bar'
-            )
-          )
+        return () => h('div', app.appContext.config.globalProperties.$config.get('nested.reactiveProp', 'bar'))
       }
     }
 

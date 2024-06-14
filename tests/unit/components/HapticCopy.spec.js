@@ -46,9 +46,7 @@ describe('HapticCopy.vue', () => {
         label: 'Copy in the clipboard'
       }
     })
-    expect(wrapper.find('.haptic-copy__label').text()).toBe(
-      'Copy in the clipboard'
-    )
+    expect(wrapper.find('.haptic-copy__label').text()).toBe('Copy in the clipboard')
   })
 
   it('should emit an `success` event after copying text', async () => {

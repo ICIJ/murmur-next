@@ -8,13 +8,13 @@ export default new Vuex.Store({
     collapseMenu: true
   },
   mutations: {
-    toggleMenu (state) {
+    toggleMenu(state) {
       state.collapseMenu = !state.collapseMenu
     },
-    collapseMenu (state) {
+    collapseMenu(state) {
       state.collapseMenu = true
     },
-    showMenu (state) {
+    showMenu(state) {
       state.collapseMenu = false
     }
   }

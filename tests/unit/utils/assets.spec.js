@@ -17,41 +17,20 @@ describe('assets.js', () => {
   it('should define a script form Pym once', () => {
     expect(window.pym).toBeUndefined()
     injectAsset('https://pym.nprapps.org/pym.v1.min.js')
-    expect(
-      document.querySelectorAll(
-        'script[src="https://pym.nprapps.org/pym.v1.min.js"]'
-      ).length
-    ).toBe(1)
+    expect(document.querySelectorAll('script[src="https://pym.nprapps.org/pym.v1.min.js"]').length).toBe(1)
     injectAsset('https://pym.nprapps.org/pym.v1.min.js')
-    expect(
-      document.querySelectorAll(
-        'script[src="https://pym.nprapps.org/pym.v1.min.js"]'
-      ).length
-    ).toBe(1)
+    expect(document.querySelectorAll('script[src="https://pym.nprapps.org/pym.v1.min.js"]').length).toBe(1)
   })
 
   it('should define a script form Pym once, even if we pass an array with duplicates', () => {
-    injectAssets([
-      'https://pym.nprapps.org/pym.v1.min.js',
-      'https://pym.nprapps.org/pym.v1.min.js'
-    ])
-    expect(
-      document.querySelectorAll(
-        'script[src="https://pym.nprapps.org/pym.v1.min.js"]'
-      ).length
-    ).toBe(1)
+    injectAssets(['https://pym.nprapps.org/pym.v1.min.js', 'https://pym.nprapps.org/pym.v1.min.js'])
+    expect(document.querySelectorAll('script[src="https://pym.nprapps.org/pym.v1.min.js"]').length).toBe(1)
   })
 
   it('should define two scripts', () => {
-    injectAssets([
-      'https://pym.nprapps.org/pym.v1.min.js',
-      'https://pym.nprapps.org/pym.v1.js'
-    ])
+    injectAssets(['https://pym.nprapps.org/pym.v1.min.js', 'https://pym.nprapps.org/pym.v1.js'])
 
-    expect(
-      document.querySelectorAll('script[src^="https://pym.nprapps.org/pym.v1"]')
-        .length
-    ).toBe(2)
+    expect(document.querySelectorAll('script[src^="https://pym.nprapps.org/pym.v1"]').length).toBe(2)
   })
 
   it('should define two stylesheets', () => {

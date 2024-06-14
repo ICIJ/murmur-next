@@ -71,9 +71,7 @@ describe('ScaleLegend.vue', () => {
       // * values from 0 to 10,000 in white
       // * values from 10,000 to 20,000 in pink
       // * values from 20,000 to 30,000 in red
-      const colorScale = scaleThreshold()
-        .domain([1e4, 2e4])
-        .range(['white', 'pink', 'red'])
+      const colorScale = scaleThreshold().domain([1e4, 2e4]).range(['white', 'pink', 'red'])
       // Create a scale for value between 0 and 30,000
       const propsData = { min: 0, max: 3e4, width: 150, colorScale }
       wrapper = shallowMount(ScaleLegend, { propsData, computed })

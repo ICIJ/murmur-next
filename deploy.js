@@ -12,4 +12,4 @@ spinner.start()
 gh.publish(path.join(process.cwd(), 'dist', 'docs'), { message }, () => {
   spinner.stop()
   console.log(chalk.cyan('  Push complete.\n'))
-});
+})

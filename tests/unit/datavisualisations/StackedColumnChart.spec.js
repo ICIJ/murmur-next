@@ -55,323 +55,158 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates four columns', async () => {
-      expect(
-        wrapper.findAll('.stacked-column-chart__groups__item')
-      ).toHaveLength(4)
+      expect(wrapper.findAll('.stacked-column-chart__groups__item')).toHaveLength(4)
     })
 
     it('creates the first group of columns with maximum height', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const totalHeight =
-        fooColumn.element.offsetHeight + barColumn.element.offsetHeight
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const totalHeight = fooColumn.element.offsetHeight + barColumn.element.offsetHeight
       expect(totalHeight).toBe(100)
     })
 
     it('creates the second group of columns with ~90% height', () => {
-      const secondGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(1)
-      const fooColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const totalHeight =
-        fooColumn.element.offsetHeight + barColumn.element.offsetHeight
+      const secondGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(1)
+      const fooColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const totalHeight = fooColumn.element.offsetHeight + barColumn.element.offsetHeight
       expect(totalHeight).toBe(90)
     })
 
     it('creates the third group of columns with ~80% height', () => {
-      const secondGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(2)
-      const fooColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const totalHeight =
-        fooColumn.element.offsetHeight + barColumn.element.offsetHeight
+      const secondGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(2)
+      const fooColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const totalHeight = fooColumn.element.offsetHeight + barColumn.element.offsetHeight
       expect(totalHeight).toBe(80)
     })
 
     it('creates the first group of columns with `foo` taking 90% height', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
       const width = fooColumn.element.offsetHeight
       expect(width).toBe(90)
     })
 
     it('creates the first group of columns with `bar` taking 10% height', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
       const width = barColumn.element.offsetHeight
       expect(width).toBe(10)
     })
 
     it('creates the first group with "2006" as label', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const label = firstGroup.find(
-        '.stacked-column-chart__groups__item__label'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
       expect(label.text()).toBe('2006')
     })
 
     it('creates the second group with "2007" as label', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(1)
-      const label = firstGroup.find(
-        '.stacked-column-chart__groups__item__label'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(1)
+      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
       expect(label.text()).toBe('2007')
     })
 
     it('creates the first group with "2009" as label when ordered by "foo"', async () => {
       await wrapper.setProps({ sortBy: 'foo' })
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const label = firstGroup.find(
-        '.stacked-column-chart__groups__item__label'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
       expect(label.text()).toBe('2009')
     })
 
     it('creates a legend with "foo" and "bar" items', () => {
-      const fooLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(0)
-      const barLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(1)
+      const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
+      const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
       expect(fooLegend.text()).toBe('foo')
       expect(barLegend.text()).toBe('bar')
     })
 
     it('hightlight the legend "foo"', async () => {
-      const fooLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(0)
-      expect(
-        fooLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeFalsy()
+      const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
+      expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
       await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay + 10)
-      expect(
-        fooLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeTruthy()
+      expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
     })
 
     it('hightlight the columns for "foo"', async () => {
-      const fooLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(0)
+      const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
-      const fooColumns = wrapper.findAll(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      expect(
-        fooColumns
-          .at(0)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
-      expect(
-        fooColumns
-          .at(1)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
-      expect(
-        fooColumns
-          .at(2)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
-      expect(
-        fooColumns
-          .at(3)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
+      const fooColumns = wrapper.findAll('.stacked-column-chart__groups__item__bars__item--foo')
+      expect(fooColumns.at(0).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(fooColumns.at(1).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(fooColumns.at(2).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(fooColumns.at(3).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
     it('hightlight the columns for "bar"', async () => {
-      const barLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(1)
+      const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
       await barLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
-      const budgetBars = wrapper.findAll(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      expect(
-        budgetBars
-          .at(0)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
-      expect(
-        budgetBars
-          .at(1)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
-      expect(
-        budgetBars
-          .at(2)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
-      expect(
-        budgetBars
-          .at(3)
-          .classes(
-            'stacked-column-chart__groups__item__bars__item--highlighted'
-          )
-      ).toBeTruthy()
+      const budgetBars = wrapper.findAll('.stacked-column-chart__groups__item__bars__item--bar')
+      expect(budgetBars.at(0).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(budgetBars.at(1).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(budgetBars.at(2).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(budgetBars.at(3).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
     it('hightlight the legend "foo" on mouseover and "bar" by default', async () => {
       await wrapper.setProps({ highlights: ['bar'] })
-      const fooLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(0)
-      const barLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(1)
-      expect(
-        fooLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeFalsy()
-      expect(
-        barLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeTruthy()
+      const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
+      const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
+      expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
+      expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
       await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
-      expect(
-        fooLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeTruthy()
-      expect(
-        barLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeFalsy()
+      expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
+      expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
     })
 
     it('hightlight the columns for "bar" after a while', async () => {
-      const barLegend = wrapper
-        .findAll('.stacked-column-chart__legend__item')
-        .at(1)
+      const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
       await wrapper.setProps({ highlightDelay: 150 })
       await barLegend.trigger('mouseover')
-      expect(
-        barLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeFalsy()
+      expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay / 2)
-      expect(
-        barLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeFalsy()
+      expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay * 2)
-      expect(
-        barLegend.classes('stacked-column-chart__legend__item--highlighted')
-      ).toBeTruthy()
+      expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
     })
 
     it('hightlight the whole "2006" column', async () => {
       await wrapper.setProps({ columnHighlights: [2006] })
-      const foo = wrapper
-        .findAll('.stacked-column-chart__groups__item__bars__item')
-        .at(0)
-      const bar = wrapper
-        .findAll('.stacked-column-chart__groups__item__bars__item')
-        .at(1)
-      expect(
-        foo.classes(
-          'stacked-column-chart__groups__item__bars__item--highlighted'
-        )
-      ).toBeTruthy()
-      expect(
-        bar.classes(
-          'stacked-column-chart__groups__item__bars__item--highlighted'
-        )
-      ).toBeTruthy()
+      const foo = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(0)
+      const bar = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(1)
+      expect(foo.classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(bar.classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
     it('hightlight the whole "2009" column', async () => {
       await wrapper.setProps({ columnHighlights: [2009] })
-      const foo = wrapper
-        .findAll('.stacked-column-chart__groups__item__bars__item')
-        .at(6)
-      const bar = wrapper
-        .findAll('.stacked-column-chart__groups__item__bars__item')
-        .at(7)
-      expect(
-        foo.classes(
-          'stacked-column-chart__groups__item__bars__item--highlighted'
-        )
-      ).toBeTruthy()
-      expect(
-        bar.classes(
-          'stacked-column-chart__groups__item__bars__item--highlighted'
-        )
-      ).toBeTruthy()
+      const foo = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(6)
+      const bar = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(7)
+      expect(foo.classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
+      expect(bar.classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
     it('creates columns with specific colors', async () => {
       await wrapper.setProps({ barColors: ['#000', '#444'] })
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
       expect(fooColumn.element.style['background-color']).toBe('rgb(0, 0, 0)')
-      expect(barColumn.element.style['background-color']).toBe(
-        'rgb(68, 68, 68)'
-      )
+      expect(barColumn.element.style['background-color']).toBe('rgb(68, 68, 68)')
     })
 
     it('creates legend with specific colors', async () => {
       await wrapper.setProps({ barColors: ['#000', '#444'] })
-      const legendBoxes = wrapper.findAll(
-        '.stacked-column-chart__legend__item__box'
-      )
+      const legendBoxes = wrapper.findAll('.stacked-column-chart__legend__item__box')
       const budgetBox = legendBoxes.at(0)
       const boxOfficeBox = legendBoxes.at(1)
       expect(budgetBox.element.style['background-color']).toBe('rgb(0, 0, 0)')
-      expect(boxOfficeBox.element.style['background-color']).toBe(
-        'rgb(68, 68, 68)'
-      )
+      expect(boxOfficeBox.element.style['background-color']).toBe('rgb(68, 68, 68)')
     })
 
     it('creates one legend when using explicite keys', async () => {
@@ -382,12 +217,8 @@ describe('StackedColumnChart.vue', () => {
 
     it('creates one bar when using explicite keys', async () => {
       await wrapper.setProps({ keys: ['foo'] })
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const columns = firstGroup.findAll(
-        '.stacked-column-chart__groups__item__bars__item'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const columns = firstGroup.findAll('.stacked-column-chart__groups__item__bars__item')
       expect(columns).toHaveLength(1)
     })
 
@@ -399,24 +230,16 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates bar direct labeling without formatting', async () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const values = firstGroup.findAll(
-        '.stacked-column-chart__groups__item__bars__item__value'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const values = firstGroup.findAll('.stacked-column-chart__groups__item__bars__item__value')
       expect(values.at(0).text()).toBe('90')
       expect(values.at(1).text()).toBe('10')
     })
 
     it('creates bar direct labeling without with currency formatting', async () => {
       await wrapper.setProps({ yAxisTickFormat: '$,' })
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const values = firstGroup.findAll(
-        '.stacked-column-chart__groups__item__bars__item__value'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const values = firstGroup.findAll('.stacked-column-chart__groups__item__bars__item__value')
       expect(values.at(0).text()).toBe('$90')
       expect(values.at(1).text()).toBe('$10')
     })
@@ -458,100 +281,54 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates 2 columns', async () => {
-      expect(
-        wrapper.findAll('.stacked-column-chart__groups__item')
-      ).toHaveLength(2)
+      expect(wrapper.findAll('.stacked-column-chart__groups__item')).toHaveLength(2)
     })
 
     it('creates the first group of columns with maximum height', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const bazColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--baz'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const bazColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
       const totalHeight =
-        fooColumn.element.offsetHeight +
-        barColumn.element.offsetHeight +
-        bazColumn.element.offsetHeight
+        fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
       expect(totalHeight).toBe(100)
     })
 
     it('creates the first group of columns with maximum width', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const bazColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--baz'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const bazColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
       expect(fooColumn.element.style.maxWidth).toBe('50%')
       expect(barColumn.element.style.maxWidth).toBe('50%')
       expect(bazColumn.element.style.maxWidth).toBe('50%')
     })
 
     it('creates the second group of columns with ~50% height', () => {
-      const secondGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(1)
-      const fooColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const bazColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--baz'
-      )
+      const secondGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(1)
+      const fooColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const bazColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
       const totalHeight =
-        fooColumn.element.offsetHeight +
-        barColumn.element.offsetHeight +
-        bazColumn.element.offsetHeight
+        fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
       expect(totalHeight).toBe(50)
     })
 
     it('creates the first group of columns with right height for each', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const bazColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--baz'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const bazColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
       expect(fooColumn.element.offsetHeight).toBe(90)
       expect(barColumn.element.offsetHeight).toBe(5)
       expect(bazColumn.element.offsetHeight).toBe(5)
     })
 
     it('creates the second group of columns with right height for each', () => {
-      const secondGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(1)
-      const fooColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const bazColumn = secondGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--baz'
-      )
+      const secondGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(1)
+      const fooColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const bazColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
       expect(fooColumn.element.offsetHeight).toBe(40)
       expect(barColumn.element.offsetHeight).toBe(10)
       expect(bazColumn.element.offsetHeight).toBe(0)
@@ -569,16 +346,12 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates a left axis with 0 as minimum value', async () => {
-      const firstTick = wrapper.find(
-        '.stacked-column-chart__left-axis .tick:first-of-type text'
-      )
+      const firstTick = wrapper.find('.stacked-column-chart__left-axis .tick:first-of-type text')
       expect(firstTick.text()).toBe('0')
     })
 
     it('creates a left axis with 100 as minimum value', async () => {
-      const lastTick = wrapper.find(
-        '.stacked-column-chart__left-axis .tick:last-of-type text'
-      )
+      const lastTick = wrapper.find('.stacked-column-chart__left-axis .tick:last-of-type text')
       expect(lastTick.text()).toBe('100')
     })
   })
@@ -613,28 +386,16 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates 2 columns', async () => {
-      expect(
-        wrapper.findAll('.stacked-column-chart__groups__item')
-      ).toHaveLength(2)
+      expect(wrapper.findAll('.stacked-column-chart__groups__item')).toHaveLength(2)
     })
 
     it('creates the first group of columns with maximum height', () => {
-      const firstGroup = wrapper
-        .findAll('.stacked-column-chart__groups__item')
-        .at(0)
-      const fooColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--foo'
-      )
-      const barColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--bar'
-      )
-      const bazColumn = firstGroup.find(
-        '.stacked-column-chart__groups__item__bars__item--baz'
-      )
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
+      const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
+      const bazColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
       const totalHeight =
-        fooColumn.element.offsetHeight +
-        barColumn.element.offsetHeight +
-        bazColumn.element.offsetHeight
+        fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
       expect(totalHeight).toBe(50)
     })
   })
@@ -671,32 +432,24 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates 3 columns', async () => {
-      expect(
-        wrapper.findAll('.stacked-column-chart__groups__item')
-      ).toHaveLength(3)
+      expect(wrapper.findAll('.stacked-column-chart__groups__item')).toHaveLength(3)
     })
 
     it('creates the first column with no hidden bars', () => {
       const group = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
-      const hiddenBars = group.findAll(
-        '.stacked-column-chart__groups__item__bars__item--hidden'
-      )
+      const hiddenBars = group.findAll('.stacked-column-chart__groups__item__bars__item--hidden')
       expect(hiddenBars).toHaveLength(0)
     })
 
     it('creates the second column with one hidden bar', () => {
       const group = wrapper.findAll('.stacked-column-chart__groups__item').at(1)
-      const hiddenBars = group.findAll(
-        '.stacked-column-chart__groups__item__bars__item--hidden'
-      )
+      const hiddenBars = group.findAll('.stacked-column-chart__groups__item__bars__item--hidden')
       expect(hiddenBars).toHaveLength(1)
     })
 
     it('creates the third column with two hidden bars', () => {
       const group = wrapper.findAll('.stacked-column-chart__groups__item').at(2)
-      const hiddenBars = group.findAll(
-        '.stacked-column-chart__groups__item__bars__item--hidden'
-      )
+      const hiddenBars = group.findAll('.stacked-column-chart__groups__item__bars__item--hidden')
       expect(hiddenBars).toHaveLength(2)
     })
   })

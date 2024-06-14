@@ -37,9 +37,7 @@ describe('DonateForm.vue', () => {
     await wrapper.find('.frequency-monthly').trigger('click')
     const amount = 3
     await updateAmount(wrapper, amount)
-    expect(wrapper.vm.changeThe).toBe(
-      wrapper.vm.t('donate-form.result.conversation')
-    )
+    expect(wrapper.vm.changeThe).toBe(wrapper.vm.t('donate-form.result.conversation'))
   })
 
   it('shows a specific message for monthly amount higher or equal than 15', async () => {
@@ -71,9 +69,7 @@ describe('DonateForm.vue', () => {
     await wrapper.find('.frequency-yearly').trigger('click')
     const amount = 35
     await updateAmount(wrapper, amount)
-    expect(wrapper.vm.changeThe).toBe(
-      wrapper.vm.t('donate-form.result.conversation')
-    )
+    expect(wrapper.vm.changeThe).toBe(wrapper.vm.t('donate-form.result.conversation'))
   })
 
   it('shows a specific message for yearly amount higher or equal than 180', async () => {

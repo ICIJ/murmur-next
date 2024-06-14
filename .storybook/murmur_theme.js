@@ -13,8 +13,7 @@ export default create({
   barBg: '#212121',
   colorPrimary: '#FF0000',
   colorSecondary: '#999999',
-  fontBase:
-    '"Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontBase: '"Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   buttonBg: '#FF0000',
   buttonColor: '#FFFFFF',
   buttonBorder: '#FF0000',
