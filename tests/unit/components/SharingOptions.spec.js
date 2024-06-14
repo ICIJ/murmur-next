@@ -1,7 +1,6 @@
-import { mount, enableAutoUnmount, config } from '@vue/test-utils'
+import { mount, enableAutoUnmount } from '@vue/test-utils'
 
 import SharingOptions from '@/components/SharingOptions'
-import Murmur from '@/main'
 
 describe('SharingOptions', () => {
   const propsData = {

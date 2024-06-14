@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import { join, resolve } from 'path'
-import { shallowMount, flushPromises } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import SymbolMap from '@/maps/SymbolMap.vue'
 
 vi.mock('d3', async () => {

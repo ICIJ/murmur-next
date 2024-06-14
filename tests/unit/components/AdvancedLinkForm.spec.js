@@ -1,13 +1,8 @@
-import MutationObserver from 'mutationobserver-shim'
 import { mount, flushPromises } from '@vue/test-utils'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
 
 describe('AdvancedLinkForm.vue', () => {
-  const createContainer = (tag = 'div') => {
-    const container = document.createElement(tag)
-    document.body.appendChild(container)
-    return container
-  }
+
   const global = { stubs: { HapticCopy: true } }
   it('should be a Vue instance', () => {
     const wrapper = mount(AdvancedLinkForm, { global })
