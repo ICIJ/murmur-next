@@ -5,6 +5,7 @@ import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardC
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
 
 import noop from 'lodash/noop'
+import uniqueId from 'lodash/uniqueId'
 import {
   ComponentPublicInstance,
   computed,
@@ -99,10 +100,13 @@ export default defineComponent({
     const tooltipContent = ref<string>('')
     const tooltipTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const showClipboardTooltip = ref(false)
+    const buttonId = computed(() => uniqueId('haptic-copy-'))
+    
     onBeforeMount(() => {
       library.add(faClipboard)
       library.add(faClipboardCheck)
     })
+
     const tooltipContainer = computed((): string | null => {
       // By default we append the tooltip in the root container using its
       // id (if any) because BootstrapVue doesn't like HTMLElement for some
@@ -181,13 +185,16 @@ export default defineComponent({
     onUnmounted(() => {
       closeTooltip()
     })
+
     expose({
       hide: closeTooltip
     })
+
     return {
       t,
       tooltip,
       el,
+      buttonId,
       showClipboardTooltip,
       tooltipContainer,
       tooltipContent,
@@ -203,7 +210,7 @@ export default defineComponent({
 
 <template>
   <button
-    id="hapticCopy"
+    :id="buttonId"
     ref="el"
     class="btn haptic-copy"
     @mouseleave="closeTooltip"
@@ -236,9 +243,9 @@ export default defineComponent({
       ref="tooltip"
       :model-value="showClipboardTooltip"
       :placement="tooltipPlacement"
+      :target="buttonId"
       manual
       noninteractive
-      target="hapticCopy"
     >
       {{ tooltipContent }}
     </b-tooltip>
