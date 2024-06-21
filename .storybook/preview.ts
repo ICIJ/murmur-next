@@ -53,5 +53,5 @@ export const parameters = {
 export default {
   parameters,
   decorators,
-  tags: ['autodocs']
+  tags: ['autodocs', 'autodocs']
 };
