@@ -1,9 +1,10 @@
 import { setup } from '@storybook/vue3'
+import { styled } from '@storybook/theming'
 import { useArgs } from '@storybook/preview-api'
+import { withThemeByDataAttribute } from '@storybook/addon-themes'
 
 import './app.scss'
 import Murmur from '@/main'
-import { withThemeByDataAttribute } from '@storybook/addon-themes'
 
 setup((app) => {
   app.use(Murmur)
@@ -41,7 +42,33 @@ export const decorators = [
   }
 ]
 
+const style = { 
+  fontFamily: '"Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important'
+}
+
+const styleH1 = {
+  fontFamily: `"Anton", ${style.fontFamily}`,
+  fontWeight: '400',
+  fontSize: '2.5rem',
+  // In kebab-case to respect the type definition
+  'text-transform': 'uppercase'
+}
+
 export const parameters = {
+  docs: {
+    components: {
+      h1: styled.h1(() => styleH1),
+      h2: styled.h1(() => style),
+      h3: styled.h1(() => style),
+      h4: styled.h1(() => style),
+      h5: styled.h1(() => style),
+      section: styled.section(() => style),
+      p: styled.p(() => style),
+      div: styled.div(() => style),
+      span: styled.span(() => style),
+      input: styled.input(() => style)
+    },
+  },
   controls: {
     matchers: {
       color: /(background|color)$/i,
@@ -53,5 +80,5 @@ export const parameters = {
 export default {
   parameters,
   decorators,
-  tags: ['autodocs', 'autodocs']
+  tags: ['autodocs'],
 };
