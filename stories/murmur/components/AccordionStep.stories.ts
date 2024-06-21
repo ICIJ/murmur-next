@@ -19,9 +19,14 @@ const Template: Story = (args: any) => ({
   setup() {
     return { args }
   },
-  template: `<AccordionStep v-bind="args" ><template #title>
-        <b-button @click="args.active = !args.active">{{args.active?'Expanded':'Collapsed'}}</b-button> Install Mailvelope
-    </template></AccordionStep>`
+  template: `<AccordionStep v-bind="args" >
+    <template #title>
+        <b-button @click="args.active = !args.active">
+          {{args.active?'Expanded':'Collapsed'}}
+        </b-button>
+        Install Mailvelope
+    </template>
+  </AccordionStep>`
 })
 
 export const Default = Template.bind({})
