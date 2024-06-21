@@ -1,8 +1,5 @@
 import { addons } from '@storybook/manager-api'
 
-import murmurTheme from './murmur_theme'
+import theme from './theme'
 
-addons.setConfig({
-  navSize: 300,
-  theme: murmurTheme
-})
+addons.setConfig({ navSize: 300, theme })
