@@ -238,17 +238,19 @@ export default defineComponent({
         {{ label || t('haptic-copy.label') }}
       </span>
     </slot>
-    <b-tooltip
-      v-if="!noTooltip"
-      ref="tooltip"
-      :model-value="showClipboardTooltip"
-      :placement="tooltipPlacement"
-      :target="buttonId"
-      manual
-      noninteractive
-    >
-      {{ tooltipContent }}
-    </b-tooltip>
+    <teleport to="body">
+      <b-tooltip
+        v-if="!noTooltip"
+        ref="tooltip"
+        :model-value="showClipboardTooltip"
+        :placement="tooltipPlacement"
+        :target="buttonId"
+        manual
+        noninteractive
+      >
+        {{ tooltipContent }}
+      </b-tooltip>
+    </teleport>
   </button>
 </template>
 <style lang="scss">
