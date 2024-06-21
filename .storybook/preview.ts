@@ -47,9 +47,14 @@ const style = {
   fontSize: '1rem',
 }
 
+const headingsStyle = {
+  fontFamily: 'var(--bs-font-sans-serif) !important',
+  fontWeight: 'var(--bs-headings-weight-bold)'
+}
+
 const h1Style = {
+  ...headingsStyle,
   fontFamily: `"Anton", ${style.fontFamily}`,
-  fontWeight: '400',
   fontSize: '2.5rem',
   // In kebab-case to respect the type definition
   'text-transform': 'uppercase'
@@ -67,11 +72,11 @@ export const parameters = {
   docs: {
     components: {
       h1: styled.h1(() => h1Style),
-      h2: styled.h2(() => style),
-      h3: styled.h3(() => style),
-      h4: styled.h4(() => style),
-      h5: styled.h5(() => style),
-      h6: styled.h6(() => style),
+      h2: styled.h2(() => headingsStyle),
+      h3: styled.h3(() => headingsStyle),
+      h4: styled.h4(() => headingsStyle),
+      h5: styled.h5(() => headingsStyle),
+      h6: styled.h6(() => headingsStyle),
       a: styled.a(() => aStyle),
       section: styled.section(() => style),
       p: styled.p(() => style),
