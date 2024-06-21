@@ -3,7 +3,7 @@ import { styled } from '@storybook/theming'
 import { useArgs } from '@storybook/preview-api'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 
-import './app.scss'
+import './preview.scss'
 import Murmur from '@/main'
 
 setup((app) => {
