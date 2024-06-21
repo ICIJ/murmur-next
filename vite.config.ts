@@ -5,7 +5,6 @@ import { fileURLToPath, URL } from "node:url";
 import DTS from "vite-plugin-dts";
 import Vue from '@vitejs/plugin-vue'
 import Delete from './plugins/plugin-delete'
-import VueDocgen from './plugins/plugin-docgen'
 import Components from 'unplugin-vue-components/vite'
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
@@ -16,7 +15,6 @@ export default defineConfig({
   plugins: [
     Delete(),
     Vue(),
-    VueDocgen(),
     DTS({
       exclude: [
         'tests/**',
