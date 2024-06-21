@@ -30,14 +30,14 @@
 
 
 h1 {
-  font-family: $headings-font-family !important;
-  font-weight: $jumbotron-font-weight;
+  font-family: var(--bs-font-sans-serif) !important;
+  font-weight: var(--bs-body-font-weight);
   font-size: 2.5rem;
 }
 
 h2, h3, h4, h5, h6 {
-  font-family: $headings-font-family;
-  font-weight: $headings-font-weight;
+  font-family: var(--bs-font-sans-serif);
+  font-weight: var(--bs-body-font-weight);
 }
 
 pre {
