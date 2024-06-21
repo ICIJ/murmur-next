@@ -529,6 +529,8 @@ export default defineComponent({
     left: 0;
 
     &__item {
+      $tooltip-bg: $body-emphasis-color;
+
       display: inline-flex;
       text-align: center;
       flex-direction: row;
@@ -545,6 +547,7 @@ export default defineComponent({
         color: $tooltip-color;
         margin: 0;
         padding: $tooltip-padding-y $tooltip-padding-x;
+        
         &.fade-enter-active,
         &.fade-leave-active {
           transition: $transition-fade;
