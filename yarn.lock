@@ -3651,7 +3651,7 @@
     js-beautify "^1.14.9"
     vue-component-type-helpers "^2.0.0"
 
-"@vueuse/core@^10.7.2":
+"@vueuse/core@^10.10.0":
   version "10.11.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-10.11.0.tgz#b042585a8bf98bb29c177b33999bd0e3fcd9e65d"
   integrity sha512-x3sD4Mkm7PJ+pcq3HX8PLPBadXCAlSDR/waK87dz0gQE+qJnaaFhc/dZVfJz+IUYzTMVGum2QlR7ImiJQN4s6g==
@@ -4086,13 +4086,13 @@ boolbase@^1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
 
-bootstrap-vue-next@^0.16.6:
-  version "0.16.6"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.16.6.tgz#bd35ad1ed64692badd8c7093fd238b5d6fc65ab0"
-  integrity sha512-CDjq3KgIOALJO/Zvmcgxqavv1NznFROUl7yWHAmp4T4R8IRJLfyMj1zizjw2OzCvQ+uJ9PZ28T1Cx7xq8+m2xg==
+bootstrap-vue-next@^0.22.1:
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.22.1.tgz#a173a845751d576c547fa7d28f8fa632d90ccbcc"
+  integrity sha512-rzwnKyAvA3ceBXX+AEhhmLUV9GSqyRr68itLg3WF2PeGG3eMsiSYF6BTn6G9XYXqWtVWt7BwYAg17CCVNhLyHQ==
   dependencies:
     "@floating-ui/vue" "^1.0.6"
-    "@vueuse/core" "^10.7.2"
+    "@vueuse/core" "^10.10.0"
 
 bootstrap@^5.3.3:
   version "5.3.3"
@@ -9976,6 +9976,7 @@ wordwrap@^1.0.0:
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
