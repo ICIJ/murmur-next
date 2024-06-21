@@ -1,8 +1,16 @@
 import { mount, enableAutoUnmount } from '@vue/test-utils'
 
 import SharingOptions from '@/components/SharingOptions'
+import { BModal } from 'bootstrap-vue-next'
 
 describe('SharingOptions', () => {
+
+  const createContainer = (tag = 'div') => {
+    const container = document.createElement(tag)
+    document.body.appendChild(container)
+    return container
+  }
+
   const propsData = {
     url: 'https://medicaldevices.icij.org/',
     values: {
@@ -13,18 +21,6 @@ describe('SharingOptions', () => {
   }
 
   enableAutoUnmount(afterEach)
-
-  beforeEach(() => {
-    // create teleport target
-    const el = document.createElement('div')
-    el.id = 'embedForm'
-    document.body.appendChild(el)
-  })
-
-  afterEach(() => {
-    // clean up
-    document.body.outerHTML = ''
-  })
 
   it('is a Vue instance', () => {
     const wrapper = mount(SharingOptions, { propsData })
@@ -102,12 +98,13 @@ describe('SharingOptions', () => {
   it('toggles the embed form', async () => {
     const wrapper = mount(SharingOptions, {
       propsData,
-      global: { stubs: { teleport: true, HapticCopy: true } }
+      global: { 
+        stubs: { Teleport: true, HapticCopy: true, Transition: true }, 
+        renderStubDefaultSlot: true 
+      }
     })
-
-    const $modal = wrapper.find('#embedForm')
-    expect($modal.isVisible()).toBe(false)
-    await wrapper.find('.sharing-options__link--embed a').trigger('click')
+    const $modal = wrapper.findComponent(BModal)
+    await wrapper.find('.sharing-options__link--embed').trigger('click')
     expect($modal.isVisible()).toBe(true)
   })
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
+import uniqueId from 'lodash/uniqueId'
 import { faCode } from '@fortawesome/free-solid-svg-icons/faCode'
 import {
   computed,
@@ -117,9 +118,9 @@ export default defineComponent({
     onBeforeMount(() => {
       library.add(faCode)
     })
-
-    const embedForm = ref(null)
-    const { show } = useModal('embedForm')
+    
+    const embedFormId = uniqueId('embed-form-')
+    const { show } = useModal(embedFormId)
     const style = computed((): CSSProperties => {
       return {
         'flex-direction': props.direction
@@ -183,7 +184,7 @@ export default defineComponent({
     return {
       style,
       show,
-      embedForm,
+      embedFormId,
       valuesFor
     }
   }
@@ -212,22 +213,11 @@ export default defineComponent({
       network="email"
       v-bind="valuesFor('email')"
     />
-    <div
-      v-show="!noEmbed"
-      class="sharing-options__link sharing-options__link--embed"
-    >
-      <a @click="show">
-        <fa icon="code" />
-        <span class="sr-only">Embed</span>
-      </a>
-    </div>
-    <b-modal
-      id="embedForm"
-      ref="embedForm"
-      class="text-dark"
-      hide-footer
-      title="Embed on your website"
-    >
+    <a class="sharing-options__link sharing-options__link--embed" @click="show" v-show="!noEmbed">
+      <fa icon="code" />
+      <span class="sr-only">Embed</span>
+    </a>
+    <b-modal :id="embedFormId" class="text-dark" hide-footer title="Embed on your website">
       <embed-form
         :min-height="iframeMinHeight"
         :min-width="iframeMinWidth"
