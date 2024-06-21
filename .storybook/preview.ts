@@ -43,10 +43,11 @@ export const decorators = [
 ]
 
 const style = { 
-  fontFamily: '"Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important'
+  fontFamily: 'var(--bs-font-sans-serif) !important',
+  fontSize: '1rem',
 }
 
-const styleH1 = {
+const h1Style = {
   fontFamily: `"Anton", ${style.fontFamily}`,
   fontWeight: '400',
   fontSize: '2.5rem',
@@ -54,17 +55,28 @@ const styleH1 = {
   'text-transform': 'uppercase'
 }
 
+const aStyle = {
+  ...style,
+  color: 'rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));',
+  '&:hover': {
+    textDecoration: 'underline'
+  }
+}
+
 export const parameters = {
   docs: {
     components: {
-      h1: styled.h1(() => styleH1),
-      h2: styled.h1(() => style),
-      h3: styled.h1(() => style),
-      h4: styled.h1(() => style),
-      h5: styled.h1(() => style),
+      h1: styled.h1(() => h1Style),
+      h2: styled.h2(() => style),
+      h3: styled.h3(() => style),
+      h4: styled.h4(() => style),
+      h5: styled.h5(() => style),
+      h6: styled.h6(() => style),
+      a: styled.a(() => aStyle),
       section: styled.section(() => style),
       p: styled.p(() => style),
       div: styled.div(() => style),
+      pre: styled.div(() => ({ })),
       span: styled.span(() => style),
       input: styled.input(() => style)
     },
@@ -79,6 +91,5 @@ export const parameters = {
 
 export default {
   parameters,
-  decorators,
-  tags: ['autodocs'],
+  decorators
 };
