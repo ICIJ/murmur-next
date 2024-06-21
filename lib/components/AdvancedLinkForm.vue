@@ -4,7 +4,6 @@ import {
   BTabs,
   BTab,
   BInputGroup,
-  BInputGroupAppend,
   BFormInput
 } from 'bootstrap-vue-next'
 
@@ -35,7 +34,6 @@ export default defineComponent({
     BTabs,
     BTab,
     BInputGroup,
-    BInputGroupAppend,
     BFormInput,
     HapticCopy
   },
@@ -216,13 +214,11 @@ export default defineComponent({
             class="advanced-link-form__raw__input"
             @click="selectRaw"
           />
-          <b-input-group-append>
-            <haptic-copy
-              class="btn-secondary"
-              :text="link"
-              @attempt="selectRaw"
-            />
-          </b-input-group-append>
+          <haptic-copy
+            class="btn-secondary"
+            :text="link"
+            @attempt="selectRaw"
+          />
         </b-input-group>
       </div>
     </b-tab>
@@ -236,15 +232,13 @@ export default defineComponent({
             @click.prevent="selectRich"
             >{{ titleOrLink }}</a
           >
-          <b-input-group-append>
-            <haptic-copy
-              class="btn-secondary"
-              html
-              :text="linkAsHtml"
-              :plain="link"
-              @attempt="selectRich"
-            />
-          </b-input-group-append>
+          <haptic-copy
+            class="btn-secondary"
+            html
+            :text="linkAsHtml"
+            :plain="link"
+            @attempt="selectRich"
+          />
         </b-input-group>
         <p class="text-muted mt-2 mb-0">
           {{ t('advanced-link-form.rich.description') }}
@@ -264,13 +258,11 @@ export default defineComponent({
             class="advanced-link-form__markdown__input"
             @click="selectMarkdown"
           />
-          <b-input-group-append>
-            <haptic-copy
-              class="btn-secondary"
-              :text="linkAsMarkdown"
-              @attempt="selectMarkdown"
-            />
-          </b-input-group-append>
+          <haptic-copy
+            class="btn-secondary"
+            :text="linkAsMarkdown"
+            @attempt="selectMarkdown"
+          />
         </b-input-group>
         <p class="text-muted mt-2 mb-0">
           {{ t('advanced-link-form.markdown.description') }}
@@ -287,13 +279,11 @@ export default defineComponent({
             class="advanced-link-form__html__input"
             @click="selectHtml"
           />
-          <b-input-group-append>
-            <haptic-copy
-              class="btn-secondary"
-              :text="linkAsHtml"
-              @attempt="selectHtml"
-            />
-          </b-input-group-append>
+          <haptic-copy
+            class="btn-secondary"
+            :text="linkAsHtml"
+            @attempt="selectHtml"
+          />
         </b-input-group>
       </div>
     </b-tab>

@@ -92,11 +92,9 @@ export default defineComponent({
 
 <template>
   <b-input-group :size="size" class="secret-input">
-    <b-input-group-prepend v-if="!noToggler">
-      <b-button variant="link" class="secret-input__toggler" @click="toggle">
-        <fa fixed-width :icon="togglerIcon" />
-      </b-button>
-    </b-input-group-prepend>
+    <b-button v-if="!noToggler" variant="link" class="secret-input__toggler" @click="toggle">
+      <fa fixed-width :icon="togglerIcon" />
+    </b-button>
     <b-form-input
       ref="secretInput"
       class="text-monospace secret-input__input"
@@ -105,16 +103,15 @@ export default defineComponent({
       :modelValue="value"
       @click="selectInput"
     />
-    <b-input-group-append v-if="!noHapticCopy">
-      <haptic-copy
-        class="secret-input__copy"
-        hide-label
-        :class="hapticCopyClassList"
-        :text="value"
-        @success="selectInput"
-        @error="selectInput"
-      />
-    </b-input-group-append>
+    <haptic-copy
+      v-if="!noHapticCopy"
+      class="secret-input__copy"
+      hide-label
+      :class="hapticCopyClassList"
+      :text="value"
+      @success="selectInput"
+      @error="selectInput"
+    />
   </b-input-group>
 </template>
 

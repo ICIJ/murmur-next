@@ -4,8 +4,6 @@ import SecretInput from '@/components/SecretInput.vue'
 describe('SecretInput.vue', () => {
   // Stubs Bootstrap Vue components
   const stubs = [
-    'b-input-group-prepend',
-    'b-input-group-append',
     'b-input-group',
     'b-form-input',
     'b-button',
