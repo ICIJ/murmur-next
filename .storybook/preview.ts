@@ -57,16 +57,16 @@ const styleH1 = {
 export const parameters = {
   docs: {
     components: {
-      // h1: styled.h1(() => styleH1),
-      // h2: styled.h1(() => style),
-      // h3: styled.h1(() => style),
-      // h4: styled.h1(() => style),
-      // h5: styled.h1(() => style),
-      // section: styled.section(() => style),
-      // p: styled.p(() => style),
-      // div: styled.div(() => style),
-      // span: styled.span(() => style),
-      // input: styled.input(() => style)
+      h1: styled.h1(() => styleH1),
+      h2: styled.h1(() => style),
+      h3: styled.h1(() => style),
+      h4: styled.h1(() => style),
+      h5: styled.h1(() => style),
+      section: styled.section(() => style),
+      p: styled.p(() => style),
+      div: styled.div(() => style),
+      span: styled.span(() => style),
+      input: styled.input(() => style)
     },
   },
   controls: {
