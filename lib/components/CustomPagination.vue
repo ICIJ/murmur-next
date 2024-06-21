@@ -173,11 +173,9 @@ export default defineComponent({
                 :placeholder="inputPlaceholder"
                 aria-label="Jump to page"
               />
-              <div v-if="!compact" class="input-group-append">
-                <button class="btn btn-secondary btn-sm" type="submit">
-                  <span class="px-1 py-3"> Go </span>
-                </button>
-              </div>
+              <button  v-if="!compact" class="btn btn-secondary btn-sm" type="submit">
+                <span class="px-1 py-3"> Go </span>
+              </button>
             </b-input-group>
           </form>
           <template v-if="!compact">
