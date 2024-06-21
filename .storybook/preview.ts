@@ -80,6 +80,7 @@ export const parameters = {
       a: styled.a(() => aStyle),
       section: styled.section(() => style),
       p: styled.p(() => style),
+      li: styled.li(() => style),
       div: styled.div(() => style),
       pre: styled.div(() => ({ })),
       span: styled.span(() => style),

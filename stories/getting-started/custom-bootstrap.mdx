@@ -9,17 +9,17 @@ This guide comes with a set of pre-configured SCSS variables that can be used in
 conjunction with Boostrap. It is **not mandatory** to uses a custom build of Boostrap
 with these variables. Yet some components might have a better display with this configuration.
 
-```scss
-// You can easily override every variables
+```css
+/* You can easily override every variables */
 $link-color: #c10448;
 
-// Then, simply import the variables before you import Bootstrap sources
+/* Then, simply import the variables before you import Bootstrap sources */
 @import '@icij/murmur/lib/styles/variables.scss';
 @import 'node_modules/bootstrap/scss/bootstrap';
-// Optional but recommended: Bootstrap Vue Next CSS additions
+/* Optional but recommended: Bootstrap Vue Next CSS additions */
 @import 'node_modules/bootstrap-vue-next/dist/bootstrap-vue-next';
 ```
 
 Here are all the variables defined in <repository-link path="lib/styles/variables.scss">lib/styles/variables.scss</repository-link>:
 
-<Source code={rawVariables} language="scss" />
+<Source code={rawVariables} language="css" />
