@@ -5,7 +5,11 @@ const config: StorybookConfig = {
   core: {
     disableTelemetry: true // 👈 Disables telemetry
   },
-  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    '../stories/getting-started/installation-guide.mdx', 
+    '../stories/**/*.mdx', 
+    '../stories/**/*.stories.@(js|jsx|ts|tsx)'
+  ],
   staticDirs: ['../public'],
   addons: [
     '@storybook/addon-links',
