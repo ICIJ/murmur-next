@@ -5,16 +5,12 @@ import { Meta, Source } from '@storybook/blocks'
 
 # Internationalization
 
-## Translate your components
-
-### How it work
-
 Murmur can be translated using [vue-i18n](https://github.com/kazupon/vue-i18n).
 By default, we provide a series of locales in English for our components. The
 translation library is installed at a component level. So each component using
 translation received a `i18n` attribute.
 
-### Adding more locales
+## Adding more locales
 
 Murmur exposes a static method to add new locales:
 
@@ -38,7 +34,7 @@ Then you can switch to a new language easily:
 Murmur.setLocale('fr')
 ```
 
-### Overiding locales
+## Overiding locales
 
 In the very same fashion, you can modify existing locales:
 
@@ -56,7 +52,7 @@ Murmur.mergeLocaleMessage('en', {
 })
 ```
 
-### Default locales
+## Default locales
 
 Here are English locales defined in <repository-link path="lib/locales/en.json">lib/locales/en.json</repository-link>:
 
