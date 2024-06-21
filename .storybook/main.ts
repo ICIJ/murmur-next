@@ -15,13 +15,13 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    '@storybook/addon-mdx-gfm',
     '@storybook/preset-scss',
     '@storybook/addon-themes',
     '@chromatic-com/storybook'
   ],
   framework: {
     name: '@storybook/vue3-vite',
+    options: {},
   },
   docs: {},
   viteFinal: (config) => {
