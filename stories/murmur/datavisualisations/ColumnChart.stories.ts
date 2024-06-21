@@ -1,6 +1,5 @@
 import { ColumnChart } from '@/datavisualisations'
 import { StoryObj } from '@storybook/vue3'
-import { humanReadableGb } from '../utils'
 import { leakSizeDecorator } from '../decorators'
 
 export default {
@@ -43,12 +42,14 @@ const leakInjuriesDecorator = () => ({
   </p>`
 })
 export const Default = Template.bind({})
+
 Default.decorators = [leakInjuriesDecorator]
 Default.args = {
   data: dataUrl,
   xAxisTickCollapse: true,
   hover: true
 }
+
 export const TooltipSlot: Story = (args: any) => ({
   components: { ColumnChart },
   setup() {
@@ -56,27 +57,28 @@ export const TooltipSlot: Story = (args: any) => ({
   },
   template: `
     <column-chart v-bind="args">
-      <template #tooltip="{ datum: { leak, size } }">
-        <span>The {{ leak }} investigation is {{ args.yAxisTickFormat(size)}}</span>
+      <template #tooltip="{ datum: { size } }">
+        {{ size }}GB
       </template>
     </column-chart>`
 })
+
 TooltipSlot.decorators = [leakSizeDecorator]
 
 TooltipSlot.args = {
   data: discreteData,
   seriesName: 'size',
-  timeseriesKey: 'leak',
-  yAxisTickFormat: humanReadableGb,
+  timeseriesKey: 'leak',  
   yAxisYTicks: 4,
   maxValue: 3000
 }
+
 export const DynamicHeight = TooltipSlot.bind({})
+
 DynamicHeight.args = {
   data: discreteData,
   seriesName: 'size',
-  timeseriesKey: 'leak',
-  yAxisTickFormat: humanReadableGb,
+  timeseriesKey: 'leak',  
   yAxisYTicks: 4,
   maxValue: 3000,
   stripped: true,
