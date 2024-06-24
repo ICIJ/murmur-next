@@ -4,11 +4,10 @@ import isObject from 'lodash/isObject'
 import isString from 'lodash/isString'
 import max from 'lodash/max'
 import some from 'lodash/some'
-import { ComponentPublicInstance, computed, onMounted, ref, watch } from 'vue'
+import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted } from 'vue'
 import { isUrl } from '@/utils/strings'
 import { Ref, SetupContext } from '@vue/runtime-core'
 import useResizeObserver from '@/composables/resizeObserver'
-import { watchEffect } from 'vue'
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
 type ChartEmit = Pick<ChartContext<['resized', 'loaded']>, 'emit'>
@@ -28,13 +27,13 @@ type ChartProps = {
   socialModeRatio: { default: number; type: NumberConstructor }
 }
 
-export function getChartProps(props: any): ChartProps {
+export function getChartProps(props: any): any {
   return {
-    chartHeightRatio: props.chartHeightRatio,
-    data: props.data,
-    dataUrlType: props.dataUrlType,
-    socialMode: props.socialMode,
-    socialModeRatio: props.socialModeRatio
+    chartHeightRatio: toRef(props, 'chartHeightRatio'),
+    data: toRef(props, 'data'),
+    dataUrlType: toRef(props, 'dataUrlType'),
+    socialMode: toRef(props, 'socialMode'),
+    socialModeRatio: toRef(props, 'socialModeRatio')
   }
 }
 
@@ -95,7 +94,7 @@ type Chart = {
 }
 export function useChart(
   resizableRef: Ref<ComponentPublicInstance<HTMLElement> | null>,
-  props: ChartProps,
+  props: any,
   { emit }: ChartEmit,
   isLoaded: Ref<boolean>,
   onResized?: ()=>void,
@@ -103,32 +102,35 @@ export function useChart(
 ): Chart {
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
   const loadedData = ref<unknown|unknown[]>([])
+  const dataRef = toRef(props.data)
+  const dataUrlTypeRef = toRef(props.dataUrlType)
 
   onMounted(async () => {
-    await document.fonts?.ready
+    
+    watch([dataRef, dataUrlTypeRef], async () => { 
+      await document.fonts?.ready
+      
+      const data = toValue(dataRef)
+      const dataUrlType = toValue(dataUrlTypeRef)
 
-    watchEffect(async () => {
-      if (!isLoaded.value) {
-        if (isString(props.data)) {
-          // @ts-expect-error introspection in typescript is tricky
-          loadedData.value = await d3[props.dataUrlType](props.data)
-        } else {
-          loadedData.value = props.data as unknown as []
-        }
-
-        if (afterLoaded) {
-          await afterLoaded()
-        }
-        isLoaded.value = true
-        emit('loaded')
+      if (isString(data)) {
+        // @ts-expect-error introspection in typescript is tricky
+        loadedData.value = await d3[dataUrlType](data)
+      } else {
+        loadedData.value = data as unknown as []
       }
 
-      if (isLoaded.value && onResized) {
+      await afterLoaded?.()
+      isLoaded.value = true
+      emit('loaded')
+      
+      if (onResized) {
         onResized()
         emit('resized')
       }
-    })
+    }, { immediate: true })
   })
+  
   function elementsMaxBBox({
     selector = 'text',
     defaultWidth = null,
@@ -160,9 +162,11 @@ export function useChart(
     // previously using narrowWidth but it is automatically updated through resizeObserver state reactivity
     return resizeState.narrowWidth ? '’' + String(year).slice(2, 4) : year
   }
+
   function highlighted(datum: { highlight: boolean }) {
     return datum.highlight
   }
+
   function d3Formatter(value: any, formatter: any) {
     if (isFunction(formatter)) {
       return formatter(value)
@@ -171,15 +175,18 @@ export function useChart(
     }
     return value
   }
+
   const baseHeightRatio = computed(() => {
-    return (
-      props.chartHeightRatio ||
-      (props.socialMode ? props.socialModeRatio : 9 / 16)
-    )
+    const chartHeightRatio = toValue(props.chartHeightRatio)
+    const socialMode = toValue(props.socialMode)
+    const socialModeRatio = toValue(props.socialModeRatio)
+    return chartHeightRatio || (socialMode ? socialModeRatio : 9 / 16)
   })
+
   const dataHasHighlights = computed(() => {
-    if (Array.isArray(props.data)) {
-      return some(props.data, highlighted)
+    const data = toValue(dataRef)
+    if (Array.isArray(data)) {
+      return some(data, highlighted)
     }
     return false
   })

@@ -154,6 +154,48 @@ describe('ColumnChart.vue', () => {
     })
   })
 
+  describe('a reactive chart', () => {
+    let wrapper
+
+    const firstData = [
+      { date: 2000, value: 0 },
+      { date: 2001, value: 1 },
+      { date: 2002, value: 2 },
+      { date: 2003, value: 3, highlight: true },
+      { date: 2004, value: 4 }
+    ]
+
+    const secondData = [
+      { date: 2005, value: 5, highlight: true },
+      { date: 2006, value: 6 },
+      { date: 2007, value: 7 }
+    ]
+    
+    beforeEach(async () => {
+      wrapper = mount(ColumnChart, { props: { data: firstData } })
+      wrapper.vm.$el.style.width = '500px'
+      await wrapper.vm.$nextTick()
+    })
+
+    it('creates x-axis ticks with the right years', async () => {
+      const ticks = wrapper.findAll('.column-chart__axis--x .tick')
+      expect(ticks.at(0).text()).toBe('2000')
+      expect(ticks.at(1).text()).toBe('2001')
+      expect(ticks.at(2).text()).toBe('2002')
+      expect(ticks.at(3).text()).toBe('2003')
+      expect(ticks.at(4).text()).toBe('2004')
+    })
+
+    it('updates x-axis ticks with the right years', async () => {
+      await wrapper.setProps({ data: secondData })
+      const ticks = wrapper.findAll('.column-chart__axis--x .tick')
+      expect(ticks.at(0).text()).toBe('2005')
+      expect(ticks.at(1).text()).toBe('2006')
+      expect(ticks.at(2).text()).toBe('2007')
+    })
+
+  })
+
   describe('a 10 columns chart with two highlights using remote CSV and no tooltips', () => {
     let wrapper
 

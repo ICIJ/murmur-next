@@ -19,11 +19,9 @@ type ColumnBar = {
   x: number
   y: number
 }
-//import chart from '../mixins/chart'
 
 export default defineComponent({
   name: 'ColumnChart',
-  //mixins: [chart],
   props: {
     /**
      * Color of each column (uses the CSS variable --column-color by default)
@@ -344,6 +342,9 @@ export default defineComponent({
       if (!el.value) {
         return
       }
+
+      d3.select('.column-chart__axis > *').remove()
+
       d3.select(el.value)
         .select('.column-chart__axis--x')
         .call(xAxis.value as any)
@@ -380,6 +381,7 @@ export default defineComponent({
       height,
       margin,
       padded,
+      isLoaded,
       shownTooltip,
       bars,
       select,
@@ -399,7 +401,8 @@ export default defineComponent({
       'column-chart--has-highlights': dataHasHighlights,
       'column-chart--hover': hover,
       'column-chart--stripped': stripped,
-      'column-chart--social-mode': socialMode
+      'column-chart--social-mode': socialMode,
+      'column-chart--loaded': isLoaded
     }"
     :style="{
       '--column-color': columnColor,
@@ -493,7 +496,7 @@ export default defineComponent({
 
   &__columns__item {
     fill: var(--column-color, var(--dark, $dark));
-
+    
     &--highlight {
       fill: var(--column-highlight-color, var(--primary, $primary));
     }

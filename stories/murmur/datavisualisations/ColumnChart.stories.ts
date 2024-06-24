@@ -84,3 +84,33 @@ DynamicHeight.args = {
   stripped: true,
   fixedHeight: fixedHeight
 }
+
+export const DynamicData:  Story = (args: any) => ({
+  components: { ColumnChart },
+  data() {
+    return {
+      data: [] as { date: string; value: number }[]
+    }
+  },
+  beforeMount() {
+    this.generateData()
+  },
+  methods: {
+    generateData() {
+      const data: { date: string; value: number }[] = []
+      const groups = ~~(5 + Math.random() * 5)
+      for (let g = 0; g < groups; g++) {
+        const date = `${2000 + g}`
+        const value = Math.random() * 100
+        data.push({ date, value })
+      }
+      this.data = data
+    }
+  },
+  template: `
+    <button class="btn btn-primary" @click="generateData()">
+      Randomize
+    </button>
+    <column-chart :data="data" :fixed-height="400" stripped />
+  `
+})
