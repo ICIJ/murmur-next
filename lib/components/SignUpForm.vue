@@ -141,11 +141,12 @@ export default defineComponent({
     const variantColorClass = computed(() => {
       return `btn-${props.variant}`
     })
+
     async function subscribe() {
       resetMessages()
       freeze()
       // Send the data, catch the result no matter what and unfreeze the form
-      await send().then(done, done).finally(unfreeze)
+      await send().then(done, error).finally(unfreeze)
     }
 
     function done({ result, msg }: any): void {
@@ -153,18 +154,24 @@ export default defineComponent({
         email.value = ''
         successMessage.value = msg
       } else {
-        // Mailchimp formats errors in list
-        errorMessage.value =
-          last((msg || "Something's wrong").split('0 -')) ?? null
+        error({ msg })
       }
     }
+
+    // Mailchimp formats errors in list
+    function error({ msg }: any): void {
+      errorMessage.value = last((msg || "Something's wrong").split('0 -')) ?? null
+    }
+
     function resetMessages() {
       errorMessage.value = null
       successMessage.value = null
     }
+
     function freeze() {
       frozen.value = true
     }
+
     function unfreeze() {
       frozen.value = false
     }

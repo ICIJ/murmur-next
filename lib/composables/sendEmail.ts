@@ -13,7 +13,6 @@ export function useSendEmail(
   referrer?: string | null,
   defaultGroups?: string[] | string
 ) {
-  const emailValue = toValue(email)
 
   const groups = computed(() => {
     return flatten(castArray(defaultGroups).map((g) => g.split(',')))
@@ -22,6 +21,7 @@ export function useSendEmail(
   const urlFromAction = computed(() => {
     return action?.replace('/post?', '/post-json?').concat('&c=?')
   })
+
   const parentReferrer = computed(() => {
     if (referrer) {
       return referrer
@@ -36,6 +36,7 @@ export function useSendEmail(
       throw new Error('Missing url Info')
     }
 
+    const emailValue = toValue(email)
     const url = new URL(urlFromAction.value)
     url.searchParams.set('SIGNUP', tracker)
     url.searchParams.set('MMERGE24', parentReferrer.value)
@@ -44,6 +45,7 @@ export function useSendEmail(
 
     return url.href
   })
+
   function send() {
     return new Promise((resolve, reject) => {
       jsonp(
