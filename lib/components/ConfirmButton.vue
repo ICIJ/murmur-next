@@ -150,7 +150,7 @@ export default defineComponent({
     }
 
     function cancel(): void {
-      // showTooltip.value = false
+      showTooltip.value = false
       props.cancelled()
       /**
        * Emitted when the confirmation is cancelled.
@@ -160,7 +160,7 @@ export default defineComponent({
     }
 
     function confirm(): void {
-      // showTooltip.value = false
+      showTooltip.value = false
       props.confirmed()
       /**
        * Emitted when the confirmation is confirmed.
