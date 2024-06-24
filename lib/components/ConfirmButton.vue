@@ -12,6 +12,7 @@
       :model-value="showTooltip"
       :placement="placement"
       :target="uniqComponentId"
+      teleport-to="body"
       manual
     >
       <div class="confirm-button__tooltip">
