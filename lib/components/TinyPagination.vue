@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import { defineComponent, PropType, ref, computed, onBeforeMount } from 'vue'
+import { defineComponent, PropType, ref, computed, onBeforeMount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { library, default as Fa } from './Fa'
@@ -186,6 +186,10 @@ export default defineComponent({
     const pageValue = computed(() => +props.modelValue)
 
     const currentPageInput = ref<number | string>(pageValue.value)
+
+    watch(() => props.modelValue, (value) => {
+      currentPageInput.value = value
+    })
 
     function applyPageForm(): void {
       if (!isNaN(currentPageInput.value as number)) {
