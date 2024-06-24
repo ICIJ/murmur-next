@@ -149,9 +149,19 @@ export default defineComponent({
       emit('toggled', showTooltip.value)
     }
 
-    function cancel(): void {
+    function hideConfirmationTooltip(): void {
       showTooltip.value = false
-      props.cancelled()
+      /**
+       * Emitted when the confirmation is toggled.
+       * @event toggled
+       * @param Boolean True if the button is shown.
+       */
+      emit('toggled', false)
+    }
+
+    function cancel(): void {
+      hideConfirmationTooltip()
+      props.cancelled?.()
       /**
        * Emitted when the confirmation is cancelled.
        * @event cancelled
@@ -160,8 +170,8 @@ export default defineComponent({
     }
 
     function confirm(): void {
-      showTooltip.value = false
-      props.confirmed()
+      hideConfirmationTooltip()
+      props.confirmed?.()
       /**
        * Emitted when the confirmation is confirmed.
        * @event confirmed
