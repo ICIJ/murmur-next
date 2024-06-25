@@ -188,6 +188,7 @@ describe('ColumnChart.vue', () => {
 
     it('updates x-axis ticks with the right years', async () => {
       await wrapper.setProps({ data: secondData })
+      await wrapper.vm.$nextTick()
       const ticks = wrapper.findAll('.column-chart__axis--x .tick')
       expect(ticks.at(0).text()).toBe('2005')
       expect(ticks.at(1).text()).toBe('2006')
