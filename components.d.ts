@@ -20,7 +20,4 @@ declare module 'vue' {
     BTabs: typeof import('bootstrap-vue-next')['BTabs']
     BTooltip: typeof import('bootstrap-vue-next')['BTooltip']
   }
-  export interface ComponentCustomProperties {
-    vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
-  }
 }
