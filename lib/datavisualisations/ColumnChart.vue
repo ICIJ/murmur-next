@@ -352,8 +352,9 @@ export default defineComponent({
     }
 
     function barTooltipStyle(bar: { x: number; y: number; width: number }) {
-      const top = `${bar.y + margin.value.top}px`
-      const left = `${bar.x + bar.width / 2 + margin.value.left}px`
+      const { x, y } = el?.value?.getBoundingClientRect() ?? new DOMRect()
+      const top = `${y + bar.y + margin.value.top}px`
+      const left = `${x + bar.x + bar.width / 2 + margin.value.left}px`
       return { top, left }
     }
 
@@ -441,27 +442,29 @@ export default defineComponent({
         </g>
       </g>
     </svg>
-    <div v-if="!noTooltips" class="column-chart__tooltips">
-      <div v-for="(bar, index) in bars" :key="index">
-        <div :style="barTooltipStyle(bar)" class="column-chart__tooltips__item">
-          <transition name="fade">
-            <div
-              v-if="shownTooltip === index"
-              class="column-chart__tooltips__item__wrapper"
-            >
-              <slot name="tooltip" v-bind="bar">
-                <h6 class="column-chart__tooltips__item__wrapper__heading mb-0">
-                  {{ formatXDatum(bar.datum[timeseriesKey]) }}
-                </h6>
-                <div class="column-chart__tooltips__item__wrapper__value">
-                  {{ formatYDatum(bar.datum[seriesName]) }}
-                </div>
-              </slot>
-            </div>
-          </transition>
+    <teleport to="body">
+      <div v-if="!noTooltips" class="column-chart__tooltips">
+        <div v-for="(bar, index) in bars" :key="index">
+          <div :style="barTooltipStyle(bar)" class="column-chart__tooltips__item">
+            <transition name="fade">
+              <div
+                v-if="shownTooltip === index"
+                class="column-chart__tooltips__item__wrapper"
+              >
+                <slot name="tooltip" v-bind="bar">
+                  <h6 class="column-chart__tooltips__item__wrapper__heading mb-0">
+                    {{ formatXDatum(bar.datum[timeseriesKey]) }}
+                  </h6>
+                  <div class="column-chart__tooltips__item__wrapper__value">
+                    {{ formatYDatum(bar.datum[seriesName]) }}
+                  </div>
+                </slot>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
-    </div>
+    </teleport>
   </div>
 </template>
 
