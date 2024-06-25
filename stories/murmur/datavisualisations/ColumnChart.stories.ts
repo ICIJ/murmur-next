@@ -98,10 +98,11 @@ export const DynamicData:  Story = (args: any) => ({
   methods: {
     generateData() {
       const data: { date: string; value: number }[] = []
-      const groups = ~~(5 + Math.random() * 5)
+      const startYear = 1995 + ~(Math.random() * 10)
+      const groups = ~~(5 + Math.random() * 15)
       for (let g = 0; g < groups; g++) {
-        const date = `${2000 + g}`
-        const value = Math.random() * 100
+        const date = `${startYear + g}`
+        const value = ~~(Math.random() * 100)
         data.push({ date, value })
       }
       this.data = data

@@ -1,13 +1,5 @@
 <script lang="ts">
-import {
-  ComponentPublicInstance,
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-  watchEffect,
-  onMounted
-} from 'vue'
+import { ComponentPublicInstance, computed, defineComponent, PropType, ref, watch } from 'vue'
 import { identity, iteratee, sortBy } from 'lodash'
 import * as d3 from 'd3'
 import { chartProps, getChartProps, useChart } from '@/composables/chart'
@@ -175,6 +167,7 @@ export default defineComponent({
     const isLoaded = ref(false)
     const {
       loadedData,
+      mounted,
       elementsMaxBBox,
       d3Formatter,
       baseHeightRatio,
@@ -339,7 +332,7 @@ export default defineComponent({
     }
 
     function update() {
-      if (!el.value) {
+      if (!mounted.value) {
         return
       }
 
@@ -369,10 +362,9 @@ export default defineComponent({
         datum.highlight || props.highlights.includes(datum[props.timeseriesKey])
       )
     }
-
-    watchEffect(async () => {
-      update()
-    })
+    
+    watch([width, height, loadedData, mounted], update.bind(this), { immediate: true})
+    watch(() => props.socialMode, update.bind(this), { immediate: true})
 
     return {
       el,
