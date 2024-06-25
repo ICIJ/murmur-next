@@ -297,8 +297,9 @@ describe('ColumnChart.vue', () => {
     })
 
     beforeEach(async () => {
+      const stubs = { teleport: true }
       const propsData = { data: 'http://localhost/data.json', noXAxis: true }
-      wrapper = mount(ColumnChart, { propsData })
+      wrapper = mount(ColumnChart, { propsData, global: { stubs, renderStubDefaultSlot: true } })
       wrapper.vm.$el.style.width = '500px'
       await wrapper.vm.$nextTick()
     })
@@ -310,7 +311,8 @@ describe('ColumnChart.vue', () => {
 
     it('should have a max value to 100 set with a property', async () => {
       const propsData = { data: 'http://localhost/data.json', maxValue: 100 }
-      wrapper = mount(ColumnChart, { propsData })
+      const stubs = { teleport: true }
+      wrapper = mount(ColumnChart, { propsData, global: { stubs, renderStubDefaultSlot: true } })
       wrapper.vm.$el.style.width = '500px'
       await new Promise((resolve) => setTimeout(resolve))
       await wrapper.vm.$nextTick()
@@ -322,7 +324,8 @@ describe('ColumnChart.vue', () => {
 
     it('should have a max value to 180 set with a property', async () => {
       const propsData = { data: 'http://localhost/data.json', maxValue: 180 }
-      wrapper = mount(ColumnChart, { propsData })
+      const stubs = { teleport: true }
+      wrapper = mount(ColumnChart, { propsData, global: { stubs, renderStubDefaultSlot: true } })
       wrapper.vm.$el.style.width = '500px'
       await new Promise((resolve) => setTimeout(resolve))
       await wrapper.vm.$nextTick()
@@ -334,6 +337,7 @@ describe('ColumnChart.vue', () => {
 
     it('should have 3 tooltips, none visible', () => {
       const tooltips = wrapper.findAll('.column-chart__tooltips__item')
+      console.log(wrapper.html())
       expect(tooltips).toHaveLength(3)
       const visibleTooltips = wrapper.findAll('.column-chart__tooltips__item__wrapper')
       expect(visibleTooltips).toHaveLength(0)
