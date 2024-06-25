@@ -11,11 +11,13 @@ import {
   ComponentPublicInstance,
   computed,
   defineComponent,
+  getCurrentInstance,
   ref,
   nextTick,
   watch
 } from 'vue'
 import { chartProps, getChartProps, useChart } from '@/composables/chart.js'
+import { useQueryObserver } from '@/composables/queryObserver.js'
 
 export default defineComponent({
   name: 'StackedColumnChart',
@@ -186,14 +188,17 @@ export default defineComponent({
     const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const isLoaded = ref(false)
     const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
+    const { querySelector, querySelectorAll } = useQueryObserver(el)
 
     const {
       elementsMaxBBox,
-      baseHeightRatio,
+      baseHeightRatio,  
       loadedData,
+      mounted,
       d3Formatter,
       dataHasHighlights
     } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
+
     const sortedData = computed(() => {
       if (!isLoaded.value) {
         return []
@@ -223,8 +228,6 @@ export default defineComponent({
       return !!highlightedKeys.value.length
     })
 
-    // different
-
     const hasColumnHighlights = computed(() => {
       return !!props.columnHighlights.length
     })
@@ -242,7 +245,7 @@ export default defineComponent({
           .tickFormat((d) => d3Formatter(d, props.yAxisTickFormat))
           .tickSize(width.value - leftAxisLabelsWidth.value)
           .tickPadding(props.yAxisTickPadding)
-      } /*, {cache: false}*/
+      }
     )
     const leftAxisLabelsWidth = computed(
       () => {
@@ -252,7 +255,7 @@ export default defineComponent({
           elementsMaxBBox({ selector, defaultWidth }).width +
           props.yAxisTickPadding
         )
-      } /*, {cache: false}*/
+      }
     )
 
     const leftAxisCanvas = computed(() => {
@@ -260,6 +263,7 @@ export default defineComponent({
         .select(el.value)
         .select('.stacked-column-chart__left-axis__canvas')
     })
+
     const paddedStyle = computed(() => {
       return {
         marginLeft: props.noDirectLabeling
@@ -267,9 +271,11 @@ export default defineComponent({
           : 0
       }
     })
+    
     const barTooltipDelay = computed(() => {
       return hasHighlights.value ? 0 : props.highlightDelay
     })
+
     const maxRowValue = computed(() => {
       return (
         props.maxValue ||
@@ -289,6 +295,7 @@ export default defineComponent({
           ? props.fixedHeight
           : width.value * baseHeightRatio.value
     }
+
     function groupName(key: string) {
       const index = discoveredKeys.value.indexOf(key)
       return props.groups[index] || key
@@ -353,12 +360,16 @@ export default defineComponent({
       return props.tooltipDisplay({ value, formattedValue, key, formattedKey })
     }
 
-    async function stackBarAndValue(i: string | number) {
+    function barUniqueId(i: string | number, key: string) {
+      // @ts-ignore 
+      const { uid } = getCurrentInstance()
+      return `bar-${uid}-${i}-${key}`
+    }
+
+    function stackBarAndValue(i: string | number) {
       if (!sortedData.value) {
         return []
       }
-      await nextTick()
-
       // Collect sizes first
       const stack = discoveredKeys.value.map((key: string) => {
         const { bar, row, value } = queryBarAndValue(i as number, key)
@@ -396,15 +407,14 @@ export default defineComponent({
     }
 
     function queryBarAndValue(i: number, key: string) {
-      if (!sortedData.value) {
+      if (!mounted.value) {
         return {}
       }
       const rowSelector = '.stacked-column-chart__groups__item'
-      const row = el.value?.querySelectorAll(rowSelector)[i] as HTMLElement
+      const row = querySelectorAll(rowSelector)[i] as HTMLElement
       const barSelector = `.stacked-column-chart__groups__item__bars__item--${key}`
       const bar = row.querySelector(barSelector) as HTMLElement
-      const valueSelector =
-        '.stacked-column-chart__groups__item__bars__item__value'
+      const valueSelector = '.stacked-column-chart__groups__item__bars__item__value'
       const value = bar.querySelector(valueSelector) as HTMLElement
       return { bar, row, value }
     }
@@ -414,13 +424,21 @@ export default defineComponent({
     }
 
     function hasValueOverflow(i: string | number, key: string) {
-      const stack = stackBarAndValue(i)
-      return find(stack, { key })?.overflow
+      try {
+        const stack = stackBarAndValue(i)
+        return find(stack, { key })?.overflow
+      } catch {
+        return false
+      }
     }
 
     function hasValuePushed(i: string | number, key: string) {
-      const stack = stackBarAndValue(i)
-      return find(stack, { key })?.pushed
+      try {
+        const stack = stackBarAndValue(i)
+        return find(stack, { key })?.pushed
+      } catch {
+        return false
+      }
     }
 
     function hasValueHidden(i: string | number, key: string) {
@@ -446,16 +464,16 @@ export default defineComponent({
     watch(sortedData, async (newVal) => {
       await nextTick()
       // This must be set after the column have been rendered
-      const element = el.value?.querySelector(
-        '.stacked-column-chart__groups__item__bars'
-      )
-      leftAxisHeight.value = (element as HTMLElement).offsetHeight
-      //@ts-ignore
-      leftAxisCanvas.value.call(leftAxis.value)
+      const element = querySelector('.stacked-column-chart__groups__item__bars')
+      // Update the left axis only if the bars exists
+      if (element) {
+        leftAxisHeight.value = (element as HTMLElement).offsetHeight
+        //@ts-ignore
+        leftAxisCanvas.value.call(leftAxis.value)
+      }
     })
 
     return {
-      barTooltipDelay,
       colorScale,
       dataHasHighlights,
       discoveredKeys,
@@ -467,7 +485,9 @@ export default defineComponent({
       paddedStyle,
       sortedData,
       width,
+      barTooltipDelay,
       barTitle,
+      barUniqueId,
       barStyle,
       delayHighlight,
       formatXDatum,
@@ -540,28 +560,19 @@ export default defineComponent({
           >
             <div
               v-for="(key, j) in discoveredKeys"
-              :key="j"
-              v-b-tooltip.html="{
-                delay: barTooltipDelay,
-                disabled: noTooltips,
-                title: barTitle(i, key)
-              }"
-              :style="barStyle(i, key)"
               class="stacked-column-chart__groups__item__bars__item"
               :class="{
                 [`stacked-column-chart__groups__item__bars__item--${key}`]: true,
                 [`stacked-column-chart__groups__item__bars__item--${j}n`]: true,
-                'stacked-column-chart__groups__item__bars__item--hidden':
-                  isHidden(i, key),
-                'stacked-column-chart__groups__item__bars__item--highlighted':
-                  isHighlighted(key) || isColumnHighlighted(i),
-                'stacked-column-chart__groups__item__bars__item--value-overflow':
-                  hasValueOverflow(i, key),
-                'stacked-column-chart__groups__item__bars__item--value-pushed':
-                  hasValuePushed(i, key),
-                'stacked-column-chart__groups__item__bars__item--value-hidden':
-                  hasValueHidden(i, key)
+                'stacked-column-chart__groups__item__bars__item--hidden': isHidden(i, key),
+                'stacked-column-chart__groups__item__bars__item--highlighted': isHighlighted(key) || isColumnHighlighted(i),
+                'stacked-column-chart__groups__item__bars__item--value-overflow': hasValueOverflow(i, key),
+                'stacked-column-chart__groups__item__bars__item--value-pushed': hasValuePushed(i, key),
+                'stacked-column-chart__groups__item__bars__item--value-hidden': hasValueHidden(i, key)
               }"
+              :style="barStyle(i, key)"
+              :key="j"
+              :id="barUniqueId(i, key)"
               @mouseover="delayHighlight(key)"
               @mouseleave="restoreHighlights()"
             >
@@ -571,6 +582,11 @@ export default defineComponent({
               >
                 {{ formatYDatum(datum[key]) }}
               </div>
+              <teleport to="body">
+                <b-tooltip v-if="!noTooltips" :delay="barTooltipDelay" :target="barUniqueId(i, key)" placement="top">
+                  <span v-html="barTitle(i, key)"></span>
+                </b-tooltip>
+              </teleport>
             </div>
           </div>
           <div class="stacked-column-chart__groups__item__label small py-2">
