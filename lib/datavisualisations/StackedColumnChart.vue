@@ -21,10 +21,6 @@ import { useQueryObserver } from '@/composables/queryObserver.js'
 
 export default defineComponent({
   name: 'StackedColumnChart',
-  // directives: {
-  //   'b-tooltip': VBTooltip
-  // },
-  //mixins: [chart],
   props: {
     /**
      * Field of each object containing data (for each group)
