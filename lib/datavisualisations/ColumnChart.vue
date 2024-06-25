@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ComponentPublicInstance, computed, defineComponent, PropType, ref, watch } from 'vue'
+import { ComponentPublicInstance, computed, defineComponent, getCurrentInstance, PropType, ref, watch } from 'vue'
 import { identity, iteratee, sortBy } from 'lodash'
 import * as d3 from 'd3'
 import { chartProps, getChartProps, useChart } from '@/composables/chart'
@@ -306,6 +306,9 @@ export default defineComponent({
         .ticks(props.yAxisTicks)
     })
 
+    const activeBar = computed((): ColumnBar => bars.value[shownTooltip.value] ?? null)
+    const activeBarId = computed((): string => columnUniqueId(shownTooltip.value))
+
     function formatXDatum(d: any) {
       return d3Formatter(d, props.xAxisTickFormat)
     }
@@ -351,11 +354,10 @@ export default defineComponent({
         .attr('x2', padded.value.width)
     }
 
-    function barTooltipStyle(bar: { x: number; y: number; width: number }) {
-      const { x, y } = el?.value?.getBoundingClientRect() ?? new DOMRect()
-      const top = `${y + bar.y + margin.value.top}px`
-      const left = `${x + bar.x + bar.width / 2 + margin.value.left}px`
-      return { top, left }
+    function columnUniqueId(i: number) {
+      // @ts-ignore 
+      const { uid } = getCurrentInstance()
+      return `column-${uid}-${i}`
     }
 
     function highlighted(datum: any): boolean {
@@ -369,6 +371,9 @@ export default defineComponent({
 
     return {
       el,
+      activeBar,
+      activeBarId,
+      columnUniqueId,
       dataHasHighlights,
       width,
       height,
@@ -379,7 +384,6 @@ export default defineComponent({
       bars,
       select,
       highlighted,
-      barTooltipStyle,
       formatYDatum,
       formatXDatum
     }
@@ -437,34 +441,24 @@ export default defineComponent({
             :height="bar.height"
             :width="bar.width"
             :y="bar.y"
+            :id="columnUniqueId(index)"
             class="column-chart__columns__item__bar"
           />
         </g>
       </g>
     </svg>
-    <teleport to="body">
-      <div v-if="!noTooltips" class="column-chart__tooltips">
-        <div v-for="(bar, index) in bars" :key="index">
-          <div :style="barTooltipStyle(bar)" class="column-chart__tooltips__item">
-            <transition name="fade">
-              <div
-                v-if="shownTooltip === index"
-                class="column-chart__tooltips__item__wrapper"
-              >
-                <slot name="tooltip" v-bind="bar">
-                  <h6 class="column-chart__tooltips__item__wrapper__heading mb-0">
-                    {{ formatXDatum(bar.datum[timeseriesKey]) }}
-                  </h6>
-                  <div class="column-chart__tooltips__item__wrapper__value">
-                    {{ formatYDatum(bar.datum[seriesName]) }}
-                  </div>
-                </slot>
-              </div>
-            </transition>
+    <template v-if="!noTooltips && activeBar">
+      <b-tooltip :target="activeBarId" teleport-to="body" manual :model-value="true" class="column-chart__tooltip">
+        <slot name="tooltip" v-bind="activeBar">
+          <h6 class="column-chart__tooltip__heading mb-0">
+            {{ formatXDatum(activeBar.datum[timeseriesKey]) }}
+          </h6>
+          <div class="column-chart__tooltip__value">
+            {{ formatYDatum(activeBar.datum[seriesName]) }}
           </div>
-        </div>
-      </div>
-    </teleport>
+        </slot>
+      </b-tooltip>
+    </template>
   </div>
 </template>
 
@@ -517,55 +511,6 @@ export default defineComponent({
 
     &--x .tick line {
       display: none;
-    }
-  }
-
-  &__tooltips {
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    &__item {
-      $tooltip-bg: $body-emphasis-color;
-
-      display: inline-flex;
-      text-align: center;
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: flex-start;
-      position: absolute;
-      transform: translate(-50%, -100%);
-      margin-top: -0.5 * $tooltip-arrow-width;
-
-      &__wrapper {
-        max-width: $tooltip-max-width;
-        background: rgba($tooltip-bg, $tooltip-opacity);
-        border-radius: $tooltip-border-radius;
-        color: $tooltip-color;
-        margin: 0;
-        padding: $tooltip-padding-y $tooltip-padding-x;
-        
-        &.fade-enter-active,
-        &.fade-leave-active {
-          transition: $transition-fade;
-        }
-
-        &.fade-enter-from,
-        &.fade-leave-to {
-          opacity: 0;
-        }
-
-        &:after {
-          content: '';
-          border: ($tooltip-arrow-width * 0.5) solid transparent;
-          border-top-color: rgba($tooltip-bg, $tooltip-opacity);
-          transform: translateX(-50%);
-          position: absolute;
-          left: 50%;
-          top: 100%;
-        }
-      }
     }
   }
 }

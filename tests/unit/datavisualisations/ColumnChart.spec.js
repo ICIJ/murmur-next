@@ -335,49 +335,6 @@ describe('ColumnChart.vue', () => {
       expect(height).toBe(wrapper.vm.padded.height / 2)
     })
 
-    it('should have 3 tooltips, none visible', () => {
-      const tooltips = wrapper.findAll('.column-chart__tooltips__item')
-      console.log(wrapper.html())
-      expect(tooltips).toHaveLength(3)
-      const visibleTooltips = wrapper.findAll('.column-chart__tooltips__item__wrapper')
-      expect(visibleTooltips).toHaveLength(0)
-    })
-
-    it('should have one tooltip visible after the mouse overs a column', async () => {
-      await wrapper.findAll('.column-chart__columns__item').at(0).trigger('mouseover') // TODO fix me
-      await wrapper.vm.$nextTick()
-      const visibleTooltips = wrapper.findAll('.column-chart__tooltips__item__wrapper')
-      expect(visibleTooltips).toHaveLength(1)
-    })
-
-    it('should hide the tooltip after the mouse leaves a column', async () => {
-      const firstColumn = wrapper.findAll('.column-chart__columns__item').at(0)
-
-      await firstColumn.trigger('mouseover')
-      await wrapper.vm.$nextTick()
-      expect(wrapper.findAll('.column-chart__tooltips__item__wrapper')).toHaveLength(1)
-
-      await firstColumn.trigger('mouseleave')
-      await wrapper.vm.$nextTick()
-      expect(wrapper.findAll('.column-chart__tooltips__item__wrapper')).toHaveLength(0)
-    })
-
-    it('should position the first tooltip next to the first bar', () => {
-      const { element: firstTooltip } = wrapper.findAll('.column-chart__tooltips__item').at(0)
-      const x = wrapper.vm.bars[0].x + wrapper.vm.bars[0].width / 2 + wrapper.vm.margin.left
-      const y = wrapper.vm.bars[0].y + wrapper.vm.margin.top
-      expect(firstTooltip.style.left).toBe(`${x}px`)
-      expect(firstTooltip.style.top).toBe(`${y}px`)
-    })
-
-    it('should position the third tooltip before to the third bar', () => {
-      const { element: thirdTooltip } = wrapper.findAll('.column-chart__tooltips__item').at(2)
-      const x = wrapper.vm.bars[2].x + wrapper.vm.bars[2].width / 2 + wrapper.vm.margin.left
-      const y = wrapper.vm.bars[2].y + wrapper.vm.margin.top
-      expect(thirdTooltip.style.left).toBe(`${x}px`)
-      expect(thirdTooltip.style.top).toBe(`${y}px`)
-    })
-
     it('should emit a "select" event when clicking on an item', async () => {
       await wrapper.findAll('.column-chart__columns__item__bar').at(0).trigger('click')
 
