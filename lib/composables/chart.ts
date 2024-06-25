@@ -4,13 +4,15 @@ import isObject from 'lodash/isObject'
 import isString from 'lodash/isString'
 import max from 'lodash/max'
 import some from 'lodash/some'
-import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted } from 'vue'
+import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted, nextTick } from 'vue'
 import { isUrl } from '@/utils/strings'
 import { Ref, SetupContext } from '@vue/runtime-core'
 import useResizeObserver from '@/composables/resizeObserver'
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
+
 type ChartEmit = Pick<ChartContext<['resized', 'loaded']>, 'emit'>
+
 type ChartProps = {
   chartHeightRatio: { type: NumberConstructor }
   data: {
@@ -75,10 +77,13 @@ export const chartProps = (): ChartProps => ({
     default: 5 / 4
   }
 })
+
 export const chartEmits = ['resized', 'loaded']
+
 type Chart = {
   dataHasHighlights: any
   loadedData: any
+  mounted: Ref<boolean>,
   xAxisYearFormat: (year: number | string) => number | string
   elementsMaxBBox: ({
     selector,
@@ -92,6 +97,7 @@ type Chart = {
   d3Formatter: any
   baseHeightRatio: any
 }
+
 export function useChart(
   resizableRef: Ref<ComponentPublicInstance<HTMLElement> | null>,
   props: any,
@@ -100,36 +106,41 @@ export function useChart(
   onResized?: ()=>void,
   afterLoaded?: () => Promise<any>
 ): Chart {
+
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
   const loadedData = ref<unknown|unknown[]>([])
+  const mounted = ref<boolean>(false)
   const dataRef = toRef(props.data)
   const dataUrlTypeRef = toRef(props.dataUrlType)
-
-  onMounted(async () => {
-    
-    watch([dataRef, dataUrlTypeRef], async () => { 
-      await document.fonts?.ready
-      
-      const data = toValue(dataRef)
-      const dataUrlType = toValue(dataUrlTypeRef)
-
-      if (isString(data)) {
-        // @ts-expect-error introspection in typescript is tricky
-        loadedData.value = await d3[dataUrlType](data)
-      } else {
-        loadedData.value = data as unknown as []
-      }
-
-      await afterLoaded?.()
-      isLoaded.value = true
-      emit('loaded')
-      
-      if (onResized) {
-        onResized()
-        emit('resized')
-      }
-    }, { immediate: true })
+  
+  onMounted(() => {
+    nextTick(() => {
+      mounted.value = true
+    })
   })
+
+  watch([dataRef, dataUrlTypeRef], async () => { 
+    await document.fonts?.ready
+    
+    const data = toValue(dataRef)
+    const dataUrlType = toValue(dataUrlTypeRef)
+
+    if (isString(data)) {
+      // @ts-expect-error introspection in typescript is tricky
+      loadedData.value = await d3[dataUrlType](data)
+    } else {
+      loadedData.value = data as unknown as []
+    }
+
+    await afterLoaded?.()
+    isLoaded.value = true
+    emit('loaded')
+    
+    if (onResized) {
+      onResized()
+      emit('resized')
+    }
+  }, { immediate: true })
   
   function elementsMaxBBox({
     selector = 'text',
@@ -200,6 +211,7 @@ export function useChart(
 
   return {
     loadedData,
+    mounted,
     elementsMaxBBox,
     xAxisYearFormat,
     d3Formatter,
