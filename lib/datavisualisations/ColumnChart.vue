@@ -513,5 +513,9 @@ export default defineComponent({
       display: none;
     }
   }
+
+  &__tooltip {
+    pointer-events: none;
+  }
 }
 </style>
