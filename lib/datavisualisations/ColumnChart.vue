@@ -438,7 +438,7 @@ export default defineComponent({
             class="column-chart__columns__item__placeholder"
           />
           <rect
-            :height="bar.height"
+            :height="Math.max(bar.height, 0.1)"
             :width="bar.width"
             :y="bar.y"
             :id="columnUniqueId(index)"

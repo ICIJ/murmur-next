@@ -74,7 +74,7 @@ describe('ColumnChart.vue', () => {
     it('creates the first column with minimum height', () => {
       const column = wrapper.findAll('.column-chart__columns__item__bar').at(0)
       const height = parseFloat(column.attributes('height'))
-      expect(height).toBe(0)
+      expect(height).toBe(0.1)
     })
 
     it('creates the third column with medium height', () => {
@@ -256,7 +256,7 @@ describe('ColumnChart.vue', () => {
     it('creates the first column with medium height', () => {
       const column = wrapper.findAll('.column-chart__columns__item__bar').at(0)
       const height = parseFloat(column.attributes('height'))
-      expect(height).toBe(0)
+      expect(height).toBe(0.1)
     })
 
     it('creates the last column with maximum height', () => {
