@@ -24,8 +24,8 @@
         :class="{ active: showShareOptions }"
         @click="showShareOptions = !showShareOptions"
       >
-        <fa icon="share-alt" />
-        <span class="sr-only">{{ $t('embeddable-footer.share') }}</span>
+        <phosphor-icon name="share-network" fill size="1.2em" />
+        <span class="visually-hidden">{{ $t('embeddable-footer.share') }}</span>
       </button>
     </slot>
     <sharing-options
@@ -39,13 +39,11 @@
 </template>
 
 <script lang="ts">
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons/faShareAlt'
 import { defineComponent } from 'vue'
-
-import { library, default as Fa } from './Fa'
 
 import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand.vue'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 import SharingOptions from '@/components/SharingOptions.vue'
 import config from '@/config'
 
@@ -58,7 +56,7 @@ type EmbeddableFooterData = {
 export default defineComponent({
   name: 'EmbeddableFooter',
   components: {
-    Fa,
+    PhosphorIcon,
     SharingOptions,
     Brand
   },
@@ -110,9 +108,6 @@ export default defineComponent({
     return {
       showShareOptions: false
     }
-  },
-  beforeMount(): void {
-    library.add(faShareAlt)
   },
   mounted(): void {
     IframeResizer.create()
@@ -176,12 +171,11 @@ export default defineComponent({
     height: 2.5em;
     line-height: 2.5em;
     width: 2.5em;
-    font-size: 80%;
     text-align: center;
     border-radius: 50%;
 
     &.active {
-      border-color: white;
+      border-color: rgb(19, 18, 18);
     }
 
     &:hover {

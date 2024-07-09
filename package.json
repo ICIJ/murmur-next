@@ -43,12 +43,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@fortawesome/fontawesome": "^1.1.8",
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-brands-svg-icons": "^6.5.2",
-    "@fortawesome/free-regular-svg-icons": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@phosphor-icons/vue": "^2.2.1",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/test": "^8.1.11",
     "@types/topojson": "^3.2.6",

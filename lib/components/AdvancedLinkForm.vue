@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, ref, Ref, toRef } from 'vue'
+import { computed, defineComponent, ref, Ref } from 'vue'
 import {
   BTabs,
   BTab,

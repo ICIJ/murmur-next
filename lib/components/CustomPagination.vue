@@ -5,9 +5,11 @@ import { useI18n } from 'vue-i18n'
 import { Size } from '@/enums'
 import { BPagination } from 'bootstrap-vue-next'
 
+import PhosphorIcon from './PhosphorIcon.vue'
+
 export default defineComponent({
   name: 'CustomPagination',
-  components: { BPagination },
+  components: { BPagination, PhosphorIcon },
   props: {
     /**
      * Total items to be stored in pages
@@ -139,11 +141,15 @@ export default defineComponent({
         >
           <template #prev-text="{ disabled, index, page }">
             <!-- @slot The 'Go to previous page' button content -->
-            <slot name="prev-text" v-bind="{ disabled, index, page }" />
+            <slot name="prev-text" v-bind="{ disabled, index, page }">
+              <phosphor-icon name="caret-left" size="0.75em" />
+            </slot>
           </template>
           <template #next-text="{ disabled, index, page }">
             <!-- @slot The 'Go to next page' button content -->
-            <slot name="next-text" v-bind="{ disabled, index, page }" />
+            <slot name="next-text" v-bind="{ disabled, index, page }">
+              <phosphor-icon name="caret-right" size="0.75em" />
+            </slot>
           </template>
           <template #page="{ active, content, disabled, index, page }">
             <!-- @slot Page number button content -->

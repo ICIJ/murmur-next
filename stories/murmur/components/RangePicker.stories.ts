@@ -9,24 +9,25 @@ export default {
   title: 'Murmur/components/RangePicker',
   component: RangePicker,
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
+  args: {
+    range: [0, 1]
+  }
 }
 
 type Story = StoryObj<typeof RangePicker>
+
 const Template: Story = (args: any) => ({
   components: { RangePicker, BBadge },
   setup() {
     return { args }
   },
-  template: `<RangePicker v-bind="args" ></RangePicker>`
+  template: `
+    <range-picker v-bind="args" class="p-3" />
+  `
 })
+
 export const Default = Template.bind({})
-Default.decorators = [
-  () => ({ template: `<div style="width:500px;"><story/></div>` })
-]
-Default.args = {
-  range: [5, 10]
-}
 
 export const WithOffsets = (args: any) => ({
   components: { RangePicker, BBadge },
@@ -34,15 +35,15 @@ export const WithOffsets = (args: any) => ({
     return { args }
   },
   template: `
-        <RangePicker v-bind="args" >
+        <range-picker v-bind="args" >
             <div class="bg-white p-3 text-center text-uppercase">
                 <b-badge>{{ args.range[0] * 100 }}%</b-badge> - <b-badge>{{ args.range[1] * 100 }}%</b-badge>
             </div>
-        </RangePicker>
+        </range-picker>
     `
 })
 WithOffsets.args = {
-  range: [5, 10]
+  range: [0.2, 0.8]
 }
 export const WithColumnChart = (args: any) => ({
   components: { RangePicker, ColumnChart },

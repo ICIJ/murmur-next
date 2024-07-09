@@ -40,13 +40,13 @@ describe('SecretInput.vue', () => {
   it('shows an eye icon when input is not visible', () => {
     const propsData = { value: 'a secret value', visible: false }
     const wrapper = shallowMount(SecretInput, { global, propsData })
-    expect(wrapper.vm.togglerIcon[1]).toBe('eye')
+    expect(wrapper.vm.togglerIcon).toBe('eye')
   })
 
   it('shows an eye-slash icon when input is visible', () => {
     const propsData = { value: 'a secret value', visible: true }
     const wrapper = shallowMount(SecretInput, { global, propsData })
-    expect(wrapper.vm.togglerIcon[1]).toBe('eye-slash')
+    expect(wrapper.vm.togglerIcon).toBe('eye-slash')
   })
 
   it('shows the toggler button by default', () => {

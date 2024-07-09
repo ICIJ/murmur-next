@@ -35,7 +35,7 @@ $body-color: $black !default; // Brand color
 $text-muted: $gray-500 !default;
 
 $component-active-bg: $primary !default;
-$component-active-color: $white;
+$component-active-color: color-contrast($component-active-bg) !default;
 
 $table-dark-bg: $gray-800 !default;
 $table-dark-border-color: $gray-600 !default;

@@ -38,7 +38,7 @@
         aria-label="Toggle navigation"
         @click="toggleNavbar"
       >
-        <fa icon="bars" size="xl" class="text-primary" />
+        <phosphor-icon name="list" size="2rem" class="text-primary" />
       </button>
       <div class="navbar-collapse" :class="{ collapse: collapseNavbar }">
         <ul class="navbar-nav ms-auto">
@@ -99,25 +99,23 @@
 </template>
 
 <script lang="ts">
-import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
+import { useI18n } from 'vue-i18n'
+import { BPopover } from 'bootstrap-vue-next'
 import headroom from 'vue-headroom/src/headroom.vue'
 import {
   computed,
   defineComponent,
   type PropType,
   ref,
-  onBeforeMount,
-  watch,
   ComponentPublicInstance
 } from 'vue'
 
+
 import config from '@/config'
-import Fa, { library } from '@/components/Fa'
 import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
 import { BrandMode } from '@/enums'
-import { useI18n } from 'vue-i18n'
-import { BPopover } from 'bootstrap-vue-next'
+import PhosphorIcon from './PhosphorIcon.vue'
 
 type BrandOptions = {
   noBorder: boolean
@@ -134,7 +132,7 @@ export default defineComponent({
   components: {
     BPopover,
     BrandExpansion,
-    Fa,
+    PhosphorIcon,
     FollowUsPopover,
     headroom
   },
@@ -176,10 +174,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    onBeforeMount((): void => {
-      library.add(faBars)
-    })
-
     const { t } = useI18n()
     const followUsPopover = ref<ComponentPublicInstance<
       typeof BPopover

@@ -6,11 +6,9 @@ import filter from 'lodash/filter'
 import identity from 'lodash/identity'
 import isEqual from 'lodash/isEqual'
 import uniqueId from 'lodash/uniqueId'
-import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons'
 //@ts-expect-error no typings available
 import { RecycleScroller } from 'vue-virtual-scroller'
 
-import Fa from './Fa'
 import {
   defineComponent,
   ref,
@@ -21,6 +19,8 @@ import {
   PropType
 } from 'vue'
 
+import PhosphorIcon from './PhosphorIcon.vue'
+
 const KEY_ESC_CODE = 27
 const KEY_UP_CODE = 38
 const KEY_DOWN_CODE = 40
@@ -28,7 +28,7 @@ type Item = any
 export default defineComponent({
   name: 'SelectableDropdown',
   components: {
-    Fa,
+    PhosphorIcon,
     RecycleScroller
   },
   props: {
@@ -197,7 +197,7 @@ export default defineComponent({
       { deep: true }
     )
     function indexIcon(item: Item) {
-      return itemActivated(item) ? faCheckSquare : faSquare
+      return itemActivated(item) ? 'check-square' : 'square'
     }
     function itemActivated(item: Item) {
       return findIndex(activeItems.value, (i) => props.eq(item, i)) > -1
@@ -383,7 +383,7 @@ export default defineComponent({
         <!-- @slot Item content -->
         <slot name="item" :item="item">
           <div v-if="multiple" class="selectable-dropdown__item__check">
-            <fa :icon="indexIcon(item)" class="me-2" />
+            <phosphor-icon :name="indexIcon(item)" class="me-2" />
           </div>
           <div
             class="flex-grow-1 text-truncate selectable-dropdown__item__label"

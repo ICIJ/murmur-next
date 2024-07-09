@@ -3,14 +3,9 @@ import querystring from 'querystring-es3'
 import reduce from 'lodash/reduce'
 import noop from 'lodash/noop'
 import get from 'lodash/get'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope'
-import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter'
-import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook'
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin'
 import { h, defineComponent, PropType, VNode } from 'vue'
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-import Fa from './Fa'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 // Popup instance and an interval holder
 type Popup = {
@@ -34,12 +29,12 @@ const preventDefault = (callback: Function) => {
 
 type SharingPlatform = {
   base: string
-  icon: IconDefinition
+  icon: string
   args: {
     [key: string]: string
   }
 }
-type Platform = 'email' | 'facebook' | 'linkedin' | 'twitter'
+type Platform = 'email' | 'facebook' | 'linkedin' | 'twitter' | 'x'
 // eslint-disable-next-line no-unused-vars
 type SharingPlatforms = { [key in Platform]: SharingPlatform }
 /**
@@ -48,7 +43,7 @@ type SharingPlatforms = { [key in Platform]: SharingPlatform }
 export const networks: SharingPlatforms = {
   email: {
     base: 'mailto:?',
-    icon: faEnvelope,
+    icon: 'envelope',
     args: {
       subject: 'title',
       body: 'description'
@@ -56,7 +51,7 @@ export const networks: SharingPlatforms = {
   },
   facebook: {
     base: 'https://www.facebook.com/sharer.php?',
-    icon: faFacebook,
+    icon: 'facebook-logo',
     args: {
       u: 'url',
       title: 'title',
@@ -66,7 +61,7 @@ export const networks: SharingPlatforms = {
   },
   linkedin: {
     base: 'https://www.linkedin.com/sharing/share-offsite/?',
-    icon: faLinkedin,
+    icon: 'linkedin-logo',
     args: {
       url: 'url',
       title: 'title',
@@ -74,8 +69,18 @@ export const networks: SharingPlatforms = {
     }
   },
   twitter: {
-    base: 'https://twitter.com/intent/tweet?',
-    icon: faTwitter,
+    base: 'https://x.com/intent/tweet?',
+    icon: 'x-logo',
+    args: {
+      url: 'url',
+      text: 'title',
+      via: 'user',
+      hashtags: 'hashtags'
+    }
+  },
+  x: {
+    base: 'https://x.com/intent/tweet?',
+    icon: 'x-logo',
     args: {
       url: 'url',
       text: 'title',
@@ -91,7 +96,7 @@ export const networks: SharingPlatforms = {
 export default defineComponent({
   name: 'SharingOptionsLink',
   components: {
-    Fa
+    PhosphorIcon
   },
   props: {
     /**
@@ -189,7 +194,7 @@ export default defineComponent({
     args(): { [key: string]: string } {
       return get(networks, [this.network, 'args'], {})
     },
-    icon(): IconDefinition | null {
+    icon(): string | null {
       return get(networks, [this.network, 'icon'], null)
     },
     query(): any {
@@ -221,7 +226,7 @@ export default defineComponent({
     renderIcon(): void | VNode | null {
       if (!this.noIcon) {
         //@ts-ignore
-        return h(Fa, { icon: this.icon })
+        return h(PhosphorIcon, { name: this.icon, weight: 'fill' })
       }
     },
     openPopup(): void {

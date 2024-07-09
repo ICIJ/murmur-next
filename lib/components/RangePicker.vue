@@ -7,15 +7,13 @@ import {
   ref,
   watch,
   computed,
-  onBeforeMount,
   toRef
 } from 'vue'
-import { faGripLinesVertical } from '@fortawesome/free-solid-svg-icons/faGripLinesVertical'
 import { clamp, round } from 'lodash'
 
-import Fa, { library } from './Fa'
-
 import type { Variant } from '@/types'
+import PhosphorIcon from '@/components/PhosphorIcon.vue';
+
 type DragDropValue = {detail:number}
 /**
  * A component to wrap an HTML element with a range picker overlay.
@@ -23,7 +21,7 @@ type DragDropValue = {detail:number}
 export default defineComponent({
   name: 'RangePicker',
   components: {
-    Fa
+    PhosphorIcon
   },
   directives: {
     draggable: {
@@ -167,9 +165,6 @@ export default defineComponent({
   },
   emits: ['update:range'],
   setup(props, { emit }) {
-    onBeforeMount(() => {
-      library.add(faGripLinesVertical)
-    })
     const rangePickerBounds = ref<HTMLElement | null>(null)
     const start = toRef(props.range[0] ?? 0)
     const end = toRef(props.range[1] ?? 0)
@@ -323,7 +318,7 @@ export default defineComponent({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <fa icon="fa-grip-lines-vertical" fixed-width />
+        <phosphor-icon name="list" weight="bold" />
       </button>
       <button
         v-draggable
@@ -333,7 +328,7 @@ export default defineComponent({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <fa icon="fa-grip-lines-vertical" fixed-width />
+        <phosphor-icon name="list" weight="bold" />
       </button>
     </div>
   </div>
@@ -352,7 +347,7 @@ export default defineComponent({
   @each $color, $value in $theme-colors {
     &--#{$color} {
       --bg: var(--#{$color}, #{$value});
-      --fg: #{color-yiq($value)};
+      --fg: #{color-contrast($value)};
     }
   }
 
@@ -435,13 +430,21 @@ export default defineComponent({
       height: 1.2rem;
       line-height: 1.2rem;
       padding: 0;
-      background: var(--bg);
+      background: var(--bg, transparent);
       color: var(--fg);
       transform: translate(-50%, -50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover,
-      &:active {
+      &:active,
+      &:focus {
         color: var(--fg);
+      }
+
+      &:active, &:focus {
+        background: var(--bg, transparent);
       }
     }
 

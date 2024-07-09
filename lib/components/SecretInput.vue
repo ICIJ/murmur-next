@@ -1,13 +1,11 @@
 <script lang="ts">
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
-
-import { computed, ref, onBeforeMount, watch, defineComponent } from 'vue'
-import { library, default as Fa } from './Fa'
+import { computed, ref, defineComponent } from 'vue'
 import HapticCopy from './HapticCopy.vue'
+import PhosphorIcon from './PhosphorIcon.vue';
 
 export default defineComponent({
   name: 'SecretInput',
-  components: { Fa, HapticCopy },
+  components: { PhosphorIcon, HapticCopy },
   props: {
     /**
      * If true the value is visible by default
@@ -51,15 +49,12 @@ export default defineComponent({
   },
   emits: ['update:visible'],
   setup(props, { emit }) {
-    onBeforeMount(() => {
-      library.add(faEye, faEyeSlash)
-    })
     const secretInput = ref<HTMLInputElement | null>(null)
     const inputType = computed(() => {
       return props.visible ? 'text' : 'password'
     })
     const togglerIcon = computed(() => {
-      return props.visible ? ['far', 'eye-slash'] : ['far', 'eye']
+      return props.visible ? 'eye-slash' : 'eye'
     })
     const hapticCopyClassList = computed(() => {
       return `btn-${props.hapticCopyVariant}`
@@ -93,7 +88,7 @@ export default defineComponent({
 <template>
   <b-input-group :size="size" class="secret-input">
     <b-button v-if="!noToggler" variant="link" class="secret-input__toggler" @click="toggle">
-      <fa fixed-width :icon="togglerIcon" />
+      <phosphor-icon :name="togglerIcon" />
     </b-button>
     <b-form-input
       ref="secretInput"

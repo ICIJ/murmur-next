@@ -48,7 +48,7 @@ describe('SharingOptionsLink', () => {
   it('should give a different `base` for Twitter', () => {
     const propsData = { network: 'twitter' }
     const wrapper = mount(SharingOptionsLink, { propsData })
-    expect(wrapper.vm.base).toBe('https://twitter.com/intent/tweet?')
+    expect(wrapper.vm.base).toBe('https://x.com/intent/tweet?')
   })
 
   it('should give a different `base` for Facebook', () => {

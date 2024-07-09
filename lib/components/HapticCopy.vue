@@ -1,7 +1,4 @@
 <script lang="ts">
-import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
-import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
-import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardCheck'
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
 
 import noop from 'lodash/noop'
@@ -18,7 +15,8 @@ import {
 } from 'vue'
 import { TranslateResult, useI18n } from 'vue-i18n'
 
-import { default as Fa, library } from './Fa'
+import PhosphorIcon from './PhosphorIcon.vue'
+import PhosphorIconLayers from './PhosphorIconLayers.vue'
 
 import { copyHtml, copyText } from '@/utils/clipboard'
 
@@ -28,12 +26,13 @@ type HapticCopyData = {
   tooltipContent: TranslateResult | string
   tooltipTimeout: ReturnType<typeof setTimeout> | undefined
 }
+
 export default defineComponent({
   name: 'HapticCopy',
   components: {
     BTooltip,
-    FontAwesomeLayers,
-    Fa
+    PhosphorIcon,
+    PhosphorIconLayers
   },
   props: {
     /**
@@ -102,25 +101,19 @@ export default defineComponent({
     const showClipboardTooltip = ref(false)
     const buttonId = computed(() => uniqueId('haptic-copy-'))
     
-    onBeforeMount(() => {
-      library.add(faClipboard)
-      library.add(faClipboardCheck)
-    })
-
     const tooltipContainer = computed((): string | null => {
       // By default we append the tooltip in the root container using its
       // id (if any) because BootstrapVue doesn't like HTMLElement for some
       // reasons.
-
       return el.value?.id.length ? `#${el.value.id}` : null
     })
 
     function copyTextToClipboard(): Promise<void> {
-      return el.value ? copyText(props.text, el.value) : Promise.resolve()
+      return el.value ? copyText(String(props.text), el.value) : Promise.resolve()
     }
 
     function copyHtmlToClipboard(): void {
-      return copyHtml(props.text, props.plain || props.text)
+      return copyHtml(String(props.text), String(props.plain ?? props.text))
     }
 
     function copyTextOrHtml() {
@@ -218,23 +211,23 @@ export default defineComponent({
   >
     <!-- @slot Main content of the button (including the icon) -->
     <slot>
-      <font-awesome-layers>
+      <phosphor-icon-layers>
         <transition name="spin">
-          <fa
+          <phosphor-icon
             v-if="!tooltipTimeout"
             class="haptic-copy__icon"
-            icon="clipboard"
+            name="clipboard"
           />
         </transition>
         <transition name="spin">
-          <fa
+          <phosphor-icon
             v-if="tooltipTimeout"
             class="haptic-copy__icon"
-            icon="clipboard-check"
+            name="check-fat"
           />
         </transition>
-      </font-awesome-layers>
-      <span :class="{ 'sr-only': hideLabel }" class="ms-1 haptic-copy__label">
+      </phosphor-icon-layers>
+      <span :class="{ 'sr-only': hideLabel }" class="ms-2 haptic-copy__label">
         {{ label || t('haptic-copy.label') }}
       </span>
     </slot>

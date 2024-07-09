@@ -21,7 +21,7 @@
           class="confirm-button__tooltip__cancel btn btn-sm btn-link text-light p-0 float-end"
           @click="cancel"
         >
-          <fa icon="times" />
+          <phosphor-icon name="x" size="0.75em" />
         </button>
         <p class="confirm-button__tooltip__label mb-2">
           {{ label }}
@@ -51,11 +51,10 @@
 <script lang="ts">
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
-import { ComponentPublicInstance, defineComponent, PropType, ref, onBeforeMount } from 'vue'
+import { ComponentPublicInstance, defineComponent, PropType, ref } from 'vue'
 
-import { default as Fa, library } from './Fa'
+import PhosphorIcon from './PhosphorIcon.vue'
 
 /**
  * ConfirmButton
@@ -64,7 +63,7 @@ export default defineComponent({
   name: 'ConfirmButton',
   components: {
     BTooltip,
-    Fa
+    PhosphorIcon
   },
   props: {
     /**
@@ -132,9 +131,6 @@ export default defineComponent({
   },
   emits: ['toggled', 'cancelled', 'confirmed'],
   setup(props, { emit }) {
-    onBeforeMount(() => {
-      library.add(faTimes)
-    })
     const showTooltip = ref<Boolean>(false)
     const uniqComponentId = uniqueId('murmur-confirm-button-')
     const confirmationTooltip = ref<ComponentPublicInstance | null>(null)

@@ -2,19 +2,15 @@
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
 import uniqueId from 'lodash/uniqueId'
-import { faCode } from '@fortawesome/free-solid-svg-icons/faCode'
 import {
   computed,
   CSSProperties,
   defineComponent,
-  onBeforeMount,
-  PropType,
-  ref
+  PropType
 } from 'vue'
 
-import { default as Fa, library } from './Fa'
-
 import EmbedForm from '@/components/EmbedForm.vue'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 import SharingOptionsLink from '@/components/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'
@@ -40,7 +36,7 @@ export default defineComponent({
     BModal,
     EmbedForm,
     SharingOptionsLink,
-    Fa
+    PhosphorIcon
   },
   props: {
     /**
@@ -115,10 +111,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    onBeforeMount(() => {
-      library.add(faCode)
-    })
-    
     const embedFormId = uniqueId('embed-form-')
     const { show } = useModal(embedFormId)
     const style = computed((): CSSProperties => {
@@ -214,8 +206,8 @@ export default defineComponent({
       v-bind="valuesFor('email')"
     />
     <a class="sharing-options__link sharing-options__link--embed" @click="show" v-show="!noEmbed">
-      <fa icon="code" />
-      <span class="sr-only">Embed</span>
+      <phosphor-icon name="code" />
+      <span class="visually-hidden">Embed</span>
     </a>
     <b-modal :id="embedFormId" class="text-dark" hide-footer title="Embed on your website">
       <embed-form

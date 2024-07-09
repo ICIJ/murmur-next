@@ -12,8 +12,8 @@
         name="previous"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <fa :icon="previousPageIcon" />
-        <span class="sr-only">{{ t('tiny-pagination.previous') }}</span>
+        <phosphor-icon :name="previousPageIcon" />
+        <span class="visually-hidden">{{ t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
     <form
@@ -53,27 +53,26 @@
         name="next"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <fa :icon="nextPageIcon" />
-        <span class="sr-only">{{ t('tiny-pagination.next') }}</span>
+        <phosphor-icon :name="nextPageIcon" />
+        <span class="visually-hidden">{{ t('tiny-pagination.next') }}</span>
       </slot>
     </b-button>
   </div>
 </template>
 
 <script lang="ts">
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import { defineComponent, PropType, ref, computed, onBeforeMount, watch } from 'vue'
+import { defineComponent, PropType, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-
-import { library, default as Fa } from './Fa'
 
 import { Size } from '@/enums'
 import { ButtonVariant, BFormInput, BButton } from 'bootstrap-vue-next'
 
+import PhosphorIcon from './PhosphorIcon.vue'
+
 export default defineComponent({
   name: 'TinyPagination',
   components: {
-    Fa,
+    PhosphorIcon,
     BFormInput,
     BButton
   },
@@ -125,15 +124,15 @@ export default defineComponent({
      * FontAwesome icon of the previous page button
      */
     previousPageIcon: {
-      type: [String, Array, Object],
-      default: 'angle-left'
+      type: String,
+      default: 'caret-left'
     },
     /**
      * FontAwesome icon of the next page button
      */
     nextPageIcon: {
-      type: [String, Array, Object],
-      default: 'angle-right'
+      type: String,
+      default: 'caret-right'
     },
     /**
      * Navigation button variants
@@ -157,10 +156,6 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    onBeforeMount(() => {
-      library.add(faAngleLeft, faAngleRight)
-    })
-
     const { t } = useI18n()
 
     const numberOfPages = computed((): number => {
