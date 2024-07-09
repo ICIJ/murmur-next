@@ -35,6 +35,7 @@
     <form class="tiny-pagination__form form-inline" v-if="row" @submit.prevent="applyRowForm">
       <b-form-input
         v-model="currentRowInput"
+        v-input-autowidth="{ minWidth: '2em' }"
         :size="size"
         class="tiny-pagination__form__input tiny-pagination__form__input--row me-1"
         type="number"
@@ -44,14 +45,16 @@
         :max="totalRows - 1"
         :aria-label="t('tiny-pagination.ariaRow')"
       />
-      <!-- @slot Compact display number of rows and current range -->
-      <slot v-if="compact" name="compact-number-of-rows" v-bind="{ modelValue, row, numberOfPages, totalRows }">
-        {{ t('tiny-pagination.compactRowRange', { row, lastRangeRow, totalRows }, totalRows) }}
-      </slot>
-      <!-- @slot Display number of rows and current range -->
-      <slot v-else name="number-of-rows" v-bind="{ modelValue, row, numberOfPages, totalRows }">
-        {{ t('tiny-pagination.rowRange', { row, lastRangeRow, totalRows }, totalRows) }}
-      </slot>
+      <div class="tiny-pagination__form__label">
+        <!-- @slot Compact display number of rows and current range -->
+        <slot v-if="compact" name="compact-number-of-rows" v-bind="{ modelValue, numberOfPages, totalRows }">
+          {{ t('tiny-pagination.compactRowRange', { lastRangeRow: n(lastRangeRow), totalRows: n(totalRows) }, totalRows) }}
+        </slot>
+        <!-- @slot Display number of rows and current range -->
+        <slot v-else name="number-of-rows" v-bind="{ modelValue, numberOfPages, totalRows }">
+          {{ t('tiny-pagination.rowRange', { lastRangeRow: n(lastRangeRow), totalRows: n(totalRows) }, totalRows) }}
+        </slot>
+      </div>
     </form>
     <form v-else class="tiny-pagination__form form-inline" @submit.prevent="applyPageForm">
       <label v-show="!compact" class="tiny-pagination__form__label me-1 mb-0">
@@ -62,6 +65,7 @@
       </label>
       <b-form-input
         v-model="currentPageInput"
+        v-input-autowidth="{ minWidth: '2em' }"
         :size="size"
         class="tiny-pagination__form__input tiny-pagination__form__input--item me-1"
         type="number"
@@ -71,10 +75,12 @@
         :max="numberOfPages"
         :aria-label="t('tiny-pagination.aria')"
       />
-      <!-- @slot Display number of pages -->
-      <slot name="number-of-pages" v-bind="{ modelValue, numberOfPages }">
-        {{ t('tiny-pagination.total', { numberOfPages }) }}
-      </slot>
+      <div class="tiny-pagination__form__label">
+        <!-- @slot Display number of pages -->
+        <slot name="number-of-pages" v-bind="{ modelValue, numberOfPages }">
+          {{ t('tiny-pagination.total', { numberOfPages: n(numberOfPages) }) }}
+        </slot>
+      </div>
     </form>
     <b-button
       class="tiny-pagination__nav"
@@ -117,6 +123,7 @@ import { useI18n } from 'vue-i18n'
 
 import { Size } from '@/enums'
 import { ButtonVariant, BFormInput, BButton } from 'bootstrap-vue-next'
+import { directive as vInputAutowidth } from "vue-input-autowidth"
 
 import PhosphorIcon from './PhosphorIcon.vue'
 
@@ -227,7 +234,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-const { t } = useI18n()
+const { t, n } = useI18n()
 
 const numberOfPages = computed((): number => {
   if (props.pages === null) {
@@ -306,6 +313,7 @@ function applyLastPage(): void {
   text-align: center;
   white-space: nowrap;
   flex-wrap: nowrap;
+  max-width: 100%;  
 
   &__nav {
     padding-left: 0.25em;
@@ -354,15 +362,14 @@ function applyLastPage(): void {
     margin: 0 $spacer * 0.25;
     width: 100%;
     display: flex;
-    white-space: nowrap;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
+    min-width: 0;
 
     &__input {
-      max-width: 2.5rem;
-      padding-left: 0.2rem;
-      padding-right: 0.2rem;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
       text-align: center;
 
       &[type='number'] {
@@ -374,6 +381,12 @@ function applyLastPage(): void {
           margin: 0;
         }
       }
+    }
+
+    &__label {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 }

@@ -79,8 +79,8 @@ CompactMode.args = {
 export const RowMode = Template.bind({})
 RowMode.args = {
   modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
+  perPage: 25,
+  totalRows: 2e6,
   compact: false,
   row: true
 }
@@ -88,8 +88,8 @@ RowMode.args = {
 export const CompactRowMode = Template.bind({})
 CompactRowMode.args = {
   modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
+  perPage: 25,
+  totalRows: 2e6,
   compact: true,
   row: true
 }
@@ -97,7 +97,7 @@ CompactRowMode.args = {
 export const RowModeZero = Template.bind({})
 RowModeZero.args = {
   modelValue: 1,
-  perPage: 10,
+  perPage: 25,
   totalRows: 0,
   compact: false,
   row: true
