@@ -32,10 +32,28 @@
         <span class="visually-hidden">{{ t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
-    <form
-      class="tiny-pagination__form form-inline"
-      @submit.prevent="applyPageForm"
-    >
+    <form class="tiny-pagination__form form-inline" v-if="row" @submit.prevent="applyRowForm">
+      <b-form-input
+        v-model="currentRowInput"
+        :size="size"
+        class="tiny-pagination__form__input tiny-pagination__form__input--row me-1"
+        type="number"
+        step="1"
+        :disabled="!totalRows"
+        :min="1"
+        :max="totalRows - 1"
+        :aria-label="t('tiny-pagination.ariaRow')"
+      />
+      <!-- @slot Compact display number of rows and current range -->
+      <slot v-if="compact" name="compact-number-of-rows" v-bind="{ modelValue, row, numberOfPages, totalRows }">
+        {{ t('tiny-pagination.compactRowRange', { row, lastRangeRow, totalRows }, totalRows) }}
+      </slot>
+      <!-- @slot Display number of rows and current range -->
+      <slot v-else name="number-of-rows" v-bind="{ modelValue, row, numberOfPages, totalRows }">
+        {{ t('tiny-pagination.rowRange', { row, lastRangeRow, totalRows }, totalRows) }}
+      </slot>
+    </form>
+    <form v-else class="tiny-pagination__form form-inline" @submit.prevent="applyPageForm">
       <label v-show="!compact" class="tiny-pagination__form__label me-1 mb-0">
         <!-- @slot Display page label -->
         <slot name="page" v-bind="{ modelValue, numberOfPages }">
@@ -45,9 +63,10 @@
       <b-form-input
         v-model="currentPageInput"
         :size="size"
-        class="tiny-pagination__form__input me-1"
+        class="tiny-pagination__form__input tiny-pagination__form__input--item me-1"
         type="number"
         step="1"
+        :disabled="!totalRows"
         :min="1"
         :max="numberOfPages"
         :aria-label="t('tiny-pagination.aria')"
@@ -123,6 +142,12 @@ const props = defineProps({
   modelValue: {
     type: [Number, String],
     default: 1
+  },
+  /**
+   * Use an input to set the row number
+   */
+  row: {
+    type: Boolean
   },
   /**
    * Set the size of the input: 'sm', 'md' (default), or 'lg'.
@@ -228,15 +253,28 @@ const hasLast = computed((): boolean => pageValue.value < numberOfPages.value)
 const hasNext = computed((): boolean => hasLast.value)
 
 const pageValue = computed(() => +props.modelValue)
+const lastRangeRow = computed(() => +pageValue.value * props.perPage)
 
-const currentPageInput = ref<number | string>(pageValue.value)
+const currentPageInput = ref<number>(0)
+const currentRowInput = ref<number>(0)
 
 watch(() => props.modelValue, (value) => {
-  currentPageInput.value = value
-})
+  currentPageInput.value = props.totalRows ? +value : 0
+  currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + 1 : 0
+}, { immediate: true })
 
 function applyPageForm(): void {
-  if (!isNaN(currentPageInput.value as number)) {
+  const { value } = currentPageInput
+  if (!isNaN(value as number)) {
+    emit('update:modelValue', +value)
+  }
+}
+
+function applyRowForm(): void {
+  const { value } = currentRowInput
+  if (!isNaN(value as number)) {
+    currentPageInput.value = Math.floor(+value / +props.perPage) + 1
+    currentRowInput.value = +props.perPage * (+currentPageInput.value - 1) + 1
     emit('update:modelValue', +currentPageInput.value)
   }
 }
@@ -266,6 +304,8 @@ function applyLastPage(): void {
   align-items: center;
   justify-content: center;
   text-align: center;
+  white-space: nowrap;
+  flex-wrap: nowrap;
 
   &__nav {
     padding-left: 0.25em;
@@ -314,6 +354,8 @@ function applyLastPage(): void {
     margin: 0 $spacer * 0.25;
     width: 100%;
     display: flex;
+    white-space: nowrap;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
 

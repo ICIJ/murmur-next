@@ -7,8 +7,17 @@ export default {
   component: TinyPagination,
   tags: ['autodocs'],
   argTypes: {
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
-    pages: { type: 'number', min: 0 }
+    size: { 
+      control: 'inline-radio', 
+      options: ['sm', 'md', 'lg'] 
+    },
+    pages: { 
+      control: 'number', 
+      min: 0 
+    },
+    row: {
+      type: 'boolean'
+    }
   }
 }
 
@@ -18,7 +27,7 @@ const Template: Story = (args: any) => ({
   setup() {
     return { args }
   },
-  template: '<TinyPagination v-bind="args" />'
+  template: '<tiny-pagination v-bind="args" />'
 })
 
 export const Default = Template.bind({})
@@ -42,6 +51,7 @@ Medium.args = {
   totalRows: 200,
   size: Size.md
 }
+
 export const Large = Template.bind({})
 Large.args = {
   modelValue: 1,
@@ -49,6 +59,7 @@ Large.args = {
   totalRows: 200,
   size: Size.lg
 }
+
 export const HideNavigation = Template.bind({})
 HideNavigation.args = {
   modelValue: 1,
@@ -56,10 +67,38 @@ HideNavigation.args = {
   totalRows: 200,
   noNav: true
 }
+
 export const CompactMode = Template.bind({})
 CompactMode.args = {
   modelValue: 1,
   perPage: 10,
   totalRows: 200,
   compact: true
+}
+
+export const RowMode = Template.bind({})
+RowMode.args = {
+  modelValue: 1,
+  perPage: 10,
+  totalRows: 200,
+  compact: false,
+  row: true
+}
+
+export const CompactRowMode = Template.bind({})
+CompactRowMode.args = {
+  modelValue: 1,
+  perPage: 10,
+  totalRows: 200,
+  compact: true,
+  row: true
+}
+
+export const RowModeZero = Template.bind({})
+RowModeZero.args = {
+  modelValue: 1,
+  perPage: 10,
+  totalRows: 0,
+  compact: false,
+  row: true
 }
