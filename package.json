@@ -19,6 +19,7 @@
     "lint": "eslint . --fix",
     "format": "prettier --write lib/ stories/ .storybook/ tests/",
     "storybook": "storybook dev -p 6006",
+    "serve": "yarn storybook",
     "build:storybook": "storybook build",
     "test": "vitest",
     "test:unit": "vitest run",
