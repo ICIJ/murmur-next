@@ -10,15 +10,34 @@
       @mouseleave="hover = false"
     >
       <animateTransform
-        v-if="spin"
+        v-if="spin || spinReverse"
         attributeName="transform"
         attributeType="XML"
         type="rotate"
         :dur="spinDuration"
         from="0 0 0"
-        to="360 0 0"
+        :to="spinTo"
         repeatCount="indefinite"
       />
+      <animateTransform
+        v-if="beat"
+        attributeName="transform"
+        attributeType="XML"
+        type="scale"
+        :dur="beatDuration"
+        values="0.8; 1.2; 0.8"
+        repeatCount="indefinite"
+      />
+      <animate
+        v-if="fade"
+        attributeName="opacity"
+        from="1"
+        to="0"
+        begin="0s"
+        :dur="spinDuration"
+        repeatCount="indefinite"
+        values="1; 0; 1"
+        keyTimes="0; 0.5; 1"/>
     </component>
   </span>
 </template>
@@ -76,7 +95,24 @@ const props = defineProps({
     required: false,
     default: null
   },
+  beat: {
+    type: Boolean
+  },
+  beatDuration: {
+    type: String,
+    default: '1s'
+  },
+  fade: {
+    type: Boolean
+  },
+  fadeDuration: {
+    type: String,
+    default: '1s'
+  },
   spin: {
+    type: Boolean
+  },
+  spinReverse: {
     type: Boolean
   },
   spinDuration: {
@@ -124,6 +160,10 @@ const weight = computed(() => {
 
 const color = computed(() => {
   return `var(--bs-${props.variant}, currentColor)`
+})
+
+const spinTo = computed(() => {
+  return props.spinReverse ? '-360 0 0' : '360 0 0'
 })
 
 const style = computed(() => {
