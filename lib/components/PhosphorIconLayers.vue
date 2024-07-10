@@ -24,16 +24,20 @@ const style = computed(() => {
 
 <style lang="scss" scoped>
 .phosphor-icon-layers {
+  --size: var(--phosphor-icon-layers-size, 1em);
+
   display: inline-block;
-  height: var(--phosphor-icon-size, 1em);
-  line-height: var(--phosphor-icon-size, 1em);
-  width: var(--phosphor-icon-size, 1em);
+  height: var(--size);
+  line-height: var(--size);
+  width: var(--size);
   position: relative;
 
   &:deep(.phosphor-icon) {
+    display: inline-block;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>
