@@ -34,7 +34,7 @@
         from="1"
         to="0"
         begin="0s"
-        :dur="spinDuration"
+        :dur="fadeDuration"
         repeatCount="indefinite"
         values="1; 0; 1"
         keyTimes="0; 0.5; 1"/>
