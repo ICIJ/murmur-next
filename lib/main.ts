@@ -46,6 +46,8 @@ export { default as StackedBarChart } from './datavisualisations/StackedBarChart
 export { default as ChoroplethMap } from './maps/ChoroplethMap.vue'
 export { default as SymbolMap } from './maps/SymbolMap.vue'
 
+export { default as EllipsisTooltip } from './directives/EllipsisTooltip'
+
 type ComponentMap = {[name:string]:Component|DefineComponent}
 
 type PluginOptions = {
