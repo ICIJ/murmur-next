@@ -45,14 +45,10 @@
         :max="totalRows - 1"
         :aria-label="t('tiny-pagination.ariaRow')"
       />
-      <div class="tiny-pagination__form__label">
-        <!-- @slot Compact display number of rows and current range -->
-        <slot v-if="compact" name="compact-number-of-rows" v-bind="{ modelValue, numberOfPages, totalRows }">
-          {{ t('tiny-pagination.compactRowRange', { lastRangeRow: n(lastRangeRow), totalRows: n(totalRows) }, totalRows) }}
-        </slot>
+      <div class="tiny-pagination__form__label" v-ellipsis-tooltip="{ title }">
         <!-- @slot Display number of rows and current range -->
-        <slot v-else name="number-of-rows" v-bind="{ modelValue, numberOfPages, totalRows }">
-          {{ t('tiny-pagination.rowRange', { lastRangeRow: n(lastRangeRow), totalRows: n(totalRows) }, totalRows) }}
+        <slot name="number-of-rows" v-bind="{ modelValue, numberOfPages, totalRows }">
+          {{ title }}
         </slot>
       </div>
     </form>
@@ -75,10 +71,10 @@
         :max="numberOfPages"
         :aria-label="t('tiny-pagination.aria')"
       />
-      <div class="tiny-pagination__form__label">
+      <div class="tiny-pagination__form__label" v-ellipsis-tooltip="{ title }">
         <!-- @slot Display number of pages -->
         <slot name="number-of-pages" v-bind="{ modelValue, numberOfPages }">
-          {{ t('tiny-pagination.total', { numberOfPages: n(numberOfPages) }) }}
+          {{ title }}
         </slot>
       </div>
     </form>
@@ -121,12 +117,12 @@
 import { PropType, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Size } from '@/enums'
 import { ButtonVariant, BFormInput, BButton } from 'bootstrap-vue-next'
 import { directive as vInputAutowidth } from "vue-input-autowidth"
 
+import { Size } from '@/enums'
+import vEllipsisTooltip from '@/directives/EllipsisTooltip'
 import PhosphorIcon from './PhosphorIcon.vue'
-
 
 const props = defineProps({
   /**
@@ -269,6 +265,16 @@ watch(() => props.modelValue, (value) => {
   currentPageInput.value = props.totalRows ? +value : 0
   currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + 1 : 0
 }, { immediate: true })
+
+const title = computed(() => {
+  if (props.row) {
+    const locales = { lastRangeRow: n(lastRangeRow.value), totalRows: n(props.totalRows) }
+    return t(props.compact ? 'tiny-pagination.compactRowRange' : 'tiny-pagination.rowRange', locales, props.totalRows)
+  }
+
+  const locales = { numberOfPages: n(numberOfPages.value) }
+  return t('tiny-pagination.total', locales, props.totalRows)
+})
 
 function applyPageForm(): void {
   const { value } = currentPageInput
