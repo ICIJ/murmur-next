@@ -177,7 +177,9 @@ const style = computed(() => {
 
 <style lang="scss" scoped>
 .phosphor-icon {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: var(--phosphor-icon-size, 1em);
   line-height: var(--phosphor-icon-size, 1em);
   width: var(--phosphor-icon-size, 1em);
