@@ -12,7 +12,7 @@
         name="first"
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
-        <phosphor-icon :name="firstPageIcon" />
+        <phosphor-icon :name="firstPageIcon" hover-weight="bold" />
         <span class="visually-hidden">{{ t('tiny-pagination.first') }}</span>
       </slot>
     </b-button>
@@ -28,7 +28,7 @@
         name="previous"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <phosphor-icon :name="previousPageIcon" />
+        <phosphor-icon :name="previousPageIcon" hover-weight="bold" />
         <span class="visually-hidden">{{ t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
@@ -90,7 +90,7 @@
         name="next"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <phosphor-icon :name="nextPageIcon" />
+        <phosphor-icon :name="nextPageIcon" hover-weight="bold" />
         <span class="visually-hidden">{{ t('tiny-pagination.next') }}</span>
       </slot>
     </b-button>
@@ -106,7 +106,7 @@
         name="last"
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
-        <phosphor-icon :name="lastPageIcon" />
+        <phosphor-icon :name="lastPageIcon" hover-weight="bold" />
         <span class="visually-hidden">{{ t('tiny-pagination.last') }}</span>
       </slot>
     </b-button>
