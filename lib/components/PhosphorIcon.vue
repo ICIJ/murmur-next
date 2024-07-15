@@ -1,12 +1,10 @@
 <template>
-  <span class="phosphor-icon" :style="style" :class="classList">
+  <span class="phosphor-icon" :style="style" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
     <component
       :size="rawSize"
       :is="component"
       :color="color"
       :weight="weight"
-      @mouseenter="hover = true"
-      @mouseleave="hover = false"
     >
       <animateTransform
         v-if="spin || spinReverse"
