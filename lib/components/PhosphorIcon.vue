@@ -114,6 +114,9 @@ const props = defineProps({
   spinDuration: {
     type: String,
     default: '1s'
+  },
+  hover: {
+    type: Boolean
   }
 })
 
@@ -137,6 +140,15 @@ watch(
     component.value = findComponentByName(props.name)
   }
 )
+
+watch(
+  () => props.hover,
+  () => {
+    hover.value = props.hover
+  },
+  { immediate: true }
+)
+
 
 const weight = computed(() => {
   if (hover.value && props.hoverWeight) {
@@ -190,6 +202,7 @@ const classList = computed(() => {
   return {
     [`phosphor-icon--size-${props.size}`]: hasSize.value,
     [`phosphor-icon--has-size`]: hasSize.value,
+    [`phosphor-icon--hover`]: hover.value,
   }
 })
 </script>
