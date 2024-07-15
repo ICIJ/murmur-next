@@ -1,5 +1,11 @@
 <template>
-  <span class="phosphor-icon" :style="style" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
+  <span 
+    class="phosphor-icon" 
+    :class="classList" 
+    :style="style" 
+    @mouseenter="currentHover = true" 
+    @mouseleave="currentHover = hover ?? false"
+  >
     <component
       :size="rawSize"
       :is="component"
@@ -59,8 +65,6 @@ const WEIGHTS = Object.freeze({
   [WEIGHT_FILL]: WEIGHT_FILL,
   [WEIGHT_DUOTONE]: WEIGHT_DUOTONE
 })
-
-const hover = ref(false)
 
 const props = defineProps({
   name: {
@@ -141,17 +145,19 @@ watch(
   }
 )
 
+const currentHover = ref(false)
+
 watch(
   () => props.hover,
   () => {
-    hover.value = props.hover
+    currentHover.value = props.hover
   },
   { immediate: true }
 )
 
 
 const weight = computed(() => {
-  if (hover.value && props.hoverWeight) {
+  if (currentHover.value && props.hoverWeight) {
     return WEIGHTS[props.hoverWeight]
   }
 
@@ -202,7 +208,7 @@ const classList = computed(() => {
   return {
     [`phosphor-icon--size-${props.size}`]: hasSize.value,
     [`phosphor-icon--has-size`]: hasSize.value,
-    [`phosphor-icon--hover`]: hover.value,
+    [`phosphor-icon--hover`]: currentHover.value,
   }
 })
 </script>

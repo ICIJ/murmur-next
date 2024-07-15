@@ -94,6 +94,14 @@ export const VariantSecondary = {
     size: '32px'
   }
 }
+export const HoverWeight = {
+  args: {
+    name: 'lego',
+    variant: 'primary',
+    hoverWeight: 'duotone',
+    size: '32px'
+  }
+}
 
 export const WithText = {
   args: {
