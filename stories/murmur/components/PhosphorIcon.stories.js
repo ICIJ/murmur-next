@@ -98,8 +98,7 @@ export const VariantSecondary = {
 export const WithText = {
   args: {
     name: 'globe',
-    variant: 'primary',
-    size: '1em'
+    variant: 'primary'
   },
   render: (args) => ({
     components: {

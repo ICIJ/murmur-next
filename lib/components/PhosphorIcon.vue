@@ -176,7 +176,7 @@ const rawSize = computed(() => {
   if (isRawSize.value) {
     return props.size
   }
-  return '1em'
+  return '1.25em'
 })
 
 const style = computed(() => {
@@ -204,8 +204,6 @@ const classList = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: var(--phosphor-icon-raw-size, 1em);
-  width: var(--phosphor-icon-raw-size, 1em);
   @include ph-icon-size($ph-icon-size-scale-base);
  
   @each $size, $value in $ph-icon-sizes {
