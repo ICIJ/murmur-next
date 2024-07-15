@@ -1,11 +1,10 @@
 <template>
-  <span class="phosphor-icon" :style="style">
+  <span class="phosphor-icon" :style="style" :class="classList">
     <component
+      :size="rawSize"
       :is="component"
-      :size="size"
       :color="color"
       :weight="weight"
-      :spin="spin"
       @mouseenter="hover = true"
       @mouseleave="hover = false"
     >
@@ -72,8 +71,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    required: false,
-    default: '1.25em'
+    default: null
   },
   variant: {
     type: String,
@@ -166,22 +164,54 @@ const spinTo = computed(() => {
   return props.spinReverse ? '-360 0 0' : '360 0 0'
 })
 
+const isRawSize = computed(() => {
+  return !['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', null].includes(props.size)
+})
+
+const hasSize = computed(() => {
+  return ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(props.size)
+})
+
+const rawSize = computed(() => {
+  if (isRawSize.value) {
+    return props.size
+  }
+  return '1em'
+})
+
 const style = computed(() => {
   return {
     '--phosphor-icon-color': color.value,
     '--phosphor-icon-weight': weight.value,
-    '--phosphor-icon-size': props.size
+    '--phosphor-icon-raw-size': isRawSize.value ? props.size : null,
+    '--phosphor-icon-size': hasSize.value ? props.size : null,
+  }
+})
+
+const classList = computed(() => {
+  return {
+    [`phosphor-icon--size-${props.size}`]: hasSize.value,
+    [`phosphor-icon--has-size`]: hasSize.value,
   }
 })
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/lib';
+@import '@/styles/mixins';
+
 .phosphor-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: var(--phosphor-icon-size, 1em);
-  line-height: var(--phosphor-icon-size, 1em);
-  width: var(--phosphor-icon-size, 1em);
+  height: var(--phosphor-icon-raw-size, 1em);
+  width: var(--phosphor-icon-raw-size, 1em);
+  @include ph-icon-size($ph-icon-size-scale-base);
+ 
+  @each $size, $value in $ph-icon-sizes {
+    &--size-#{$size} {
+      @include ph-icon-size($value);
+    }
+  }
 }
 </style>

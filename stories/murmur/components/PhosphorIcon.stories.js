@@ -15,6 +15,9 @@ export default {
     },
     spin: {
       control: { type: 'boolean' }
+    },
+    size: {
+      control: { type: 'string' }
     }
   },
   args: {
@@ -90,4 +93,65 @@ export const VariantSecondary = {
     variant: 'secondary',
     size: '32px'
   }
+}
+
+export const WithText = {
+  args: {
+    name: 'globe',
+    variant: 'primary',
+    size: '1em'
+  },
+  render: (args) => ({
+    components: {
+      PhosphorIcon
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <h2>
+        <phosphor-icon v-bind="args" />
+        An ICIJ poem
+      </h2>
+      <p>
+        In the shadows of whispers <phosphor-icon name="chat" /> and silk veils,<br />
+        The ink of truth flows like moonlight <phosphor-icon name="moon" /> on paper,<br />
+        ICIJ, a lantern <phosphor-icon name="lightbulb" /> in the murk,<br />
+        Unveils the hidden and the hushed.
+      </p>
+      <p>
+        Words not bound by chains <phosphor-icon name="link-break" />, but by liberty,<br />
+        The silent scream <phosphor-icon name="user-sound" /> of the unseen,<br />
+        With each page turned, a revelation <phosphor-icon name="newspaper" />,<br />
+        A mirror held to the world's face <phosphor-icon name="scan-smiley" />.
+      </p>   
+    `
+  })
+}
+
+export const Sizings = {
+  args: {
+    name: 'globe'
+  },
+  render: (args) => ({
+    components: {
+      PhosphorIcon
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <p><phosphor-icon name="globe" size="2xs" /> Stories that rock the world (<code>2xs</code>).</p>
+      <p><phosphor-icon name="globe" size="xs" /> Stories that rock the world (<code>xs</code>).</p>
+      <p><phosphor-icon name="globe" size="sm" /> Stories that rock the world (<code>sm</code>).</p>
+      <p><phosphor-icon name="globe" /> Stories that rock the world (<code>md</code>).</p>
+      <p><phosphor-icon name="globe" size="lg" /> Stories that rock the world (<code>lg</code>).</p>
+      <p><phosphor-icon name="globe" size="xl" /> Stories that rock the world (<code>xl</code>).</p>
+      <p><phosphor-icon name="globe" size="2xl" /> Stories that rock the world (<code>2xl</code>).</p>
+    `
+  })
 }

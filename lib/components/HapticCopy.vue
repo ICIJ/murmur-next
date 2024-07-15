@@ -249,20 +249,20 @@ export default defineComponent({
 <style lang="scss">
 .haptic-copy {
   &__icon {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translate(-50%, -50%);
 
     &.spin-enter-active,
     &.spin-leave-active {
-      transition: all 0.2s;
+      transition: all 500ms;
     }
 
     &.spin-enter-from {
-      transform: rotate(-180deg);
+      transform: rotate(-180deg) translate(-50%, -50%);
       opacity: 0;
     }
 
     &.spin-leave-to {
-      transform: rotate(180deg);
+      transform: rotate(180deg) translate(-50%, -50%);
       opacity: 0;
     }
   }
