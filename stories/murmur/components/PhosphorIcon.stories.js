@@ -173,3 +173,35 @@ export const Sizings = {
     `
   })
 }
+
+export const Scaling = {
+  args: {
+    name: 'balloon',
+    weight: 'duotone',
+    variant: 'primary'
+  },
+  render: (args) => ({
+    components: {
+      PhosphorIcon
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <p>
+        <phosphor-icon v-bind="args" scale="1" />      
+        <phosphor-icon v-bind="args" scale="2" />      
+        <phosphor-icon v-bind="args" scale="3" />      
+        <phosphor-icon v-bind="args" scale="4" />      
+        <phosphor-icon v-bind="args" scale="5" />      
+        <phosphor-icon v-bind="args" scale="6" />      
+        <phosphor-icon v-bind="args" scale="7" />      
+        <phosphor-icon v-bind="args" scale="8" />      
+        <phosphor-icon v-bind="args" scale="9" />      
+        <phosphor-icon v-bind="args" scale="10" />      
+      </p>
+    `
+  })
+}

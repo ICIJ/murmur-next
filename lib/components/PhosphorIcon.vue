@@ -76,6 +76,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  scale: {
+    type: Number,
+    default: 1
+  },
   variant: {
     type: String,
     required: false,
@@ -203,6 +207,7 @@ const style = computed(() => {
     '--phosphor-icon-weight': weight.value,
     '--phosphor-icon-raw-size': isRawSize.value ? props.size : null,
     '--phosphor-icon-size': hasSize.value ? props.size : null,
+    '--phosphor-icon-scale': props.scale ?? 1,
   }
 })
 
@@ -223,11 +228,11 @@ const classList = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include ph-icon-size($ph-icon-size-scale-base);
+  @include ph-icon-size($ph-icon-size-scale-base, var(--phosphor-icon-scale, 1));
  
   @each $size, $value in $ph-icon-sizes {
     &--size-#{$size} {
-      @include ph-icon-size($value);
+      @include ph-icon-size($value, var(--phosphor-icon-scale));
     }
   }
 }

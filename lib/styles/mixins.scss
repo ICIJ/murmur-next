@@ -38,8 +38,8 @@
   #{$name}: #{$argument};
 }
 
-@mixin ph-icon-size ($font-size) {
-  font-size: divide($font-size, $ph-icon-size-scale-base) * 1em;
+@mixin ph-icon-size ($font-size, $scale: 1) {
+  font-size: calc(#{$scale} * #{divide($font-size, $ph-icon-size-scale-base) * 1em});
   line-height: divide(1, $font-size) * 1em;
   vertical-align: (divide(4, $font-size) - divide(3, 7)) * 1em;
 }
