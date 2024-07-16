@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { computed, ref, shallowRef, defineAsyncComponent, watch } from 'vue'
+import isObject from 'lodash/isObject'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
 
@@ -68,7 +69,7 @@ const WEIGHTS = Object.freeze({
 
 const props = defineProps({
   name: {
-    type: String,
+    type: [String, Object],
     required: true
   },
   size: {
@@ -136,13 +137,14 @@ function findComponentByName(name: string) {
   })
 }
 
-const component = shallowRef(findComponentByName(props.name))
+const component = shallowRef(null)
 
 watch(
   () => props.name,
   () => {
-    component.value = findComponentByName(props.name)
-  }
+    component.value = isObject(props.name) ? props.name : findComponentByName(props.name)
+  },
+  { immediate: true }
 )
 
 const currentHover = ref(false)

@@ -1,3 +1,5 @@
+import { PhHorse } from "@phosphor-icons/vue"
+
 import { PhosphorIcon } from '@/components'
 
 export default {
@@ -43,7 +45,7 @@ export default {
 export const Default = {
   args: {
     name: 'User',
-    size: '32px'
+    size: '2xl'
   }
 }
 
@@ -51,7 +53,7 @@ export const WeightBold = {
   args: {
     name: 'User',
     weight: 'bold',
-    size: '32px'
+    size: '2xl'
   }
 }
 
@@ -59,7 +61,7 @@ export const WeightFill = {
   args: {
     name: 'User',
     weight: 'fill',
-    size: '32px'
+    size: '2xl'
   }
 }
 
@@ -67,14 +69,14 @@ export const WeightDuotone = {
   args: {
     name: 'User',
     weight: 'duotone',
-    size: '32px'
+    size: '2xl'
   }
 }
 
 export const Spinning = {
   args: {
     name: 'circle-notch',
-    size: '32px',
+    size: '2xl',
     spin: true
   }
 }
@@ -83,23 +85,32 @@ export const VariantPrimary = {
   args: {
     name: 'rocket',
     variant: 'primary',
-    size: '32px'
+    size: '2xl'
   }
 }
 
 export const VariantSecondary = {
   args: {
     name: 'rocket',
-    variant: 'secondary',
-    size: '32px'
+    variant: 'primary',
+    size: '2xl'
   }
 }
+
+export const WithComponent = {
+  args: {
+    name: PhHorse,
+    variant: 'primary',
+    size: '2xl'
+  }
+}
+
 export const HoverWeight = {
   args: {
     name: 'lego',
     variant: 'primary',
     hoverWeight: 'duotone',
-    size: '32px'
+    size: '2xl'
   }
 }
 
