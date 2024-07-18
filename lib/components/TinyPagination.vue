@@ -265,9 +265,12 @@ watch(() => props.modelValue, (value) => {
   // Update currentPageInput value based on totalRows
   currentPageInput.value = props.totalRows ? +value : 0
   // Determine the row offset based on the perPage value.
-  const rowOffset = props.perPage === 1 ? 0 : 1  
-  // Update currentRowInput value based on totalRows and calculated rowOffset
-  currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + rowOffset : 0
+  if (props.perPage === 1) {
+    currentRowInput.value = +value
+  } else {
+    // Update currentRowInput value based on totalRows and calculated rowOffset
+    currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + 1 : 0
+  }
 }, { immediate: true })
 
 const title = computed(() => {
