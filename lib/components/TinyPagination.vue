@@ -262,13 +262,21 @@ const currentPageInput = ref<number>(0)
 const currentRowInput = ref<number>(0)
 
 watch(() => props.modelValue, (value) => {
+  // Update currentPageInput value based on totalRows
   currentPageInput.value = props.totalRows ? +value : 0
-  currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + 1 : 0
+  // Determine the row offset based on the perPage value.
+  const rowOffset = props.perPage === 1 ? 0 : 1  
+  // Update currentRowInput value based on totalRows and calculated rowOffset
+  currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + rowOffset : 0
 }, { immediate: true })
 
 const title = computed(() => {
   if (props.row) {
     const locales = { lastRangeRow: n(lastRangeRow.value), totalRows: n(props.totalRows) }
+    // Only one per page, meaning we navigate through rows one by one
+    if (props.perPage === 1) {
+      return props.compact ? '' : t('tiny-pagination.uniqueRowRange', locales, props.totalRows)
+    }
     return t(props.compact ? 'tiny-pagination.compactRowRange' : 'tiny-pagination.rowRange', locales, props.totalRows)
   }
 

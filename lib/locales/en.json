@@ -136,6 +136,7 @@
     "ariaRow": "Jump to row",
     "total": "of {numberOfPages}",
     "rowRange": "to {lastRangeRow} of 0 rows | to {lastRangeRow} of 1 row | to {lastRangeRow} of {totalRows} rows",
+    "uniqueRowRange": "of {totalRows} rows",
     "compactRowRange": "to {lastRangeRow}",
     "previous": "Previous page",
     "next": "Next page",
