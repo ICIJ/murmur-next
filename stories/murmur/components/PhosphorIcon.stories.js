@@ -1,4 +1,4 @@
-import { PhHorse } from "@phosphor-icons/vue"
+import { PhHorse, PhWindowsLogo } from "@phosphor-icons/vue"
 
 import { PhosphorIcon } from '@/components'
 
@@ -100,6 +100,15 @@ export const VariantSecondary = {
 export const WithComponent = {
   args: {
     name: PhHorse,
+    variant: 'primary',
+    size: '2xl'
+  }
+}
+
+
+export const WithArray = {
+  args: {
+    name: ['windows-logo', 'fill'],
     variant: 'primary',
     size: '2xl'
   }

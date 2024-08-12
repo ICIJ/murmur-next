@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { computed, ref, shallowRef, defineAsyncComponent, watch } from 'vue'
+import isArray from 'lodash/isArray'
 import isObject from 'lodash/isObject'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
@@ -69,7 +70,7 @@ const WEIGHTS = Object.freeze({
 
 const props = defineProps({
   name: {
-    type: [String, Object],
+    type: [String, Object, Array],
     required: true
   },
   size: {
@@ -141,28 +142,29 @@ function findComponentByName(name: string) {
   })
 }
 
-const component = shallowRef(null)
+const component = shallowRef()
 
-watch(
-  () => props.name,
-  () => {
-    component.value = isObject(props.name) ? props.name : findComponentByName(props.name)
-  },
-  { immediate: true }
-)
+const setComponent = (icon: Array<any> | string | object) => {
+  if (isArray(icon)) {
+    setComponent(icon[0])
+  } else if (isObject(icon)) {
+    component.value = icon
+  } else {
+    component.value = findComponentByName(icon)
+  }
+}
+
+watch(() => props.name, setComponent, { immediate: true })
 
 const currentHover = ref(false)
-
-watch(
-  () => props.hover,
-  () => {
-    currentHover.value = props.hover
-  },
-  { immediate: true }
-)
+watch(() => props.hover, () => { currentHover.value = props.hover }, { immediate: true })
 
 
 const weight = computed(() => {
+  if (isArray(props.name) && props.name.length > 1) {
+    return WEIGHTS[props.name[1]]
+  }
+  
   if (currentHover.value && props.hoverWeight) {
     return WEIGHTS[props.hoverWeight]
   }
