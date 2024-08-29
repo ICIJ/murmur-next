@@ -1,6 +1,6 @@
 {
   "name": "@icij/murmur-next",
-  "version": "4.3.13",
+  "version": "4.3.14",
   "private": false,
   "description": "Murmur is ICIJ's Design System for Bootstrap 5 and Vue.js",
   "author": "promera@icij.org",
@@ -105,9 +105,9 @@
     "vite-plugin-dts": "^3.9.1",
     "vitest": "^1.6.0",
     "vue": "^3.4.38",
-    "vue-i18n": "^9.13.1",
     "vue-component-meta": "^2.0.26",
-    "vue-headroom": "github:caro3801/vue-headroom"
+    "vue-headroom": "github:caro3801/vue-headroom",
+    "vue-i18n": "^9.13.1"
   },
   "prettier": {
     "singleQuote": true,
