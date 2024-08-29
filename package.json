@@ -49,7 +49,7 @@
     "@types/topojson": "^3.2.6",
     "@types/vue-i18n": "^7.0.0",
     "bootstrap": "^5.3.3",
-    "bootstrap-vue-next": "^0.22.1",
+    "bootstrap-vue-next": "^0.24.11",
     "canvas": "^2.11.2",
     "clipboard": "^2.0.11",
     "d3": "^7.9.0",
@@ -61,7 +61,7 @@
     "querystring-es3": "^0.2.1",
     "resize-observer-polyfill": "^1.5.1",
     "topojson": "^3.0.2",
-    "vue": "^3.4.31",
+    "vue": "^3.4.38",
     "vue-i18n": "^9.13.1",
     "vue-input-autowidth": "^2.2.1",
     "vue-virtual-scroller": "^2.0.0-beta.8"
