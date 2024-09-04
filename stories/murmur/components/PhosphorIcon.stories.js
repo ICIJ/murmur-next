@@ -123,6 +123,16 @@ export const HoverWeight = {
   }
 }
 
+export const HoverVariant = {
+  args: {
+    name: 'trash',
+    variant: 'link',
+    hoverVariant: 'danger',
+    hoverWeight: 'duotone',
+    size: '2xl'
+  }
+}
+
 export const WithText = {
   args: {
     name: 'globe',
