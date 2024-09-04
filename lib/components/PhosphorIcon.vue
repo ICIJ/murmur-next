@@ -141,6 +141,7 @@ function findComponentByName(name: string) {
     try {
       return await import(`node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`)
     } catch {
+      // @ts-expect-error Importing not typescript module
       // eslint-disable-next-line import/extensions
       return import('node_modules/@phosphor-icons/vue/dist/icons/PhSelection.vue.mjs')
     }
@@ -186,10 +187,16 @@ const weight = computed(() => {
 })
 
 const color = computed(() => {
-  if (currentHover.value && props.hoverVariant) {
-    return `var(--bs-${props.hoverVariant}, currentColor)`
+  let colorVariant = ''
+
+  if(props.variant){
+    colorVariant = `var(--bs-${props.variant}, currentColor)`
   }
-  return `var(--bs-${props.variant}, currentColor)`
+  if (currentHover.value && props.hoverVariant) {
+    colorVariant = `var(--bs-${props.hoverVariant}, ${colorVariant})`
+  }
+  
+  return colorVariant
 })
 
 const spinTo = computed(() => {
@@ -215,8 +222,8 @@ const style = computed(() => {
   return {
     '--phosphor-icon-color': color.value,
     '--phosphor-icon-weight': weight.value,
-    '--phosphor-icon-raw-size': isRawSize.value ? props.size : null,
-    '--phosphor-icon-size': hasSize.value ? props.size : null,
+    '--phosphor-icon-raw-size': isRawSize.value ? props.size : undefined,
+    '--phosphor-icon-size': hasSize.value ? props.size : undefined,
     '--phosphor-icon-scale': props.scale ?? 1,
   }
 })
