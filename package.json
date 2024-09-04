@@ -1,6 +1,6 @@
 {
   "name": "@icij/murmur-next",
-  "version": "4.3.14",
+  "version": "4.3.15",
   "private": false,
   "description": "Murmur is ICIJ's Design System for Bootstrap 5 and Vue.js",
   "author": "promera@icij.org",
