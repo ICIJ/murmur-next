@@ -124,6 +124,14 @@ import { Size } from '@/enums'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
 import PhosphorIcon from './PhosphorIcon.vue'
 
+/**
+ * Grabs and syncs the currentPage variable passed down from the parent in v-model
+ */
+const modelValue = defineModel({
+  type: [Number, String],
+  default: 1
+})
+
 const props = defineProps({
   /**
    * Total items to be stored in pages
@@ -138,13 +146,6 @@ const props = defineProps({
   perPage: {
     type: Number,
     default: 20
-  },
-  /**
-   * Grabs and syncs the currentPage variable passed down from the parent in v-model
-   */
-  modelValue: {
-    type: [Number, String],
-    default: 1
   },
   /**
    * Use an input to set the row number
@@ -229,7 +230,6 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
 const { t, n } = useI18n()
 
 const numberOfPages = computed((): number => {
@@ -255,13 +255,13 @@ const hasPrevious = computed((): boolean => hasFirst.value)
 const hasLast = computed((): boolean => pageValue.value < numberOfPages.value)
 const hasNext = computed((): boolean => hasLast.value)
 
-const pageValue = computed(() => +props.modelValue)
+const pageValue = computed(() => +modelValue.value)
 const lastRangeRow = computed(() => +pageValue.value * props.perPage)
 
 const currentPageInput = ref<number>(0)
 const currentRowInput = ref<number>(0)
 
-watch(() => props.modelValue, (value) => {
+watch(modelValue, (value) => {
   // Update currentPageInput value based on totalRows
   currentPageInput.value = props.totalRows ? +value : 0
   // Determine the row offset based on the perPage value.
@@ -290,7 +290,7 @@ const title = computed(() => {
 function applyPageForm(): void {
   const { value } = currentPageInput
   if (!isNaN(value as number)) {
-    emit('update:modelValue', +value)
+    modelValue.value = +value
   }
 }
 
@@ -299,24 +299,24 @@ function applyRowForm(): void {
   if (!isNaN(value as number)) {
     currentPageInput.value = Math.floor(+value / +props.perPage) + 1
     currentRowInput.value = +props.perPage * (+currentPageInput.value - 1) + 1
-    emit('update:modelValue', +currentPageInput.value)
+    modelValue.value = +currentPageInput.value
   }
 }
 
 function applyNextPage(): void {
-  emit('update:modelValue', pageValue.value + 1)
+  modelValue.value = pageValue.value + 1
 }
 
 function applyPreviousPage(): void {
-  emit('update:modelValue', pageValue.value - 1)
+  modelValue.value = pageValue.value - 1
 }
 
 function applyFirstPage(): void {
-  emit('update:modelValue', 1)
+  modelValue.value = 1
 }
 
 function applyLastPage(): void {
-  emit('update:modelValue', numberOfPages.value)
+  modelValue.value = numberOfPages.value
 }
 </script>
 
