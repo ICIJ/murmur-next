@@ -187,11 +187,12 @@ const weight = computed(() => {
 })
 
 const color = computed(() => {
-  let colorVariant = ''
+  let colorVariant = 'currentColor'
 
   if(props.variant){
     colorVariant = `var(--bs-${props.variant}, currentColor)`
   }
+
   if (currentHover.value && props.hoverVariant) {
     colorVariant = `var(--bs-${props.hoverVariant}, ${colorVariant})`
   }
