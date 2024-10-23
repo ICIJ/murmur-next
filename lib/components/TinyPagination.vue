@@ -13,7 +13,7 @@
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
         <phosphor-icon :name="firstPageIcon" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('tiny-pagination.first') }}</span>
+        <span class="visually-hidden">{{ firstLabel ?? t('tiny-pagination.first') }}</span>
       </slot>
     </b-button>
     <b-button
@@ -29,7 +29,7 @@
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
         <phosphor-icon :name="previousPageIcon" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('tiny-pagination.previous') }}</span>
+        <span class="visually-hidden">{{ previousLabel ?? t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
     <form class="tiny-pagination__form form-inline" v-if="row" @submit.prevent="applyRowForm">
@@ -69,7 +69,7 @@
         :disabled="!totalRows"
         :min="1"
         :max="numberOfPages"
-        :aria-label="t('tiny-pagination.aria')"
+        :aria-label="inputAriaLabel ?? t('tiny-pagination.aria')"
       />
       <div class="tiny-pagination__form__label" v-ellipsis-tooltip="{ title }">
         <!-- @slot Display number of pages -->
@@ -91,7 +91,7 @@
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
         <phosphor-icon :name="nextPageIcon" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('tiny-pagination.next') }}</span>
+        <span class="visually-hidden">{{ nextLabel ?? t('tiny-pagination.next') }}</span>
       </slot>
     </b-button>
     <b-button
@@ -107,7 +107,7 @@
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
         <phosphor-icon :name="lastPageIcon" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('tiny-pagination.last') }}</span>
+        <span class="visually-hidden">{{ lastLabel ?? t('tiny-pagination.last') }}</span>
       </slot>
     </b-button>
   </div>
@@ -227,6 +227,48 @@ const props = defineProps({
    */
   compact: {
     type: Boolean
+  },
+  /**
+   * Label for the previous page button
+   */
+  previousLabel: {
+    type: String,
+    default: null
+  },
+  /**
+   * Label for the next page button
+   */
+  nextLabel: {
+    type: String,
+    default: null
+  },
+  /**
+   * Label for the first page button
+   */
+  firstLabel: {
+    type: String,
+    default: null
+  },
+  /**
+   * Label for the last page button
+   */
+  lastLabel: {
+    type: String,
+    default: null
+  },
+  /**
+   * ARIA label for the input field
+   */
+  inputAriaLabel: {
+    type: String,
+    default: null
+  },
+  /**
+   * Title label for the pagination component
+   */
+  titleLabel: {
+    type: String,
+    default: null
   }
 })
 
@@ -274,6 +316,10 @@ watch(modelValue, (value) => {
 }, { immediate: true })
 
 const title = computed(() => {
+  if (props.titleLabel) {
+    return props.titleLabel
+  }
+
   if (props.row) {
     const locales = { lastRangeRow: n(lastRangeRow.value), totalRows: n(props.totalRows) }
     // Only one per page, meaning we navigate through rows one by one
