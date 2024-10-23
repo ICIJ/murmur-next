@@ -47,7 +47,7 @@
       />
       <div class="tiny-pagination__form__label" v-ellipsis-tooltip="{ title }">
         <!-- @slot Display number of rows and current range -->
-        <slot name="number-of-rows" v-bind="{ modelValue, numberOfPages, totalRows }">
+        <slot name="number-of-rows" v-bind="{ modelValue, lastRangeRow, numberOfPages, totalRows }">
           {{ title }}
         </slot>
       </div>
