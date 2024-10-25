@@ -1,5 +1,5 @@
 <script lang="ts">
-import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
+import { BButton, BTooltip, PopoverPlacement, ButtonVariant } from 'bootstrap-vue-next'
 
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
@@ -8,7 +8,6 @@ import {
   computed,
   defineComponent,
   nextTick,
-  onBeforeMount,
   onUnmounted,
   PropType,
   ref
@@ -30,6 +29,7 @@ type HapticCopyData = {
 export default defineComponent({
   name: 'HapticCopy',
   components: {
+    BButton,
     BTooltip,
     PhosphorIcon,
     PhosphorIconLayers
@@ -89,6 +89,13 @@ export default defineComponent({
      */
     noTooltip: {
       type: Boolean
+    },
+    /** 
+     * Button variant
+     */
+    variant: {
+      type: String as PropType<ButtonVariant>,
+      default: 'primary'
     }
   },
   emits: ['attempt', 'success', 'error', 'hideClipboardTooltip'],
@@ -100,16 +107,9 @@ export default defineComponent({
     const tooltipTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const showClipboardTooltip = ref(false)
     const buttonId = computed(() => uniqueId('haptic-copy-'))
-    
-    const tooltipContainer = computed((): string | null => {
-      // By default we append the tooltip in the root container using its
-      // id (if any) because BootstrapVue doesn't like HTMLElement for some
-      // reasons.
-      return el.value?.id.length ? `#${el.value.id}` : null
-    })
-
+  
     function copyTextToClipboard(): Promise<void> {
-      return el.value ? copyText(String(props.text), el.value) : Promise.resolve()
+      return el.value ? copyText(String(props.text), el.value.$el) : Promise.resolve()
     }
 
     function copyHtmlToClipboard(): void {
@@ -189,7 +189,6 @@ export default defineComponent({
       el,
       buttonId,
       showClipboardTooltip,
-      tooltipContainer,
       tooltipContent,
       tooltipTimeout,
       copy,
@@ -202,10 +201,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <button
+  <b-button
     :id="buttonId"
     ref="el"
-    class="btn haptic-copy"
+    class="haptic-copy"
+    :variant="variant"
     @mouseleave="closeTooltip"
     @click.stop="copy"
   >
@@ -224,6 +224,7 @@ export default defineComponent({
             v-if="tooltipTimeout"
             class="haptic-copy__icon"
             name="check-fat"
+            weight="fill"
           />
         </transition>
       </phosphor-icon-layers>
@@ -231,20 +232,19 @@ export default defineComponent({
         {{ label || t('haptic-copy.label') }}
       </span>
     </slot>
-    <teleport to="body">
-      <b-tooltip
-        v-if="!noTooltip"
-        ref="tooltip"
-        :model-value="showClipboardTooltip"
-        :placement="tooltipPlacement"
-        :target="buttonId"
-        manual
-        noninteractive
-      >
-        {{ tooltipContent }}
-      </b-tooltip>
-    </teleport>
-  </button>
+    <b-tooltip
+      v-if="!noTooltip"
+      ref="tooltip"
+      :model-value="showClipboardTooltip"
+      :placement="tooltipPlacement"
+      :target="buttonId"
+      teleport-to="body"
+      manual
+      noninteractive
+    >
+      {{ tooltipContent }}
+    </b-tooltip>
+  </b-button>
 </template>
 <style lang="scss">
 .haptic-copy {
