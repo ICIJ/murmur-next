@@ -1,10 +1,11 @@
 <script lang="ts">
-import { computed, defineComponent, ref, Ref } from 'vue'
+import { computed, defineComponent, ref, Ref, PropType } from 'vue'
 import {
   BTabs,
   BTab,
   BInputGroup,
-  BFormInput
+  BFormInput,
+  ButtonVariant
 } from 'bootstrap-vue-next'
 
 import HapticCopy from './HapticCopy.vue'
@@ -89,6 +90,13 @@ export default defineComponent({
      */
     vertical: {
       type: Boolean
+    },
+    /**
+     * The variant to use for the copy button.
+     */
+    variant: {
+      type: String as PropType<ButtonVariant>,
+      default: 'primary'
     },
     /**
      * CSS class (or classes) to apply to the currently active tab.
@@ -215,8 +223,8 @@ export default defineComponent({
             @click="selectRaw"
           />
           <haptic-copy
-            class="btn-secondary"
             :text="link"
+            :variant="variant"
             @attempt="selectRaw"
           />
         </b-input-group>
@@ -233,10 +241,10 @@ export default defineComponent({
             >{{ titleOrLink }}</a
           >
           <haptic-copy
-            class="btn-secondary"
             html
             :text="linkAsHtml"
             :plain="link"
+            :variant="variant"
             @attempt="selectRich"
           />
         </b-input-group>
@@ -259,8 +267,8 @@ export default defineComponent({
             @click="selectMarkdown"
           />
           <haptic-copy
-            class="btn-secondary"
             :text="linkAsMarkdown"
+            :variant="variant"
             @attempt="selectMarkdown"
           />
         </b-input-group>
@@ -280,8 +288,8 @@ export default defineComponent({
             @click="selectHtml"
           />
           <haptic-copy
-            class="btn-secondary"
             :text="linkAsHtml"
+            :variant="variant"
             @attempt="selectHtml"
           />
         </b-input-group>
