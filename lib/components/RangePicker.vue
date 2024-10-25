@@ -161,7 +161,23 @@ export default defineComponent({
     rounded: {
       type: Boolean as PropType<boolean>,
       default: false
-    }
+    },
+    boundStartIcon: {
+      type: String as PropType<string>,
+      default: 'caret-left'
+    },
+    boundStartIconWeight: {
+      type: String as PropType<string>,
+      default: 'bold'
+    },
+    boundEndIcon: {
+      type: String as PropType<string>,
+      default: 'caret-right'
+    },
+    boundEndIconWeight: {
+      type: String as PropType<string>,
+      default: 'bold'
+    },
   },
   emits: ['update:range'],
   setup(props, { emit }) {
@@ -318,7 +334,7 @@ export default defineComponent({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <phosphor-icon name="list" weight="bold" />
+        <phosphor-icon :name="boundStartIcon" :weight="boundStartIconWeight" />
       </button>
       <button
         v-draggable
@@ -328,7 +344,7 @@ export default defineComponent({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <phosphor-icon name="list" weight="bold" />
+        <phosphor-icon :name="boundEndIcon" :weight="boundEndIconWeight" />
       </button>
     </div>
   </div>
