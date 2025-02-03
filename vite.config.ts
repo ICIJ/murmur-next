@@ -6,7 +6,7 @@ import DTS from "vite-plugin-dts";
 import Vue from '@vitejs/plugin-vue'
 import Delete from './plugins/plugin-delete'
 import Components from 'unplugin-vue-components/vite'
-import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
+import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 
 export default defineConfig({
