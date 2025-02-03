@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    BBtn: typeof import('bootstrap-vue-next')['BBtn']
     BButton: typeof import('bootstrap-vue-next')['BButton']
     BCard: typeof import('bootstrap-vue-next')['BCard']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
