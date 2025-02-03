@@ -280,7 +280,7 @@ export default defineComponent({
     const featureColor = computed(() => {
       return (d: number) => {
         const id = get(d, props.topojsonObjectsPath)
-        const hasIdProp = loadedData.value && id in loadedData.value
+        const hasIdProp = loadedData.value && (id in loadedData.value)
         return hasIdProp
           ? featureColorScaleFunction.value(loadedData.value[id])
           : undefined
@@ -569,7 +569,7 @@ export default defineComponent({
 
     function featureMouseOver(_: any, d: number) {
       const id = get(d, props.topojsonObjectsPath)
-      const cursorId = loadedData.value && id in loadedData.value ? id : null
+      const cursorId = loadedData.value && (id in loadedData.value) ? id : null
       updateFeatureCursor(cursorId)
     }
 
