@@ -1,6 +1,6 @@
 import { memoize, flatten } from 'lodash'
 
-var assetUniqueIdCounter: number = 0
+let assetUniqueIdCounter: number = 0
 
 export const injectAsset = memoize(function (
   file: string,
@@ -13,7 +13,7 @@ export const injectAsset = memoize(function (
     const ext = parts[parts.length - 1].toLowerCase()
     switch (ext) {
       case 'js':
-        var script = document.createElement('script')
+        const script = document.createElement('script')
         script.setAttribute('type', 'text/javascript')
         script.onload = resolve
         parent.appendChild(script)
@@ -21,7 +21,7 @@ export const injectAsset = memoize(function (
         script.setAttribute('id', id)
         break
       case 'css':
-        var css = document.createElement('link')
+        const css = document.createElement('link')
         css.setAttribute('rel', 'stylesheet')
         css.setAttribute('type', 'text/css')
         css.onload = resolve
@@ -36,13 +36,13 @@ export const injectAsset = memoize(function (
 export const injectAssets = function (...args: string[]): Promise<void> {
   const files = flatten(args)
   return new Promise((resolve: () => void) => {
-    var filesLoaded = 0
-    var allFilesLoaded = function () {
+    let filesLoaded = 0
+    const allFilesLoaded = function () {
       if (++filesLoaded == files.length) {
         resolve()
       }
     }
-    for (var i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
       injectAsset(files[i]).then(allFilesLoaded)
     }
   })
