@@ -8,7 +8,7 @@ module.exports = async function sassExtractLoader() {
     const json = await getSassVars(css)
     callback(null, `module.exports = ${JSON.stringify(json)}`)
   } catch(_) {
-    callback(null, "module.exports = {}")    
+    callback(null, "module.exports = {}")
   }
-  return 
+  return null
 }
