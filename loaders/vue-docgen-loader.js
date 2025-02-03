@@ -10,5 +10,5 @@ module.exports = async function vueDocgenLoader() {
   } catch (_) {
     callback(null, `module.exports = ${emptyApi}`)
   }
-  return
+  return null
 };
