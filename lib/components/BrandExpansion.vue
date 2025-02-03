@@ -236,7 +236,6 @@ export default defineComponent({
 
     .plate,
     .globe {
-      animation-direction: repeat;
       transform: rotate(0deg);
       transform-origin: bottom center;
       transform-box: fill-box;
