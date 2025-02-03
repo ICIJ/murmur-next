@@ -2,11 +2,6 @@
 import { filter } from 'lodash'
 import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue'
 
-type DigitsInputData = {
-  mounted: boolean
-  values: string[] | number[] | null[]
-}
-
 /**
  * Create an input for digits.
  */
