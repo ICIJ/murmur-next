@@ -27,7 +27,7 @@
             :mode="longMode"
             class="d-none d-sm-inline-block"
           />
-          <span class="sr-only"
+          <span class="visually-hidden"
             >International Consortium of Investigative Journalists</span
           >
         </a>
