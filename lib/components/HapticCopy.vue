@@ -228,7 +228,7 @@ export default defineComponent({
           />
         </transition>
       </phosphor-icon-layers>
-      <span :class="{ 'sr-only': hideLabel }" class="ms-2 haptic-copy__label">
+      <span :class="{ 'visually-hidden': hideLabel }" class="ms-2 haptic-copy__label">
         {{ label || t('haptic-copy.label') }}
       </span>
     </slot>
