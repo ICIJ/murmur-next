@@ -12,7 +12,7 @@
               class="generic-footer__icij__logo text-decoration-none"
             >
               <brand-expansion :mode="mode" dark />
-              <span class="sr-only"
+              <span class="visually-hidden"
                 >International Consortium of Investigative Journalists</span
               >
             </a>

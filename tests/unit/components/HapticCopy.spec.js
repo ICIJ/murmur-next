@@ -26,7 +26,7 @@ describe('HapticCopy.vue', () => {
 
   it("shouldn't hide the label", () => {
     const wrapper = mount(HapticCopy, { propsData })
-    expect(wrapper.find('.haptic-copy__label').classes('sr-only')).toBeFalsy()
+    expect(wrapper.find('.haptic-copy__label').classes('visually-hidden')).toBeFalsy()
   })
 
   it('should hide the label', () => {
@@ -36,7 +36,7 @@ describe('HapticCopy.vue', () => {
         hideLabel: true
       }
     })
-    expect(wrapper.find('.haptic-copy__label').classes('sr-only')).toBeTruthy()
+    expect(wrapper.find('.haptic-copy__label').classes('visually-hidden')).toBeTruthy()
   })
 
   it('should use a custom label', () => {
