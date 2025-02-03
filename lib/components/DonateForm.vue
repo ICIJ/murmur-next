@@ -1,4 +1,4 @@
-<script>
+<script lang="ts" >
 import keys from 'lodash/keys'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
@@ -7,7 +7,9 @@ import forEach from 'lodash/forEach'
 import config from '../config'
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch } from 'vue'
+import type { Ref } from "vue"
 
+type Period = 'onetime' | 'monthly' | 'yearly'
 /**
  * A form to encourage donations. We usually put this form inside a modal
  */
@@ -26,7 +28,7 @@ export default {
     const amount = ref(10)
     // True if the amount wasn't changed by the user yet
     const amountIsPristine = ref(true)
-    const installmentPeriod = ref('monthly')
+    const installmentPeriod :Ref<Period,null>= ref('monthly')
     const level = ref('conversation')
     const campaign = ref(config.get('donate-form.tracker'))
     const labelForChange = ref({
@@ -237,7 +239,7 @@ export default {
               <button
                 type="button"
                 class="btn btn-sm frequency-onetime"
-                :class="{ 'btn-primary': installmentPeriod === null }"
+                :class="{ 'btn-primary': !installmentPeriod}"
                 @click="installmentPeriod = 'onetime'"
               >
                 {{ t('donate-form.frequency.onetime') }}
