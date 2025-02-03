@@ -9,7 +9,7 @@ vi.mock('d3', async () => {
 })
 
 // Mock HTML element offset so the size of the chart can be calculated
-// dynamicly using JSDOM and tests
+// dynamically using JSDOM and tests
 Object.defineProperties(window.HTMLElement.prototype, {
   offsetWidth: {
     get() {
@@ -170,7 +170,7 @@ describe('ColumnChart.vue', () => {
       { date: 2006, value: 6 },
       { date: 2007, value: 7 }
     ]
-    
+
     beforeEach(async () => {
       wrapper = mount(ColumnChart, { props: { data: firstData } })
       wrapper.vm.$el.style.width = '500px'

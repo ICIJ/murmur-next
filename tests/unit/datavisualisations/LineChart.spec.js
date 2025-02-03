@@ -47,7 +47,7 @@ describe('LineChart.vue', () => {
       expect(wrapper.vm).toBeTruthy()
     })
 
-    it('is a fixed height chart, regardeless of the mode', async () => {
+    it('is a fixed height chart, regardless of the mode', async () => {
       expect(wrapper.vm.height).toBe(300)
       await wrapper.setProps({ socialMode: true })
       expect(wrapper.vm.height).toBe(300)

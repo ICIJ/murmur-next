@@ -68,7 +68,7 @@ TooltipSlot.decorators = [leakSizeDecorator]
 TooltipSlot.args = {
   data: discreteData,
   seriesName: 'size',
-  timeseriesKey: 'leak',  
+  timeseriesKey: 'leak',
   yAxisYTicks: 4,
   maxValue: 3000
 }
@@ -78,14 +78,14 @@ export const DynamicHeight = TooltipSlot.bind({})
 DynamicHeight.args = {
   data: discreteData,
   seriesName: 'size',
-  timeseriesKey: 'leak',  
+  timeseriesKey: 'leak',
   yAxisYTicks: 4,
   maxValue: 3000,
   stripped: true,
   fixedHeight: fixedHeight
 }
 
-export const DynamicData:  Story = (args: any) => ({
+export const DynamicData:  Story = () => ({
   components: { ColumnChart },
   data() {
     return {

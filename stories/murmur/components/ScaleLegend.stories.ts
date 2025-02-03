@@ -33,7 +33,7 @@ function thresholdScaleFn() {
     d3
       .scaleThreshold()
       .domain([1e4, 2e4, 3e4, 4e4, 5e4])
-      // @ts-expect-error expect an array with numbers but hexa color strings works
+      // @ts-expect-error expect an array with numbers but hex color strings works
       .range(['#D12229', '#F68A1E', '#FDE01A', '#007940', '#24408E', '#732982'])
   )
 }
