@@ -1,16 +1,16 @@
 import {
   BoxStyle,
-  ContentPlaceholderStyledRow,
   ContentPlaceholderRow,
-  ContentPlaceholderStyledRows,
-  ContentPlaceholderRows
+  ContentPlaceholderRows,
+  ContentPlaceholderStyledRow,
+  ContentPlaceholderStyledRows
 } from '@/utils/placeholderTypes'
 
-export function isFlexBasis(value: string | number): boolean {
+function isFlexBasis(value: string | number): boolean {
   return Number(value).toString() === value.toString()
 }
 
-export function isWidth(value: string | number): boolean {
+function isWidth(value: string | number): boolean {
   const valueAsStr = String(value)
   const cssSuffix = ['px', '%', 'em', 'rem']
   let checkState = false
@@ -26,7 +26,7 @@ export function isWidth(value: string | number): boolean {
   return checkState
 }
 
-export function getBoxStyle(
+function getBoxStyle(
   left: number,
   width: number,
   isLast: boolean,
@@ -61,11 +61,11 @@ export function getBoxStyle(
   return arr
 }
 
-export function formatRows(
+function formatRows(
   rows: ContentPlaceholderRows,
   subClass: string = 'box'
 ): ContentPlaceholderStyledRows {
-  const rowArr: ContentPlaceholderStyledRows = rows.map(
+  return rows.map(
     (row: ContentPlaceholderRow) => {
       // Will contain all boxes in
       const rowBoxes: Array<BoxStyle> = []
@@ -84,11 +84,9 @@ export function formatRows(
       return rowObj
     }
   )
-
-  return rowArr
 }
 
-export default {
+export {
   isFlexBasis,
   isWidth,
   getBoxStyle,
