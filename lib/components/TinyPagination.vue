@@ -128,7 +128,7 @@ import PhosphorIcon from './PhosphorIcon.vue'
  * Grabs and syncs the currentPage variable passed down from the parent in v-model
  */
 const modelValue = defineModel({
-  type: [Number, String],
+  type: [Number, String] as PropType<number | string>,
   default: 1
 })
 
@@ -376,7 +376,7 @@ function applyLastPage(): void {
   text-align: center;
   white-space: nowrap;
   flex-wrap: nowrap;
-  max-width: 100%;  
+  max-width: 100%;
 
   &__nav {
     padding-left: 0.25em;
