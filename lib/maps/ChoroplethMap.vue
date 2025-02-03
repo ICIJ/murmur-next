@@ -141,7 +141,7 @@ export default defineComponent({
       type: Boolean
     },
     /**
-     * Minium zoom value.
+     * Minimum zoom value.
      */
     zoomMin: {
       type: Number,
@@ -177,7 +177,7 @@ export default defineComponent({
       default: geoRobinson
     },
     /**
-     * If true the map will display an sphere outline arround the world.
+     * If true the map will display a sphere outline around the world.
      */
     outline: {
       type: Boolean
