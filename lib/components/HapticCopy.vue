@@ -148,7 +148,7 @@ export default defineComponent({
         emit('error', error)
       }
       // And close the tooltip after a short delay
-      nextTimeout(closeTooltip, props.tooltipHideDelay)
+      return nextTimeout(closeTooltip, props.tooltipHideDelay)
     }
 
     function getTooltipContent(msg: string) {
