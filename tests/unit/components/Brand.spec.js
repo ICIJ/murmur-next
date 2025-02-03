@@ -14,36 +14,36 @@ describe('Brand.vue', () => {
 
   it('should change logo color to red', () => {
     const color = 'red'
-    const propsData = { color }
-    const wrapper = shallowMount(Brand, { propsData })
+    const props = { color }
+    const wrapper = shallowMount(Brand, { props })
     expect(wrapper.element.style.color).toBe(color)
   })
 
   it('should change logo color to blue', () => {
     const color = 'blue'
-    const propsData = { color }
-    const wrapper = shallowMount(Brand, { propsData })
+    const props = { color }
+    const wrapper = shallowMount(Brand, { props })
     expect(wrapper.element.style.color).toBe(color)
   })
 
   it('should change logo color to #A10207', () => {
     const color = 'rgb(161, 2, 7)'
-    const propsData = { color }
-    const wrapper = shallowMount(Brand, { propsData })
+    const props = { color }
+    const wrapper = shallowMount(Brand, { props })
     expect(wrapper.element.style.color).toBe(color)
   })
 
   it('should change logo background to red', () => {
     const background = 'red'
-    const propsData = { background }
-    const wrapper = shallowMount(Brand, { propsData })
+    const props = { background }
+    const wrapper = shallowMount(Brand, { props })
     expect(wrapper.element.style.background).toBe(background)
   })
 
   it('should change logo background to rgb(161, 2, 7)', () => {
     const background = 'rgb(161, 2, 7)'
-    const propsData = { background }
-    const wrapper = shallowMount(Brand, { propsData })
+    const props = { background }
+    const wrapper = shallowMount(Brand, { props })
     expect(wrapper.element.style.background).toBe(background)
   })
 })

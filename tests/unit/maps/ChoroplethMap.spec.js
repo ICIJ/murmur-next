@@ -88,7 +88,7 @@ describe('ChoroplethMap.vue', () => {
       expect(wrapper.vm.featureCursor).toBeNull()
     })
 
-    it('doesnt actve the cursor when mouse is over a feature without data', () => {
+    it('doesnt active the cursor when mouse is over a feature without data', () => {
       const feature = wrapper.find('.choropleth-map__main__features__item--identifier-usa')
       feature.element.dispatchEvent(new Event('mouseover'))
       expect(wrapper.vm.featureCursor).toBeNull()

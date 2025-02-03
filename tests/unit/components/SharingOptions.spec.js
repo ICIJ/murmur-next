@@ -5,12 +5,6 @@ import { BModal } from 'bootstrap-vue-next'
 
 describe('SharingOptions', () => {
 
-  const createContainer = (tag = 'div') => {
-    const container = document.createElement(tag)
-    document.body.appendChild(container)
-    return container
-  }
-
   const propsData = {
     url: 'https://medicaldevices.icij.org/',
     values: {
@@ -98,9 +92,9 @@ describe('SharingOptions', () => {
   it('toggles the embed form', async () => {
     const wrapper = mount(SharingOptions, {
       propsData,
-      global: { 
-        stubs: { Teleport: true, HapticCopy: true, Transition: true }, 
-        renderStubDefaultSlot: true 
+      global: {
+        stubs: { Teleport: true, HapticCopy: true, Transition: true },
+        renderStubDefaultSlot: true
       }
     })
     const $modal = wrapper.findComponent(BModal)

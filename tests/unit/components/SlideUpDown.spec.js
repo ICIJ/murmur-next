@@ -50,9 +50,9 @@ describe('SlideUpDown', () => {
 
   it('calls `cleanLayout` which change the state from `pre` to `active`', async () => {
     const wrapper = mount(SlideUpDown)
-    const defered = wrapper.vm.triggerSlide()
+    const deferred = wrapper.vm.triggerSlide()
     expect(wrapper.vm.state).toBe('pre')
-    await defered
+    await deferred
     expect(wrapper.vm.state).toBe('active')
   })
 })

@@ -85,15 +85,15 @@ describe('StackedColumnChart.vue', () => {
     it('creates the first group of columns with `foo` taking 90% height', () => {
       const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
       const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
-      const width = fooColumn.element.offsetHeight
-      expect(width).toBe(90)
+      const offsetHeight = fooColumn.element.offsetHeight
+      expect(offsetHeight).toBe(90)
     })
 
     it('creates the first group of columns with `bar` taking 10% height', () => {
       const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
       const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
-      const width = barColumn.element.offsetHeight
-      expect(width).toBe(10)
+      const offsetHeight = barColumn.element.offsetHeight
+      expect(offsetHeight).toBe(10)
     })
 
     it('creates the first group with "2006" as label', () => {

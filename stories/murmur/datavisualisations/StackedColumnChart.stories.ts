@@ -41,7 +41,7 @@ const data = {
       devops: 0,
       finance: 1
     },
-    { city: 'Syndey', developers: 0, journalists: 2, devops: 0, finance: 1 }
+    { city: 'Sydney', developers: 0, journalists: 2, devops: 0, finance: 1 }
   ],
   leaksSize: [
     { leak: 'Offshore Leaks (2013)', size: 260 },

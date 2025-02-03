@@ -154,7 +154,7 @@ describe('SharingOptionsLink', () => {
     expect($popup.instance.close).toBeCalled()
   })
 
-  it('should open a popup wgen clicking on the component', async () => {
+  it('should open a popup when clicking on the component', async () => {
     // Return a fake popup instance
     $popup.parent = mockPopupParent()
     const wrapper = mount(SharingOptionsLink, { propsData })

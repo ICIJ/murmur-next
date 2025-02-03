@@ -23,7 +23,7 @@ describe('ActiveTextTruncate.vue', () => {
     expect(wrapper.text()).toBe('Lorem ipsum dolor sit amet.')
   })
 
-  it('shoud wrap text', () => {
+  it('should wrap text', () => {
     const slots = { default: ['Lorem ipsum dolor sit amet.'] }
     const wrapper = shallowMount(ActiveTextTruncate, { slots })
     expect(wrapper.find('.active-text-truncate__wrapper__text').exists()).toBeTruthy()
