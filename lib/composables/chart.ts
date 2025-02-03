@@ -112,16 +112,16 @@ export function useChart(
   const mounted = ref<boolean>(false)
   const dataRef = toRef(props.data)
   const dataUrlTypeRef = toRef(props.dataUrlType)
-  
+
   onMounted(() => {
-    nextTick(() => {
+    return nextTick(() => {
       mounted.value = true
     })
   })
 
-  watch([dataRef, dataUrlTypeRef], async () => { 
+  watch([dataRef, dataUrlTypeRef], async () => {
     await document.fonts?.ready
-    
+
     const data = toValue(dataRef)
     const dataUrlType = toValue(dataUrlTypeRef)
 
@@ -135,13 +135,13 @@ export function useChart(
     await afterLoaded?.()
     isLoaded.value = true
     emit('loaded')
-    
+
     if (onResized) {
       onResized()
       emit('resized')
     }
   }, { immediate: true })
-  
+
   function elementsMaxBBox({
     selector = 'text',
     defaultWidth = null,
@@ -170,7 +170,7 @@ export function useChart(
   }
 
   function xAxisYearFormat(year: number | string) {
-    // previously using narrowWidth but it is automatically updated through resizeObserver state reactivity
+    // previously using narrowWidth, but it is automatically updated through resizeObserver state reactivity
     return resizeState.narrowWidth ? '’' + String(year).slice(2, 4) : year
   }
 

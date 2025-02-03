@@ -236,12 +236,7 @@ export default defineComponent({
       emit('click', item)
       selectRangeToItem(item)
     }
-    function emitEventOnItem(
-      name: 'click' | 'update:modelValue' | 'deactivate',
-      item: Item
-    ) {
-      emit(name, item)
-    }
+
     function selectItem(item: Item) {
       if (itemActivated(item) && activeItems.value.length === 1) {
         activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))

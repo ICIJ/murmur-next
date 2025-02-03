@@ -38,10 +38,6 @@ export default defineComponent({
           data?: any
         }) {
           vnode.el?.dispatchEvent(new CustomEvent(name, { detail: data }))
-          //const handlers = get(vnode, 'data.on') ?? get(vnode, 'componentOptions.listeners')
-          /*if (has(handlers, name)) {
-            invoke(handlers, `${name}.fns`, data)
-          }*/
         }
 
         // Handle the dragging of the element
@@ -148,7 +144,7 @@ export default defineComponent({
     },
     /**
      * Variant style of the component. Expected to be one
-     * of the predefined Bootstrap theme (e.g., 'primary', 'secondary', etc).
+     * of the predefined Bootstrap theme (e.g., 'primary', 'secondary', etc.).
      */
     variant: {
       type: String as PropType<Variant>,

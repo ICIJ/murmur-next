@@ -1,7 +1,8 @@
-import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
-import { StoryObj } from '@storybook/vue3'
-import { scaleThreshold } from 'd3'
-import { geoOrthographic } from 'd3-geo'
+import {ChoroplethMap, ChoroplethMapAnnotation} from '@/maps'
+import {StoryObj} from '@storybook/vue3'
+import {scaleThreshold} from 'd3'
+import {geoOrthographic} from 'd3-geo'
+
 const motorVehiclesPer1000people = {
   MCO: 899,
   USA: 797,
@@ -293,10 +294,9 @@ const wineStockByDepartment = {
   '95': 840
 }
 function featureColorScale() {
-  const scale = scaleThreshold()
+  return scaleThreshold()
     .domain([100, 300, 700])
     .range(['#ffffcc', '#c2e699', '#78c679', '#238443'])
-  return scale
 }
 export default {
   title: 'Murmur/maps/ChoroplethMap',

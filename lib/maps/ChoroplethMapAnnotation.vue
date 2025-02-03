@@ -99,7 +99,6 @@ export default defineComponent({
     }
 
     const mapRect = parent.mapRect
-    const mapTransform1 = parent.mapTransform
     const rotatingMapProjection = parent.rotatingMapProjection
     const mapTransform = computed(() => {
       return toRaw(parent.mapTransform)

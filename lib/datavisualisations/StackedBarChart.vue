@@ -126,7 +126,7 @@ export default defineComponent({
       default: null
     },
     /**
-     * Function to apply to format x axis ticks (bar value). It can be a
+     * Function to apply to format x-axis ticks (bar value). It can be a
      * function returning the formatted value or a d3's formatter string.
      */
     xAxisTickFormat: {
@@ -140,12 +140,12 @@ export default defineComponent({
     const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const isLoaded = ref(false)
     const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-    const { 
-      loadedData, 
+    const {
+      loadedData,
       mounted,
-      baseHeightRatio, 
-      d3Formatter, 
-      dataHasHighlights 
+      baseHeightRatio,
+      d3Formatter,
+      dataHasHighlights
     } = useChart(el, getChartProps(props), { emit }, isLoaded)
     const { querySelectorAll } = useQueryObserver(el)
 
@@ -236,7 +236,7 @@ export default defineComponent({
 
     function delayHighlight(key: string) {
       clearTimeout(highlightTimeout.value)
-      // Reduce the delay to zero if there is already an highlighted key
+      // Reduce the delay to zero if there is already a highlighted key
       const isDelayed = !hasHighlights.value
       const delay = isDelayed ? props.highlightDelay : 0
       highlightTimeout.value = setTimeout(() => highlight(key), delay)
@@ -294,7 +294,7 @@ export default defineComponent({
           const bothValuesWidth = desc.valueWidth + prevDesc.valueWidth
           desc.overflow = prevDesc.overflow && desc.barWidth < bothValuesWidth
         }
-        // Value must be pushed to the other side (left) if the value label is outside of the bar (overflow)
+        // Value must be pushed to the other side (left) if the value label is outside the bar (overflow)
         // and if the size of the value label isn't fitting in the row
         desc.pushed = desc.overflow && desc.barEdge + desc.valueWidth > desc.rowEdge
         return desc
@@ -324,7 +324,7 @@ export default defineComponent({
         return false
       }
     }
-    
+
     function hasValuePushed(i: number | string, key: string) {
       try {
         const stack = stackBarAndValue(i)

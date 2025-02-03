@@ -70,14 +70,14 @@ export default defineComponent({
       default: null
     },
     /**
-     * Function to apply to format x axis ticks
+     * Function to apply to format x-axis ticks
      */
     xAxisTickFormat: {
       type: [Function, String],
       default: () => identity
     },
     /**
-     * Function to apply to format y axis ticks (bars value). It can be a
+     * Function to apply to format y-axis ticks (bars value). It can be a
      * function returning the formatted value or a d3's formatter string.
      */
     yAxisTickFormat: {
@@ -85,7 +85,7 @@ export default defineComponent({
       default: () => identity
     },
     /**
-     * Padding on y axis ticks
+     * Padding on y-axis ticks
      */
     yAxisTickPadding: {
       type: Number,
@@ -188,7 +188,7 @@ export default defineComponent({
 
     const {
       elementsMaxBBox,
-      baseHeightRatio,  
+      baseHeightRatio,
       loadedData,
       mounted,
       d3Formatter,
@@ -267,7 +267,7 @@ export default defineComponent({
           : 0
       }
     })
-    
+
     const barTooltipDelay = computed(() => {
       return hasHighlights.value ? 0 : props.highlightDelay
     })
@@ -313,7 +313,7 @@ export default defineComponent({
 
     function delayHighlight(key: string) {
       clearTimeout(highlightTimeout.value)
-      // Reduce the delay to zero if there is already an highlighted key
+      // Reduce the delay to zero if there is already a highlighted key
       const isDelayed = !hasHighlights.value
       const delay = isDelayed ? props.highlightDelay : 0
       highlightTimeout.value = setTimeout(() => highlight(key), delay)
@@ -357,7 +357,7 @@ export default defineComponent({
     }
 
     function barUniqueId(i: string | number, key: string) {
-      // @ts-ignore 
+      // @ts-ignore
       const { uid } = getCurrentInstance()
       return `bar-${uid}-${i}-${key}`
     }
@@ -457,7 +457,7 @@ export default defineComponent({
         highlightedKeys.value = newHighlights
       }
     )
-    watch(sortedData, async (newVal) => {
+    watch(sortedData, async () => {
       await nextTick()
       // This must be set after the column have been rendered
       const element = querySelector('.stacked-column-chart__groups__item__bars')

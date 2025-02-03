@@ -69,8 +69,8 @@ export default defineComponent({
       }
     },
     /**
-     * Sharing contents which can be generic (<em>title</em>, <em>description</em>, etc)
-     * or specific to a network (<em>twitter_title</em>, <em>facebook_description</em>, etc).
+     * Sharing contents which can be generic (<em>title</em>, <em>description</em>, etc.)
+     * or specific to a network (<em>twitter_title</em>, <em>facebook_description</em>, etc.).
      */
     values: {
       type: Object,

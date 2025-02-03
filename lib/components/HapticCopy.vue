@@ -90,7 +90,7 @@ export default defineComponent({
     noTooltip: {
       type: Boolean
     },
-    /** 
+    /**
      * Button variant
      */
     variant: {
@@ -107,7 +107,7 @@ export default defineComponent({
     const tooltipTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const showClipboardTooltip = ref(false)
     const buttonId = computed(() => uniqueId('haptic-copy-'))
-  
+
     function copyTextToClipboard(): Promise<void> {
       return el.value ? copyText(String(props.text), el.value.$el) : Promise.resolve()
     }

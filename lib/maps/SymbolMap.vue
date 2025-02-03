@@ -486,7 +486,7 @@ export default defineComponent({
       featureZoom.value = null
 
       /**
-       * The zomm on the map was reset to its initial <slot ate></slot>
+       * The zoom on the map was reset to its initial <slot ate></slot>
        * @event reset
        */
       emit('reset')
