@@ -51,35 +51,35 @@ export default defineComponent({
       default: 'value'
     },
     /**
-     * Hide x axis ticks when no enough space
+     * Hide x-axis ticks when no enough space
      */
     xAxisTickCollapse: {
       type: Boolean as PropType<boolean> as PropType<boolean>,
       default: false
     },
     /**
-     * Function to apply to format x axis ticks
+     * Function to apply to format x-axis ticks
      */
     xAxisTickFormat: {
       type: [Function, String] as PropType<Function | string>,
       default: () => identity
     },
     /**
-     * Definition of x axis ticks
+     * Definition of x-axis ticks
      */
     xAxisTicks: {
       type: Array as PropType<string[] | null>,
       default: null
     },
     /**
-     * Function to apply to format y axis ticks
+     * Function to apply to format y-axis ticks
      */
     yAxisTickFormat: {
       type: [Function, String] as PropType<Function | string>,
       default: () => identity
     },
     /**
-     * Definition of y axis ticks
+     * Definition of y-axis ticks
      */
     yAxisTicks: {
       type: [Number, Object] as PropType<number | object>,
@@ -355,7 +355,7 @@ export default defineComponent({
     }
 
     function columnUniqueId(i: number) {
-      // @ts-ignore 
+      // @ts-ignore
       const { uid } = getCurrentInstance()
       return `column-${uid}-${i}`
     }
@@ -365,7 +365,7 @@ export default defineComponent({
         datum.highlight || props.highlights.includes(datum[props.timeseriesKey])
       )
     }
-    
+
     watch([width, height, loadedData, mounted], update.bind(this), { immediate: true})
     watch(() => props.socialMode, update.bind(this), { immediate: true})
 
@@ -485,7 +485,7 @@ export default defineComponent({
 
   &__columns__item {
     fill: var(--column-color, var(--dark, $dark));
-    
+
     &--highlight {
       fill: var(--column-highlight-color, var(--primary, $primary));
     }

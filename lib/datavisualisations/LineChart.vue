@@ -57,7 +57,7 @@ export default defineComponent({
       default: null
     },
     /**
-     * Function to apply to format y axis ticks (line value). It can be a
+     * Function to apply to format y-axis ticks (line value). It can be a
      * function returning the formatted value or a d3's formatter string.
      */
     yAxisTickFormat: {

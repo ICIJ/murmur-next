@@ -63,7 +63,7 @@
                     href="https://www.icij.org/about/corporate/"
                     target="_blank"
                   >
-                    Corportate
+                    Corporate
                   </a>
                 </li>
                 <li class="list-unstyled-item">

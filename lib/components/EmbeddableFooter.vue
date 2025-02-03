@@ -17,7 +17,7 @@
         <span v-html="lead"></span>
       </slot>
     </div>
-    <!-- @slot Overide the sharing button -->
+    <!-- @slot Override the sharing button -->
     <slot name="sharing-button" v-bind="{ sharingOptionsValues }">
       <button
         class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"

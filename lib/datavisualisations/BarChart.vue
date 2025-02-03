@@ -61,7 +61,7 @@ export default defineComponent({
       default: 10
     },
     /**
-     * Distande between a bar and its value
+     * Distance between a bar and its value
      */
     valueGap: {
       type: Number,
@@ -75,7 +75,7 @@ export default defineComponent({
       default: null
     },
     /**
-     * Function to apply to format x axis ticks (bar value). It can be a
+     * Function to apply to format x-axis ticks (bar value). It can be a
      * function returning the formatted value or a d3's formatter string.
      */
     xAxisTickFormat: {

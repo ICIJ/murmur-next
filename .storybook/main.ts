@@ -3,17 +3,17 @@ import { mergeConfig } from 'vite'
 
 const config: StorybookConfig = {
   core: {
-    disableTelemetry: true 
+    disableTelemetry: true
   },
   stories: [
-    '../stories/getting-started/installation-guide.mdx', 
-    '../stories/**/*.mdx', 
+    '../stories/getting-started/installation-guide.mdx',
+    '../stories/**/*.mdx',
     '../stories/**/*.stories.@(js|jsx|ts|tsx)'
   ],
   staticDirs: ['../public'],
   addons: [
-    '@storybook/addon-links',
     '@storybook/addon-interactions',
+    '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/preset-scss',
     '@storybook/addon-themes'
@@ -25,7 +25,7 @@ const config: StorybookConfig = {
   docs: {},
   viteFinal: (config) => {
     return mergeConfig(config, {
-      // This is needed because the copy plugin can't copy files outside of the root directory
+      // This is needed because the copy plugin can't copy files outside the root directory
       // The files are copied back to the root by the post script
       build: {
         outDir: 'storybook-static'

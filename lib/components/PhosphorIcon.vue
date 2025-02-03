@@ -1,9 +1,9 @@
 <template>
-  <span 
-    class="phosphor-icon" 
-    :class="classList" 
-    :style="style" 
-    @mouseenter="currentHover = true" 
+  <span
+    class="phosphor-icon"
+    :class="classList"
+    :style="style"
+    @mouseenter="currentHover = true"
     @mouseleave="currentHover = hover ?? false"
   >
     <component
@@ -139,6 +139,7 @@ function findComponentByName(name: string) {
   const filename = `Ph${upperFirst(camelCase(name))}`
   return defineAsyncComponent(async () => {
     try {
+      //@ts-ignore
       return await import(`node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`)
     } catch {
       // @ts-expect-error Importing not typescript module
@@ -170,7 +171,7 @@ const weight = computed(() => {
   if (isArray(props.name) && props.name.length > 1) {
     return WEIGHTS[props.name[1]]
   }
-  
+
   if (currentHover.value && props.hoverWeight) {
     return WEIGHTS[props.hoverWeight]
   }
@@ -196,7 +197,7 @@ const color = computed(() => {
   if (currentHover.value && props.hoverVariant) {
     colorVariant = `var(--bs-${props.hoverVariant}, ${colorVariant})`
   }
-  
+
   return colorVariant
 })
 
@@ -247,7 +248,7 @@ const classList = computed(() => {
   align-items: center;
   justify-content: center;
   @include ph-icon-size($ph-icon-size-scale-base, var(--phosphor-icon-scale, 1));
- 
+
   @each $size, $value in $ph-icon-sizes {
     &--size-#{$size} {
       @include ph-icon-size($value, var(--phosphor-icon-scale));

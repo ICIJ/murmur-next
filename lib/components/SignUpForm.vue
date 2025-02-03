@@ -43,23 +43,12 @@
 </template>
 
 <script lang="ts">
-import jsonp from 'jsonp'
-import castArray from 'lodash/castArray'
-import flatten from 'lodash/flatten'
 import last from 'lodash/last'
 import { computed, defineComponent, PropType, ref } from 'vue'
 
 import config from '../config'
 import { useI18n } from 'vue-i18n'
 import { useSendEmail } from '@/composables/sendEmail'
-
-type SignUpFormData = {
-  email: string
-  frozen: boolean
-  response: any
-  errorMessage: string | null
-  successMessage: string | null
-}
 
 /**
  * SignUpForm
@@ -75,14 +64,14 @@ export default defineComponent({
       default: () => config.get('signup-form.action')
     },
     /**
-     * Malchimp email field parameter
+     * Mailchimp email field parameter
      */
     emailField: {
       type: String,
       default: () => config.get('signup-form.email-field')
     },
     /**
-     * Malchimp default groups. Can be an array or a commat-separated list of groups.
+     * Mailchimp default groups. Can be an array or a comma-separated list of groups.
      */
     defaultGroups: {
       type: [String, Array] as PropType<string | string[]>,
