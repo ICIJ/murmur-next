@@ -1,7 +1,8 @@
 <script lang="ts">
-import { computed, ref, defineComponent } from 'vue'
+import {computed, ref, defineComponent, PropType} from 'vue'
 import HapticCopy from './HapticCopy.vue'
 import PhosphorIcon from './PhosphorIcon.vue';
+import {BaseSize} from "bootstrap-vue-next";
 
 export default defineComponent({
   name: 'SecretInput',
@@ -24,7 +25,7 @@ export default defineComponent({
      * Size of the input form
      */
     size: {
-      type: String,
+      type: String as PropType<keyof BaseSize | undefined>,
       default: 'md'
     },
     /**
