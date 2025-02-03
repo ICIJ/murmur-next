@@ -97,12 +97,7 @@ export default defineComponent({
       }
       return [textFinalOffset.value, textInitialOffset.value]
     })
-    const isFadingLeft = computed((): boolean => {
-      return props.direction === 'rtl' && isFading.value
-    })
-    const isFadingRight = computed((): boolean => {
-      return props.direction === 'ltr' && isFading.value
-    })
+
     const isFading = computed((): boolean => {
       return wrapperElementWidth.value < textElementWidth.value
     })

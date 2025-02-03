@@ -113,7 +113,7 @@ export default defineComponent({
     }
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  setup(props) {
     const { t } = useI18n()
     const rawInput = ref<HTMLTextAreaElement | null>(null)
     const richInput = ref<HTMLElement | null>(null)
