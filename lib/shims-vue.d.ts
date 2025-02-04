@@ -12,3 +12,4 @@ declare module '*.vue' {
   const component: DefineComponent<NonNullable<unknown>, NonNullable<unknown>, any>
   export default component
 }
+declare module 'bootstrap-vue-next/src/utils/floatingUi';
