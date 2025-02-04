@@ -1,6 +1,6 @@
 import { config } from '@vue/test-utils'
 import { i18n } from '@/i18n'
-import createBootstrap from 'bootstrap-vue-next'
+import { createBootstrap } from 'bootstrap-vue-next'
 
 // @ts-expect-error type
 config.global.plugins = [i18n, createBootstrap()]
