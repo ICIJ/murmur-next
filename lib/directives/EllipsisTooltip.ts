@@ -1,6 +1,6 @@
 import { type Directive } from 'vue'
 
-import { 
+import {
   bind,
   type ElementWithPopper,
   resolveActiveStatus,
@@ -17,9 +17,9 @@ export default {
     const title = text.title ?? text.content
     const noninteractive = true
     if (!tooltip) return
-    if (!title) return    
-  
-    const isTruncated = (el: HTMLElement) => el.offsetWidth < el.scrollWidth 
+    if (!title) return
+
+    const isTruncated = (el: HTMLElement) => el.offsetWidth < el.scrollWidth
     const bindTooltip = (el: HTMLElement) => bind(el, binding, { noninteractive, ...props, title, tooltip })
     const unbindTooltip = (el: HTMLElement) => unbind(el)
     const toggleTooltip = (el: HTMLElement) => isTruncated(el) ? bindTooltip(el) : unbindTooltip(el)
