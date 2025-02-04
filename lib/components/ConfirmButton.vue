@@ -131,7 +131,7 @@ export default defineComponent({
   },
   emits: ['toggled', 'cancelled', 'confirmed'],
   setup(props, { emit }) {
-    const showTooltip = ref<Boolean>(false)
+    const showTooltip = ref<boolean>(false)
     const uniqComponentId = uniqueId('murmur-confirm-button-')
     const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
 
