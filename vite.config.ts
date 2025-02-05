@@ -66,7 +66,7 @@ export default defineConfig({
     port: 9009
   },
   resolve: {
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+    extensions: ['.mjs', '.js', '.ts', '.json', '.vue'],
     alias: {
       vue: resolve(__dirname, './node_modules/vue'),
       node_modules: resolve(__dirname, 'node_modules'),
