@@ -116,8 +116,8 @@
 <script lang="ts" setup>
 import { PropType, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-
-import { ButtonVariant, BFormInput, BButton } from 'bootstrap-vue-next'
+import type { ButtonVariant } from 'bootstrap-vue-next'
+import {  BFormInput, BButton } from 'bootstrap-vue-next'
 import { directive as vInputAutowidth } from "vue-input-autowidth"
 
 import { Size } from '@/enums'
@@ -270,7 +270,7 @@ const props = defineProps({
     type: String,
     default: null
   }
-})
+});
 
 const { t, n } = useI18n()
 
