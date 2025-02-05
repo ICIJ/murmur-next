@@ -10,6 +10,17 @@ import { computed, ref, watch } from 'vue'
 import type { Ref } from "vue"
 
 type Period = 'onetime' | 'monthly' | 'yearly'
+type DonationCategory = 'conversation' | 'rules' | 'world'
+type SuggestedDonation = {
+  [category in DonationCategory]: {
+    [period in Period]: number;
+  };
+}
+type LabelForChange ={
+  monthly: { [value: number]: DonationCategory }
+  yearly: { [value: number]: DonationCategory }
+  onetime?: { [value: number]: DonationCategory }
+}
 /**
  * A form to encourage donations. We usually put this form inside a modal
  */
@@ -25,46 +36,48 @@ export default {
   },
   setup() {
     const { t, locale, messages } = useI18n()
-    const amount = ref(10)
+    const amount = ref<number|undefined>(10)
     // True if the amount wasn't changed by the user yet
     const amountIsPristine = ref(true)
     const installmentPeriod :Ref<Period,null>= ref('monthly')
-    const level = ref('conversation')
+    const level = ref<DonationCategory|null>('conversation')
     const campaign = ref(config.get('donate-form.tracker'))
-    const labelForChange = ref({
+    const labelForChange = ref<LabelForChange>({
       monthly: {
-        1: t('donate-form.result.conversation'),
-        15: t('donate-form.result.rules'),
-        50: t('donate-form.result.world')
+        1: t('donate-form.result.conversation') as DonationCategory,
+        15: t('donate-form.result.rules') as DonationCategory,
+        50: t('donate-form.result.world') as DonationCategory
       },
       yearly: {
-        1: t('donate-form.result.conversation'),
-        180: t('donate-form.result.rules'),
-        600: t('donate-form.result.world')
+        1: t('donate-form.result.conversation') as DonationCategory,
+        180: t('donate-form.result.rules') as DonationCategory,
+        600: t('donate-form.result.world') as DonationCategory
       }
     })
 
-    const suggestedAmount = ref(
+    const suggestedAmount = ref<SuggestedDonation>(
+        //@ts-ignore retrieves a map of messages from the i18n json
       messages.value[locale.value]['donate-form']['suggesteddonation']
     )
-    const listBenefits = ref(
+    const listBenefits = ref<string[]>(
+        //@ts-ignore retrieves a list of messages from the i18n json
       messages.value[locale.value]['donate-form']['benefits']['list']
     )
-    const ranges = computed(() => {
+    const ranges = computed(() : {[value: number]:DonationCategory }=> {
       if (installmentPeriod.value === 'onetime') {
         return labelForChange.value['yearly']
       }
       return labelForChange.value[installmentPeriod.value]
     })
     const firstRange = computed(() => {
-      const key = keys(ranges.value)[0]
+      const key: number = Number(keys(ranges.value)[0])
       return ranges.value[key]
     })
     const changeThe = computed(() => {
       // Final label
-      let label = null
+      let label:DonationCategory|null = null
       forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
-        label = amount.value >= amountV ? ranges.value[amountV] : label
+        label = amount.value && (amount.value >= amountV) ? ranges.value[amountV] : label
       })
       return label
     })
@@ -97,7 +110,7 @@ export default {
       // Return suggested amount
       return suggestedAmount.value[level.value][installmentPeriod.value]
     }
-    function selectLevel(levelSelected) {
+    function selectLevel(levelSelected: DonationCategory) {
       // Set chose level
       level.value = levelSelected
 
