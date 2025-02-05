@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import StackedColumnChart from '@/datavisualisations/StackedColumnChart.vue'
 
 // Mock HTML element offset so the size of the chart can be calculated
-// dynamicly using JSDOM and tests
+// dynamically using JSDOM and tests
 Object.defineProperties(window.HTMLElement.prototype, {
   offsetWidth: {
     get() {
@@ -17,13 +17,13 @@ Object.defineProperties(window.HTMLElement.prototype, {
 })
 
 describe('StackedColumnChart.vue', () => {
-  const createContainer = (tag = 'div') => {
+  const createContainer = (tag = 'body') => {
     const container = document.createElement(tag)
     document.body.appendChild(container)
     return container
   }
 
-  describe('a stacked-colmuns chart with two columns in four groups and direct labeling', () => {
+  describe('a stacked-columns chart with two columns in four groups and direct labeling', () => {
     let wrapper
 
     beforeEach(async () => {
@@ -122,7 +122,7 @@ describe('StackedColumnChart.vue', () => {
       expect(barLegend.text()).toBe('bar')
     })
 
-    it('hightlight the legend "foo"', async () => {
+    it('highlight the legend "foo"', async () => {
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
       await fooLegend.trigger('mouseover')
@@ -130,7 +130,7 @@ describe('StackedColumnChart.vue', () => {
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the columns for "foo"', async () => {
+    it('highlight the columns for "foo"', async () => {
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       await fooLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
@@ -141,7 +141,7 @@ describe('StackedColumnChart.vue', () => {
       expect(fooColumns.at(3).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the columns for "bar"', async () => {
+    it('highlight the columns for "bar"', async () => {
       const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
       await barLegend.trigger('mouseover')
       await vi.advanceTimersByTimeAsync(wrapper.vm.highlightDelay)
@@ -152,7 +152,7 @@ describe('StackedColumnChart.vue', () => {
       expect(budgetBars.at(3).classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the legend "foo" on mouseover and "bar" by default', async () => {
+    it('highlight the legend "foo" on mouseover and "bar" by default', async () => {
       await wrapper.setProps({ highlights: ['bar'] })
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
@@ -164,7 +164,7 @@ describe('StackedColumnChart.vue', () => {
       expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
     })
 
-    it('hightlight the columns for "bar" after a while', async () => {
+    it('highlight the columns for "bar" after a while', async () => {
       const barLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(1)
       await wrapper.setProps({ highlightDelay: 150 })
       await barLegend.trigger('mouseover')
@@ -175,7 +175,7 @@ describe('StackedColumnChart.vue', () => {
       expect(barLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the whole "2006" column', async () => {
+    it('highlight the whole "2006" column', async () => {
       await wrapper.setProps({ columnHighlights: [2006] })
       const foo = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(0)
       const bar = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(1)
@@ -183,7 +183,7 @@ describe('StackedColumnChart.vue', () => {
       expect(bar.classes('stacked-column-chart__groups__item__bars__item--highlighted')).toBeTruthy()
     })
 
-    it('hightlight the whole "2009" column', async () => {
+    it('highlight the whole "2009" column', async () => {
       await wrapper.setProps({ columnHighlights: [2009] })
       const foo = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(6)
       const bar = wrapper.findAll('.stacked-column-chart__groups__item__bars__item').at(7)
@@ -250,7 +250,7 @@ describe('StackedColumnChart.vue', () => {
     })
   })
 
-  describe('a stacked-colmuns chart with 3 columns in 2 groups and no direct labeling', () => {
+  describe('a stacked-columns chart with 3 columns in 2 groups and no direct labeling', () => {
     let wrapper
 
     beforeEach(async () => {
@@ -346,17 +346,19 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates a left axis with 0 as minimum value', async () => {
+      await wrapper.vm.$nextTick()
       const firstTick = wrapper.find('.stacked-column-chart__left-axis .tick:first-of-type text')
       expect(firstTick.text()).toBe('0')
     })
 
     it('creates a left axis with 100 as minimum value', async () => {
+      await wrapper.vm.$nextTick()
       const lastTick = wrapper.find('.stacked-column-chart__left-axis .tick:last-of-type text')
       expect(lastTick.text()).toBe('100')
     })
   })
 
-  describe('a stacked-colmuns chart with 3 columns in 3 groups and a max value', () => {
+  describe('a stacked-columns chart with 3 columns in 3 groups and a max value', () => {
     let wrapper
 
     beforeEach(async () => {
@@ -400,7 +402,7 @@ describe('StackedColumnChart.vue', () => {
     })
   })
 
-  describe('a stacked-colmuns chart with 3 columns in 3 groups with empty values', () => {
+  describe('a stacked-columns chart with 3 columns in 3 groups with empty values', () => {
     let wrapper
 
     beforeEach(async () => {

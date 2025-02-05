@@ -10,7 +10,7 @@ export default mergeConfig(
             globals: true,
             clearMocks: false,
             setupFiles: ['tests/unit/setup.js'],
-            reporters: 'basic',
+            reporters: 'default',
             environment: 'jsdom',
             exclude: [...configDefaults.exclude, 'e2e/*'],
             root: fileURLToPath(new URL('./', import.meta.url))

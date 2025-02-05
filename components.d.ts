@@ -17,5 +17,7 @@ declare module 'vue' {
     BTab: typeof import('bootstrap-vue-next')['BTab']
     BTabs: typeof import('bootstrap-vue-next')['BTabs']
     BTooltip: typeof import('bootstrap-vue-next')['BTooltip']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
   }
 }
