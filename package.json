@@ -95,7 +95,7 @@
     "eslint": "^9.19.0",
     "eslint-plugin-storybook": "^0.11.2",
     "eslint-plugin-vue": "^9.32.0",
-    "jsdom": "^24.1.0",
+    "jsdom": "^26.0.0",
     "msw": "^2.7.0",
     "msw-storybook-addon": "^2.0.4",
     "prettier": "^3.4.2",
