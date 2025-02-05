@@ -1707,13 +1707,6 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.8.tgz#7545ba4fc3c003d6c756f651f3bf163d8f0f29ba"
   integrity sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==
 
-"@types/vue-i18n@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@types/vue-i18n/-/vue-i18n-7.0.0.tgz#ace0de742b3a0398b6fa6b3956d6e583377c3081"
-  integrity sha512-4e3EvN4k+B6eTq1qWDFW1wpzCgz+8nNCn6LAQTkcRoGJx9rVO5iYzyEogFTi9RwBJ588+Rx0nUwRFjKUYPe/BQ==
-  dependencies:
-    vue-i18n "*"
-
 "@types/web-bluetooth@^0.0.20":
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.20.tgz#f066abfcd1cbe66267cdbbf0de010d8a41b41597"
@@ -5644,7 +5637,7 @@ safe-regex-test@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-sass@^1.77.2:
+sass@^1.77.8:
   version "1.83.4"
   resolved "https://registry.yarnpkg.com/sass/-/sass-1.83.4.tgz#5ccf60f43eb61eeec300b780b8dcb85f16eec6d1"
   integrity sha512-B1bozCeNQiOgDcLd33e2Cs2U60wZwjUUXzh900ZyQF5qUasvMdDZYbQ566LJu7cqR+sAHlAfO6RMkaID5s6qpA==
@@ -5851,6 +5844,7 @@ string-argv@~0.3.1:
   integrity sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -6489,15 +6483,6 @@ vue-eslint-parser@^9.4.3:
   version "0.0.1"
   resolved "https://codeload.github.com/caro3801/vue-headroom/tar.gz/d8932aa77049768dfb9ca13eaa38f38f9181dca9"
 
-vue-i18n@*, vue-i18n@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-11.1.0.tgz#996095024da5cbb5148e602d7d88e0218ffe5fcc"
-  integrity sha512-UgtYUe99mLfo7ya5TJSsJcgJZaqIunwXjff5UA03xRry0VtgN4zIUbuoycK9/ZZQJg5Cmr6V6zq+u0H0P0hlNw==
-  dependencies:
-    "@intlify/core-base" "11.1.0"
-    "@intlify/shared" "11.1.0"
-    "@vue/devtools-api" "^6.5.0"
-
 vue-i18n@^10.0.0:
   version "10.0.5"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-10.0.5.tgz#fdf4e6c7b669e80cfa3a12ed9625e2b46671cdf0"
@@ -6505,6 +6490,15 @@ vue-i18n@^10.0.0:
   dependencies:
     "@intlify/core-base" "10.0.5"
     "@intlify/shared" "10.0.5"
+    "@vue/devtools-api" "^6.5.0"
+
+vue-i18n@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-11.1.0.tgz#996095024da5cbb5148e602d7d88e0218ffe5fcc"
+  integrity sha512-UgtYUe99mLfo7ya5TJSsJcgJZaqIunwXjff5UA03xRry0VtgN4zIUbuoycK9/ZZQJg5Cmr6V6zq+u0H0P0hlNw==
+  dependencies:
+    "@intlify/core-base" "11.1.0"
+    "@intlify/shared" "11.1.0"
     "@vue/devtools-api" "^6.5.0"
 
 vue-inbrowser-compiler-independent-utils@^4.69.0:
@@ -6674,6 +6668,7 @@ word-wrap@^1.2.5:
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
