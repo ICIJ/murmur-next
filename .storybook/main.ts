@@ -12,9 +12,9 @@ const config: StorybookConfig = {
   ],
   staticDirs: ['../public'],
   addons: [
+    '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-links',
-    '@storybook/addon-essentials',
     '@storybook/preset-scss',
     '@storybook/addon-themes'
   ],
