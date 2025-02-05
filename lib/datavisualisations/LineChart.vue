@@ -200,26 +200,7 @@ export default defineComponent({
         .selectAll('.tick line')
         .attr('x2', padded.value.width)
     }
-    // function initialize() {
-    //   d3.axisBottom().scale(scale.value.x)
-    // }
 
-    // watch(width,()=> {
-    //   update()
-    // })
-    // watch(width,()=> {
-    //   update()
-    // })
-    // watch(height,()=> {
-    //   update()
-    // })
-    //
-    // watch(loadedData,()=> {
-    //   update()
-    // })
-    // watch(labelHeight,()=> {
-    //   update()
-    // })
     watchEffect(() => {
       update()
     })
