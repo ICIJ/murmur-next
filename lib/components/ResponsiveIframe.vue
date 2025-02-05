@@ -44,7 +44,6 @@ export default defineComponent({
   },
   async mounted(): Promise<void> {
     await injectAssets('https://pym.nprapps.org/pym.v1.min.js')
-    //@ts-ignore
     this.pymParent = new window.pym.Parent(
       this.iframeId,
       this.url,
