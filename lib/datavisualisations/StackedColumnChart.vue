@@ -213,11 +213,11 @@ export default defineComponent({
       }
       return without(keys(loadedData.value[0]), props.labelField)
     })
-    const colorScale = computed(() => {
+    const colorScale = computed(():(key:string)=> string => {
       return d3
         .scaleOrdinal()
         .domain(discoveredKeys.value)
-        .range(props.barColors)
+        .range(props.barColors) as unknown as (key:string)=> string
     })
 
     const hasHighlights = computed(() => {
@@ -526,8 +526,8 @@ export default defineComponent({
         <span
           class="stacked-column-chart__legend__item__box"
           :style="{ 'background-color': colorScale(key) }"
-        />
-        {{ groupName(key) }}
+        >
+          {{ groupName(key) }}</span>
       </li>
     </ul>
     <div class="d-flex flex-grow-1 position-relative overflow-hidden">
