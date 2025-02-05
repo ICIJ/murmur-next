@@ -47,6 +47,7 @@ export default defineComponent({
               ? event.clientX
               : event.touches[0].clientX
           const offset = relative ? el.offsetWidth : 0
+          //@ts-ignore
           const maxX = binding.instance?.rangeWidth() - offset
           const data = clamp(startX + clientX - initialClientX, 0, maxX)
           emitEvent({ name: 'dragged', data })
