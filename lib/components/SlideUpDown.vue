@@ -11,7 +11,7 @@ const STATE = {
   ACTIVE: 'active',
   POST: 'post'
 }
-interface SlideUpDownData {
+export interface SlideUpDownData {
   state: string
   mounted: boolean
   scrollHeight: number
