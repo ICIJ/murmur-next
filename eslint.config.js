@@ -7,8 +7,8 @@ import icijPlugin from '@icij/eslint-config';
 
 export default [
   {
-    files: ['**/*.{ts,tsx}'],
-    ignores: ['tmpDoc/**/*.stories.{ts,tsx}'],
+    files: ['**/*.{ts}'],
+    ignores: ['tmpDoc/**/*.stories.{ts}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -31,17 +31,23 @@ export default [
       'vitest/no-identical-title': 'error',
       'vitest/expect-expect': 'error',
       "import/no-named-default": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "caughtErrorsIgnorePattern": "^_"
+        }
+      ]
     },
   },
   {
-    files: ['*.stories.ts', '*.stories.tsx'],
+    files: ['*.stories.ts'],
     rules: {
       'storybook/no-stories-of': 'warn',
       'storybook/prefer-csf': 'warn',
     },
   },
   {
-    files: ['*spec.ts', '*spec.tsx'],
+    files: ['*spec.ts'],
     languageOptions: {
       globals: {
         vitest: true,
