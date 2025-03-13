@@ -47,7 +47,8 @@ Default.decorators = [leakInjuriesDecorator]
 Default.args = {
   data: dataUrl,
   xAxisTickCollapse: true,
-  hover: true
+  hover: true,
+  hoverIcon: 'info'
 }
 
 export const TooltipSlot: Story = (args: any) => ({

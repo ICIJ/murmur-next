@@ -2,7 +2,9 @@
 import { ComponentPublicInstance, computed, defineComponent, getCurrentInstance, PropType, ref, watch } from 'vue'
 import { identity, iteratee, sortBy } from 'lodash'
 import * as d3 from 'd3'
+
 import { chartProps, getChartProps, useChart } from '@/composables/chart'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 type ColumnBar = {
   datum: { [timeSerie: string]: any }
@@ -157,7 +159,23 @@ export default defineComponent({
     hover: {
       type: Boolean as PropType<boolean>
     },
+    /**
+     * A phosphor icon to show on hover
+     */
+    hoverIcon: {
+      type: [String, Object, Array] as PropType<string | object | object>,
+      default: null
+    },
+    /**
+     * Size of the hover icon
+     */
+    hoverIconSize: {
+      type: String as PropType<string>
+    },
     ...chartProps()
+  },
+  components: {
+    PhosphorIcon
   },
   setup(props, { emit }) {
     const width = ref(0)
@@ -444,6 +462,16 @@ export default defineComponent({
             :id="columnUniqueId(index)"
             class="column-chart__columns__item__bar"
           />
+          <foreignObject
+            v-if="hoverIcon"
+            :height="Math.max(bar.height, 0.1)"
+            :width="bar.width"
+            :y="bar.y"
+          > 
+            <div class="column-chart__columns__item__hover-icon">
+              <phosphor-icon :name="hoverIcon" :size="hoverIconSize" />
+            </div>
+          </foreignObject>
         </g>
       </g>
     </svg>
@@ -496,6 +524,19 @@ export default defineComponent({
       .column-chart--stripped &,
       .column-chart--hover .column-chart__columns__item:hover & {
         opacity: var(--placeholder-opacity);
+      }
+    }    
+
+    &__hover-icon {
+      opacity: 0;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .column-chart--hover .column-chart__columns__item:hover & {
+        opacity: 1;
       }
     }
   }
