@@ -38,83 +38,76 @@ export const Small = {
 
 export const Medium = {
   args: {
-  modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
-  size: Size.md
+    modelValue: 1,
+    perPage: 10,
+    totalRows: 200,
+    size: Size.md
   }
 }
 
 export const Large = {
   args: {
-  modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
-  size: Size.lg
-
+    modelValue: 1,
+    perPage: 10,
+    totalRows: 200,
+    size: Size.lg
   }
 }
 
 export const HideNavigation = {
   args: {
-  modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
-  noNav: true
-
+    modelValue: 1,
+    perPage: 10,
+    totalRows: 200,
+    noNav: true
   }
 }
 
 export const CompactMode = {
   args: {
-  modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
-  compact: true
-
+    modelValue: 1,
+    perPage: 10,
+    totalRows: 200,
+    compact: true
   }
 }
 
 export const RowMode = {
   args: {
-  modelValue: 1,
-  perPage: 25,
-  totalRows: 2e6,
-  compact: false,
-  row: true
-
+    modelValue: 1,
+    perPage: 25,
+    totalRows: 2e6,
+    compact: false,
+    row: true
   }
 }
 
 export const UniqueRowMode = {
   args: {
-  modelValue: 1,
-  perPage: 1,
-  totalRows: 2e6,
-  compact: false,
-  row: true
-
+    modelValue: 1,
+    perPage: 1,
+    totalRows: 2e6,
+    compact: false,
+    row: true
   }
 }
 
 export const CompactRowMode = {
   args: {
-  modelValue: 1,
-  perPage: 25,
-  totalRows: 2e6,
-  compact: true,
-  row: true
-
+    modelValue: 1,
+    perPage: 25,
+    totalRows: 2e6,
+    compact: true,
+    row: true
   }
 }
 
 export const RowModeZero = {
   args: {
-  modelValue: 1,
-  perPage: 25,
-  totalRows: 0,
-  compact: false,
-  row: true
-
+    modelValue: 1,
+    perPage: 25,
+    totalRows: 0,
+    compact: false,
+    row: true
   }
 }
