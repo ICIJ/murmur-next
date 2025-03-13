@@ -322,14 +322,22 @@ const title = computed(() => {
 
   if (props.row) {
     const locales = { lastRangeRow: n(lastRangeRow.value), totalRows: n(props.totalRows) }
+    
     // Only one per page, meaning we navigate through rows one by one
     if (props.perPage === 1) {
       return props.compact ? '' : t('tiny-pagination.uniqueRowRange', locales, props.totalRows)
     }
+  
+    // The total is less or equal than the current row range
+    if (props.totalRows <= (props.perPage * pageValue.value)) {
+      return t('tiny-pagination.rowRangeFewer', locales, props.totalRows)
+    }
+
     return t(props.compact ? 'tiny-pagination.compactRowRange' : 'tiny-pagination.rowRange', locales, props.totalRows)
   }
 
   const locales = { numberOfPages: n(numberOfPages.value) }
+  
   return t('tiny-pagination.total', locales, props.totalRows)
 })
 

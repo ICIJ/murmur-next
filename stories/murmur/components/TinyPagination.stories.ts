@@ -102,6 +102,36 @@ export const CompactRowMode = {
   }
 }
 
+export const RowModeFewer = {
+  args: {
+    modelValue: 1,
+    perPage: 25,
+    totalRows: 20,
+    compact: false,
+    row: true
+  }
+}
+
+export const RowModeNextFewer = {
+  args: {
+    modelValue: 2,
+    perPage: 25,
+    totalRows: 50,
+    compact: false,
+    row: true
+  }
+}
+
+export const RowModeSingle = {
+  args: {
+    modelValue: 1,
+    perPage: 25,
+    totalRows: 1,
+    compact: false,
+    row: true
+  }
+}
+
 export const RowModeZero = {
   args: {
     modelValue: 1,
