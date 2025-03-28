@@ -13,9 +13,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "dev": "yarn storybook",
     "build:lib": "vite build",
-    "preview": "vite preview",
     "lint": "eslint --ignore-pattern storybook-static .",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write lib/ stories/ .storybook/ tests/",
