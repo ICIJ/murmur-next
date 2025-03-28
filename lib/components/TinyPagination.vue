@@ -1,6 +1,7 @@
 <template>
   <div class="tiny-pagination" :class="paginationClassList">
     <b-button
+      v-if="!noFirst"
       class="tiny-pagination__nav tiny-pagination__nav--bound  tiny-pagination__nav--first"
       :size="size"
       :disabled="!hasFirst"
@@ -17,6 +18,7 @@
       </slot>
     </b-button>
     <b-button
+      v-if="!noPrevious"
       class="tiny-pagination__nav"
       :size="size"
       :disabled="!hasPrevious"
@@ -79,6 +81,7 @@
       </div>
     </form>
     <b-button
+      v-if="!noNext"
       class="tiny-pagination__nav"
       :size="size"
       :disabled="!hasNext"
@@ -95,6 +98,7 @@
       </slot>
     </b-button>
     <b-button
+      v-if="!noLast"
       class="tiny-pagination__nav tiny-pagination__nav--bound  tiny-pagination__nav--last"
       :size="size"
       :disabled="!hasLast"
@@ -179,6 +183,30 @@ const props = defineProps({
    * Hide bounds navigation buttons (first and last)
    */
   noNavBounds: {
+    type: Boolean
+  },
+  /**
+   * Hide the first page button
+   */
+  noFirst: {  
+    type: Boolean
+  },
+  /**
+   * Hide the last page button
+   */
+  noLast: {
+    type: Boolean
+  },
+  /**
+   * Hide the previous page button
+   */
+  noPrevious: {
+    type: Boolean
+  }, 
+  /**
+   * Hide the next page button
+   */
+  noNext: {
     type: Boolean
   },
   /**
