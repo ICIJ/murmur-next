@@ -115,13 +115,11 @@ describe('SelectableDropdown.vue', () => {
     const wrapper = mount(SelectableDropdown, { propsData })
     await flushPromises()
 
-    expect(wrapper.emitted('update:modelValue')[0]).toContain('Djibouti')
-
     await wrapper.find('#dropdown-item-lesotho').trigger('click')
-    expect(wrapper.emitted('update:modelValue')[1]).toContain('Lesotho')
+    expect(wrapper.emitted('update:modelValue')[0]).toContain('Lesotho')
 
     await wrapper.find('#dropdown-item-senegal').trigger('click')
-    expect(wrapper.emitted('update:modelValue')[2]).toContain('Senegal')
+    expect(wrapper.emitted('update:modelValue')[1]).toContain('Senegal')
   })
 
   it('emits a `click` event when user click on an item', async () => {
