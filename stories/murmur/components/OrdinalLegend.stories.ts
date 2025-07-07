@@ -1,5 +1,5 @@
 import { OrdinalLegend } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 
 const data = {
   highlighted: 'dc',

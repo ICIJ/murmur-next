@@ -1,5 +1,5 @@
 import { CustomPagination } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { Size } from '../../../lib/enums'
 
 export default {

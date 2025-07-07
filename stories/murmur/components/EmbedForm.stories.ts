@@ -1,5 +1,5 @@
 import { EmbedForm } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { modalDecorator } from '../decorators'
 import { Size } from '@/enums'
 

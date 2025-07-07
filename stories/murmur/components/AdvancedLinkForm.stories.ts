@@ -1,6 +1,6 @@
 import { AdvancedLinkForm } from '@/components'
 import { BCard } from 'bootstrap-vue-next'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { Size } from '@/enums'
 import { modalDecorator, popoverDecorator } from '../decorators'
 
@@ -25,7 +25,8 @@ export const Default = Template.bind({})
 Default.args = {
   title: 'Medtronic spends millions each year on lobbying in the US',
   link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',
-  card: true
+  card: true,
+  forms:["markdown",'html',"raw"]
 }
 
 export const InsideModal = Template.bind({})

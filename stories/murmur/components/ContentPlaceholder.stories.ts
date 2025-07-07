@@ -1,5 +1,5 @@
 import { ContentPlaceholder } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { ContentPlaceholderRows } from '@/utils/placeholderTypes'
 
 export default {

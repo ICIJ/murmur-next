@@ -1,5 +1,5 @@
 import { RangePicker } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { BBadge } from 'bootstrap-vue-next'
 import { ColumnChart } from '../../../lib/main'
 import { range } from 'lodash'

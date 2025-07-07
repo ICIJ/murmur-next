@@ -10,14 +10,13 @@ describe('AdvancedLinkForm.vue', () => {
 
   it('should create 4 nav items (tabs) by default', async () => {
     const wrapper = mount(AdvancedLinkForm, { global })
-    await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.nav-item').length).toBe(4)
   })
 
   it('should create 4 pans by default, only one active', async () => {
     const wrapper = mount(AdvancedLinkForm, { global })
     await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.tab-pane').length).toBe(4)
+    expect(wrapper.findAll('.tab-pane')).toHaveLength(4)
     expect(wrapper.findAll('.tab-pane.active').length).toBe(1)
   })
 
@@ -49,7 +48,8 @@ describe('AdvancedLinkForm.vue', () => {
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await flushPromises()
     expect(wrapper.findAll('.tab-pane').length).toBe(3)
-    expect(wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()).toBeTruthy()
+    console.log(wrapper.html())
+    expect(wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()).toBe(true)
   })
 
   it('should not use card by default', async () => {

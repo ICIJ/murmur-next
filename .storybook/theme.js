@@ -1,4 +1,4 @@
-import { create } from '@storybook/theming/create'
+import { create } from 'storybook/theming/create'
 import brandImage from '../lib/assets/images/murmur-textured.png'
 
 export default create({

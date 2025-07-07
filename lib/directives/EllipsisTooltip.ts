@@ -7,14 +7,14 @@ import {
   resolveContent,
   resolveDirectiveProps,
   unbind,
- } from 'bootstrap-vue-next/src/utils/floatingUi'
+ } from './floatingUi'
 
 export default {
   mounted(el, binding) {
     const props = resolveDirectiveProps(binding, el)
     const tooltip = resolveActiveStatus(binding.value)
     const text = resolveContent(binding.value, el)
-    const title = text.title ?? text.content
+    const title = text.title ?? text.body
     const noninteractive = true
     if (!tooltip) return
     if (!title) return

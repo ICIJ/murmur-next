@@ -1,21 +1,10 @@
-<script lang="ts">
-import { computed, defineComponent, ref, Ref, PropType } from 'vue'
-import {
-  BTabs,
-  BTab,
-  BInputGroup,
-  BFormInput,
-  ButtonVariant
-} from 'bootstrap-vue-next'
-
+<script lang="ts" setup>
+import {computed, watch, ref, Ref, PropType, useTemplateRef, onMounted, nextTick, getCurrentInstance} from 'vue'
 import HapticCopy from './HapticCopy.vue'
 
 import { useI18n } from 'vue-i18n'
+import {ButtonVariant} from "bootstrap-vue-next";
 
-type AdvancedLinkedFormClassName = `${'advanced-link-form--'}${string}`
-interface AdvancedLinkedFormClasses {
-  [prop: AdvancedLinkedFormClassName]: boolean
-}
 
 interface TextRange {
   moveToElementText: Function
@@ -29,190 +18,170 @@ interface HTMLElementSupportingCreateRange extends HTMLElement {
 /**
  * A form with tabs to offer several copy formats to users.
  */
-export default defineComponent({
+defineOptions({
   name: 'AdvancedLinkForm',
-  components: {
-    BTabs,
-    BTab,
-    BInputGroup,
-    BFormInput,
-    HapticCopy
+})
+
+/**
+ * Index of the selected tab
+ */
+const index = defineModel({
+  type: Number
+})
+
+const props = defineProps({
+  /**
+   * The link to copy
+   */
+  link: {
+    type: String,
+    default: null
   },
-  props: {
-    /**
-     * The link to copy
-     */
-    link: {
-      type: String,
-      default: null
-    },
-    /**
-     * Title associated with the link
-     */
-    title: {
-      type: String,
-      default: null
-    },
-    /**
-     * The forms to display
-     */
-    forms: {
-      type: Array,
-      default: () => ['raw', 'markdown', 'rich', 'html']
-    },
-    /**
-     * Index of the selected tab
-     */
-    modelValue: {
-      type: Number,
-      default: 0
-    },
-    /**
-     * Activate the card integration for the tabs
-     */
-    card: {
-      type: Boolean
-    },
-    /**
-     * Renders the tabs with the appearance of pill buttons
-     */
-    pills: {
-      type: Boolean
-    },
-    /**
-     * Makes the tabs and the panels smaller.
-     */
-    small: {
-      type: Boolean
-    },
-    /**
-     * Makes the tabs and the panels vertical.
-     */
-    vertical: {
-      type: Boolean
-    },
-    /**
-     * The variant to use for the copy button.
-     */
-    variant: {
-      type: String as PropType<ButtonVariant>,
-      default: 'primary'
-    },
-    /**
-     * CSS class (or classes) to apply to the currently active tab.
-     */
-    activeNavItemClass: {
-      type: String,
-      default: null
-    },
-    /**
-     * When set to 'true', disables the fade animation on the tabs.
-     */
-    noFade: {
-      type: Boolean
-    }
+   /**
+   * Title associated with the link
+   */
+  title: {
+    type: String,
+    default: null
   },
-  emits: ['update:modelValue'],
-  setup(props) {
-    const { t } = useI18n()
-    const rawInput = ref<HTMLTextAreaElement | null>(null)
-    const richInput = ref<HTMLElement | null>(null)
-    const markdownInput = ref<HTMLTextAreaElement | null>(null)
-    const htmlInput = ref<HTMLTextAreaElement | null>(null)
-    const titleOrLink = computed(() => props.title || props.link)
-
-    const linkAsMarkdown = computed(
-      () => `[${titleOrLink.value}](${props.link})`
-    )
-
-    const linkAsHtml = computed(
-      () => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`
-    )
-    const formClasses = computed(() => {
-      const propsToCheck = ['card', 'pills', 'small', 'vertical']
-      return propsToCheck.reduce((classes, prop) => {
-        //@ts-ignore
-        classes[`advanced-link-form--${prop}`] = props[prop]
-        return classes
-      }, {})
-    })
-
-    const size = computed(() => (props.small ? 'sm' : 'md'))
-
-    const showForm = computed(() => {
-      return (name: string) => props.forms.indexOf(name) > -1
-    })
-
-    const selectInput = (target: Ref<HTMLElement | null>) => {
-      // if(!target.value){
-      //   throw new Error("no target")
-      // }
-      if (target.value instanceof HTMLTextAreaElement) {
-        target.value.select()
-      }
-    }
-
-    const selectRaw = () => selectInput(rawInput)
-
-    function selectRich() {
-      if (!richInput.value) return
-
-      const selection = window.getSelection ? window.getSelection() : null
-      if (selection) {
-        const range = document.createRange()
-        range.selectNodeContents(richInput.value)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      } else if (
-        (document.body as HTMLElementSupportingCreateRange).createTextRange
-      ) {
-        const range = (
-          document.body as HTMLElementSupportingCreateRange
-        ).createTextRange()
-        range.moveToElementText(richInput.value)
-        range.select()
-      }
-    }
-    function selectMarkdown() {
-      selectInput(markdownInput)
-    }
-
-    function selectHtml() {
-      selectInput(htmlInput)
-    }
-
-    return {
-      t,
-      titleOrLink,
-      linkAsMarkdown,
-      linkAsHtml,
-      formClasses,
-      size,
-      showForm,
-      selectRaw,
-      selectRich,
-      selectMarkdown,
-      selectHtml
-    }
+  /**
+   * The forms to display
+   */
+  forms: {
+    type: Array as PropType<string[]>,
+    default: () => ['raw', 'markdown', 'rich', 'html']
+  },
+  /**
+   * Activate the card integration for the tabs
+   */
+  card: {
+    type: Boolean
+  },
+  /**
+   * Renders the tabs with the appearance of pill buttons
+   */
+  pills: {
+    type: Boolean
+  },
+  /**
+   * Makes the tabs and the panels smaller.
+   */
+  small: {
+    type: Boolean
+  },
+  /**
+   * Makes the tabs and the panels vertical.
+   */
+  vertical: {
+    type: Boolean
+  },
+  /**
+   * The variant to use for the copy button.
+   */
+  variant: {
+    type: String as PropType<ButtonVariant>,
+    default: 'primary'
+  },
+  /**
+   * CSS class (or classes) to apply to the currently active tab.
+   */
+  activeNavItemClass: {
+    type: String,
+    default: null
+  },
+  /**
+   * When set to 'true', disables the fade animation on the tabs.
+   */
+  noFade: {
+    type: Boolean
   }
 })
+const { t } = useI18n()
+const rawInput = useTemplateRef<HTMLTextAreaElement>("rawInput")
+const richInput = useTemplateRef<HTMLElement>("richInput")
+const markdownInput = useTemplateRef<HTMLTextAreaElement>("markdownInput")
+const htmlInput = useTemplateRef<HTMLTextAreaElement>("htmlInput")
+const titleOrLink = computed(() => props.title || props.link)
+
+const linkAsMarkdown = computed(
+    () => `[${titleOrLink.value}](${props.link})`
+)
+
+const linkAsHtml = computed(
+    () => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`
+)
+const formClasses = computed(() => {
+  const propsToCheck = ['card', 'pills', 'small', 'vertical']
+  return propsToCheck.reduce((classes, prop) => {
+    //@ts-ignore
+    classes[`advanced-link-form--${prop}`] = props[prop]
+    return classes
+  }, {})
+})
+
+const size = computed(() => (props.small ? 'sm' : 'md'))
+const orderedTabs =  computed(()=>["raw","rich","markdown","html"].filter(elem => props.forms.includes(elem)))
+
+const showForm = computed(() =>(name: string) => orderedTabs.value.indexOf(name) > -1)
+const activeForm = computed(() => {return orderedTabs.value[index.value??0]?? orderedTabs.value[0]})
+function onUpdate(event:string | undefined):void{
+  index.value = event? orderedTabs.value.indexOf(event):0
+}
+const selectInput = (target: Ref<HTMLElement | null>) => {
+  // if(!target.value){
+  //   throw new Error("no target")
+  // }
+  if (target.value instanceof HTMLTextAreaElement) {
+    target.value.select()
+  }
+}
+
+const selectRaw = () => selectInput(rawInput)
+
+function selectRich() {
+  if (!richInput.value) return
+
+  const selection = window.getSelection ? window.getSelection() : null
+  if (selection) {
+    const range = document.createRange()
+    range.selectNodeContents(richInput.value)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  } else if (
+      (document.body as HTMLElementSupportingCreateRange).createTextRange
+  ) {
+    const range = (
+        document.body as HTMLElementSupportingCreateRange
+    ).createTextRange()
+    range.moveToElementText(richInput.value)
+    range.select()
+  }
+}
+function selectMarkdown() {
+  selectInput(markdownInput)
+}
+
+function selectHtml() {
+  selectInput(htmlInput)
+}
+
 </script>
 
 <template>
-  <b-tabs
+ <b-tabs
     class="advanced-link-form"
     :content-class="card ? 'mt-0' : 'mt-3'"
     :card="card"
     :pills="pills"
-    :model-value="modelValue"
+    :model-value="activeForm"
+    @update:model-value="onUpdate"
     :small="small"
     :vertical="vertical"
     :active-nav-item-class="activeNavItemClass"
     :no-fade="noFade"
     :class="formClasses"
-    @update:model-value="$emit('update:modelValue')"
   >
-    <b-tab v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
+    <b-tab id="raw" v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
       <div class="advanced-link-form__raw" :class="{ small }">
         <b-input-group :size="size">
           <b-form-input
@@ -230,7 +199,7 @@ export default defineComponent({
         </b-input-group>
       </div>
     </b-tab>
-    <b-tab v-if="showForm('rich')" :title="t('advanced-link-form.rich.tab')">
+    <b-tab id="rich" v-if="showForm('rich')" :title="t('advanced-link-form.rich.tab')">
       <div class="advanced-link-form__rich" :class="{ small }">
         <b-input-group :size="size">
           <a
@@ -254,6 +223,7 @@ export default defineComponent({
       </div>
     </b-tab>
     <b-tab
+        id="markdown"
       v-if="showForm('markdown')"
       :title="t('advanced-link-form.markdown.tab')"
     >
@@ -277,13 +247,13 @@ export default defineComponent({
         </p>
       </div>
     </b-tab>
-    <b-tab v-if="showForm('html')" :title="t('advanced-link-form.html.tab')">
+    <b-tab id="html" v-if="showForm('html')" :title="t('advanced-link-form.html.tab')">
       <div class="advanced-link-form__html" :class="{ small }">
         <b-input-group :size="size">
           <b-form-input
             ref="htmlInput"
             readonly
-            :modelValue="linkAsHtml"
+            :model-value="linkAsHtml"
             class="advanced-link-form__html__input"
             @click="selectHtml"
           />

@@ -12,11 +12,10 @@ const config: StorybookConfig = {
   ],
   staticDirs: ['../public'],
   addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
     '@storybook/addon-links',
     '@storybook/preset-scss',
-    '@storybook/addon-themes'
+    '@storybook/addon-themes',
+    '@storybook/addon-docs'
   ],
   framework: {
     name: '@storybook/vue3-vite',

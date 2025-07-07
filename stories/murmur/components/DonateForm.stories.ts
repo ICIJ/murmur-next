@@ -1,5 +1,5 @@
 import { DonateForm } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { Size } from '@/enums'
 import { modalDecorator } from '../decorators'
 

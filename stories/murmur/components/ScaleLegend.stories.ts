@@ -1,5 +1,5 @@
 import { ScaleLegend } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 
 import * as d3 from 'd3'
 export default {

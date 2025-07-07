@@ -1,5 +1,5 @@
 import { StackedBarChart } from '@/datavisualisations'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { humanReadableGb } from '../utils'
 
 export default {
