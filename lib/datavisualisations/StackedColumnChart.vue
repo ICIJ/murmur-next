@@ -16,8 +16,8 @@ import {
   nextTick,
   watch
 } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/chart.js'
-import { useQueryObserver } from '@/composables/queryObserver.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart.js'
+import { useQueryObserver } from '@/composables/useQueryObserver'
 
 export default defineComponent({
   name: 'StackedColumnChart',

@@ -7,7 +7,7 @@ import some from 'lodash/some'
 import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted, nextTick } from 'vue'
 import { isUrl } from '@/utils/strings'
 import { Ref, SetupContext } from '@vue/runtime-core'
-import useResizeObserver from '@/composables/resizeObserver'
+import useResizeObserver from '@/composables/useResizeObserver'
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
 
@@ -80,7 +80,7 @@ export const chartProps = (): ChartProps => ({
 
 export const chartEmits = ['resized', 'loaded']
 
-type Chart = {
+type UseChart = {
   dataHasHighlights: any
   loadedData: any
   mounted: Ref<boolean>,
@@ -105,7 +105,7 @@ export function useChart(
   isLoaded: Ref<boolean>,
   onResized?: ()=>void,
   afterLoaded?: () => Promise<any>
-): Chart {
+): UseChart {
 
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
   const loadedData = ref<unknown|unknown[]>([])

@@ -24,7 +24,7 @@ import {
   chartProps,
   getChartProps,
   useChart
-} from '@/composables/chart.js'
+} from '@/composables/useChart.js'
 import {
   ComponentPublicInstance,
   computed,

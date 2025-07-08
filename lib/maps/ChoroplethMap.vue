@@ -36,7 +36,7 @@ import {
   chartProps,
   getChartProps,
   useChart
-} from '@/composables/chart'
+} from '@/composables/useChart'
 import ScaleLegend from '@/components/ScaleLegend.vue'
 
 export default defineComponent({

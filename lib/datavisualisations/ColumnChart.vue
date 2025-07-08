@@ -3,7 +3,7 @@ import { ComponentPublicInstance, computed, defineComponent, getCurrentInstance,
 import { identity, iteratee, sortBy } from 'lodash'
 import * as d3 from 'd3'
 
-import { chartProps, getChartProps, useChart } from '@/composables/chart'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 type ColumnBar = {
@@ -467,7 +467,7 @@ export default defineComponent({
             :height="Math.max(bar.height, 0.1)"
             :width="bar.width"
             :y="bar.y"
-          > 
+          >
             <div class="column-chart__columns__item__hover-icon">
               <phosphor-icon :name="hoverIcon" :size="hoverIconSize" />
             </div>
@@ -525,7 +525,7 @@ export default defineComponent({
       .column-chart--hover .column-chart__columns__item:hover & {
         opacity: var(--placeholder-opacity);
       }
-    }    
+    }
 
     &__hover-icon {
       opacity: 0;

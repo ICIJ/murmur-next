@@ -48,7 +48,7 @@ import { computed, defineComponent, PropType, ref } from 'vue'
 
 import config from '../config'
 import { useI18n } from 'vue-i18n'
-import { useSendEmail } from '@/composables/sendEmail'
+import { useSendEmail } from '@/composables/useSendEmail'
 
 /**
  * SignUpForm

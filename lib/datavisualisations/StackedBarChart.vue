@@ -8,8 +8,8 @@ import keys from 'lodash/keys'
 import without from 'lodash/without'
 import sortBy from 'lodash/sortBy'
 import { ComponentPublicInstance, computed, defineComponent, PropType, ref, watch } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/chart.js'
-import { useQueryObserver } from '@/composables/queryObserver.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart.js'
+import { useQueryObserver } from '@/composables/useQueryObserver'
 import { isArray } from 'lodash'
 
 export default defineComponent({
