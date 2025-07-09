@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import SignUpForm from '@/components/SignUpForm'
 import Murmur from '@/main'
 const mockSend = vi.fn().mockResolvedValue({})
-vi.mock('@/composables/sendEmail', () => ({
+vi.mock('@/composables/useSendEmail', () => ({
   useSendEmail() {
     return {
       send: mockSend
