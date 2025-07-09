@@ -18,7 +18,6 @@ const castCall = (fnOrValue = identity, ...rest) =>
 
 export default defineComponent({
   name: 'LineChart',
-  //mixins: [chart],
   props: {
     /**
      * Color of the line (uses the CSS variable --line-color by default)
