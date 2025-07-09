@@ -2,7 +2,7 @@
 import * as d3 from 'd3'
 import isFunction from 'lodash/isFunction'
 import identity from 'lodash/identity'
-import { chartProps, getChartProps, useChart } from '@/composables/useChart.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import {
   computed,
   ref,

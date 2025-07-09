@@ -16,7 +16,7 @@ import {
   nextTick,
   watch
 } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/useChart.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 
 export default defineComponent({
