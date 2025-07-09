@@ -48,143 +48,131 @@
   </component>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
-import { ComponentPublicInstance, defineComponent, PropType, ref } from 'vue'
+import { ComponentPublicInstance, PropType, ref } from 'vue'
 
 import PhosphorIcon from './PhosphorIcon.vue'
 
 /**
  * ConfirmButton
  */
-export default defineComponent({
-  name: 'ConfirmButton',
-  components: {
-    BTooltip,
-    PhosphorIcon
+defineOptions({
+  name: 'ConfirmButton'
+})
+
+const props = defineProps({
+  /**
+   * Confirmation message visible in the tooltip upon user's click
+   */
+  label: {
+    type: String,
+    default: 'Are you sure?'
   },
-  props: {
-    /**
-     * Confirmation message visible in the tooltip upon user's click
-     */
-    label: {
-      type: String,
-      default: 'Are you sure?'
-    },
-    /**
-     * A description text to show under the confirmation label
-     */
-    description: {
-      type: String,
-      default: null
-    },
-    /**
-     * Disable the closing button
-     */
-    noCloseButton: {
-      type: Boolean
-    },
-    /**
-     * The confirmation callback
-     */
-    confirmed: {
-      type: Function,
-      default: noop
-    },
-    /**
-     * The cancellation callback
-     */
-    cancelled: {
-      type: Function,
-      default: noop
-    },
-    /**
-     * Label for 'Yes' button
-     */
-    yes: {
-      type: String,
-      default: 'Yes'
-    },
-    /**
-     * Label for 'No' button
-     */
-    no: {
-      type: String,
-      default: 'No'
-    },
-    /**
-     * Tooltip position
-     */
-    placement: {
-      type: String as PropType<PopoverPlacement>,
-      default: 'top'
-    },
-    /**
-     * HTML tag to render this component to.
-     */
-    tag: {
-      type: String,
-      default: 'button'
-    }
+  /**
+   * A description text to show under the confirmation label
+   */
+  description: {
+    type: String,
+    default: null
   },
-  emits: ['toggled', 'cancelled', 'confirmed'],
-  setup(props, { emit }) {
-    const showTooltip = ref<boolean>(false)
-    const uniqComponentId = uniqueId('murmur-confirm-button-')
-    const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
-
-    function toggleConfirmationTooltip(): void {
-      showTooltip.value = !showTooltip.value
-      /**
-       * Emitted when the confirmation is toggled.
-       * @event toggled
-       * @param Boolean True if the button is shown.
-       */
-      emit('toggled', showTooltip.value)
-    }
-
-    function hideConfirmationTooltip(): void {
-      showTooltip.value = false
-      /**
-       * Emitted when the confirmation is toggled.
-       * @event toggled
-       * @param Boolean True if the button is shown.
-       */
-      emit('toggled', false)
-    }
-
-    function cancel(): void {
-      hideConfirmationTooltip()
-      props.cancelled?.()
-      /**
-       * Emitted when the confirmation is cancelled.
-       * @event cancelled
-       */
-      emit('cancelled')
-    }
-
-    function confirm(): void {
-      hideConfirmationTooltip()
-      props.confirmed?.()
-      /**
-       * Emitted when the confirmation is confirmed.
-       * @event confirmed
-       */
-      emit('confirmed')
-    }
-
-    return {
-      showTooltip,
-      uniqComponentId,
-      cancel,
-      confirm,
-      confirmationTooltip,
-      toggleConfirmationTooltip
-    }
+  /**
+   * Disable the closing button
+   */
+  noCloseButton: {
+    type: Boolean
+  },
+  /**
+   * The confirmation callback
+   */
+  confirmed: {
+    type: Function,
+    default: noop
+  },
+  /**
+   * The cancellation callback
+   */
+  cancelled: {
+    type: Function,
+    default: noop
+  },
+  /**
+   * Label for 'Yes' button
+   */
+  yes: {
+    type: String,
+    default: 'Yes'
+  },
+  /**
+   * Label for 'No' button
+   */
+  no: {
+    type: String,
+    default: 'No'
+  },
+  /**
+   * Tooltip position
+   */
+  placement: {
+    type: String as PropType<PopoverPlacement>,
+    default: 'top'
+  },
+  /**
+   * HTML tag to render this component to.
+   */
+  tag: {
+    type: String,
+    default: 'button'
   }
 })
+
+const emit = defineEmits(['toggled', 'cancelled', 'confirmed'])
+
+const showTooltip = ref<boolean>(false)
+const uniqComponentId = uniqueId('murmur-confirm-button-')
+const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
+
+function toggleConfirmationTooltip(): void {
+  showTooltip.value = !showTooltip.value
+  /**
+   * Emitted when the confirmation is toggled.
+   * @event toggled
+   * @param Boolean True if the button is shown.
+   */
+  emit('toggled', showTooltip.value)
+}
+
+function hideConfirmationTooltip(): void {
+  showTooltip.value = false
+  /**
+   * Emitted when the confirmation is toggled.
+   * @event toggled
+   * @param Boolean True if the button is shown.
+   */
+  emit('toggled', false)
+}
+
+function cancel(): void {
+  hideConfirmationTooltip()
+  props.cancelled?.()
+  /**
+   * Emitted when the confirmation is cancelled.
+   * @event cancelled
+   */
+  emit('cancelled')
+}
+
+function confirm(): void {
+  hideConfirmationTooltip()
+  props.confirmed?.()
+  /**
+   * Emitted when the confirmation is confirmed.
+   * @event confirmed
+   */
+  emit('confirmed')
+}
 </script>
 
 <style lang="scss">

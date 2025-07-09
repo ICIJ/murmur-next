@@ -7,62 +7,53 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, PropType, provide, defineComponent } from 'vue'
+<script setup lang="ts">
+import { computed, PropType, provide } from 'vue'
 import { AccordionKey } from '@/keys'
 import { Accordion, Step } from '@/types'
 
 const STEP_CHANGE_EVENT: string = 'step-change'
-export default defineComponent({
-  props: {
-    step: {
-      type: [String, Symbol, Object as () => Step],
-      required: true
-    },
-    steps: {
-      type: Array as PropType<Step[]>,
-      required: true
-    }
+
+const props = defineProps({
+  step: {
+    type: [String, Symbol, Object as () => Step],
+    required: true
   },
-  emits: ['step-change'],
-  setup(props, { emit }) {
-    const emitAccordionNextStepEvent = () => {
-      emit('step-change', props.steps[activeStepIndex.value + 1] || props.step)
-    }
-
-    const emitAccordionPreviousStepEvent = () => {
-      emit('step-change', props.steps[activeStepIndex.value - 1] || props.step)
-    }
-
-    const activeStepIndex = computed(() => props.steps?.indexOf(props.step))
-
-    const isFirstStep = (step: Step): boolean =>
-      props.steps?.indexOf(step) === 0
-    const isLastStep = (step: Step): boolean =>
-      props.steps?.indexOf(step) === props.steps?.length - 1
-    const isActiveStep = (step: Step): boolean => props.step === step
-    const isPreviousStep = (step: Step): boolean =>
-      props.steps?.indexOf(step) < activeStepIndex.value
-
-    provide<Accordion>(AccordionKey, {
-      emitAccordionNextStepEvent,
-      emitAccordionPreviousStepEvent,
-      isActiveStep,
-      isPreviousStep,
-      isFirstStep,
-      isLastStep,
-      step: props.step,
-      steps: props.steps
-    })
-    return {
-      emitAccordionNextStepEvent,
-      emitAccordionPreviousStepEvent,
-      isActiveStep,
-      isPreviousStep,
-      isFirstStep,
-      isLastStep
-    }
+  steps: {
+    type: Array as PropType<Step[]>,
+    required: true
   }
+})
+
+const emit = defineEmits(['step-change'])
+
+const activeStepIndex = computed(() => props.steps?.indexOf(props.step))
+
+const emitAccordionNextStepEvent = () => {
+  emit('step-change', props.steps[activeStepIndex.value + 1] || props.step)
+}
+
+const emitAccordionPreviousStepEvent = () => {
+  emit('step-change', props.steps[activeStepIndex.value - 1] || props.step)
+}
+
+const isFirstStep = (step: Step): boolean =>
+  props.steps?.indexOf(step) === 0
+const isLastStep = (step: Step): boolean =>
+  props.steps?.indexOf(step) === props.steps?.length - 1
+const isActiveStep = (step: Step): boolean => props.step === step
+const isPreviousStep = (step: Step): boolean =>
+  props.steps?.indexOf(step) < activeStepIndex.value
+
+provide<Accordion>(AccordionKey, {
+  emitAccordionNextStepEvent,
+  emitAccordionPreviousStepEvent,
+  isActiveStep,
+  isPreviousStep,
+  isFirstStep,
+  isLastStep,
+  step: props.step,
+  steps: props.steps
 })
 </script>
 

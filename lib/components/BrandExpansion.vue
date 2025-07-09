@@ -82,8 +82,8 @@
   </span>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script setup lang="ts">
+import { computed, PropType } from 'vue'
 import { isString } from 'lodash'
 
 import { BrandMode } from '@/enums'
@@ -92,74 +92,78 @@ import type { BrandExpansionStyle } from '@/types'
 /**
  * A component to create variations of ICIJ logo with text
  */
-export default defineComponent({
-  name: 'BrandExpansion',
-  props: {
-    /**
-     * Add a balancing effect to the globe
-     */
-    animated: {
-      type: Boolean
-    },
-    /**
-     * Monochromatic logo's color
-     */
-    color: {
-      type: String,
-      default: null
-    },
-    /**
-     * Logo's background color
-     */
-    background: {
-      type: String,
-      default: null
-    },
-    /**
-     * Logo's size
-     */
-    size: {
-      type: [Number, String],
-      default: '70px'
-    },
-    /**
-     * Brand mode ("short", "medium", "long")
-     */
-    mode: {
-      type: String as PropType<BrandMode>,
-      default: BrandMode.Short
-    },
-    /**
-     * Reverse color of the main text to white if no `color` is given
-     */
-    dark: {
-      type: Boolean
-    }
+defineOptions({
+  name: 'BrandExpansion'
+})
+
+const props = defineProps({
+  /**
+   * Add a balancing effect to the globe
+   */
+  animated: {
+    type: Boolean
   },
-  computed: {
-    baseWidth(): number {
-      const widths = {
-        [BrandMode.Short]: 401.256,
-        [BrandMode.Medium]: 901.24,
-        [BrandMode.Long]: 1047.01
-      }
-      return widths[this.mode]
-    },
-    width(): string {
-      return `${(this.baseWidth / 200) * this.sizeAsNumber}px`
-    },
-    height(): string {
-      return `${this.sizeAsNumber}px`
-    },
-    sizeAsNumber(): number {
-      return isString(this.size) ? parseInt(this.size) : this.size
-    },
-    style(): BrandExpansionStyle {
-      return {
-        '--monochrome-color': this.color,
-        background: this.background
-      }
-    }
+  /**
+   * Monochromatic logo's color
+   */
+  color: {
+    type: String,
+    default: null
+  },
+  /**
+   * Logo's background color
+   */
+  background: {
+    type: String,
+    default: null
+  },
+  /**
+   * Logo's size
+   */
+  size: {
+    type: [Number, String],
+    default: '70px'
+  },
+  /**
+   * Brand mode ("short", "medium", "long")
+   */
+  mode: {
+    type: String as PropType<BrandMode>,
+    default: BrandMode.Short
+  },
+  /**
+   * Reverse color of the main text to white if no `color` is given
+   */
+  dark: {
+    type: Boolean
+  }
+})
+
+const baseWidth = computed((): number => {
+  const widths = {
+    [BrandMode.Short]: 401.256,
+    [BrandMode.Medium]: 901.24,
+    [BrandMode.Long]: 1047.01
+  }
+  return widths[props.mode]
+})
+
+const sizeAsNumber = computed((): number => {
+  return isString(props.size) ? parseInt(props.size) : props.size
+})
+
+const width = computed((): string => {
+  return `${(baseWidth.value / 200) * sizeAsNumber.value}px`
+})
+
+const height = computed((): string => {
+  return `${sizeAsNumber.value}px`
+})
+
+const style = computed((): BrandExpansionStyle => {
+  return {
+    '--monochrome-color': props.color,
+    background: props.background
   }
 })
 </script>

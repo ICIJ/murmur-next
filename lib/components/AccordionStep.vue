@@ -59,81 +59,73 @@
   </b-card>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, inject, PropType } from 'vue'
+<script setup lang="ts">
+import { computed, inject, PropType } from 'vue'
 
 import SlideUpDown from '@/components/SlideUpDown.vue'
 import { AccordionKey } from '@/keys'
 import { Accordion, Step } from '@/types'
 
-export default defineComponent({
-  components: {
-    SlideUpDown
-  },
-  props: {
-    /**
-     * Step name
-     */
-    step: { type: [String, Object as () => Step, Symbol], required: true },
-    /**
-     * Title of the step card
-     */
-    title: { type: String, default: 'Step' },
-
-    /**
-     * Content of the step card
-     */
-    content: { type: String, default: 'Step' },
-    /**
-     * Force card expansion/collapse
-     */
-    active: { type: Boolean as PropType<boolean | undefined>, default: false }
-  },
-  emits: ['next-step', 'previous-step'],
-  setup(props: { step: Step; active: boolean | undefined }, { emit }: any) {
-    const accordion = inject<Accordion>(AccordionKey)
-    const isActive = computed(() => {
-      const fromAccordion = !!accordion?.isActiveStep(props.step)
-      const fromSelf = props.active !== undefined ? props.active : false
-      return fromSelf || fromAccordion
-    })
-
-    const isPrevious = computed(() => !!accordion?.isPreviousStep(props.step))
-    const isFirst = computed(() => !!accordion?.isFirstStep(props.step))
-    const isLast = computed(() => !!accordion?.isLastStep(props.step))
-
-    const nextStep = () => {
-      accordion?.emitAccordionNextStepEvent()
-      /**
-       * Fired when the nextStep function is called
-       * either by clicking on the next button or in the next step slot
-       * with the new value as parameter
-       * @event next-step
-       * @param Mixed New step value.
-       */
-      emit('next-step')
-    }
-
-    const previousStep = () => {
-      accordion?.emitAccordionPreviousStepEvent()
-      /**
-       * Fired when the previousStep function is called
-       * either by clicking on the previous button or in the previous step slot
-       * with the new value as parameter
-       * @event previous-step
-       * @param Mixed New step value.
-       */
-      emit('previous-step')
-    }
-    return {
-      isFirst,
-      isLast,
-      isActive,
-      isPrevious,
-      nextStep,
-      previousStep,
-      accordion
-    }
-  }
+/**
+ * Define props
+ */
+const props = defineProps({
+  /**
+   * Step name
+   */
+  step: { type: [String, Object as () => Step, Symbol], required: true },
+  /**
+   * Title of the step card
+   */
+  title: { type: String, default: 'Step' },
+  /**
+   * Content of the step card
+   */
+  content: { type: String, default: 'Step' },
+  /**
+   * Force card expansion/collapse
+   */
+  active: { type: Boolean as PropType<boolean | undefined>, default: false }
 })
+
+/**
+ * Define emits
+ */
+const emit = defineEmits(['next-step', 'previous-step'])
+
+const accordion = inject<Accordion>(AccordionKey)
+
+const isActive = computed(() => {
+  const fromAccordion = !!accordion?.isActiveStep(props.step)
+  const fromSelf = props.active !== undefined ? props.active : false
+  return fromSelf || fromAccordion
+})
+
+const isPrevious = computed(() => !!accordion?.isPreviousStep(props.step))
+const isFirst = computed(() => !!accordion?.isFirstStep(props.step))
+const isLast = computed(() => !!accordion?.isLastStep(props.step))
+
+const nextStep = () => {
+  accordion?.emitAccordionNextStepEvent()
+  /**
+   * Fired when the nextStep function is called
+   * either by clicking on the next button or in the next step slot
+   * with the new value as parameter
+   * @event next-step
+   * @param Mixed New step value.
+   */
+  emit('next-step')
+}
+
+const previousStep = () => {
+  accordion?.emitAccordionPreviousStepEvent()
+  /**
+   * Fired when the previousStep function is called
+   * either by clicking on the previous button or in the previous step slot
+   * with the new value as parameter
+   * @event previous-step
+   * @param Mixed New step value.
+   */
+  emit('previous-step')
+}
 </script>
