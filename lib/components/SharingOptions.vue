@@ -222,8 +222,8 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-@import '@/styles/lib';
-@import '@/styles/mixins';
+@import '../styles/lib';
+@import '../styles/mixins';
 
 .sharing-options {
   display: flex;

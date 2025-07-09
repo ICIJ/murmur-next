@@ -181,7 +181,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../styles/lib.scss';
+@import '../styles/lib';
 
 .sign-up-form {
   .sign-up-form__fieldset__group__addon.btn {

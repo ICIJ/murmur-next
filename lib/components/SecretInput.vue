@@ -112,7 +112,7 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-@import '../styles/lib.scss';
+@import '../styles/lib';
 
 .secret-input {
   &__toggler {
