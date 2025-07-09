@@ -8,7 +8,7 @@ import keys from 'lodash/keys'
 import without from 'lodash/without'
 import sortBy from 'lodash/sortBy'
 import { ComponentPublicInstance, computed, defineComponent, PropType, ref, watch } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/useChart.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 import { isArray } from 'lodash'
 
@@ -147,7 +147,7 @@ export default defineComponent({
       d3Formatter,
       dataHasHighlights
     } = useChart(el, getChartProps(props), { emit }, isLoaded)
-    const { querySelectorAll } = useQueryObserver(el)
+    const { querySelectorAll } = useQueryObserver(el.value)
 
     const hasConstraintHeight = computed(() => {
       return props.fixedHeight !== null || props.socialMode

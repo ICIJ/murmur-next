@@ -184,7 +184,7 @@ export default defineComponent({
     const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const isLoaded = ref(false)
     const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-    const { querySelector, querySelectorAll } = useQueryObserver(el)
+    const { querySelector, querySelectorAll } = useQueryObserver(el.value)
 
     const {
       elementsMaxBBox,
