@@ -1,5 +1,5 @@
-<script setup>
-import { computed, ref } from 'vue'
+<script setup lang="ts">
+import { computed, useTemplateRef } from 'vue'
 
 import { useColorMode } from '@/composables/useColorMode'
 import { useQueryObserver } from '@/composables/useQueryObserver'
@@ -26,7 +26,7 @@ const props = defineProps({
   }
 })
 
-const element = ref(null)
+const element = useTemplateRef<HTMLElement>('element')
 
 const { colorMode } = useColorMode(element, props.defaultColorMode)
 const { querySelectorAll } = useQueryObserver(element)
