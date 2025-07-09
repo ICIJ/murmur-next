@@ -1,13 +1,20 @@
+// Node.js built-ins
 import { resolve } from 'path'
+import { fileURLToPath, URL } from 'node:url'
+
+// Vite and plugins
 import { defineConfig } from 'vite'
-import { fileURLToPath, URL } from "node:url";
-// generates d.ts files
-import DTS from "vite-plugin-dts";
 import Vue from '@vitejs/plugin-vue'
-import Delete from './plugins/plugin-delete'
-import Components from 'unplugin-vue-components/vite'
-import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
+import DTS from 'vite-plugin-dts' // generates d.ts files
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import Components from 'unplugin-vue-components/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+
+// Project imports
+import Delete from './plugins/plugin-delete'
+import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
+import { PhosphorVuePreset } from './bin/presets'
+import { PhosphorVueResolver } from './bin/resolvers'
 
 export default defineConfig({
   base: '/',
@@ -24,7 +31,8 @@ export default defineConfig({
           video: ['src', 'poster'],
           img: ['src']
         }
-      }}),
+      }
+    }),
     DTS({
       exclude: [
         'tests/**',
@@ -41,9 +49,34 @@ export default defineConfig({
       // locale messages resource pre-compile option
       include: resolve(__dirname, 'lib/locales')
     }),
+    /**
+     * The "Components" plugin resolvers automatically import components in Vue
+     * templates. For PhosphorVueResolver we use a homemade resolver
+     * that simply imports icons (example: `<ph-plus>`).
+     */
     Components({
-      resolvers: [BootstrapVueNextResolver()],
+      dts: false,
+      dirs: [],
+      resolvers: [
+        BootstrapVueNextResolver(),
+        PhosphorVueResolver()
+      ]
     }),
+    /**
+     * The "AutoImport" plugin offers a mechanism similar to the "Components" plugin
+     * but it targets JavaScript variables and references. This allows importing components
+     * directly in `<script setup>` or in Vue template refs (example: `<component :is="PhPlus" />`)
+     */
+    AutoImport({
+      dts: false,
+      vueTemplate: true,
+      imports: [
+        PhosphorVuePreset()
+      ],
+      resolvers: [
+        PhosphorVueResolver()
+      ]
+    })
   ],
   build: {
     target: 'es2015',
@@ -71,6 +104,20 @@ export default defineConfig({
       }
     }
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+        silenceDeprecations: ['legacy-js-api'],
+        api: 'modern',
+        additionalData: `
+            @use 'sass:math';
+            @use 'sass:color';
+            @import "@/utils/settings.scss";
+          `
+      }
+    }
+  },
   server: {
     host: '0.0.0.0',
     port: 9009
@@ -80,6 +127,7 @@ export default defineConfig({
     alias: {
       vue: resolve(__dirname, './node_modules/vue'),
       node_modules: resolve(__dirname, 'node_modules'),
+      '~storybook': resolve(__dirname, '.storybook'),
       $package: resolve(__dirname, 'package.json'),
       '@': fileURLToPath(new URL('./lib', import.meta.url)),
     },

@@ -21,4 +21,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
+  export interface GlobalDirectives {
+    vBTooltip: typeof import('bootstrap-vue-next/directives/BTooltip')['vBTooltip']
+  }
 }
