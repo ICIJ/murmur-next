@@ -15,7 +15,6 @@ import Delete from './plugins/plugin-delete'
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 import { PhosphorVuePreset } from './bin/presets'
 import { PhosphorVueResolver } from './bin/resolvers'
-
 export default defineConfig({
   base: '/',
   assetsInclude: ['/sb-preview/**'],
@@ -70,14 +69,34 @@ export default defineConfig({
     AutoImport({
       dts: false,
       vueTemplate: true,
-      imports: [
-        PhosphorVuePreset()
-      ],
-      resolvers: [
-        PhosphorVueResolver()
-      ]
+      imports: [PhosphorVuePreset()],
+      resolvers: [PhosphorVueResolver()]
     })
   ],
+  resolve: {
+    extensions: ['.mjs', '.js', '.ts', '.json', '.vue'],
+    alias: {
+      vue: resolve(__dirname, './node_modules/vue'),
+      node_modules: resolve(__dirname, 'node_modules'),
+      '~storybook': resolve(__dirname, '.storybook'),
+      $package: resolve(__dirname, 'package.json'),
+      '@': fileURLToPath(new URL('./lib', import.meta.url)),
+    },
+    dedupe: ['vue']
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+        silenceDeprecations: ['legacy-js-api'],
+        api: 'modern',
+        additionalData: `
+            @use 'sass:math';
+            @use 'sass:color';
+          `
+      }
+    }
+  },
   build: {
     target: 'es2015',
     copyPublicDir: false,
@@ -103,34 +122,5 @@ export default defineConfig({
         }
       }
     }
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        quietDeps: true,
-        silenceDeprecations: ['legacy-js-api'],
-        api: 'modern',
-        additionalData: `
-            @use 'sass:math';
-            @use 'sass:color';
-            @import "@/utils/settings.scss";
-          `
-      }
-    }
-  },
-  server: {
-    host: '0.0.0.0',
-    port: 9009
-  },
-  resolve: {
-    extensions: ['.mjs', '.js', '.ts', '.json', '.vue'],
-    alias: {
-      vue: resolve(__dirname, './node_modules/vue'),
-      node_modules: resolve(__dirname, 'node_modules'),
-      '~storybook': resolve(__dirname, '.storybook'),
-      $package: resolve(__dirname, 'package.json'),
-      '@': fileURLToPath(new URL('./lib', import.meta.url)),
-    },
-    dedupe: ['vue']
   }
 })

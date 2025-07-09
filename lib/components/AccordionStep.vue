@@ -66,9 +66,6 @@ import SlideUpDown from '@/components/SlideUpDown.vue'
 import { AccordionKey } from '@/keys'
 import { Accordion, Step } from '@/types'
 
-/**
- * Define props
- */
 const props = defineProps({
   /**
    * Step name
@@ -88,9 +85,7 @@ const props = defineProps({
   active: { type: Boolean as PropType<boolean | undefined>, default: false }
 })
 
-/**
- * Define emits
- */
+
 const emit = defineEmits(['next-step', 'previous-step'])
 
 const accordion = inject<Accordion>(AccordionKey)

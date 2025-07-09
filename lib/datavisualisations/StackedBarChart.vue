@@ -464,7 +464,6 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-@use 'sass:math';
 @import '../styles/lib';
 
 .stacked-bar-chart {

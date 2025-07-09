@@ -58,7 +58,6 @@ provide<Accordion>(AccordionKey, {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
 @import '../styles/variables.scss';
 
 .accordion-wrapper {
