@@ -1,5 +1,5 @@
-import ImageMode from '@/components'
-import ImageModeSource from '@/components'
+import { ImageMode } from '@/components'
+import { ImageModeSource } from '@/components'
 
 export default {
   title: 'Murmur/components/ImageMode/ImageMode',

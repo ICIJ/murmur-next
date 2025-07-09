@@ -7,7 +7,7 @@ import some from 'lodash/some'
 import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted, nextTick } from 'vue'
 import { isUrl } from '@/utils/strings'
 import { Ref, SetupContext } from '@vue/runtime-core'
-import useResizeObserver from '@/composables/useResizeObserver'
+import { useResizeObserver } from '@/composables/useResizeObserver'
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
 

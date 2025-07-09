@@ -1,4 +1,4 @@
-import { PhHorse, PhWindowsLogo } from "@phosphor-icons/vue"
+import { PhHorse } from "@phosphor-icons/vue"
 
 import { PhosphorIcon } from '@/components'
 
