@@ -2,7 +2,7 @@ import { ImageMode } from '@/components'
 import { ImageModeSource } from '@/components'
 
 export default {
-  title: 'Murmur/components/ImageMode/ImageMode',
+  title: 'Murmur/components/ImageMode',
   component: ImageMode,
   args: {
     colorModes: ['light', 'dark'],
