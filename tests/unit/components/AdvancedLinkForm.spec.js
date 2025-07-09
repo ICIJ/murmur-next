@@ -48,7 +48,6 @@ describe('AdvancedLinkForm.vue', () => {
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await flushPromises()
     expect(wrapper.findAll('.tab-pane').length).toBe(3)
-    console.log(wrapper.html())
     expect(wrapper.find('.tab-pane.active .advanced-link-form__markdown').exists()).toBe(true)
   })
 
