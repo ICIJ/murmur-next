@@ -14,7 +14,17 @@ export default defineConfig({
   assetsInclude: ['/sb-preview/**'],
   plugins: [
     Delete(),
-    Vue(),
+    Vue({
+      template: {
+        transformAssetUrls: {
+          'image-mode': ['src'],
+          'image-mode-source': ['src'],
+          'b-img': ['src'],
+          source: ['src'],
+          video: ['src', 'poster'],
+          img: ['src']
+        }
+      }}),
     DTS({
       exclude: [
         'tests/**',
