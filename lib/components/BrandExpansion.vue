@@ -88,6 +88,8 @@ import { isString } from 'lodash'
 
 import { BrandMode } from '@/enums'
 import type { BrandExpansionStyle } from '@/types'
+import {useBreakpoints} from "@vueuse/core";
+
 
 /**
  * A component to create variations of ICIJ logo with text
@@ -136,9 +138,17 @@ const props = defineProps({
    */
   dark: {
     type: Boolean
+  },
+  adaptive:{
+    type:Boolean
   }
 })
 
+const breakpoints = useBreakpoints({
+  [BrandMode.Short]: 401.256,
+  [BrandMode.Medium]: 901.24,
+  [BrandMode.Long]: 1047.01
+})
 const baseWidth = computed((): number => {
   const widths = {
     [BrandMode.Short]: 401.256,
@@ -153,6 +163,9 @@ const sizeAsNumber = computed((): number => {
 })
 
 const width = computed((): string => {
+  if( props.adaptive && breakpoints.smallerOrEqual(props.mode)){
+    return '100%'
+  }
   return `${(baseWidth.value / 200) * sizeAsNumber.value}px`
 })
 
@@ -166,6 +179,7 @@ const style = computed((): BrandExpansionStyle => {
     background: props.background
   }
 })
+
 </script>
 
 <style scoped lang="scss">
@@ -209,7 +223,6 @@ const style = computed((): BrandExpansionStyle => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   svg {
     .triangle,
     .globe,

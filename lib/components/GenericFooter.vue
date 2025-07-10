@@ -81,7 +81,7 @@
                 </li>
               </ul>
             </div>
-            <div class="col-6 col-lg-4">
+            <div class="col-12 col-sm-6 col-lg-4">
               <h5 class="text-uppercase mb-3">
                 {{ $t('generic-footer.investigations') }}
               </h5>
@@ -140,7 +140,7 @@
                 </ul>
               </slot>
             </div>
-            <div class="col-6 col-lg-4">
+            <div class="col-12 col-sm-6  col-lg-4">
               <h5 class="text-uppercase mb-3">
                 {{ $t('generic-footer.follow-us') }}
               </h5>
@@ -193,50 +193,55 @@
   </footer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import {computed} from 'vue'
 
 import config from '../config'
 import BrandExpansion from './BrandExpansion.vue'
 
-import { BrandMode } from '@/enums'
+import {BrandMode} from '@/enums'
+import {breakpointsBootstrapV5, useBreakpoints} from "@vueuse/core";
 
 /**
  * GenericFooter
  */
-export default defineComponent({
-  name: 'GenericFooter',
-  components: { BrandExpansion },
-  props: {
-    /**
-     * Version of the app to display in the bottom-right corner of the footer
-     */
-    version: {
-      type: String,
-      default: null
-    },
-    /**
-     * Whether to show the About Us column or not
-     */
-    showAboutUs: {
-      type: Boolean,
-      default: false
-    }
+defineOptions({
+  name: 'GenericFooter'
+})
+
+/**
+ * Version of the app to display in the bottom-right corner of the footer
+ */
+defineProps({
+  version: {
+    type: String,
+    default: null
   },
-  data() {
-    return { mode: BrandMode.Long }
-  },
-  computed: {
-    year(): number {
-      return new Date().getFullYear()
-    },
-    contactEmail(): string {
-      return config.get('contact-email')
-    },
-    contactEmailMailto(): string {
-      return `mailto:${this.contactEmail}`
-    }
+  /**
+   * Whether to show the About Us column or not
+   */
+  showAboutUs: {
+    type: Boolean,
+    default: false
   }
+})
+
+const breakpoints = useBreakpoints(breakpointsBootstrapV5)
+const xs = breakpoints.smaller('sm')
+
+const mode = computed(()=>{
+  return  xs.value?BrandMode.Short:BrandMode.Long
+})
+const year = computed((): number => {
+  return new Date().getFullYear()
+})
+
+const contactEmail = computed((): string => {
+  return config.get('contact-email')
+})
+
+const contactEmailMailto = computed((): string => {
+  return `mailto:${contactEmail.value}`
 })
 </script>
 
