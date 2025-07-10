@@ -11,7 +11,7 @@
               target="_blank"
               class="generic-footer__icij__logo text-decoration-none"
             >
-              <brand-expansion :mode="mode" dark />
+              <brand-expansion :mode="mode" dark :responsive="responsive"/>
               <span class="visually-hidden"
                 >International Consortium of Investigative Journalists</span
               >
@@ -212,7 +212,7 @@ defineOptions({
 /**
  * Version of the app to display in the bottom-right corner of the footer
  */
-defineProps({
+const props = defineProps({
   version: {
     type: String,
     default: null
@@ -223,14 +223,31 @@ defineProps({
   showAboutUs: {
     type: Boolean,
     default: false
-  }
+  },
+  /**
+   * If true, it resizes the brand as the display downsize.
+   */
+  responsive: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * If true, on small screens it uses the short version of the brand.
+   */
+  adaptive: {
+    type: Boolean,
+    default: true
+  },
 })
 
 const breakpoints = useBreakpoints(breakpointsBootstrapV5)
 const xs = breakpoints.smaller('sm')
 
 const mode = computed(()=>{
-  return  xs.value?BrandMode.Short:BrandMode.Long
+  if(props.adaptive){
+    return  xs.value?BrandMode.Short:BrandMode.Long
+  }
+  return BrandMode.Long
 })
 const year = computed((): number => {
   return new Date().getFullYear()

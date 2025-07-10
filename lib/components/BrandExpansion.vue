@@ -139,8 +139,13 @@ const props = defineProps({
   dark: {
     type: Boolean
   },
-  adaptive:{
-    type:Boolean
+  /**
+   * If true, it resizes the brand as the display downsize.
+   * If false, the brand keep the same size.
+   */
+  responsive:{
+    type:Boolean,
+    default:false
   }
 })
 
@@ -163,7 +168,7 @@ const sizeAsNumber = computed((): number => {
 })
 
 const width = computed((): string => {
-  if( props.adaptive && breakpoints.smallerOrEqual(props.mode)){
+  if( props.responsive && breakpoints.smallerOrEqual(props.mode)){
     return '100%'
   }
   return `${(baseWidth.value / 200) * sizeAsNumber.value}px`
