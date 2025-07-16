@@ -1,7 +1,6 @@
 import { ButtonIcon } from '@/components'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
-import { SIZE } from '@/enums/sizes'
-import {VARIANT} from "../../../lib/enums/variants";
+import {VARIANT} from "@/enums/variants";
 
 export default {
   components: { ButtonIcon },
@@ -29,7 +28,7 @@ export default {
   },
   args: {
     variant: 'primary',
-    size: SIZE.MD,
+    size: 'md',
     pill: false,
     loading: false
   },
@@ -44,8 +43,8 @@ export default {
 
 export const IconLeft = {
   args: {
-    variant: 'primary',
-    size: SIZE.MD,
+    variant: VARIANT.PRIMARY,
+    size: 'md',
     label: 'Button',
     iconLeft: 'CirclesThreePlus'
   }
@@ -53,8 +52,8 @@ export const IconLeft = {
 
 export const IconBothSide = {
   args: {
-    variant: 'primary',
-    size: SIZE.MD,
+    variant: VARIANT.PRIMARY,
+    size: 'md',
     label: 'Save search',
     iconLeft: 'CirclesThreePlus',
     iconRight: 'users'
@@ -64,7 +63,7 @@ export const IconBothSide = {
 export const IconRight = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Button',
     iconRight: 'users'
   }
@@ -73,7 +72,7 @@ export const IconRight = {
 export const WithCounter = {
   args: {
     variant: VARIANT.OUTLINE_PRIMARY,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Shakira',
     iconLeft: 'UserCircle',
     counter: 134
@@ -83,7 +82,7 @@ export const WithCounter = {
 export const HideLabel = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Button',
     hideLabel: true,
     iconRight: 'users'
@@ -93,7 +92,7 @@ export const HideLabel = {
 export const Square = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Path',
     hideLabel: true,
     pill: false,
@@ -105,7 +104,7 @@ export const Square = {
 export const SquareWithCounter = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Path',
     hideLabel: true,
     pill: false,
@@ -119,7 +118,7 @@ export const SquareWithCounter = {
 export const SquarePill = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Close',
     hideLabel: true,
     pill: true,
@@ -131,7 +130,7 @@ export const SquarePill = {
 export const Truncated = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Saving the tags',
     truncate: true,
     iconLeft: 'floppy-disk'
@@ -156,7 +155,7 @@ export const Truncated = {
 export const Loading = {
   args: {
     variant: VARIANT.ACTION,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Save',
     pill: true,
     loading: true,
@@ -181,7 +180,7 @@ export const Loading = {
 export const LoadingSpinner = {
   args: {
     variant: VARIANT.SECONDARY,
-    size: SIZE.MD,
+    size: 'md',
     label: 'Refresh',
     pill: true,
     loading: true,

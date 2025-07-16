@@ -10,7 +10,7 @@
       :size="rawSize"
       :is="component"
       :color="color"
-      :weight="weight"
+      :weight="weightComp"
     >
       <animateTransform
         v-if="spin || spinReverse"
@@ -51,91 +51,39 @@ import isArray from 'lodash/isArray'
 import isObject from 'lodash/isObject'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
+import {IconPhosphor, IconSize, IconWeight} from "@/types";
+import {ICON_WEIGHT} from "@/enums";
+import {TextColorVariant} from "bootstrap-vue-next";
 
-const WEIGHT_THIN: string = 'thin'
-const WEIGHT_LIGHT: string = 'light'
-const WEIGHT_REGULAR: string = 'regular'
-const WEIGHT_BOLD: string = 'bold'
-const WEIGHT_FILL: string = 'fill'
-const WEIGHT_DUOTONE: string = 'duotone'
 
-const WEIGHTS = Object.freeze({
-  [WEIGHT_THIN]: WEIGHT_THIN,
-  [WEIGHT_LIGHT]: WEIGHT_LIGHT,
-  [WEIGHT_REGULAR]: WEIGHT_REGULAR,
-  [WEIGHT_BOLD]: WEIGHT_BOLD,
-  [WEIGHT_FILL]: WEIGHT_FILL,
-  [WEIGHT_DUOTONE]: WEIGHT_DUOTONE
+interface PhosphorIconProps {
+  name: string|string[]|IconPhosphor,
+  size?: IconSize | string,
+  scale?: number,
+  variant?: TextColorVariant,
+  hoverVariant?: TextColorVariant,
+  fill?: boolean,
+  weight?:IconWeight,
+  hoverWeight?:IconWeight,
+  beat?:boolean,
+  beatDuration?:string,
+  fade?: boolean,
+  fadeDuration?:string,
+  spin?: boolean,
+  spinReverse?: boolean,
+  spinDuration?:string,
+  hover?: boolean,
+}
+const props = withDefaults(defineProps<PhosphorIconProps>(),{
+  scale:1,
+  fill:false,
+  weight:'regular',
+  beatDuration:'1s',
+  fadeDuration:'1s',
+  spinDuration:'1s'
 })
 
-const props = defineProps({
-  name: {
-    type: [String, Object, Array],
-    required: true
-  },
-  size: {
-    type: String,
-    default: null
-  },
-  scale: {
-    type: Number,
-    default: 1
-  },
-  variant: {
-    type: String,
-    required: false,
-    default: null
-  },
-  hoverVariant: {
-    type: String,
-    required: false,
-    default: null
-  },
-  fill: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  weight: {
-    type: String,
-    required: false,
-    default: 'regular'
-  },
-  hoverWeight: {
-    type: String,
-    required: false,
-    default: null
-  },
-  beat: {
-    type: Boolean
-  },
-  beatDuration: {
-    type: String,
-    default: '1s'
-  },
-  fade: {
-    type: Boolean
-  },
-  fadeDuration: {
-    type: String,
-    default: '1s'
-  },
-  spin: {
-    type: Boolean
-  },
-  spinReverse: {
-    type: Boolean
-  },
-  spinDuration: {
-    type: String,
-    default: '1s'
-  },
-  hover: {
-    type: Boolean
-  }
-})
-
-function findComponentByName(name: string) {
+function findComponentByName(name: string) :IconPhosphor{
   const filename = `Ph${upperFirst(camelCase(name))}`
   return defineAsyncComponent(async () => {
     try {
@@ -151,7 +99,7 @@ function findComponentByName(name: string) {
 
 const component = shallowRef()
 
-const setComponent = (icon: Array<any> | string | object) => {
+const setComponent = (icon: string |  string[] | IconPhosphor) => {
   if (isArray(icon)) {
     setComponent(icon[0])
   } else if (isObject(icon)) {
@@ -167,24 +115,25 @@ const currentHover = ref(false)
 watch(() => props.hover, () => { currentHover.value = props.hover }, { immediate: true })
 
 
-const weight = computed(() => {
-  if (isArray(props.name) && props.name.length > 1) {
-    return WEIGHTS[props.name[1]]
+const weightComp = computed(() :IconWeight=> {
+  if (isArray(props.name) && props.name.length > 1 ) {
+    const weight = props.name[1] as IconWeight
+    return ICON_WEIGHT[weight]
   }
 
   if (currentHover.value && props.hoverWeight) {
-    return WEIGHTS[props.hoverWeight]
+    return ICON_WEIGHT[props.hoverWeight]
   }
 
   if (props.fill) {
-    return WEIGHT_FILL
+    return ICON_WEIGHT.fill
   }
 
-  if (WEIGHTS[props.weight]) {
-    return WEIGHTS[props.weight]
+  if (ICON_WEIGHT[props.weight]) {
+    return ICON_WEIGHT[props.weight]
   }
 
-  return WEIGHT_REGULAR
+  return ICON_WEIGHT.regular
 })
 
 const color = computed(() => {
@@ -206,11 +155,11 @@ const spinTo = computed(() => {
 })
 
 const isRawSize = computed(() => {
-  return !['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', null].includes(props.size)
+  return !['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', undefined].includes(props.size)
 })
 
 const hasSize = computed(() => {
-  return ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(props.size)
+  return ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(props.size??"")
 })
 
 const rawSize = computed(() => {
@@ -223,7 +172,7 @@ const rawSize = computed(() => {
 const style = computed(() => {
   return {
     '--phosphor-icon-color': color.value,
-    '--phosphor-icon-weight': weight.value,
+    '--phosphor-icon-weight': weightComp.value,
     '--phosphor-icon-raw-size': isRawSize.value ? props.size : undefined,
     '--phosphor-icon-size': hasSize.value ? props.size : undefined,
     '--phosphor-icon-scale': props.scale ?? 1,

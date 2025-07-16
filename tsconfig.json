@@ -7,24 +7,26 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "jsx": "preserve",
-    "module": "nodenext",
+    "module": "ESNext",
     "resolveJsonModule":true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext",
+    "target": "ESNext",
     "useDefineForClassFields": true,
     "types": [
-      "vitest/globals"
+      "vitest/globals",
+      "node"
     ],
     "paths": {
-      "@/*": [ "lib/*"],
-    },
+      "@/*": [ "lib/*"]
+    }
   },
   "include": [
     "lib/**/*.ts",
+    "lib/**/*.d.ts",
     "lib/**/*.vue",
     "tests/**/*.ts"
   ],

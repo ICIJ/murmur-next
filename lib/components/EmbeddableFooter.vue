@@ -24,7 +24,7 @@
         :class="{ active: showShareOptions }"
         @click="showShareOptions = !showShareOptions"
       >
-        <phosphor-icon name="share-network" fill size="1.2em" />
+        <phosphor-icon :name="PhShareNetwork" fill size="1.2em" />
         <span class="visually-hidden">{{ $t('embeddable-footer.share') }}</span>
       </button>
     </slot>
@@ -38,81 +38,71 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import {ref, onMounted } from 'vue'
 
 import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand.vue'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
 import SharingOptions from '@/components/SharingOptions.vue'
 import config from '@/config'
+import { PhShareNetwork } from "@phosphor-icons/vue";
 
-type EmbeddableFooterData = {
-  showShareOptions: boolean
-}
 /**
  * EmbeddableFooter
  */
-export default defineComponent({
-  name: 'EmbeddableFooter',
-  components: {
-    PhosphorIcon,
-    SharingOptions,
-    Brand
+defineProps({
+  /**
+   * Title to display next to ICIJ logo.
+   */
+  title: {
+    type: String,
+    default: () => config.get('project.name')
   },
-  props: {
-    /**
-     * Title to display next to ICIJ logo.
-     */
-    title: {
-      type: String,
-      default: () => config.get('project.name')
-    },
-    /**
-     * Lead sentence to display next to the title.
-     */
-    lead: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Minimum height for the iframe generated in the embed form.
-     */
-    iframeMinHeight: {
-      type: Number,
-      default: 100
-    },
-    /**
-     * Minimum width for the iframe generated in the embed form.
-     */
-    iframeMinWidth: {
-      type: Number,
-      default: 100
-    },
-    /**
-     * Target of the ICIJ logo and title links.
-     */
-    homeUrl: {
-      type: String,
-      default: () => config.get('app.home')
-    },
-    /**
-     * Sharing option values to bind to the sharing-options component in the bottom-right corner.
-     */
-    sharingOptionsValues: {
-      type: Object,
-      default: () => ({})
-    }
+  /**
+   * Lead sentence to display next to the title.
+   */
+  lead: {
+    type: String,
+    default: ''
   },
-  data(): EmbeddableFooterData {
-    return {
-      showShareOptions: false
-    }
+  /**
+   * Minimum height for the iframe generated in the embed form.
+   */
+  iframeMinHeight: {
+    type: Number,
+    default: 100
   },
-  mounted(): void {
-    IframeResizer.create()
+  /**
+   * Minimum width for the iframe generated in the embed form.
+   */
+  iframeMinWidth: {
+    type: Number,
+    default: 100
+  },
+  /**
+   * Target of the ICIJ logo and title links.
+   */
+  homeUrl: {
+    type: String,
+    default: () => config.get('app.home')
+  },
+  /**
+   * Sharing option values to bind to the sharing-options component in the bottom-right corner.
+   */
+  sharingOptionsValues: {
+    type: Object,
+    default: () => ({})
   }
 })
+
+// Reactive state
+const showShareOptions = ref(false)
+
+onMounted(() => {
+  IframeResizer.create()
+})
+
 </script>
 
 <style lang="scss" scoped>

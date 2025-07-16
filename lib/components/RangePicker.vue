@@ -11,8 +11,11 @@ import {
 } from 'vue'
 import { clamp, round } from 'lodash'
 
-import type { Variant } from '@/types'
+
+import type { ButtonVariant } from "bootstrap-vue-next";
 import PhosphorIcon from '@/components/PhosphorIcon.vue';
+import {PhCaretLeft, PhCaretRight} from "@phosphor-icons/vue";
+import {IconPhosphor, IconWeight} from "@/types";
 
 type DragDropValue = {detail:number}
 /**
@@ -148,7 +151,7 @@ export default defineComponent({
      * of the predefined Bootstrap theme (e.g., 'primary', 'secondary', etc.).
      */
     variant: {
-      type: String as PropType<Variant>,
+      type: String as PropType<ButtonVariant>,
       default: 'primary'
     },
     /**
@@ -160,20 +163,20 @@ export default defineComponent({
       default: false
     },
     boundStartIcon: {
-      type: String as PropType<string>,
-      default: 'caret-left'
+      type: [String,Object] as PropType<string|IconPhosphor>,
+      default: PhCaretLeft
     },
     boundStartIconWeight: {
-      type: String as PropType<string>,
-      default: 'bold'
+      type: String as PropType<IconWeight>,
+      default: "bold"
     },
     boundEndIcon: {
-      type: String as PropType<string>,
-      default: 'caret-right'
+      type: [String,Object] as PropType<string|IconPhosphor>,
+      default: PhCaretRight
     },
     boundEndIconWeight: {
-      type: String as PropType<string>,
-      default: 'bold'
+      type: String as PropType<IconWeight>,
+      default: "bold"
     },
   },
   emits: ['update:range'],

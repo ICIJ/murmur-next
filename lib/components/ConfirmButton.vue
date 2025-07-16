@@ -21,7 +21,7 @@
           class="confirm-button__tooltip__cancel btn btn-sm btn-link text-light p-0 float-end"
           @click="cancel"
         >
-          <phosphor-icon name="x" size="0.75em" />
+          <phosphor-icon :name="PhX" size="0.75em" variant="action"/>
         </button>
         <p class="confirm-button__tooltip__label mb-2">
           {{ label }}
@@ -51,10 +51,11 @@
 <script setup lang="ts">
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
-import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
+import { BTooltip, PopoverPlacement} from 'bootstrap-vue-next'
 import { ComponentPublicInstance, PropType, ref } from 'vue'
 
 import PhosphorIcon from './PhosphorIcon.vue'
+import {PhX} from "@phosphor-icons/vue";
 
 /**
  * ConfirmButton

@@ -2,14 +2,15 @@ import { describe, expect, it } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
 
 import {
-  default as ChoroplethMapAnnotation,
-  PLACEMENTS
+  default as ChoroplethMapAnnotation
 } from '@/maps/ChoroplethMapAnnotation.vue'
 import type { ParentMap, ParentMapProvide } from '@/types.js'
 import { ParentKey } from '@/keys.js'
 import { computed } from 'vue'
 import { geoRobinson } from 'd3-geo-projection'
 import { GeoProjection } from 'd3-geo'
+import {PLACEMENTS} from "@/enums";
+
 
 describe('ChoroplethMapAnnotation', () => {
   const generateParentMock = ({
@@ -67,7 +68,7 @@ describe('ChoroplethMapAnnotation', () => {
   describe('placements', () => {
     const mockParentMap: ParentMap = generateParentMock({})
     const provide: ParentMapProvide = { [ParentKey]: mockParentMap }
-    const testPlacement = (placement:string|undefined, expectedResults: any) => {
+    const testPlacement = (placement:PLACEMENTS|undefined, expectedResults: any) => {
       it(`computes placement correctly for ${placement}`, () => {
         const wrapper = shallowMount(ChoroplethMapAnnotation, {
           propsData: {
@@ -105,7 +106,7 @@ describe('ChoroplethMapAnnotation', () => {
     const mockParentMap: ParentMap = generateParentMock({})
     const provide: ParentMapProvide = { [ParentKey]: mockParentMap }
     const testTransformOrigin = (
-      placement: string,
+      placement: PLACEMENTS,
       expectedX: string,
       expectedY: string
     ) => {

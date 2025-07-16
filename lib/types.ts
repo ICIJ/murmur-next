@@ -1,11 +1,31 @@
-import type { StyleValue } from 'vue'
+import type {DefineComponent, PropType, StyleValue} from 'vue'
 
 import { AccordionKey, ParentKey } from '@/keys'
 import { ComputedRef } from 'vue'
 import type { GeoProjection } from 'd3-geo'
 import { Ref } from 'vue'
+import type { ButtonVariant, PopoverPlacement, Size} from "bootstrap-vue-next";
+import {TextColorVariant} from "bootstrap-vue-next";
 
 export type Step = symbol | string
+ type IconPhosphorProps = {
+  weight: {
+    type: PropType<IconWeight>;
+  }
+  size: {
+    type: PropType<string | number>;
+  }
+  color: {
+    type: PropType<string>;
+  }
+  mirrored: {
+    type: PropType<boolean>;
+    default: false;
+  }
+}
+export type IconPhosphor = DefineComponent<IconPhosphorProps, {}, any>;
+export type IconWeight = "bold" | "fill" | "thin" | "light" | "regular" | "duotone";
+export type IconSize = '2xs'| 'xs'| 'sm'| 'md'| 'lg'| 'xl'| '2xl'
 
 export type Accordion = {
   emitAccordionNextStepEvent: () => void
@@ -34,15 +54,6 @@ export type BrandExpansionStyle = Pick<
   '--monochrome-color' | 'background'
 >
 
-export type Variant =
-  | 'primary'
-  | 'secondary'
-  | 'danger'
-  | 'info'
-  | 'warning'
-  | 'success'
-  | 'dark'
-  | 'light'
 
 export type MapTransform = {
   k: number,
@@ -62,19 +73,19 @@ export type ParentMapProvide = {
 }
 export interface ButtonIconProps{
   id?: string,
-  iconLeft?: string|string[]|any,
-  iconLeftVariant?: string,
-  iconLeftHoverVariant?: string,
-  iconLeftWeight?: string,
-  iconLeftHoverWeight?: string,
+  iconLeft?: string|string[]|IconPhosphor,
+  iconLeftVariant?: TextColorVariant,
+  iconLeftHoverVariant?: TextColorVariant,
+  iconLeftWeight?: IconWeight,
+  iconLeftHoverWeight?: IconWeight,
   iconLeftSize?: string,
   iconLeftLabel?: string,
   iconLeftLabelOffset?:number, //
   iconRight?: string|string[]|any,
-  iconRightVariant?: string,
-  iconRightHoverVariant?: string,
-  iconRightWeight?: string,
-  iconRightHoverWeight?: string,
+  iconRightVariant?: TextColorVariant,
+  iconRightHoverVariant?: TextColorVariant,
+  iconRightWeight?: IconWeight,
+  iconRightHoverWeight?: IconWeight,
   iconRightSize?: string,
   iconRightLabel?: string,
   iconRightLabelOffset?: number,
@@ -84,8 +95,8 @@ export interface ButtonIconProps{
   label?: string,
   square?: boolean,
   to?: any,
-  variant: string,
-  size?: string,
+  variant?: ButtonVariant,
+  size?: Size,
   block?: boolean,
   pill?: boolean,
   pressed?: boolean,

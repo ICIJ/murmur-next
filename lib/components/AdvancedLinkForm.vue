@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, watch, ref, Ref, PropType, useTemplateRef, onMounted, nextTick, getCurrentInstance} from 'vue'
+import {computed, Ref, PropType, useTemplateRef } from 'vue'
 import HapticCopy from './HapticCopy.vue'
 
 import { useI18n } from 'vue-i18n'

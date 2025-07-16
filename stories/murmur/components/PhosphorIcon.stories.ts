@@ -1,20 +1,47 @@
-import { PhHorse } from "@phosphor-icons/vue"
+import {
+  PhChat,
+  PhGlobe,
+  PhHorse,
+  PhLightbulb,
+  PhLinkBreak,
+  PhMoon,
+  PhNewspaper,
+  PhScanSmiley
+} from "@phosphor-icons/vue"
 
+import { variantsArgType,iconWeightsArgType } from '~storybook/utils'
 import { PhosphorIcon } from '@/components'
 
 export default {
+  computed: {
+    PhLightbulb() {
+      return PhLightbulb
+    },
+    PhScanSmiley() {
+      return PhScanSmiley
+    },
+    PhNewspaper() {
+      return PhNewspaper
+    },
+    PhLinkBreak() {
+      return PhLinkBreak
+    },
+    PhMoon() {
+      return PhMoon
+    },
+    PhChat() {
+      return PhChat
+    },
+    PhGlobe() {
+      return PhGlobe
+    }
+  },
   title: 'Murmur/Components/PhosphorIcon',
   tags: ['autodocs'],
   component: PhosphorIcon,
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'body-color']
-    },
-    weight: {
-      control: { type: 'select' },
-      options: ['thin', 'light', 'regular', 'bold', 'fill', 'duotone']
-    },
+    variant: variantsArgType,
+    weight: iconWeightsArgType,
     spin: {
       control: { type: 'boolean' }
     },
@@ -153,16 +180,16 @@ export const WithText = {
         An ICIJ poem
       </h2>
       <p>
-        In the shadows of whispers <phosphor-icon name="chat" /> and silk veils,<br />
-        The ink of truth flows like moonlight <phosphor-icon name="moon" /> on paper,<br />
-        ICIJ, a lantern <phosphor-icon name="lightbulb" /> in the murk,<br />
+        In the shadows of whispers <phosphor-icon :name="PhChat" /> and silk veils,<br />
+        The ink of truth flows like moonlight <phosphor-icon :name="PhMoon" /> on paper,<br />
+        ICIJ, a lantern <phosphor-icon :name="PhLightbulb" /> in the murk,<br />
         Unveils the hidden and the hushed.
       </p>
       <p>
-        Words not bound by chains <phosphor-icon name="link-break" />, but by liberty,<br />
+        Words not bound by chains <phosphor-icon :name="PhLinkBreak" />, but by liberty,<br />
         The silent scream <phosphor-icon name="user-sound" /> of the unseen,<br />
-        With each page turned, a revelation <phosphor-icon name="newspaper" />,<br />
-        A mirror held to the world's face <phosphor-icon name="scan-smiley" />.
+        With each page turned, a revelation <phosphor-icon :name="PhNewspaper" />,<br />
+        A mirror held to the world's face <phosphor-icon :name="PhScanSmiley" />.
       </p>   
     `
   })
@@ -182,13 +209,13 @@ export const Sizings = {
       }
     },
     template: `
-      <p><phosphor-icon name="globe" size="2xs" /> Stories that rock the world (<code>2xs</code>).</p>
-      <p><phosphor-icon name="globe" size="xs" /> Stories that rock the world (<code>xs</code>).</p>
-      <p><phosphor-icon name="globe" size="sm" /> Stories that rock the world (<code>sm</code>).</p>
-      <p><phosphor-icon name="globe" /> Stories that rock the world (<code>md</code>).</p>
-      <p><phosphor-icon name="globe" size="lg" /> Stories that rock the world (<code>lg</code>).</p>
-      <p><phosphor-icon name="globe" size="xl" /> Stories that rock the world (<code>xl</code>).</p>
-      <p><phosphor-icon name="globe" size="2xl" /> Stories that rock the world (<code>2xl</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" size="2xs" /> Stories that rock the world (<code>2xs</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" size="xs" /> Stories that rock the world (<code>xs</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" size="sm" /> Stories that rock the world (<code>sm</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" /> Stories that rock the world (<code>md</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" size="lg" /> Stories that rock the world (<code>lg</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" size="xl" /> Stories that rock the world (<code>xl</code>).</p>
+      <p><phosphor-icon :name="PhGlobe" size="2xl" /> Stories that rock the world (<code>2xl</code>).</p>
     `
   })
 }

@@ -80,6 +80,7 @@
     "@types/eslint__js": "^8.42.3",
     "@types/jsonp": "^0.2.3",
     "@types/lodash": "^4.17.20",
+    "@types/node": "^24.0.14",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "@vitejs/plugin-vue": "^6.0.0",

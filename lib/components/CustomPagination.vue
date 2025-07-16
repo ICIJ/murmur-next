@@ -2,10 +2,11 @@
 import { computed, ref, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Size } from '@/enums'
-import { BPagination } from 'bootstrap-vue-next'
+import {BPagination, Size} from 'bootstrap-vue-next'
 
 import PhosphorIcon from './PhosphorIcon.vue'
+import {PhCaretLeft, PhCaretRight} from "@phosphor-icons/vue";
+import {SIZE} from "@/enums";
 
 /**
  * Define options
@@ -47,8 +48,7 @@ const props = defineProps({
    */
   size: {
     type: String as PropType<Size>,
-    default: Size.md,
-    validator: (value: Size) => Object.values(Size).includes(value)
+    default: SIZE.md
   },
   /**
    * Compact layout
@@ -88,7 +88,7 @@ const numberOfPages = computed((): number => {
 })
 
 const paginationClassList = computed((): string[] => {
-  return props.size === Size.sm ? ['float-end', 'me-1'] : []
+  return props.size === SIZE.sm ? ['float-end', 'me-1'] : []
 })
 
 function applyJumpFormPage(): void {
@@ -137,13 +137,13 @@ function updateModelValue(value: string | number): void {
           <template #prev-text="{ disabled, index, page }">
             <!-- @slot The 'Go to previous page' button content -->
             <slot name="prev-text" v-bind="{ disabled, index, page }">
-              <phosphor-icon name="caret-left" size="0.75em" />
+              <phosphor-icon :name="PhCaretLeft" size="0.75em" />
             </slot>
           </template>
           <template #next-text="{ disabled, index, page }">
             <!-- @slot The 'Go to next page' button content -->
             <slot name="next-text" v-bind="{ disabled, index, page }">
-              <phosphor-icon name="caret-right" size="0.75em" />
+              <phosphor-icon :name="PhCaretRight" size="0.75em" />
             </slot>
           </template>
           <template #page="{ active, content, disabled, index, page }">

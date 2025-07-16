@@ -9,7 +9,7 @@ describe('GenericHeader.vue', () => {
 
   it('renders the header as a `headroom` component', () => {
     const wrapper = shallowMount(GenericHeader)
-    expect(wrapper.find('#generic-header').element.tagName).toBe('HEADROOM-STUB')
+    expect(wrapper.find('#generic-header').element.tagName).toBe('HEADROOM')
   })
 
   it('renders the header as a div', () => {

@@ -1,24 +1,14 @@
-import { SignUpForm } from '@/components'
+
 import { StoryObj } from '@storybook/vue3-vite'
+import { variantsArgType } from '~storybook/utils'
+import { SignUpForm } from '@/components'
 
 export default {
   title: 'Murmur/components/SignUpForm',
   component: SignUpForm,
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      type: 'select',
-      options: [
-        'primary',
-        'secondary',
-        'success',
-        'danger',
-        'warning',
-        'info',
-        'light',
-        'dark'
-      ]
-    }
+    variant: variantsArgType
   }
 }
 

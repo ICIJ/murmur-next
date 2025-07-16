@@ -1,22 +1,20 @@
-import { BUTTON_SIZES, BREAKPOINT_SIZES } from "@/enums/sizes"
-import { ICON_WEIGHTS } from "@/enums/iconWeights"
-import { VARIANTS } from "../lib/enums/variants";
+import { VARIANT } from "@/enums"
 export const variantsArgType = {
   control: 'select',
-  options: VARIANTS
+  options: Object.values(VARIANT)
 }
 export const buttonSizesArgType = {
   control: 'inline-radio',
-  options: BUTTON_SIZES
+  options: ['sm', 'md', 'lg']
 }
 export const breakpointSizeArgType = {
   control: 'select',
-  options: BREAKPOINT_SIZES
+  options: ['xs','sm','md','lg','xl','xxl']
 }
 
 export const iconWeightsArgType = {
   control: 'select',
-  options: ICON_WEIGHTS
+  options: ["thin" , "light" , "regular" , "bold" , "fill" , "duotone"]
 }
 
 export const inputTypeArgType = {

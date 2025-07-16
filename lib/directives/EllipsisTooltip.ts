@@ -7,7 +7,7 @@ import {
   resolveContent,
   resolveDirectiveProps,
   unbind,
- } from './floatingUi'
+ } from '@/utils/floatingUi'
 
 export default {
   mounted(el, binding) {

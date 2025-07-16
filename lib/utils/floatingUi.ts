@@ -1,3 +1,8 @@
+/**
+ * floatingUI from https://github.com/bootstrap-vue-next/bootstrap-vue-next/blob/main/packages/bootstrap-vue-next/src/utils/floatingUi.ts
+ * It's no longer exported by BVN so we need to copy it.
+ */
+
 import type {Boundary, Placement, RootBoundary} from '@floating-ui/vue'
 export {autoUpdate} from '@floating-ui/vue'
 

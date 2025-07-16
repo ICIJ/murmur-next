@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import SignUpForm from '@/components/SignUpForm'
+import SignUpForm from '@/components/SignUpForm.vue'
 import Murmur from '@/main'
 const mockSend = vi.fn().mockResolvedValue({})
 vi.mock('@/composables/useSendEmail', () => ({
@@ -62,27 +62,42 @@ describe('SignUpForm', () => {
     await wrapper.find('form').trigger('submit.prevent')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.emitted('submit')[0][0]).toBeDefined()
+    let submitEmitted:unknown[] = wrapper.emitted().submit;
+    expect(submitEmitted).toBeDefined()
+    let submitEmittedElement = submitEmitted[0] as unknown[];
+    expect(submitEmittedElement).toBeDefined()
+    expect(submitEmittedElement[0]).toBeDefined()
   })
 
   it('sends the email when submitting the form and display the confirmation', async () => {
     const msg = '☮️'
     mockSend.mockResolvedValueOnce({ result: 'success', msg })
     const wrapper = mount(SignUpForm)
-
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.successMessage).toBe(msg)
+    await wrapper.trigger('submit')
+    expect(wrapper.emitted().success[0]).toContain(msg)
   })
 
   it('sends the email and drops it when the result is a success', async () => {
     const msg = '☮️'
-
     mockSend.mockResolvedValueOnce({ result: 'success', msg })
-
     const wrapper = mount(SignUpForm)
-    wrapper.vm.email = 'data@icij.org'
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.email).toBe('')
+    const emailInput = wrapper.find('input[name=EMAIL]');
+    await emailInput.setValue('data@icij.org')
+    await wrapper.trigger('submit')
+    const emptyEmailInput = wrapper.find('input[name=EMAIL]').element as HTMLInputElement
+    expect(emptyEmailInput.value).toBe('')
+  })
+
+  it("sends the email but doesn't drop it when the result is an error", async () => {
+    const msg = '❎'
+    mockSend.mockRejectedValueOnce({ result: 'error', msg })
+    const wrapper = mount(SignUpForm)
+    const emailInput = wrapper.find('input[name=EMAIL]');
+    const email = 'data@icij.org';
+    await emailInput.setValue(email)
+    await wrapper.trigger('submit')
+    const emptyEmailInput = wrapper.find('input[name=EMAIL]').element as HTMLInputElement
+    expect(emptyEmailInput.value).toBe(email)
   })
 
   it('sends the email when submitting the form and display the error', async () => {
@@ -90,40 +105,27 @@ describe('SignUpForm', () => {
     mockSend.mockRejectedValueOnce({ result: 'error', msg })
 
     const wrapper = mount(SignUpForm)
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.errorMessage).toBe(msg)
-  })
-
-  it("sends the email but doesn't drop it when the result is an error", async () => {
-    const msg = '❎'
-    mockSend.mockRejectedValueOnce({ result: 'error', msg })
-    const wrapper = mount(SignUpForm)
-    wrapper.vm.email = 'data@icij.org'
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.email).toBe('data@icij.org')
-  })
-
-  it('sends the email when submitting the form and display the error, with a rejected promise', async () => {
-    const msg = '❎'
-    mockSend.mockRejectedValueOnce({ result: 'error', msg })
-    const wrapper = mount(SignUpForm)
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.errorMessage).toBe(msg)
+    await wrapper.trigger('submit')
+    expect(wrapper.emitted().error[0]).toContain(msg)
+    expect(wrapper.find('.sign-up-form__error').text()).toBe(msg)
   })
 
   it('sends the email and transform the error message', async () => {
     mockSend.mockRejectedValueOnce({ msg: '0 -❎' })
 
     const wrapper = mount(SignUpForm)
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.errorMessage).toBe('❎')
+    await wrapper.trigger('submit')
+      //@ts-expect-error error is emitted as an array of strings
+    expect(wrapper.emitted().error[0][0]).toBe('❎')
   })
 
   it('sends the email and show a default error message', async () => {
     mockSend.mockRejectedValueOnce({})
     const wrapper = mount(SignUpForm)
-    await wrapper.vm.subscribe()
-    expect(wrapper.vm.errorMessage).toBe("Something's wrong")
+    await wrapper.trigger('submit')
+
+    //@ts-expect-error error is emitted as an array of strings
+    expect(wrapper.emitted().error[0][0]).toBe("Something's wrong")
   })
 
   it('changes the color variant of the button', async () => {
@@ -133,8 +135,7 @@ describe('SignUpForm', () => {
     expect(element.exists()).toBeTruthy()
 
     //variant is secondary
-    const propsData = { variant: 'secondary' }
-    await wrapper.setProps(propsData)
+    await wrapper.setProps({ variant: 'secondary' })
     element = wrapper.find('.sign-up-form__fieldset__group__addon.btn-secondary')
     expect(element.exists()).toBeTruthy()
   })

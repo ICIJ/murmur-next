@@ -66,6 +66,7 @@ import { uniqueId } from 'lodash'
 import { PhCircleNotch } from '@phosphor-icons/vue'
 
 import type { ButtonIconProps } from '@/types'
+import PhosphorIcon from "./PhosphorIcon.vue";
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
