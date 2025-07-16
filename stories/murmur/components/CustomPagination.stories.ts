@@ -1,6 +1,7 @@
-import { CustomPagination } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
-import { Size } from '../../../lib/enums'
+import { buttonSizesArgType } from '~storybook/utils'
+import { CustomPagination } from '@/components'
+import { SIZE } from '@/enums'
 
 export default {
   title: 'Murmur/components/CustomPagination',
@@ -11,7 +12,7 @@ export default {
     perPage: { type: 'number', min: 0 },
     totalRows: { type: 'number', min: 0 },
     pages: { type: 'number', min: 0 },
-    size: { type: 'select', options: ['sm', 'md', 'lg'] }
+    size: buttonSizesArgType
   }
 }
 
@@ -27,11 +28,11 @@ const Template: Story = (args: any) => ({
 export const Default = Template.bind({})
 Default.args = { modelValue: 1, perPage: 10, totalRows: 200 }
 export const Small = Template.bind({})
-Small.args = { modelValue: 1, perPage: 10, totalRows: 200, size: Size.sm }
+Small.args = { modelValue: 1, perPage: 10, totalRows: 200, size: SIZE.sm }
 export const Medium = Template.bind({})
 Medium.args = { modelValue: 1, perPage: 10, totalRows: 200, size: 'md' }
 export const Large = Template.bind({})
-Large.args = { modelValue: 1, perPage: 10, totalRows: 200, size: Size.lg }
+Large.args = { modelValue: 1, perPage: 10, totalRows: 200, size: SIZE.lg }
 export const Compact = Template.bind({})
 Compact.args = { modelValue: 1, perPage: 10, totalRows: 200, compact: true }
 export const Pills = Template.bind({})
@@ -42,7 +43,7 @@ PillsSmall.args = {
   perPage: 10,
   totalRows: 200,
   pills: true,
-  size: Size.sm
+  size: SIZE.sm
 }
 export const PillsCompact = Template.bind({})
 PillsCompact.args = {

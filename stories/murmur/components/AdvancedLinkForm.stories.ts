@@ -1,7 +1,7 @@
 import { AdvancedLinkForm } from '@/components'
 import { BCard } from 'bootstrap-vue-next'
 import { StoryObj } from '@storybook/vue3-vite'
-import { Size } from '@/enums'
+import { SIZE } from '@/enums'
 import { modalDecorator, popoverDecorator } from '../decorators'
 
 export default {
@@ -31,7 +31,7 @@ Default.args = {
 
 export const InsideModal = Template.bind({})
 InsideModal.decorators = [
-  modalDecorator.bind(this, 'Click to see the form', 'Advanced Link', Size.md)
+  modalDecorator.bind(this, 'Click to see the form', 'Advanced Link', SIZE.md)
 ]
 InsideModal.args = {
   title: 'Medtronic spends millions each year on lobbying in the US',

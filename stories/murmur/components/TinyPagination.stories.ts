@@ -1,18 +1,16 @@
+import { buttonSIZEsArgType } from '~storybook/utils'
 import { TinyPagination } from '@/components'
-import { Size } from '@/enums'
+import {SIZE} from "@/enums";
 
 export default {
   title: 'Murmur/components/TinyPagination',
   component: TinyPagination,
   tags: ['autodocs'],
   argTypes: {
-    size: { 
-      control: 'inline-radio', 
-      options: ['sm', 'md', 'lg'] 
-    },
-    pages: { 
-      control: 'number', 
-      min: 0 
+    size: buttonSIZEsArgType,
+    pages: {
+      control: 'number',
+      min: 0
     },
     row: {
       type: 'boolean'
@@ -32,7 +30,7 @@ export const Small = {
     modelValue: 1,
     perPage: 10,
     totalRows: 200,
-    size: Size.sm
+    size: SIZE.sm
   }
 }
 
@@ -41,7 +39,7 @@ export const Medium = {
     modelValue: 1,
     perPage: 10,
     totalRows: 200,
-    size: Size.md
+    size: SIZE.md
   }
 }
 
@@ -50,7 +48,7 @@ export const Large = {
     modelValue: 1,
     perPage: 10,
     totalRows: 200,
-    size: Size.lg
+    size: SIZE.lg
   }
 }
 

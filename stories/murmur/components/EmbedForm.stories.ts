@@ -1,7 +1,7 @@
 import { EmbedForm } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
 import { modalDecorator } from '../decorators'
-import { Size } from '@/enums'
+import { SIZE } from '@/enums'
 
 export default {
   title: 'Murmur/components/EmbedForm',
@@ -31,7 +31,7 @@ InModal.decorators = [
     this,
     'Click to see the form with preview',
     'Embed form with a preview',
-    Size.lg
+    SIZE.lg
   )
 ]
 InModal.args = {

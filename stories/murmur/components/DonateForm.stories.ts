@@ -1,6 +1,6 @@
 import { DonateForm } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
-import { Size } from '@/enums'
+import { SIZE } from '@/enums'
 import { modalDecorator } from '../decorators'
 
 export default {
@@ -24,7 +24,7 @@ Default.args = {}
 
 export const InModal = Template.bind({})
 InModal.decorators = [
-  modalDecorator.bind(this, 'Click to see the form', 'Support ICIJ', Size.lg)
+  modalDecorator.bind(this, 'Click to see the form', 'Support ICIJ', SIZE.lg)
 ]
 InModal.args = {
   noTitle: true
