@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import ActiveTextTruncate from '@/components/ActiveTextTruncate.vue'
 
 // Mock HTML element offset so the size of the wrapper can be calculated

@@ -2,8 +2,7 @@
 import { get, isFunction, kebabCase, uniqueId } from 'lodash'
 import * as d3 from 'd3'
 import { defineComponent, PropType, computed } from 'vue'
-
-type Datum = { id?: string; color: string; path?: string; label: string }
+export type Datum = { id?: string|number; color: string; path?: string; label: string }
 type Category = 'id' | 'color' | 'path' | 'label'
 export default defineComponent({
   name: 'OrdinalLegend',
@@ -67,7 +66,7 @@ export default defineComponent({
         return { [props.categoryObjectsPath]: id, ...d }
       })
     })
-    function itemClassList(d: { [key: string]: string }) {
+    function itemClassList(d: Datum) {
       const id = d[props.categoryObjectsPath]
       return {
         [`ordinal-legend__item--identifier-${kebabCase(d.label)}`]: true,
@@ -78,7 +77,7 @@ export default defineComponent({
     function markerPathFunction(d?: Datum): string {
       return isFunction(props.markerPath) && d
         ? props.markerPath(d)
-        : props.markerPath
+        : props.markerPath as string
     }
     function update(d: Datum) {
       /**

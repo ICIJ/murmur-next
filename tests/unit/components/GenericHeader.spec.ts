@@ -1,4 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import GenericHeader from '@/components/GenericHeader.vue'
 
 describe('GenericHeader.vue', () => {
@@ -46,7 +47,8 @@ describe('GenericHeader.vue', () => {
     const wrapper = shallowMount(GenericHeader, {
       global: { renderStubDefaultSlot: true }
     })
-    expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
+    const brandElement = wrapper.find('.generic-header__brand').element as HTMLAnchorElement
+    expect(brandElement.href).toBe(homeUrl)
   })
 
   it('renders home link to https://icij.org/', () => {
@@ -55,7 +57,8 @@ describe('GenericHeader.vue', () => {
       propsData: { homeUrl },
       global: { renderStubDefaultSlot: true }
     })
-    expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
+    const brandElement = wrapper.find('.generic-header__brand').element as HTMLAnchorElement
+    expect(brandElement.href).toBe(homeUrl)
   })
 
   it('renders home link to https://pirhoo.com/', () => {
@@ -64,7 +67,8 @@ describe('GenericHeader.vue', () => {
       propsData: { homeUrl },
       global: { renderStubDefaultSlot: true }
     })
-    expect(wrapper.find('.generic-header__brand').element.href).toBe(homeUrl)
+    const brandElement = wrapper.find('.generic-header__brand').element as HTMLAnchorElement
+    expect(brandElement.href).toBe(homeUrl)
   })
 
   it('renders the navbar as `collapse` by default', () => {

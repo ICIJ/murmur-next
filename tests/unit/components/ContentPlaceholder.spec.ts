@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import ContentPlaceholder from '@/components/ContentPlaceholder.vue'
 
 describe('ContentPlaceholder.vue', () => {

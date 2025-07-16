@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { describe, expect, it, beforeAll, afterAll, vi } from 'vitest'
 import HapticCopy from '@/components/HapticCopy.vue'
 import noop from 'lodash/noop'
 

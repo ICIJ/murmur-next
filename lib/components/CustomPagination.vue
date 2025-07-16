@@ -183,11 +183,11 @@ function updateModelValue(value: string | number): void {
             <small
               v-if="errors.length"
               id="invalid-number-error"
-              class="float-start mt-1 ms-1 text-danger"
+              class="custom-pagination__errors float-start mt-1 ms-1 text-danger"
             >
               {{ errors[0] }}
             </small>
-            <small v-else class="float-start mt-1 ms-1 text-muted">
+            <small v-else class="custom-pagination__number-of-pages float-start mt-1 ms-1 text-muted">
               {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
             </small>
           </template>

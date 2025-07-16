@@ -1,4 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
 
 describe('AdvancedLinkForm.vue', () => {
@@ -28,7 +29,7 @@ describe('AdvancedLinkForm.vue', () => {
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.tab-pane.active .advanced-link-form__raw__input').exists()).toBeTruthy()
-    expect(wrapper.find('.advanced-link-form__raw__input').element._value).toBe(propsData.link)
+    expect((wrapper.find('.advanced-link-form__raw__input').element as HTMLInputElement).value).toBe(propsData.link)
   })
 
   it('should create switch between form using `modelValue` property', async () => {
@@ -111,7 +112,7 @@ describe('AdvancedLinkForm.vue', () => {
     const markdown = `[${propsData.title}](${propsData.link})`
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.advanced-link-form__markdown__input').element.value).toBe(markdown)
+    expect((wrapper.find('.advanced-link-form__markdown__input').element as HTMLInputElement).value).toBe(markdown)
   })
 
   it('should use the title in rich input', () => {

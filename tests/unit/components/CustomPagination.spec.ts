@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import CustomPagination from '@/components/CustomPagination.vue'
 
 describe('CustomPagination.vue', () => {
@@ -29,44 +30,36 @@ describe('CustomPagination.vue', () => {
   it('calculates numberOfPages based on the totalRows and perPage prop values', () => {
     const propsData = { totalRows: 200, perPage: 20 }
     const wrapper = mount(CustomPagination, { propsData })
-    expect(wrapper.vm.numberOfPages).toBe(10)
+    expect(wrapper.find('.custom-pagination__number-of-pages').text()).toBe("10 pages total")
   })
 
   it('emits an event on form submit with the currentPageInput', async () => {
     const propsData = { totalRows: 200, perPage: 20 }
     const wrapper = mount(CustomPagination, { propsData })
     const input = wrapper.find('.form-control')
-    input.element.value = 3
-    await input.trigger('input')
-    wrapper.vm.customPaginationForm.dispatchEvent(new Event('submit'))
-
+    await input.setValue(3)
+    await wrapper.find({ ref: 'customPaginationForm' }).trigger('submit')
+    //@ts-expect-error
     expect(wrapper.emitted('update:modelValue')[0]).toContain(3)
   })
 
   it('does not emit an event if the currentPageInput is invalid', async () => {
     const propsData = { totalRows: 200, perPage: 20 }
     const wrapper = mount(CustomPagination, { propsData })
-    expect(wrapper.vm.currentPageInput).toBe('')
-    await wrapper.vm.applyJumpFormPage()
+    await wrapper.find('.form-control').setValue('')
+    await wrapper.find({ ref: 'customPaginationForm' }).trigger('submit')
     expect(wrapper.emitted()).toMatchObject({})
   })
 
   it('sets errors if the currentPageInput is invalid', async () => {
     const propsData = { totalRows: 200, perPage: 20 }
     const wrapper = mount(CustomPagination, { propsData })
-    expect(wrapper.vm.currentPageInput).toBe('')
-    await wrapper.vm.applyJumpFormPage()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.errors.length).toBe(1)
-  })
+    expect(wrapper.find('.custom-pagination__errors').exists()).toBe(false)
 
-  it('renders an element containing the errors if the currentPageInput is invalid', async () => {
-    const propsData = { totalRows: 200, perPage: 20 }
-    const wrapper = mount(CustomPagination, { propsData })
-    expect(wrapper.vm.currentPageInput).toBe('')
-    await wrapper.vm.applyJumpFormPage()
+    await wrapper.find('.form-control').setValue('')
+    await wrapper.find({ ref: 'customPaginationForm' }).trigger('submit')
     await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('#invalid-number-error').exists()).toEqual(true)
+    expect(wrapper.find('.custom-pagination__errors').exists()).toBe(true)
+    expect(wrapper.find('.custom-pagination__errors').text()).toBe("Invalid page number")
   })
 })

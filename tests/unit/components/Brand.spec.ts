@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import Brand from '@/components/Brand.vue'
 
 describe('Brand.vue', () => {

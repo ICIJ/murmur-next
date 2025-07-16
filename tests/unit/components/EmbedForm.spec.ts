@@ -1,5 +1,6 @@
 import startsWith from 'lodash/startsWith'
 import { shallowMount, mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import EmbedForm from '@/components/EmbedForm.vue'
 
 describe('EmbedForm.vue', () => {
@@ -42,8 +43,8 @@ describe('EmbedForm.vue', () => {
 
   it('shows a preview panel with an iframe targeting the passed props.url', () => {
     const wrapper = shallowMount(EmbedForm, { propsData, global })
-    const src = wrapper.element.querySelector('.embed-form__preview iframe').src
-    expect(src).toBe(propsData.url)
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.src).toBe(propsData.url)
   })
 
   it('shows a preview panel with an iframe targeting the passed props.url without pym params', () => {
@@ -52,8 +53,8 @@ describe('EmbedForm.vue', () => {
       propsData: { url },
       global
     })
-    const src = wrapper.element.querySelector('.embed-form__preview iframe').src
-    expect(src).toBe('https://projects.icij.org/the-implant-files/graphics/')
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.src).toBe('https://projects.icij.org/the-implant-files/graphics/')
   })
 
   it('renders iframe height to 150 according to the passed props.height', () => {
@@ -61,8 +62,8 @@ describe('EmbedForm.vue', () => {
       propsData: { height: 150, ...propsData },
       global
     })
-    const height = wrapper.element.querySelector('.embed-form__preview iframe').height
-    expect(height).toBe('150')
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.height).toBe('150')
   })
 
   it('renders iframe height to 250 according to the passed props.height', () => {
@@ -70,14 +71,14 @@ describe('EmbedForm.vue', () => {
       propsData: { height: 250, ...propsData },
       global
     })
-    const height = wrapper.element.querySelector('.embed-form__preview iframe').height
-    expect(height).toBe('250')
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.height).toBe('250')
   })
 
   it('renders iframe width to 100% when no value is passed to props.width', () => {
     const wrapper = shallowMount(EmbedForm, { propsData, global })
-    const width = wrapper.element.querySelector('.embed-form__preview iframe').width
-    expect(width).toBe('100%')
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.width).toBe('100%')
   })
 
   it('renders iframe width to 150 according to the passed props.width', () => {
@@ -85,8 +86,8 @@ describe('EmbedForm.vue', () => {
       propsData: { width: 150, ...propsData },
       global
     })
-    const width = wrapper.element.querySelector('.embed-form__preview iframe').width
-    expect(width).toBe('150')
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.width).toBe('150')
   })
 
   it('renders iframe width to 250 according to the passed props.width', () => {
@@ -94,8 +95,8 @@ describe('EmbedForm.vue', () => {
       propsData: { width: 250, ...propsData },
       global
     })
-    const width = wrapper.element.querySelector('.embed-form__preview iframe').width
-    expect(width).toBe('250')
+    const iframe = wrapper.element.querySelector('.embed-form__preview iframe') as HTMLIFrameElement
+    expect(iframe.width).toBe('250')
   })
 
   it('renders a responsive iframe when `responsiveCheck` is true', () => {

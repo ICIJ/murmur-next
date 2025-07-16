@@ -32,7 +32,7 @@ defineOptions({
 /**
  * Define props
  */
-const props = defineProps({
+defineProps({
   /**
    * Title of the form.
    */
@@ -163,7 +163,7 @@ watch(
       >
         <div class="donate-form__payment__levels row">
           <div
-            class="col donate-form__payment__level"
+            class="col donate-form__payment__level donate-form__payment__level--conversation"
             :class="{ active: level === 'conversation' }"
             @click="selectLevel('conversation')"
           >
@@ -186,7 +186,7 @@ watch(
             </div>
           </div>
           <div
-            class="col donate-form__payment__level"
+            class="col donate-form__payment__level donate-form__payment__level--rules"
             :class="{ active: level === 'rules' }"
             @click="selectLevel('rules')"
           >
@@ -207,7 +207,7 @@ watch(
             </div>
           </div>
           <div
-            class="col donate-form__payment__level"
+            class="col donate-form__payment__level donate-form__payment__level--world"
             :class="{ active: level === 'world' }"
             @click="selectLevel('world')"
           >

@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import SlideUpDown from '@/components/SlideUpDown'
+import { describe, expect, it, vi } from 'vitest'
+import SlideUpDown from '@/components/SlideUpDown.vue'
 
 describe('SlideUpDown', () => {
   it('is a Vue instance', () => {
@@ -40,7 +41,7 @@ describe('SlideUpDown', () => {
     wrapper.vm.cleanLayout = vi.fn()
     expect(wrapper.vm.cleanLayout.mock.calls.length).toBe(0)
     await wrapper.setProps({ active: false })
-    await new Promise((done) => {
+    await new Promise<void>((done) => {
       setTimeout(() => {
         expect(wrapper.vm.cleanLayout.mock.calls.length).toBe(1)
         done()
