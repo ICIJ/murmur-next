@@ -1,13 +1,12 @@
 <template>
-  <!-- @vue-ignore -->
   <b-button
       v-bind="buttonProps"
       :id="buttonId"
       ref="element"
-      :aria-label="tooltipText"
       :to="to"
-      :class="classList"
       class="button-icon"
+      :class="classList"
+      :aria-label="tooltipText"
       @mousenter="currentHover = true"
       @mouseleave="currentHover = false"
   >
@@ -26,10 +25,7 @@
         :hover="currentHover"
         class="button-icon__icon-left"
     />
-    <span
-        v-if="!hideLabel"
-        class="button-icon__label"
-    >
+    <span v-if="!hideLabel" class="button-icon__label">
       <slot v-bind="{ labelOrLoadingText }">{{ labelOrLoadingText }}</slot>
     </span>
     <phosphor-icon
@@ -47,6 +43,7 @@
         class="button-icon__icon-right"
         @click="click('icon-right')"
     />
+    <button-icon-counter v-if="counter !== null" :counter="counter" :variant="counterVariant" :style="counterStyle" />
     <slot name="end" />
     <b-tooltip
         v-if="hasTooltip"
@@ -64,9 +61,10 @@
 import {computed, ref, inject, useTemplateRef} from 'vue'
 import { uniqueId } from 'lodash'
 import { PhCircleNotch } from '@phosphor-icons/vue'
-
 import type { ButtonIconProps } from '@/types'
-import PhosphorIcon from "./PhosphorIcon.vue";
+
+import {PhosphorIcon} from "@/components";
+import ButtonIconCounter from './ButtonIconCounter.vue'
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
@@ -75,7 +73,8 @@ const elementRef = useTemplateRef<HTMLElement>('element')
 defineOptions({
   name: 'ButtonIcon'
 })
-const props = withDefaults(defineProps<ButtonIconProps>(),{  square:false,
+const props = withDefaults(defineProps<ButtonIconProps>(),{
+  square:false,
   iconLeftLabelOffset:19,
   iconSpinner:PhCircleNotch,
   hideLabel:false,
@@ -147,13 +146,20 @@ const buttonProps = computed(() => ({
   --button-icon-square-size: calc(
       #{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2
   );
+  --button-icon-square-size-sm: calc(
+      #{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2
+  );
+  --button-icon-square-size-lg: calc(
+      #{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2
+  );
+
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   min-width: 0;
 
   .button-icon-counter {
-    margin-left: $spacer-xs;
+    margin: -0.5em 0 -0.5em $spacer-xs;
   }
 
   &--truncate {
@@ -177,7 +183,7 @@ const buttonProps = computed(() => ({
     flex-shrink: 0;
 
     .button-icon-counter {
-      margin-left: 0;
+      margin: 0;
       position: absolute;
       bottom: auto;
       left: auto;
@@ -188,20 +194,19 @@ const buttonProps = computed(() => ({
   }
 
   &--square.btn-sm {
-    width: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
-    height: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
+    width: var(--button-icon-square-size-sm);
+    height: var(--button-icon-square-size-sm);
   }
 
   &--square.btn-lg {
-    width: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
-    height: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
+    width: var(--button-icon-square-size-lg);
+    height: var(--button-icon-square-size-lg);
   }
 
   &__icon-left ~ &__label,
   &__label ~ &__icon-right {
     margin-left: $spacer-xs;
   }
-
   &__icon-left,
   &__icon-right {
     --phosphor-icon-size: #{$line-height-base * $btn-font-size};

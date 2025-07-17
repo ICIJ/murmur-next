@@ -8,16 +8,29 @@ $gray-600: #696969 !default; // Brand color
 $gray-700: #494949 !default;
 $gray-800: #3c3c3c !default; // Brand color
 $gray-900: #212121 !default;
+
 $black: #000 !default;
 
 $primary: #ff0000 !default; // Brand color
 $secondary: $gray-500 !default;
-$danger: #8b0707 !default; // Brand color
 $success: #46ec4e !default;
 $info: #0000ff !default;
 $warning: #ffba00 !default;
+$danger: #8b0707 !default; // Brand color
 $light: $gray-200 !default;
 $dark: #000 !default;
+
+$theme-colors: (
+        primary: $primary,
+        secondary: $secondary,
+        success: $success,
+        info: $info,
+        warning: $warning,
+        danger: $danger,
+        light: $light,
+        dark: $dark,
+);
+
 
 $brand-grays: () !default;
 $brand-grays: map-merge(

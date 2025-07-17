@@ -110,7 +110,10 @@ export interface ButtonIconProps{
   tooltipDelay?:{show: number, hide: number},
   showTooltipForce?: boolean,
   hover?: boolean,
-  truncate?: boolean
+  truncate?: boolean,
+  counter?:number,
+  counterVariant?:TextColorVariant,
+  counterStyle?:string|Object
 }
 export interface PhosphorIconProps {
   name: string|string[]|IconPhosphor,
