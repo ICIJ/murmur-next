@@ -183,7 +183,7 @@ function toggleNavbar(): void {
 </script>
 
 <style lang="scss">
-@import '../styles/lib';
+
 
 .generic-header {
   background: white;

@@ -169,7 +169,7 @@ const classList = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 @import '../styles/mixins';
 
 .phosphor-icon {

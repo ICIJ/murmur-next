@@ -223,7 +223,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .scale-legend {
   position: relative;

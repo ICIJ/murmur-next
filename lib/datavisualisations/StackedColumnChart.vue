@@ -594,7 +594,7 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-@import '../styles/lib';
+
 
 .stacked-column-chart {
   $muted-group-opacity: 0.2;

@@ -403,7 +403,7 @@ function applyLastPage(): void {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .tiny-pagination {
   display: inline-flex;

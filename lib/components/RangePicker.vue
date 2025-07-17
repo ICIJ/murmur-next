@@ -351,7 +351,7 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-@import '../styles/lib';
+
 
 .range-picker {
   min-height: 1rem;

@@ -198,7 +198,7 @@ function updateModelValue(value: string | number): void {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .custom-pagination {
   /* Chrome, Safari, Edge, Opera */

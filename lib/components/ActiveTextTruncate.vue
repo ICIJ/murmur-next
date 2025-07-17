@@ -193,7 +193,7 @@ function resetTextLivePosition(): void {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 @import '../styles/mixins';
 
 .active-text-truncate {

@@ -202,7 +202,7 @@ function defaultValueFor(key: string, metaSelector?: string): string {
 </template>
 
 <style lang="scss">
-@import '../styles/lib';
+
 @import '../styles/mixins';
 
 .sharing-options {

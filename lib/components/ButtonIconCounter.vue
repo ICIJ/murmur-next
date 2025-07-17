@@ -20,7 +20,7 @@ defineProps({
 </template>
 
 <style lang="scss">
-@import '../styles/variables.scss';
+
 .button-icon-counter {
   // Override negative top position done by
   // .badge when used inside a button.

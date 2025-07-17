@@ -334,7 +334,7 @@ watch(
 </template>
 
 <style lang="scss">
-@import '../styles/lib';
+
 
 .donate-form {
   font-size: 0.9rem;

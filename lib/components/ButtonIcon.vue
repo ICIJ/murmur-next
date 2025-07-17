@@ -141,7 +141,7 @@ const buttonProps = computed(() => ({
 
 <style lang="scss">
 
-@import '../styles/lib';
+
 .button-icon {
   --button-icon-square-size: calc(
       #{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2

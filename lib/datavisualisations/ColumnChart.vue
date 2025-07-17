@@ -491,7 +491,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-@import '../styles/lib';
+
 
 .column-chart {
   --highlight-opacity: 0.7;

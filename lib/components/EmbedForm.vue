@@ -167,7 +167,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .embed-form {
   font-size: 0.9rem;

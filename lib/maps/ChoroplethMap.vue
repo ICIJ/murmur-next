@@ -904,7 +904,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .choropleth-map {
   --map-scale: 1;

@@ -58,7 +58,7 @@ provide<Accordion>(AccordionKey, {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/variables.scss';
+
 
 .accordion-wrapper {
   $step-bullet-size: 2rem;

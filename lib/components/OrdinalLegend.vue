@@ -142,7 +142,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .ordinal-legend {
   $muted-item-opacity: 0.2;

@@ -72,7 +72,7 @@ function closeSignupPopover(): void {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .follow-us {
   position: relative;

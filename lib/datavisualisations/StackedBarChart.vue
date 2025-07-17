@@ -464,7 +464,7 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-@import '../styles/lib';
+
 
 .stacked-bar-chart {
   $muted-group-opacity: 0.2;

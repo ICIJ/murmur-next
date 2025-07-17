@@ -257,7 +257,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-@import '../styles/lib';
+
 
 .bar-chart {
   text {

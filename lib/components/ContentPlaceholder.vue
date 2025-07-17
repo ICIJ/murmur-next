@@ -57,7 +57,7 @@ const formattedRows = computed((): ContentPlaceholderStyledRows => {
 </script>
 
 <style scoped lang="scss">
-@import '../styles/lib';
+
 
 @keyframes placeHolderShimmer {
   0% {

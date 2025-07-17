@@ -94,6 +94,7 @@ export default defineConfig({
         additionalData: `
             @use 'sass:math';
             @use 'sass:color';
+            @import '@/styles/lib.scss';
           `
       }
     }

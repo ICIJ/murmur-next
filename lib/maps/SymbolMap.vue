@@ -623,7 +623,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .symbol-map {
   $muted-item-opacity: 0.2;

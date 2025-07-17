@@ -292,7 +292,7 @@ function selectHtml() {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .advanced-link-form {
   text-align: left;

@@ -155,7 +155,7 @@ watch(
 </template>
 
 <style scoped lang="scss">
-@import '../styles/lib';
+
 
 .digits-input {
   &__container {

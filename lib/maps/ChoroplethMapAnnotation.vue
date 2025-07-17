@@ -284,7 +284,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .choropleth-map-annotation {
   --color: #{$body-color};

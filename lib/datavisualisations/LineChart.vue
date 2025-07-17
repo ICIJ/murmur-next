@@ -244,7 +244,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-@import '../styles/lib';
+
 
 .line-chart {
   text {

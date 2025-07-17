@@ -34,7 +34,7 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 @import '../styles/mixins';
 
 .phosphor-icon-layers {

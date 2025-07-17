@@ -177,7 +177,7 @@ function confirm(): void {
 </script>
 
 <style lang="scss">
-@import '../styles/lib';
+
 
 .confirm-button {
   &__tooltip {

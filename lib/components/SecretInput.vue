@@ -103,7 +103,7 @@ function selectInput() {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/lib';
+
 
 .secret-input {
   &__toggler {

@@ -106,7 +106,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 @import '../styles/mixins';
 
 @include keyframes(slideup) {

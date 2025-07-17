@@ -263,7 +263,7 @@ const contactEmailMailto = computed((): string => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/lib';
+
 
 .generic-footer {
   background: $black;
