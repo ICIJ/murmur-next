@@ -1,4 +1,4 @@
-import { VARIANT } from "@/enums"
+import { VARIANT } from '@/enums'
 export const variantsArgType = {
   control: 'select',
   options: Object.values(VARIANT)
