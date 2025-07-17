@@ -1,4 +1,4 @@
-import { buttonSIZEsArgType } from '~storybook/utils'
+import { buttonSizesArgType } from '~storybook/utils'
 import { TinyPagination } from '@/components'
 import {SIZE} from "@/enums";
 
@@ -7,7 +7,7 @@ export default {
   component: TinyPagination,
   tags: ['autodocs'],
   argTypes: {
-    size: buttonSIZEsArgType,
+    size: buttonSizesArgType,
     pages: {
       control: 'number',
       min: 0

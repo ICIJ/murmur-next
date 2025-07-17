@@ -1,6 +1,6 @@
 import { ButtonIcon } from '@/components'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
-import {VARIANT} from "@/enums/variants";
+import {VARIANT} from "@/enums";
 
 export default {
   components: { ButtonIcon },
