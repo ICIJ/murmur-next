@@ -26,9 +26,11 @@ export default defineConfig({
           'image-mode': ['src'],
           'image-mode-source': ['src'],
           'b-img': ['src'],
-          source: ['src'],
           video: ['src', 'poster'],
-          img: ['src']
+          source: ['src'],
+          img: ['src'],
+          image: ['xlink:href', 'href'],
+          use: ['xlink:href', 'href']
         }
       }
     }),
@@ -74,13 +76,12 @@ export default defineConfig({
     })
   ],
   resolve: {
-    extensions: ['.mjs', '.js', '.ts', '.json', '.vue'],
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
       vue: resolve(__dirname, './node_modules/vue'),
       node_modules: resolve(__dirname, 'node_modules'),
-      '~storybook': resolve(__dirname, '.storybook'),
-      $package: resolve(__dirname, 'package.json'),
       '@': fileURLToPath(new URL('./lib', import.meta.url)),
+      '~storybook': resolve(__dirname, './.storybook'),
     },
     dedupe: ['vue']
   },
