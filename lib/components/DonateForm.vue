@@ -1,4 +1,4 @@
-<script lang="ts" >
+<script setup lang="ts">
 import keys from 'lodash/keys'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
@@ -16,125 +16,124 @@ type SuggestedDonation = {
     [period in Period]: number;
   };
 }
-type LabelForChange ={
+type LabelForChange = {
   monthly: { [value: number]: DonationCategory }
   yearly: { [value: number]: DonationCategory }
   onetime?: { [value: number]: DonationCategory }
 }
+
 /**
  * A form to encourage donations. We usually put this form inside a modal
  */
-export default {
-  name: 'DonateForm',
-  props: {
-    /**
-     * Title of the form.
-     */
-    noTitle: {
-      type: Boolean
-    }
-  },
-  setup() {
-    const { t, locale, messages } = useI18n()
-    const amount = ref<number|undefined>(10)
-    // True if the amount wasn't changed by the user yet
-    const amountIsPristine = ref(true)
-    const installmentPeriod :Ref<Period,null>= ref('monthly')
-    const level = ref<DonationCategory|null>('conversation')
-    const campaign = ref(config.get('donate-form.tracker'))
-    const labelForChange = ref<LabelForChange>({
-      monthly: {
-        1: t('donate-form.result.conversation') as DonationCategory,
-        15: t('donate-form.result.rules') as DonationCategory,
-        50: t('donate-form.result.world') as DonationCategory
-      },
-      yearly: {
-        1: t('donate-form.result.conversation') as DonationCategory,
-        180: t('donate-form.result.rules') as DonationCategory,
-        600: t('donate-form.result.world') as DonationCategory
-      }
-    })
+defineOptions({
+  name: 'DonateForm'
+})
 
-    const suggestedAmount = ref<SuggestedDonation>(
-        //@ts-ignore retrieves a map of messages from the i18n json
-      messages.value[locale.value]['donate-form']['suggesteddonation']
-    )
-    const listBenefits = ref<string[]>(
-        //@ts-ignore retrieves a list of messages from the i18n json
-      messages.value[locale.value]['donate-form']['benefits']['list']
-    )
-    const ranges = computed(() : {[value: number]:DonationCategory }=> {
-      if (installmentPeriod.value === 'onetime') {
-        return labelForChange.value['yearly']
-      }
-      return labelForChange.value[installmentPeriod.value]
-    })
-    const firstRange = computed(() => {
-      const key: number = Number(keys(ranges.value)[0])
-      return ranges.value[key]
-    })
-    const changeThe = computed(() => {
-      // Final label
-      let label:DonationCategory|null = null
-      forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
-        label = amount.value && (amount.value >= amountV) ? ranges.value[amountV] : label
-      })
-      return label
-    })
-    watch(installmentPeriod, () => {
-      if (!amountIsPristine.value) {
-        return
-      }
-
-      // Set suggested amount
-      amount.value = getSuggestedAmount()
-    })
-    watch(
-      () => amount.value,
-      (v) => {
-        level.value = changeThe.value
-
-        // Set manual amount
-        return (amount.value = v)
-      }
-    )
-    function getSuggestedAmount() {
-      if (!amountIsPristine.value) {
-        return
-      }
-
-      if (!level.value) {
-        level.value = firstRange.value
-      }
-
-      // Return suggested amount
-      return suggestedAmount.value[level.value][installmentPeriod.value]
-    }
-    function selectLevel(levelSelected: DonationCategory) {
-      // Set chose level
-      level.value = levelSelected
-
-      // Set suggested amount
-      amount.value = getSuggestedAmount()
-    }
-    function amountIsNotPristine() {
-      amountIsPristine.value = false
-    }
-
-    return {
-      t,
-      amount,
-      level,
-      campaign,
-      labelForChange,
-      installmentPeriod,
-      changeThe,
-      listBenefits,
-      selectLevel,
-      amountIsNotPristine
-    }
+/**
+ * Define props
+ */
+defineProps({
+  /**
+   * Title of the form.
+   */
+  noTitle: {
+    type: Boolean
   }
+})
+
+const { t, locale, messages } = useI18n()
+const amount = ref<number|undefined>(10)
+// True if the amount wasn't changed by the user yet
+const amountIsPristine = ref(true)
+const installmentPeriod: Ref<Period> = ref('monthly')
+const level = ref<DonationCategory|null>('conversation')
+const campaign = ref(config.get('donate-form.tracker'))
+const labelForChange = ref<LabelForChange>({
+  monthly: {
+    1: t('donate-form.result.conversation') as DonationCategory,
+    15: t('donate-form.result.rules') as DonationCategory,
+    50: t('donate-form.result.world') as DonationCategory
+  },
+  yearly: {
+    1: t('donate-form.result.conversation') as DonationCategory,
+    180: t('donate-form.result.rules') as DonationCategory,
+    600: t('donate-form.result.world') as DonationCategory
+  }
+})
+
+const suggestedAmount = ref<SuggestedDonation>(
+    //@ts-ignore retrieves a map of messages from the i18n json
+  messages.value[locale.value]['donate-form']['suggesteddonation']
+)
+const listBenefits = ref<string[]>(
+    //@ts-ignore retrieves a list of messages from the i18n json
+  messages.value[locale.value]['donate-form']['benefits']['list']
+)
+
+const ranges = computed((): {[value: number]:DonationCategory} => {
+  if (installmentPeriod.value === 'onetime') {
+    return labelForChange.value['yearly']
+  }
+  return labelForChange.value[installmentPeriod.value]
+})
+
+const firstRange = computed(() => {
+  const key: number = Number(keys(ranges.value)[0])
+  return ranges.value[key]
+})
+
+const changeThe = computed(() => {
+  // Final label
+  let label: DonationCategory|null = null
+  forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
+    label = amount.value && (amount.value >= amountV) ? ranges.value[amountV] : label
+  })
+  return label
+})
+
+function getSuggestedAmount() {
+  if (!amountIsPristine.value) {
+    return
+  }
+
+  if (!level.value) {
+    level.value = firstRange.value
+  }
+
+  // Return suggested amount
+  return suggestedAmount.value[level.value][installmentPeriod.value]
 }
+
+function selectLevel(levelSelected: DonationCategory) {
+  // Set chose level
+  level.value = levelSelected
+
+  // Set suggested amount
+  amount.value = getSuggestedAmount()
+}
+
+function amountIsNotPristine() {
+  amountIsPristine.value = false
+}
+
+watch(installmentPeriod, () => {
+  if (!amountIsPristine.value) {
+    return
+  }
+
+  // Set suggested amount
+  amount.value = getSuggestedAmount()
+})
+
+watch(
+  () => amount.value,
+  (v) => {
+    level.value = changeThe.value
+
+    // Set manual amount
+    return (amount.value = v)
+  }
+)
 </script>
 
 <template>
@@ -164,7 +163,7 @@ export default {
       >
         <div class="donate-form__payment__levels row">
           <div
-            class="col donate-form__payment__level"
+            class="col donate-form__payment__level donate-form__payment__level--conversation"
             :class="{ active: level === 'conversation' }"
             @click="selectLevel('conversation')"
           >
@@ -187,7 +186,7 @@ export default {
             </div>
           </div>
           <div
-            class="col donate-form__payment__level"
+            class="col donate-form__payment__level donate-form__payment__level--rules"
             :class="{ active: level === 'rules' }"
             @click="selectLevel('rules')"
           >
@@ -208,7 +207,7 @@ export default {
             </div>
           </div>
           <div
-            class="col donate-form__payment__level"
+            class="col donate-form__payment__level donate-form__payment__level--world"
             :class="{ active: level === 'world' }"
             @click="selectLevel('world')"
           >

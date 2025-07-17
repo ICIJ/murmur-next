@@ -1,6 +1,6 @@
 import { SecretInput } from '@/components'
-import { StoryObj } from '@storybook/vue3'
-import { Size } from '../../../lib/enums'
+import { StoryObj } from '@storybook/vue3-vite'
+import {SIZE} from "@/enums";
 
 export default {
   title: 'Murmur/components/SecretInput',
@@ -37,19 +37,19 @@ export const SmallSize = Template.bind({})
 SmallSize.args = {
   value: 'this is a secret passphrase 🕵️‍♀️',
   visible: true,
-  size: Size.sm
+  size: SIZE.sm
 }
 export const MediumSize = Template.bind({})
 MediumSize.args = {
   value: 'this is a secret passphrase 🕵️‍♀️',
   visible: true,
-  size: Size.md
+  size: SIZE.md
 }
 export const LargeSize = Template.bind({})
 LargeSize.args = {
   value: 'this is a secret passphrase 🕵️‍♀️',
   visible: true,
-  size: Size.lg
+  size: SIZE.lg
 }
 export const HapticCopyVariant = Template.bind({})
 HapticCopyVariant.args = {

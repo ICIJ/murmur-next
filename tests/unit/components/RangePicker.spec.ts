@@ -67,7 +67,7 @@ describe('RangePicker.vue', () => {
       propsData: { range: [0.1, 0.11], minDistance: 0.05 }
     })
 
-    wrapper.vm.dragStartBound(0.06)
+    wrapper.vm.dragStartBound({detail:0.06})
     await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.start).not.toBe(0.06)

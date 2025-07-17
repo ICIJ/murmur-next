@@ -1,5 +1,5 @@
 import { BarChart } from '@/datavisualisations'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
   title: 'Murmur/datavisualisations/BarChart',

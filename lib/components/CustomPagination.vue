@@ -1,117 +1,112 @@
-<script lang="ts">
-import { computed, defineComponent, ref, PropType } from 'vue'
+<script setup lang="ts">
+import { computed, ref, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Size } from '@/enums'
-import { BPagination } from 'bootstrap-vue-next'
+import {BPagination, Size} from 'bootstrap-vue-next'
 
 import PhosphorIcon from './PhosphorIcon.vue'
+import {PhCaretLeft, PhCaretRight} from "@phosphor-icons/vue";
+import {SIZE} from "@/enums";
 
-export default defineComponent({
-  name: 'CustomPagination',
-  components: { BPagination, PhosphorIcon },
-  props: {
-    /**
-     * Total items to be stored in pages
-     */
-    totalRows: {
-      type: Number,
-      default: 0
-    },
-    /**
-     * Sets the quantity of items per page
-     */
-    perPage: {
-      type: Number,
-      default: 20
-    },
-    /**
-     * Grabs and syncs the currentPage variable passed down from the parent in v-model
-     */
-    modelValue: {
-      type: Number,
-      default: 1
-    },
-    /**
-     * Displays the pagination element in pills styling as opposed to the default boxes
-     */
-    pills: {
-      type: Boolean
-    },
-    /**
-     * Set the size of the input: 'sm', 'md' (default), or 'lg'.
-     */
-    size: {
-      type: String as PropType<Size>,
-      default: Size.md,
-      validator: (value: Size) => Object.values(Size).includes(value)
-    },
-    /**
-     * Compact layout
-     */
-    compact: {
-      type: Boolean
-    },
-    /**
-     * (Optional) Number of page. Property `size` is required for this to work
-     * properly. If `pages` is empty, it will be calculated using the size.
-     */
-    pages: {
-      type: [Number, String],
-      default: null
-    }
+/**
+ * Define options
+ */
+defineOptions({
+  name: 'CustomPagination'
+})
+
+const props = defineProps({
+  /**
+   * Total items to be stored in pages
+   */
+  totalRows: {
+    type: Number,
+    default: 0
   },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const { t } = useI18n()
-    const customPaginationForm = ref<HTMLFormElement | null>(null)
-    const currentPageInput = ref('')
-    const invalidNumberError = t('custom-pagination.invalid-number-error')
-    const errors = ref<string[]>([])
-    const inputPlaceholder = computed((): string => {
-      const compact = props.compact ? 'compact-' : ''
-      return t(`custom-pagination.${compact}placeholder`) as string
-    })
-    const numberOfPages = computed((): number => {
-      if (props.pages === null) {
-        return Math.ceil(props.totalRows / props.perPage)
-      }
-      return Number(props.pages)
-    })
-    const paginationClassList = computed((): string[] => {
-      return props.size === Size.sm ? ['float-end', 'me-1'] : []
-    })
-
-    function applyJumpFormPage(): void {
-      const number = isNaN(parseInt(currentPageInput.value))
-        ? 0
-        : parseInt(currentPageInput.value)
-      errors.value = []
-      if (number > numberOfPages.value || number < 1) {
-        errors.value.push(invalidNumberError)
-      }
-      if (errors.value.length === 0) {
-        updateModelValue(parseInt(currentPageInput.value))
-      }
-    }
-
-    function updateModelValue(value: string | number): void {
-      emit('update:modelValue', value)
-    }
-
-    return {
-      customPaginationForm,
-      currentPageInput,
-      errors,
-      inputPlaceholder,
-      numberOfPages,
-      paginationClassList,
-      t,
-      applyJumpFormPage,
-      updateModelValue
-    }
+  /**
+   * Sets the quantity of items per page
+   */
+  perPage: {
+    type: Number,
+    default: 20
+  },
+  /**
+   * Grabs and syncs the currentPage variable passed down from the parent in v-model
+   */
+  modelValue: {
+    type: Number,
+    default: 1
+  },
+  /**
+   * Displays the pagination element in pills styling as opposed to the default boxes
+   */
+  pills: {
+    type: Boolean
+  },
+  /**
+   * Set the size of the input: 'sm', 'md' (default), or 'lg'.
+   */
+  size: {
+    type: String as PropType<Size>,
+    default: SIZE.md
+  },
+  /**
+   * Compact layout
+   */
+  compact: {
+    type: Boolean
+  },
+  /**
+   * (Optional) Number of page. Property `size` is required for this to work
+   * properly. If `pages` is empty, it will be calculated using the size.
+   */
+  pages: {
+    type: [Number, String],
+    default: null
   }
 })
+
+
+const emit = defineEmits(['update:modelValue'])
+
+const { t } = useI18n()
+const customPaginationForm = ref<HTMLFormElement | null>(null)
+const currentPageInput = ref('')
+const invalidNumberError = t('custom-pagination.invalid-number-error')
+const errors = ref<string[]>([])
+
+const inputPlaceholder = computed((): string => {
+  const compact = props.compact ? 'compact-' : ''
+  return t(`custom-pagination.${compact}placeholder`) as string
+})
+
+const numberOfPages = computed((): number => {
+  if (props.pages === null) {
+    return Math.ceil(props.totalRows / props.perPage)
+  }
+  return Number(props.pages)
+})
+
+const paginationClassList = computed((): string[] => {
+  return props.size === SIZE.sm ? ['float-end', 'me-1'] : []
+})
+
+function applyJumpFormPage(): void {
+  const number = isNaN(parseInt(currentPageInput.value))
+    ? 0
+    : parseInt(currentPageInput.value)
+  errors.value = []
+  if (number > numberOfPages.value || number < 1) {
+    errors.value.push(invalidNumberError)
+  }
+  if (errors.value.length === 0) {
+    updateModelValue(parseInt(currentPageInput.value))
+  }
+}
+
+function updateModelValue(value: string | number): void {
+  emit('update:modelValue', value)
+}
 </script>
 
 <template>
@@ -142,13 +137,13 @@ export default defineComponent({
           <template #prev-text="{ disabled, index, page }">
             <!-- @slot The 'Go to previous page' button content -->
             <slot name="prev-text" v-bind="{ disabled, index, page }">
-              <phosphor-icon name="caret-left" size="0.75em" />
+              <phosphor-icon :name="PhCaretLeft" size="0.75em" />
             </slot>
           </template>
           <template #next-text="{ disabled, index, page }">
             <!-- @slot The 'Go to next page' button content -->
             <slot name="next-text" v-bind="{ disabled, index, page }">
-              <phosphor-icon name="caret-right" size="0.75em" />
+              <phosphor-icon :name="PhCaretRight" size="0.75em" />
             </slot>
           </template>
           <template #page="{ active, content, disabled, index, page }">
@@ -188,11 +183,11 @@ export default defineComponent({
             <small
               v-if="errors.length"
               id="invalid-number-error"
-              class="float-start mt-1 ms-1 text-danger"
+              class="custom-pagination__errors float-start mt-1 ms-1 text-danger"
             >
               {{ errors[0] }}
             </small>
-            <small v-else class="float-start mt-1 ms-1 text-muted">
+            <small v-else class="custom-pagination__number-of-pages float-start mt-1 ms-1 text-muted">
               {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
             </small>
           </template>

@@ -10,7 +10,6 @@ import uniqueId from 'lodash/uniqueId'
 import { RecycleScroller } from 'vue-virtual-scroller'
 
 import {
-  ref,
   toRef,
   computed,
   watch,
@@ -20,6 +19,7 @@ import {
 } from 'vue'
 
 import PhosphorIcon from './PhosphorIcon.vue'
+import { PhCheckSquare, PhSquare} from "@phosphor-icons/vue";
 
 const KEY_ESC_CODE = 27
 const KEY_UP_CODE = 38
@@ -130,7 +130,7 @@ onMounted(() => {
   activateItemOrItems()
   toggleKeys()
 })
-  
+
 onUnmounted(unbindKeys)
 
 const cssProps = computed(() => {
@@ -178,7 +178,7 @@ watch(modelValue, (itemOrItems) => {
 
 watch(activeItems, (itemOrItems) => {
   /**
-   * Fired when the selected value change. It will pass a canonical value
+   * Fired when the selected value changes. It will pass a canonical value
    * or an array of values if the property `multiple` is set to true.
    *
    * @event input
@@ -188,7 +188,7 @@ watch(activeItems, (itemOrItems) => {
 },{ deep: true })
 
 function indexIcon(item: Item) {
-  return itemActivated(item) ? 'check-square' : 'square'
+  return itemActivated(item) ? PhCheckSquare : PhSquare
 }
 
 function itemActivated(item: Item) {
@@ -213,7 +213,7 @@ function clickToSelectItem(item: Item) {
 
 function clickToAddItem(item: Item) {
   /**
-   * Fired when user click on an item
+   * Fired when a user clicks on an item
    *
    * @event click
    * @type {String, Object, Array, Number}
@@ -224,7 +224,7 @@ function clickToAddItem(item: Item) {
 
 function clickToSelectRangeToItem(item: Item) {
   /**
-   * Fired when user click on an item
+   * Fired when a user clicks on an item
    *
    * @event click
    * @type {String, Object, Array, Number}

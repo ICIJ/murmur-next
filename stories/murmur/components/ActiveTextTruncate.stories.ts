@@ -1,5 +1,5 @@
 import { ActiveTextTruncate } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { bgStripedDecorator } from '../decorators'
 
 type Story = StoryObj<typeof ActiveTextTruncate>

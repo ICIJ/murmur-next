@@ -1,5 +1,5 @@
 import { ColumnChart } from '@/datavisualisations'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { leakSizeDecorator } from '../decorators'
 
 export default {

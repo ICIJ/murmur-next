@@ -1,5 +1,5 @@
 import { SlideUpDown } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { toggleDecorator } from '../decorators'
 
 export default {

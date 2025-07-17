@@ -1,5 +1,5 @@
 import { ResponsiveIframe } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
   title: 'Murmur/components/ResponsiveIframe',

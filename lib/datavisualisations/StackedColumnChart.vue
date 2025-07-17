@@ -16,8 +16,8 @@ import {
   nextTick,
   watch
 } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/chart.js'
-import { useQueryObserver } from '@/composables/queryObserver.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart'
+import { useQueryObserver } from '@/composables/useQueryObserver'
 
 export default defineComponent({
   name: 'StackedColumnChart',
@@ -184,7 +184,7 @@ export default defineComponent({
     const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
     const isLoaded = ref(false)
     const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-    const { querySelector, querySelectorAll } = useQueryObserver(el)
+    const { querySelector, querySelectorAll } = useQueryObserver(el.value)
 
     const {
       elementsMaxBBox,
@@ -594,7 +594,6 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-@use 'sass:math';
 @import '../styles/lib';
 
 .stacked-column-chart {

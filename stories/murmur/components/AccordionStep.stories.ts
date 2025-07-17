@@ -1,5 +1,5 @@
 import { AccordionStep } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { BButton } from 'bootstrap-vue-next'
 const stepsEnum = Object.freeze({
   MAILVELOPE: Symbol('MAILVELOPE'),

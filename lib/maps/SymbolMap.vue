@@ -24,7 +24,7 @@ import {
   chartProps,
   getChartProps,
   useChart
-} from '@/composables/chart.js'
+} from '@/composables/useChart'
 import {
   ComponentPublicInstance,
   computed,
@@ -623,7 +623,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-@use 'sass:math';
 @import '../styles/lib';
 
 .symbol-map {

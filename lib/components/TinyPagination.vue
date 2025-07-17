@@ -118,15 +118,16 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref, computed, watch } from 'vue'
+import { computed, PropType, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ButtonVariant } from 'bootstrap-vue-next'
-import {  BFormInput, BButton } from 'bootstrap-vue-next'
+import type {ButtonVariant, Size} from 'bootstrap-vue-next'
+import { BButton, BFormInput } from 'bootstrap-vue-next'
 import { directive as vInputAutowidth } from "vue-input-autowidth"
 
-import { Size } from '@/enums'
+import { SIZE } from '@/enums'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
 import PhosphorIcon from './PhosphorIcon.vue'
+import {PhCaretDoubleLeft, PhCaretRight} from "@phosphor-icons/vue";
 
 /**
  * Grabs and syncs the currentPage variable passed down from the parent in v-model
@@ -162,8 +163,7 @@ const props = defineProps({
    */
   size: {
     type: String as PropType<Size>,
-    default: Size.md,
-    validator: (value: Size) => Object.values(Size).includes(value)
+    default: SIZE.md
   },
   /**
    * (Optional) Number of page. Property `size` is required for this to work
@@ -188,7 +188,7 @@ const props = defineProps({
   /**
    * Hide the first page button
    */
-  noFirst: {  
+  noFirst: {
     type: Boolean
   },
   /**
@@ -202,7 +202,7 @@ const props = defineProps({
    */
   noPrevious: {
     type: Boolean
-  }, 
+  },
   /**
    * Hide the next page button
    */
@@ -221,14 +221,14 @@ const props = defineProps({
    */
   nextPageIcon: {
     type: String,
-    default: 'caret-right'
+    default: PhCaretRight
   },
   /**
    * Phosphor icon of the first page button
    */
   firstPageIcon: {
     type: String,
-    default: 'caret-double-left'
+    default: PhCaretDoubleLeft
   },
   /**
    * Phosphor icon of the last page button
@@ -350,12 +350,12 @@ const title = computed(() => {
 
   if (props.row) {
     const locales = { lastRangeRow: n(lastRangeRow.value), totalRows: n(props.totalRows) }
-    
+
     // Only one per page, meaning we navigate through rows one by one
     if (props.perPage === 1) {
       return props.compact ? '' : t('tiny-pagination.uniqueRowRange', locales, props.totalRows)
     }
-  
+
     // The total is less or equal than the current row range
     if (props.totalRows <= (props.perPage * pageValue.value)) {
       return t('tiny-pagination.rowRangeFewer', locales, props.totalRows)
@@ -365,7 +365,7 @@ const title = computed(() => {
   }
 
   const locales = { numberOfPages: n(numberOfPages.value) }
-  
+
   return t('tiny-pagination.total', locales, props.totalRows)
 })
 

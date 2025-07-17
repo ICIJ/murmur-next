@@ -1,5 +1,5 @@
 import { TexturedDeck } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { BButton } from 'bootstrap-vue-next'
 import { Brand } from '@/components'
 

@@ -2,7 +2,7 @@
 import * as d3 from 'd3'
 import isFunction from 'lodash/isFunction'
 import identity from 'lodash/identity'
-import { chartProps, getChartProps, useChart } from '@/composables/chart.js'
+import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import {
   computed,
   ref,
@@ -18,7 +18,6 @@ const castCall = (fnOrValue = identity, ...rest) =>
 
 export default defineComponent({
   name: 'LineChart',
-  //mixins: [chart],
   props: {
     /**
      * Color of the line (uses the CSS variable --line-color by default)

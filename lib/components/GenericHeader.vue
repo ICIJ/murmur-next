@@ -38,7 +38,7 @@
         aria-label="Toggle navigation"
         @click="toggleNavbar"
       >
-        <phosphor-icon name="list" size="2rem" class="text-primary" />
+        <phosphor-icon :name="PhList" size="2rem" class="text-primary" />
       </button>
       <div class="navbar-collapse" :class="{ collapse: collapseNavbar }">
         <ul class="navbar-nav ms-auto">
@@ -98,24 +98,23 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { BPopover } from 'bootstrap-vue-next'
 import headroom from 'vue-headroom/src/headroom.vue'
 import {
   computed,
-  defineComponent,
   type PropType,
   ref,
   ComponentPublicInstance
 } from 'vue'
-
 
 import config from '@/config'
 import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
 import { BrandMode } from '@/enums'
 import PhosphorIcon from './PhosphorIcon.vue'
+import { PhList } from "@phosphor-icons/vue";
 
 type BrandOptions = {
   noBorder: boolean
@@ -127,102 +126,60 @@ type BrandOptions = {
 /**
  * GenericHeader
  */
-export default defineComponent({
-  name: 'GenericHeader',
-  components: {
-    BPopover,
-    BrandExpansion,
-    PhosphorIcon,
-    FollowUsPopover,
-    headroom
+const props = defineProps({
+  /**
+   * CSS position of the header. Can be <em>absolute</em>, <em>relative</em>, <em>static</em> or <em>fixed</em> (default).
+   */
+  position: {
+    type: String,
+    default: 'fixed'
   },
-  props: {
-    /**
-     * CSS position of the header. Can be <em>absolute</em>, <em>relative</em>, <em>static</em> or <em>fixed</em> (default).
-     */
-    position: {
-      type: String,
-      default: 'fixed'
-    },
-    /**
-     * Disable Headroom for hiding header until needed.
-     */
-    noHeadroom: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Target link of the ICIJ logo and project name.
-     */
-    homeUrl: {
-      type: String,
-      default: () => config.get('app.home')
-    },
-    /**
-     * Default options to pass to the brand component
-     */
-    brandOptions: {
-      type: Object as PropType<BrandOptions>,
-      default: () => ({})
-    },
-    /**
-     * Target link of the donate button.
-     */
-    donateUrl: {
-      type: String,
-      default: () => config.get('app.donate-url')
-    }
+  /**
+   * Disable Headroom for hiding header until needed.
+   */
+  noHeadroom: {
+    type: Boolean,
+    default: false
   },
-  setup(props) {
-    const { t } = useI18n()
-    const followUsPopover = ref<ComponentPublicInstance<
-      typeof BPopover
-    > | null>(null)
-    const closable = ref(false)
-    const showFollowUsPopover = ref<boolean>(false)
-    const collapseNavbar = ref(true)
-    const shortMode = ref(BrandMode.Short)
-    const longMode = ref(BrandMode.Long)
-    const rootElement = computed((): string => {
-      return props.noHeadroom ? 'div' : 'headroom'
-    })
-    const appliedBrandOptions = computed((): BrandOptions => {
-      return { ...defaultBrandOptions.value, ...props.brandOptions }
-    })
-    const defaultBrandOptions = computed((): BrandOptions => {
-      return {
-        noBorder: true,
-        size: 50,
-        color: 'white',
-        background: '#A10207'
-      }
-    })
-    function closeFollowUsPopover() {
-      if (followUsPopover.value?.hide) {
-        followUsPopover.value?.hide(new Event('forceHide'))
-      }
-      showFollowUsPopover.value = false
-    }
-    function toggleNavbar(): void {
-      collapseNavbar.value = !collapseNavbar.value
-      closeFollowUsPopover()
-    }
-
-    return {
-      t,
-      rootElement,
-      showFollowUsPopover,
-      followUsPopover,
-      collapseNavbar,
-      shortMode,
-      longMode,
-      appliedBrandOptions,
-      closable,
-      closeFollowUsPopover,
-      toggleNavbar
-    }
+  /**
+   * Target link of the ICIJ logo and project name.
+   */
+  homeUrl: {
+    type: String,
+    default: () => config.get('app.home')
+  },
+  /**
+   * Target link of the donate button.
+   */
+  donateUrl: {
+    type: String,
+    default: () => config.get('app.donate-url')
   }
 })
+
+const { t } = useI18n()
+const followUsPopover = ref<ComponentPublicInstance<
+  typeof BPopover
+> | null>(null)
+const showFollowUsPopover = ref<boolean>(false)
+const collapseNavbar = ref(true)
+const shortMode = ref(BrandMode.Short)
+const longMode = ref(BrandMode.Long)
+const rootElement = computed((): string => {
+  return props.noHeadroom ? 'div' : 'headroom'
+})
+
+function closeFollowUsPopover() {
+  if (followUsPopover.value?.hide) {
+    followUsPopover.value?.hide(new Event('forceHide'))
+  }
+  showFollowUsPopover.value = false
+}
+
+function toggleNavbar(): void {
+  collapseNavbar.value = !collapseNavbar.value
+  closeFollowUsPopover()
+}
 </script>
 
 <style lang="scss">

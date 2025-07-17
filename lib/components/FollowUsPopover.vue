@@ -4,7 +4,7 @@
       class="btn btn-link text-secondary follow-us__close"
       @click="closeSignupPopover"
     >
-      <phosphor-icon name="x" />
+      <phosphor-icon :name="PhX" />
     </button>
     <sign-up-form class="p-3" />
     <div class="px-3 pb-1 text-uppercase text-muted fw-bold">
@@ -18,7 +18,7 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Twitter"
         >
-          <phosphor-icon name="x-logo" size="1.5em" fill />
+          <phosphor-icon :name="PhXLogo" size="1.5em" fill />
           <span class="visually-hidden">Twitter</span>
         </a>
       </div>
@@ -29,7 +29,7 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Facebook"
         >
-          <phosphor-icon name="facebook-logo" size="1.5em" fill />
+          <phosphor-icon :name="PhFacebookLogo" size="1.5em" fill />
           <span class="visually-hidden">Facebook</span>
         </a>
       </div>
@@ -40,7 +40,7 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Linkedin"
         >
-          <phosphor-icon name="linkedin-logo" size="1.5em" fill />
+          <phosphor-icon :name="PhLinkedinLogo" size="1.5em" fill />
           <span class="visually-hidden">Linkedin</span>
         </a>
       </div>
@@ -48,41 +48,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import SignUpForm from '@/components/SignUpForm.vue'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import {PhFacebookLogo, PhLinkedinLogo, PhX, PhXLogo} from "@phosphor-icons/vue";
 
 /**
  * FollowUsPopover
  */
-export default defineComponent({
-  name: 'FollowUsPopover',
-  components: {
-    PhosphorIcon,
-    SignUpForm
-  },
-  emits: ['update:close'],
-  setup(_props, { emit }) {
-    const { t } = useI18n()
-    
-    function closeSignupPopover(): void {
-      /**
-       * Fired when user click on the `close` button
-       *
-       * @event update:close
-       * @type {boolean}
-       */
-      emit('update:close', false)
-    }
+const emit = defineEmits(['update:close'])
+const { t } = useI18n()
 
-    return {
-      t,
-      closeSignupPopover
-    }
-  }
-})
+/**
+ * Fired when a user clicks on the `close` button
+ *
+ * @event update:close
+ * @type {boolean}
+ */
+function closeSignupPopover(): void {
+  emit('update:close', false)
+}
 </script>
 
 <style lang="scss" scoped>

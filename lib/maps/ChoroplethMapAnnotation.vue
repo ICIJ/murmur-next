@@ -1,24 +1,10 @@
 <script lang="ts">
-import { values } from 'lodash'
 import { geoDistance, GeoProjection } from 'd3-geo'
-import { computed, defineComponent, inject, toRaw } from 'vue'
+import {computed, defineComponent, inject, PropType, toRaw} from 'vue'
 import { ParentKey } from '@/keys'
 import { ParentMap } from '@/types'
+import {PLACEMENTS} from "@/enums";
 
-export const PLACEMENTS = {
-  TOP: 'top',
-  TOPLEFT: 'topleft',
-  TOPRIGHT: 'topright',
-  RIGHT: 'right',
-  RIGHTTOP: 'righttop',
-  RIGHTBOTTOM: 'rightbottom',
-  BOTTOM: 'bottom',
-  BOTTOMLEFT: 'bottomleft',
-  BOTTOMRIGHT: 'bottomright',
-  LEFT: 'left',
-  LEFTTOP: 'lefttop',
-  LEFTBOTTOM: 'leftbottom'
-}
 
 export default defineComponent({
   name: 'ChoroplethMapAnnotation',
@@ -52,7 +38,7 @@ export default defineComponent({
       default: 150
     },
     /**
-     * If true the annotation will scale with the map zoom.
+     * If true, the annotation will scale with the map zoom.
      */
     scale: {
       type: Boolean
@@ -85,10 +71,8 @@ export default defineComponent({
      * and leftbottom. If `null`, the annotation will be centered.
      */
     placement: {
-      type: String,
-      default: null,
-      validator: (p: null | string) =>
-        p === null || values(PLACEMENTS).includes(p)
+      type: String as PropType<PLACEMENTS>,
+      default: null
     }
   },
   setup(props) {
@@ -240,7 +224,7 @@ export default defineComponent({
         if (!projection.value?.invert) {
           return 0
         }
-        const mapCenter = projection.value.invert([
+        const mapCenter:[number,number] = projection.value.invert([
           mapRect.value.width / 2,
           mapRect.value.height / 2
         ])

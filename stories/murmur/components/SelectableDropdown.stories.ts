@@ -1,5 +1,5 @@
 import { SelectableDropdown } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 import { onBeforeMount, toRefs } from 'vue'
 
 const data = {

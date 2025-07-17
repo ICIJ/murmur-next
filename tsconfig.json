@@ -1,30 +1,32 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "moduleResolution": "node",
-    "resolveJsonModule":true,
-    "experimentalDecorators": true,
-    "checkJs": true,
     "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "sourceMap": true,
     "baseUrl": ".",
+    "checkJs": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "module": "esnext",
+    "resolveJsonModule":true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "useDefineForClassFields": true,
     "types": [
-      "vitest/globals"
+      "vitest/globals",
+      "node"
     ],
     "paths": {
-      "@/*": [ "lib/*"],
-    },
+      "@/*": [ "lib/*"]
+    }
   },
   "include": [
     "lib/**/*.ts",
+    "lib/**/*.d.ts",
     "lib/**/*.vue",
     "tests/**/*.ts"
   ],

@@ -1,6 +1,6 @@
-import { setup } from '@storybook/vue3'
-import { styled } from '@storybook/theming'
-import { useArgs } from '@storybook/preview-api'
+import { setup } from '@storybook/vue3-vite'
+import { styled } from 'storybook/theming'
+import { useArgs } from 'storybook/preview-api'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 
 import './preview.scss'

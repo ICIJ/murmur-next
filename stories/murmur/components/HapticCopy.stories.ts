@@ -1,5 +1,5 @@
 import { HapticCopy } from '@/components'
-import { StoryObj } from '@storybook/vue3'
+import { StoryObj } from '@storybook/vue3-vite'
 type Story = StoryObj<typeof HapticCopy>
 
 const Template: Story = (args: any, { argTypes }: any) => ({

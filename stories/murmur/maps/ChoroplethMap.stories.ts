@@ -1,5 +1,5 @@
 import {ChoroplethMap, ChoroplethMapAnnotation} from '@/maps'
-import {StoryObj} from '@storybook/vue3'
+import {StoryObj} from '@storybook/vue3-vite'
 import {scaleThreshold} from 'd3'
 import {geoOrthographic} from 'd3-geo'
 
