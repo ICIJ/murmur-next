@@ -112,3 +112,21 @@ export interface ButtonIconProps{
   hover?: boolean,
   truncate?: boolean
 }
+export interface PhosphorIconProps {
+  name: string|string[]|IconPhosphor,
+  size?: IconSize | string,
+  scale?: number,
+  variant?: TextColorVariant,
+  hoverVariant?: TextColorVariant,
+  fill?: boolean,
+  weight?:IconWeight,
+  hoverWeight?:IconWeight,
+  beat?:boolean,
+  beatDuration?:string,
+  fade?: boolean,
+  fadeDuration?:string,
+  spin?: boolean,
+  spinReverse?: boolean,
+  spinDuration?:string,
+  hover?: boolean,
+}

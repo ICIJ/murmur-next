@@ -51,29 +51,9 @@ import isArray from 'lodash/isArray'
 import isObject from 'lodash/isObject'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
-import {IconPhosphor, IconSize, IconWeight} from "@/types";
+import {IconPhosphor, IconWeight, PhosphorIconProps} from "@/types";
 import {ICON_WEIGHT} from "@/enums";
-import {TextColorVariant} from "bootstrap-vue-next";
 
-
-interface PhosphorIconProps {
-  name: string|string[]|IconPhosphor,
-  size?: IconSize | string,
-  scale?: number,
-  variant?: TextColorVariant,
-  hoverVariant?: TextColorVariant,
-  fill?: boolean,
-  weight?:IconWeight,
-  hoverWeight?:IconWeight,
-  beat?:boolean,
-  beatDuration?:string,
-  fade?: boolean,
-  fadeDuration?:string,
-  spin?: boolean,
-  spinReverse?: boolean,
-  spinDuration?:string,
-  hover?: boolean,
-}
 const props = withDefaults(defineProps<PhosphorIconProps>(),{
   scale:1,
   fill:false,
