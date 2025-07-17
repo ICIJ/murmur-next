@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import {mount, flushPromises, shallowMount} from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
 
@@ -8,6 +8,7 @@ describe('AdvancedLinkForm.vue', () => {
     const wrapper = mount(AdvancedLinkForm, { global })
     expect(wrapper.vm).toBeTruthy()
   })
+
 
   it('should create 4 nav items (tabs) by default', async () => {
     const wrapper = mount(AdvancedLinkForm, { global })

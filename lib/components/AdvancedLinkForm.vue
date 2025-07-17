@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {computed, Ref, PropType, useTemplateRef } from 'vue'
-import HapticCopy from './HapticCopy.vue'
-
 import { useI18n } from 'vue-i18n'
-import {ButtonVariant} from "bootstrap-vue-next";
+import {uniqueId} from "lodash"
+import {ButtonVariant} from "bootstrap-vue-next"
 
+import HapticCopy from './HapticCopy.vue'
 
 interface TextRange {
   moveToElementText: Function
@@ -96,6 +96,8 @@ const props = defineProps({
     type: Boolean
   }
 })
+const advanceLinkFormId = uniqueId('advance-link-form-')
+
 const { t } = useI18n()
 const rawInput = useTemplateRef<HTMLTextAreaElement>("rawInput")
 const richInput = useTemplateRef<HTMLElement>("richInput")
@@ -120,9 +122,30 @@ const formClasses = computed(() => {
 })
 
 const size = computed(() => (props.small ? 'sm' : 'md'))
-const orderedTabs =  computed(()=>["raw","rich","markdown","html"].filter(elem => props.forms.includes(elem)))
 
-const showForm = computed(() =>(name: string) => orderedTabs.value.indexOf(name) > -1)
+// default tabs order
+const defaultTabs = ["raw", "rich", "markdown", "html"]
+// generate unique id for each tab
+const defaultTabsIds = computed(()=> {
+  return defaultTabs.map(elem => `${advanceLinkFormId}-${elem}`)
+})
+
+// map default tabs to their id
+const defaultTabIdMap = computed(()=>{
+  return defaultTabs.reduce((acc, elem, index) => {
+    acc[elem] = defaultTabsIds.value[index]
+    return acc
+  },{})
+})
+
+// filter tabs to display based on props.forms
+const orderedTabs =  computed(()=> {
+  return defaultTabs
+      .filter(elem => props.forms.includes(elem))
+      .map(elem => defaultTabIdMap.value[elem])
+})
+
+const showForm = computed(() =>(name: string) => orderedTabs.value.indexOf(defaultTabIdMap.value[name]) > -1)
 const activeForm = computed(() => {return orderedTabs.value[index.value??0]?? orderedTabs.value[0]})
 function onUpdate(event:string | undefined):void{
   index.value = event? orderedTabs.value.indexOf(event):0
@@ -181,7 +204,7 @@ function selectHtml() {
     :no-fade="noFade"
     :class="formClasses"
   >
-    <b-tab id="raw" v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
+    <b-tab :id="defaultTabIdMap['raw']" v-if="showForm('raw')" :title="t('advanced-link-form.raw.tab')">
       <div class="advanced-link-form__raw" :class="{ small }">
         <b-input-group :size="size">
           <b-form-input
@@ -199,7 +222,7 @@ function selectHtml() {
         </b-input-group>
       </div>
     </b-tab>
-    <b-tab id="rich" v-if="showForm('rich')" :title="t('advanced-link-form.rich.tab')">
+    <b-tab :id="defaultTabIdMap['rich']" v-if="showForm('rich')" :title="t('advanced-link-form.rich.tab')">
       <div class="advanced-link-form__rich" :class="{ small }">
         <b-input-group :size="size">
           <a
@@ -223,7 +246,7 @@ function selectHtml() {
       </div>
     </b-tab>
     <b-tab
-        id="markdown"
+        :id="defaultTabIdMap['markdown']"
       v-if="showForm('markdown')"
       :title="t('advanced-link-form.markdown.tab')"
     >
@@ -247,7 +270,7 @@ function selectHtml() {
         </p>
       </div>
     </b-tab>
-    <b-tab id="html" v-if="showForm('html')" :title="t('advanced-link-form.html.tab')">
+    <b-tab :id="defaultTabIdMap['html']" v-if="showForm('html')" :title="t('advanced-link-form.html.tab')">
       <div class="advanced-link-form__html" :class="{ small }">
         <b-input-group :size="size">
           <b-form-input
