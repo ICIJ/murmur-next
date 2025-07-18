@@ -48,6 +48,11 @@ export { default as SymbolMap } from './maps/SymbolMap.vue'
 
 export { default as EllipsisTooltip } from './directives/EllipsisTooltip'
 
+export { useChart } from './composables/useChart'
+export { useResizeObserver } from './composables/useResizeObserver'
+export { useColorMode } from './composables/useColorMode'
+export { useQueryObserver } from './composables/useQueryObserver'
+
 type ComponentMap = {[name:string]:Component|DefineComponent}
 
 type PluginOptions = {
@@ -87,11 +92,11 @@ const Murmur = {
     // @ts-expect-error not sure why typescript sees an error here
     return Murmur.i18n.global.locale.value
   },
-  install(app: App<Element>, { 
-    useI18n = true, 
-    useBootstrap = true, 
-    useConfig = true, 
-    registerComponents = true 
+  install(app: App<Element>, {
+    useI18n = true,
+    useBootstrap = true,
+    useConfig = true,
+    registerComponents = true
   }: PluginOptions = {}) {
 
     if (useBootstrap) {
@@ -113,11 +118,10 @@ const Murmur = {
       Object.keys(this.datavisualisations).forEach((key) =>
         app.component(key, this.datavisualisations[key])
       )
-      Object.keys(this.maps).forEach((key) => 
+      Object.keys(this.maps).forEach((key) =>
         app.component(key, this.maps[key])
       )
     }
-    
   }
 }
 
