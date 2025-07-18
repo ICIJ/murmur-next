@@ -131,7 +131,7 @@ export default defineComponent({
     const responsiveCheck = ref(false)
     const embedFormCode = ref<HTMLTextAreaElement | null>(null)
     const currentUrl = computed(() => {
-      return props.url || window.location.href
+      return props.url || window?.location?.href
     })
     function iframeCodeFor(_url = currentUrl, width: string, height: string) {
       return `<iframe width="${width}" height="${height}" src="${IframeResizer.deletePymParams(
