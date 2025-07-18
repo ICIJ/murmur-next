@@ -96,7 +96,7 @@ const props = defineProps({
     type: Boolean
   }
 })
-const advanceLinkFormId = uniqueId('advance-link-form-')
+const advancedLinkFormId = uniqueId('advanced-link-form-')
 
 const { t } = useI18n()
 const rawInput = useTemplateRef<HTMLTextAreaElement>("rawInput")
@@ -127,12 +127,12 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
 const defaultTabs = ["raw", "rich", "markdown", "html"]
 // generate unique id for each tab
 const defaultTabsIds = computed(()=> {
-  return defaultTabs.map(elem => `${advanceLinkFormId}-${elem}`)
+  return defaultTabs.map(elem => `${advancedLinkFormId}-${elem}`)
 })
 
 // map default tabs to their id
 const defaultTabIdMap = computed(()=>{
-  return defaultTabs.reduce((acc, elem, index) => {
+  return defaultTabs.reduce((acc:{[key:string]:string}, elem, index) => {
     acc[elem] = defaultTabsIds.value[index]
     return acc
   },{})
