@@ -4,6 +4,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // Vite and plugins
 import { defineConfig } from 'vite'
+// @ts-ignore
 import Vue from '@vitejs/plugin-vue'
 import DTS from 'vite-plugin-dts' // generates d.ts files
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
@@ -88,14 +89,16 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        quietDeps: true,
-        silenceDeprecations: ['legacy-js-api'],
         api: 'modern',
+        silenceDeprecations: ['legacy-js-api', 'import','mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
         additionalData: `
             @use 'sass:math';
             @use 'sass:color';
-            @import '@/styles/lib.scss';
+            @import "@/styles/lib.scss";
           `
+      },
+      sass: { // https://github.com/twbs/bootstrap/issues/40962
+        quietDeps: true,
       }
     }
   },
