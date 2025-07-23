@@ -138,13 +138,18 @@ const buttonProps = computed(() => ({
 }))
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .button-icon {
-  &.btn { /* force overriding display-block from bootstrap */
+  &.btn { 
+    // force overriding display-block from bootstrap
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
     min-width: 0;
+
+    .button-icon-counter {
+      margin: -0.5em 0 -0.5em $spacer-xs;
+    }
   }
 
   --button-icon-square-size: calc(
@@ -152,11 +157,7 @@ const buttonProps = computed(() => ({
   );
 
 
-  .button-icon-counter {
-    margin: -0.5em 0 -0.5em $spacer-xs;
-  }
-
-  &--truncate {
+  &--truncate.btn {
     max-width: 100%;
 
     .button-icon__label {
@@ -167,7 +168,7 @@ const buttonProps = computed(() => ({
     }
   }
 
-  &--square {
+  &--square.btn {
     padding: 0;
     align-items: center;
     justify-content: center;
