@@ -159,7 +159,9 @@ const selectInput = (target: Ref<HTMLElement | null>) => {
   }
 }
 
-const selectRaw = () => selectInput(rawInput)
+function selectRaw() {
+  selectInput(rawInput)
+}
 
 function selectRich() {
   if (!richInput.value) return
