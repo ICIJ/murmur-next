@@ -2,10 +2,10 @@ import type {DefineComponent, PropType, StyleValue} from 'vue'
 
 import { AccordionKey, ParentKey } from '@/keys'
 import { ComputedRef } from 'vue'
-import type { GeoProjection } from 'd3-geo'
 import { Ref } from 'vue'
-import type { ButtonVariant, PopoverPlacement, Size} from "bootstrap-vue-next";
-import {TextColorVariant} from "bootstrap-vue-next";
+import {TextColorVariant} from "bootstrap-vue-next"
+import type { ButtonVariant, PopoverPlacement, Size} from "bootstrap-vue-next"
+import type { GeoProjection } from 'd3-geo'
 
 export type Step = symbol | string
  type IconPhosphorProps = {
@@ -23,6 +23,7 @@ export type Step = symbol | string
     default: false;
   }
 }
+
 export type IconPhosphor = DefineComponent<IconPhosphorProps, {}, any>;
 export type IconWeight = "bold" | "fill" | "thin" | "light" | "regular" | "duotone";
 export type IconSize = '2xs'| 'xs'| 'sm'| 'md'| 'lg'| 'xl'| '2xl'
@@ -68,9 +69,11 @@ export type ParentMap = {
   mapTransform: Ref<MapTransform>
   rotatingMapProjection: ComputedRef<GeoProjection | (()=>number[])>
 }
+
 export type ParentMapProvide = {
   [ParentKey]: ParentMap
 }
+
 export interface ButtonIconProps{
   id?: string,
   iconLeft?: string|string[]|IconPhosphor,
