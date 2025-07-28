@@ -118,16 +118,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import type {ButtonVariant, Size} from 'bootstrap-vue-next'
 import { BButton, BFormInput } from 'bootstrap-vue-next'
+import { computed, PropType, ref, watch } from 'vue'
 import { directive as vInputAutowidth } from "vue-input-autowidth"
+import { useI18n } from 'vue-i18n'
+import type { ButtonVariant, Size } from 'bootstrap-vue-next'
 
 import { SIZE } from '@/enums'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
 import PhosphorIcon from './PhosphorIcon.vue'
-import {PhCaretDoubleLeft, PhCaretRight} from "@phosphor-icons/vue";
+import { PhCaretDoubleLeft, PhCaretRight } from '@phosphor-icons/vue'
+import type { IconPhosphor } from '@/types'
 
 /**
  * Grabs and syncs the currentPage variable passed down from the parent in v-model
@@ -213,29 +214,29 @@ const props = defineProps({
    * Phosphor icon of the previous page button
    */
   previousPageIcon: {
-    type: String,
-    default: 'caret-left'
+    type: [String, Object, Array] as string|string[]|IconPhosphor,
+    default: PhCaretLeft
   },
   /**
    * Phosphor icon of the next page button
    */
   nextPageIcon: {
-    type: String,
+    type: [String, Object, Array] as string|string[]|IconPhosphor,
     default: PhCaretRight
   },
   /**
    * Phosphor icon of the first page button
    */
   firstPageIcon: {
-    type: String,
+    type: [String, Object, Array] as string|string[]|IconPhosphor,
     default: PhCaretDoubleLeft
   },
   /**
    * Phosphor icon of the last page button
    */
   lastPageIcon: {
-    type: String,
-    default: 'caret-double-right'
+    type: [String, Object, Array] as string|string[]|IconPhosphor,
+    default: PhCaretDoubleRight
   },
   /**
    * Navigation button variants
