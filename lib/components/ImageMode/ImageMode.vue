@@ -30,13 +30,14 @@ const element = useTemplateRef<HTMLElement>('element')
 
 const { colorMode } = useColorMode(element, props.defaultColorMode)
 const { querySelectorAll } = useQueryObserver(element)
+const imageModeSources = querySelectorAll('.image-mode-source')
 
 const classList = computed(() => {
   return [`image-mode--${colorMode.value}`]
 })
 
 const sources = computed(() => {
-  return querySelectorAll('.image-mode-source').value.map((source) => source.__exposed__)
+  return imageModeSources.value.map((source) => source.dataset)
 })
 
 const source = computed(() => {
