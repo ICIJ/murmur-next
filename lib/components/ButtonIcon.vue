@@ -61,9 +61,9 @@
 import {computed, ref, inject, useTemplateRef} from 'vue'
 import { uniqueId } from 'lodash'
 import { PhCircleNotch } from '@phosphor-icons/vue'
-import type { ButtonIconProps } from '@/types'
 
-import {PhosphorIcon, ButtonIconCounter} from "@/components"
+import type { ButtonIconProps } from '@/types'
+import { PhosphorIcon, ButtonIconCounter } from "@/components"
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
