@@ -72,17 +72,18 @@ const elementRef = useTemplateRef<HTMLElement>('element')
 defineOptions({
   name: 'ButtonIcon'
 })
-const props = withDefaults(defineProps<ButtonIconProps>(),{
-  square:false,
-  iconLeftLabelOffset:19,
-  iconSpinner:PhCircleNotch,
-  hideLabel:false,
-  hideTooltip:false,
-  tag:'button',
-  type:'button',
-  loadingDuration:'1s',
-  tooltipPlacement:'top',
-  tooltipDelay:() =>({ show: 0, hide: 0 })
+
+const props = withDefaults(defineProps<Omit<ButtonIconProps, 'pressed'>>(), {
+  square: false,
+  iconLeftLabelOffset: 19,
+  iconSpinner: PhCircleNotch,
+  hideLabel: false,
+  hideTooltip: false,
+  tag: 'button',
+  type: 'button',
+  loadingDuration: '1s',
+  tooltipPlacement: 'top',
+  tooltipDelay: () => ({ show: 0, hide: 0 })
 })
 
 
