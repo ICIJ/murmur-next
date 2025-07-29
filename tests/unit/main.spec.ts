@@ -34,6 +34,7 @@ describe('main.js', () => {
     expect(Murmur.components).toHaveProperty('AccordionWrapper')
     expect(Murmur.components).toHaveProperty('ActiveTextTruncate')
     expect(Murmur.components).toHaveProperty('AdvancedLinkForm')
+    expect(Murmur.components).toHaveProperty('AdvancedLinkFormTab')
     expect(Murmur.components).toHaveProperty('Brand')
     expect(Murmur.components).toHaveProperty('BrandExpansion')
     expect(Murmur.components).toHaveProperty('ButtonIcon')

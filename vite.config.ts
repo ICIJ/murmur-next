@@ -115,6 +115,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['bootstrap', 'vue', 'bootstrap-vue-next'],
       output: {
+        inlineDynamicImports: true,
         globals: {
           vue: 'Vue'
         },
