@@ -26,7 +26,10 @@ jobs:
       - name: Install Node dependencies
         run: yarn --frozen-lockfile
 
-      - name: Run tests
+      - name: Lint with ESLint
+        run: yarn lint
+
+      - name: Test with Vitest
         run: yarn test
 
   publish:
