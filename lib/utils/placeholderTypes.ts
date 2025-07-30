@@ -5,7 +5,7 @@ export interface BoxStyle {
   subClass?: string
 }
 
-export type ContentPlaceholderRowBoxes = Array<Array<number | string>>
+export type ContentPlaceholderRowBoxes = (number | string)[][]
 
 export interface ContentPlaceholderRow {
   height: number | string
@@ -14,8 +14,8 @@ export interface ContentPlaceholderRow {
 
 export interface ContentPlaceholderStyledRow {
   height: number | string
-  boxes: Array<BoxStyle>
+  boxes: BoxStyle[]
 }
 
-export type ContentPlaceholderStyledRows = Array<ContentPlaceholderStyledRow>
-export type ContentPlaceholderRows = Array<ContentPlaceholderRow>
+export type ContentPlaceholderStyledRows = ContentPlaceholderStyledRow[]
+export type ContentPlaceholderRows = ContentPlaceholderRow[]

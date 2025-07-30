@@ -6,8 +6,8 @@ import * as d3 from 'd3'
 import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
-type ColumnBar = {
-  datum: { [timeSerie: string]: any }
+interface ColumnBar {
+  datum: Record<string, any>
   width: number
   height: number
   x: number
@@ -235,7 +235,7 @@ export default defineComponent({
     })
 
     const margin = computed(
-      (): { left: number; right: number; top: number; bottom: number } => {
+      (): { left: number, right: number, top: number, bottom: number } => {
         return {
           left: props.noYAxis ? 0 : labelWidth.value + 10,
           right: 0,
@@ -245,7 +245,7 @@ export default defineComponent({
       }
     )
 
-    const padded = computed((): { width: number; height: number } => {
+    const padded = computed((): { width: number, height: number } => {
       const widthP = width.value - margin.value.left - margin.value.right
       const heightP = height.value - margin.value.top - margin.value.bottom
       return { width: widthP, height: heightP }
@@ -260,8 +260,8 @@ export default defineComponent({
     })
 
     const scaleY = computed((): d3.ScaleLinear<number, number> => {
-      const maxValue =
-        props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName))
+      const maxValue
+        = props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName))
       return d3
         .scaleLinear()
         .domain([0, maxValue])
@@ -280,8 +280,8 @@ export default defineComponent({
             padded.value.height - scaleY.value(datum[props.seriesName])
           ),
           x:
-            (scaleX.value(datum[props.timeseriesKey]) ?? 0) +
-            props.barMargin / 2,
+            (scaleX.value(datum[props.timeseriesKey]) ?? 0)
+            + props.barMargin / 2,
           y: scaleY.value(datum[props.seriesName]) ?? 0
         }
       })
@@ -302,8 +302,8 @@ export default defineComponent({
 
     const xAxisTickValues = computed((): string[] => {
       // Either use the explicit `xAxisTicks` prop or use the data
-      const ticks =
-        props.xAxisTicks ?? sortedData.value.map(iteratee(props.timeseriesKey))
+      const ticks
+        = props.xAxisTicks ?? sortedData.value.map(iteratee(props.timeseriesKey))
       // Then filter out ticks according to `this.xAxisHiddenTicks`
       return ticks.map((tick, i) => {
         return (i + 1) % xAxisHiddenTicks.value ? null : tick
@@ -313,14 +313,14 @@ export default defineComponent({
     const xAxis = computed((): d3.Axis<string> => {
       return d3
         .axisBottom(scaleX.value)
-        .tickFormat((d) => d3Formatter(d, props.xAxisTickFormat))
+        .tickFormat(d => d3Formatter(d, props.xAxisTickFormat))
         .tickValues(xAxisTickValues.value)
     })
 
     const yAxis = computed((): d3.Axis<d3.NumberValue> => {
       return d3
         .axisLeft(scaleY.value)
-        .tickFormat((d) => d3Formatter(d, props.yAxisTickFormat))
+        .tickFormat(d => d3Formatter(d, props.yAxisTickFormat))
         .ticks(props.yAxisTicks)
     })
 
@@ -337,8 +337,8 @@ export default defineComponent({
 
     function setSizes() {
       width.value = (el.value as HTMLElement)?.offsetWidth ?? 0
-      height.value =
-        props.fixedHeight !== null
+      height.value
+        = props.fixedHeight !== null
           ? props.fixedHeight
           : width.value * baseHeightRatio.value
     }
@@ -384,8 +384,8 @@ export default defineComponent({
       )
     }
 
-    watch([width, height, loadedData, mounted], update.bind(this), { immediate: true})
-    watch(() => props.socialMode, update.bind(this), { immediate: true})
+    watch([width, height, loadedData, mounted], update.bind(this), { immediate: true })
+    watch(() => props.socialMode, update.bind(this), { immediate: true })
 
     return {
       el,
@@ -425,14 +425,20 @@ export default defineComponent({
     }"
     class="column-chart"
   >
-    <svg :height="height" :width="width">
+    <svg
+      :height="height"
+      :width="width"
+    >
       <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
         <g
           v-if="!noXAxis"
           :style="{ transform: `translate(0, ${padded.height}px)` }"
           class="column-chart__axis column-chart__axis--x"
         />
-        <g v-if="!noYAxis" class="column-chart__axis column-chart__axis--y" />
+        <g
+          v-if="!noYAxis"
+          class="column-chart__axis column-chart__axis--y"
+        />
       </g>
       <g
         :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }"
@@ -456,10 +462,10 @@ export default defineComponent({
             class="column-chart__columns__item__placeholder"
           />
           <rect
+            :id="columnUniqueId(index)"
             :height="Math.max(bar.height, 0.1)"
             :width="bar.width"
             :y="bar.y"
-            :id="columnUniqueId(index)"
             class="column-chart__columns__item__bar"
           />
           <foreignObject
@@ -469,15 +475,27 @@ export default defineComponent({
             :y="bar.y"
           >
             <div class="column-chart__columns__item__hover-icon">
-              <phosphor-icon :name="hoverIcon" :size="hoverIconSize" />
+              <phosphor-icon
+                :name="hoverIcon"
+                :size="hoverIconSize"
+              />
             </div>
           </foreignObject>
         </g>
       </g>
     </svg>
     <template v-if="!noTooltips && activeBar">
-      <b-tooltip :target="activeBarId" teleport-to="body" manual :model-value="true" class="column-chart__tooltip">
-        <slot name="tooltip" v-bind="activeBar">
+      <b-tooltip
+        :target="activeBarId"
+        teleport-to="body"
+        manual
+        :model-value="true"
+        class="column-chart__tooltip"
+      >
+        <slot
+          name="tooltip"
+          v-bind="activeBar"
+        >
           <h6 class="column-chart__tooltip__heading mb-0">
             {{ formatXDatum(activeBar.datum[timeseriesKey]) }}
           </h6>
@@ -491,7 +509,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-
 
 .column-chart {
   --highlight-opacity: 0.7;

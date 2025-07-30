@@ -45,7 +45,7 @@ module.exports = function (src) {
   const { html, data: { hoistedTags, links }, dataBlockString } = markdown.render(content)
 
   // check if relative links are valid
-  links && links.forEach(link => {
+  links && links.forEach((link) => {
     link = decodeURIComponent(link)
 
     const shortname = link
@@ -67,22 +67,22 @@ module.exports = function (src) {
     if (!fs.existsSync(file) && (!altfile || !fs.existsSync(altfile))) {
       this.emitWarning(
         new Error(
-          `\nFile for relative link "${link}" does not exist.\n` +
-          `(Resolved file: ${file})\n`
+          `\nFile for relative link "${link}" does not exist.\n`
+          + `(Resolved file: ${file})\n`
         )
       )
     }
   })
 
   const res = (
-    `<template>\n` +
-      `<div>${html}</div>\n` +
-    `</template>\n` +
-    `<script>
+    `<template>\n`
+    + `<div>${html}</div>\n`
+    + `</template>\n`
+    + `<script>
       export default { }
-    </script>` +
-    (hoistedTags || []).join('\n') +
-    `\n${dataBlockString}\n`
+    </script>`
+    + (hoistedTags || []).join('\n')
+    + `\n${dataBlockString}\n`
   )
   cache.set(key, res)
   return res

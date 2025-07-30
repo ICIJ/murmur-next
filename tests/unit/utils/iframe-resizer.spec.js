@@ -35,17 +35,17 @@ describe('iframe-resizer.ts', () => {
     expect(IframeResizer.deletePymParams).toBeDefined()
   })
 
-  it("should delete Pym's params from the given location", () => {
+  it('should delete Pym\'s params from the given location', () => {
     const url = 'https://projects.icij.org/?initialWidth=720&childId=example-graphic'
     expect(IframeResizer.deletePymParams(url)).toBe('https://projects.icij.org/')
   })
 
-  it("should delete Pym's params from the other given location", () => {
+  it('should delete Pym\'s params from the other given location', () => {
     const url = 'https://projects.icij.org/test/?initialWidth=720'
     expect(IframeResizer.deletePymParams(url)).toBe('https://projects.icij.org/test/')
   })
 
-  it("shouldn't delete Pym's params from given location because there is none", () => {
+  it('shouldn\'t delete Pym\'s params from given location because there is none', () => {
     const url = 'https://projects.icij.org/test/?initial=720'
     expect(IframeResizer.deletePymParams(url)).toBe(url)
   })

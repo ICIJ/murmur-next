@@ -244,9 +244,9 @@ describe('StackedBarChart.vue', () => {
         hideEmptyValues: true,
         highlightDelay: 0,
         data: [
-          { label: 'today', foo: 90, 'baz 1': 5, 'baz 2': 5 },
-          { label: 'tomorrow', foo: 40, 'baz 1': 10, 'baz 2': 0 },
-          { label: 'next week', foo: 0, 'baz 1': 20, 'baz 2': 0 }
+          { 'label': 'today', 'foo': 90, 'baz 1': 5, 'baz 2': 5 },
+          { 'label': 'tomorrow', 'foo': 40, 'baz 1': 10, 'baz 2': 0 },
+          { 'label': 'next week', 'foo': 0, 'baz 1': 20, 'baz 2': 0 }
         ]
       }
 

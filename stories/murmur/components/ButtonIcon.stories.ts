@@ -1,6 +1,6 @@
 import { ButtonIcon } from '@/components'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
-import {VARIANT} from "@/enums";
+import { VARIANT } from '@/enums'
 
 export default {
   components: { ButtonIcon },
@@ -135,7 +135,7 @@ export const Truncated = {
     truncate: true,
     iconLeft: 'floppy-disk'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       ButtonIcon
     },
@@ -161,7 +161,7 @@ export const Loading = {
     loading: true,
     iconLeft: 'floppy-disk'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       ButtonIcon
     },
@@ -189,7 +189,7 @@ export const LoadingSpinner = {
     iconLeft: 'arrow-clockwise',
     iconSpinner: 'arrow-clockwise'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       ButtonIcon
     },

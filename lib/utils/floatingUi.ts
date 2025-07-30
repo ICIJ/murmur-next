@@ -3,11 +3,11 @@
  * It's no longer exported by BVN so we need to copy it.
  */
 
-import type {Boundary, Placement, RootBoundary} from '@floating-ui/vue'
-export {autoUpdate} from '@floating-ui/vue'
+import type { Boundary, Placement, RootBoundary } from '@floating-ui/vue'
+export { autoUpdate } from '@floating-ui/vue'
 
-import {type DirectiveBinding, h, render} from 'vue'
-import {BPopover, BPopoverProps} from "bootstrap-vue-next";
+import { type DirectiveBinding, h, render } from 'vue'
+import { BPopover, BPopoverProps } from 'bootstrap-vue-next'
 
 export const resolveBootstrapPlacement = (placement: Placement): string => {
   const [_placement] = placement.split('-')
@@ -42,13 +42,13 @@ export const resolveActiveStatus = (values: DirectiveBinding['value']): boolean 
 export const resolveContent = (
   values: DirectiveBinding['value'],
   el: HTMLElement
-): {title?: string; body?: string} => {
+): { title?: string, body?: string } => {
   const isActive = resolveActiveStatus(values)
   if (!isActive) return {}
 
-  const missingBindingValue =
-    typeof values === 'undefined' ||
-    (typeof values === 'object' && !values.title && !values.content && !values.body)
+  const missingBindingValue
+    = typeof values === 'undefined'
+      || (typeof values === 'object' && !values.title && !values.content && !values.body)
   const title = el.getAttribute('title') || el.getAttribute('data-original-title')
   if (missingBindingValue) {
     if (title) {
@@ -69,7 +69,7 @@ export const resolveContent = (
 
   // TODO: deprication remove warning in 2025-07
   if (values?.content)
-    // eslint-disable-next-line no-console
+
     console.warn('v-b-popover/v-b-tooltip: `content` is deprecated, use `body` instead')
 
   return {
@@ -98,7 +98,7 @@ export const resolveDirectiveProps = (
           ? 'top'
           : undefined,
   ...(typeof binding.value === 'object' ? binding.value : undefined),
-  ...(binding.modifiers.interactive ? {noninteractive: false} : undefined),
+  ...(binding.modifiers.interactive ? { noninteractive: false } : undefined),
   title: null,
   body: null,
 })

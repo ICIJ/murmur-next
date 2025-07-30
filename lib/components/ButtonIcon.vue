@@ -1,69 +1,77 @@
 <template>
   <b-button
-      v-bind="buttonProps"
-      :id="buttonId"
-      ref="element"
-      :to="to"
-      class="button-icon"
-      :class="classList"
-      :aria-label="tooltipText"
-      @mousenter="currentHover = true"
-      @mouseleave="currentHover = false"
+    v-bind="buttonProps"
+    :id="buttonId"
+    ref="element"
+    :to="to"
+    class="button-icon"
+    :class="classList"
+    :aria-label="tooltipText"
+    @mousenter="currentHover = true"
+    @mouseleave="currentHover = false"
   >
     <slot name="start" />
     <phosphor-icon
-        v-if="iconLeft || (!iconLeft && !iconRight && loading)"
-        v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset, delay: tooltipDelay }"
-        :name="iconLeftOrSpinner"
-        :size="iconLeftSize"
-        :weight="iconLeftWeight"
-        :hover-weight="iconLeftHoverWeight"
-        :spin="loading"
-        :spin-duration="loadingDuration"
-        :variant="iconLeftVariant"
-        :hover-variant="iconLeftHoverVariant"
-        :hover="currentHover"
-        class="button-icon__icon-left"
+      v-if="iconLeft || (!iconLeft && !iconRight && loading)"
+      v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset, delay: tooltipDelay }"
+      :name="iconLeftOrSpinner"
+      :size="iconLeftSize"
+      :weight="iconLeftWeight"
+      :hover-weight="iconLeftHoverWeight"
+      :spin="loading"
+      :spin-duration="loadingDuration"
+      :variant="iconLeftVariant"
+      :hover-variant="iconLeftHoverVariant"
+      :hover="currentHover"
+      class="button-icon__icon-left"
     />
-    <span v-if="!hideLabel" class="button-icon__label">
+    <span
+      v-if="!hideLabel"
+      class="button-icon__label"
+    >
       <slot v-bind="{ labelOrLoadingText }">{{ labelOrLoadingText }}</slot>
     </span>
     <phosphor-icon
-        v-if="iconRight"
-        v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset, delay: tooltipDelay }"
-        :name="iconRightOrSpinner"
-        :size="iconRightSize"
-        :weight="iconRightWeight"
-        :hover-weight="iconRightHoverWeight"
-        :spin="loading"
-        :spin-duration="loadingDuration"
-        :variant="iconRightVariant"
-        :hover-variant="iconRightHoverVariant"
-        :hover="currentHover"
-        class="button-icon__icon-right"
-        @click="click('icon-right')"
+      v-if="iconRight"
+      v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset, delay: tooltipDelay }"
+      :name="iconRightOrSpinner"
+      :size="iconRightSize"
+      :weight="iconRightWeight"
+      :hover-weight="iconRightHoverWeight"
+      :spin="loading"
+      :spin-duration="loadingDuration"
+      :variant="iconRightVariant"
+      :hover-variant="iconRightHoverVariant"
+      :hover="currentHover"
+      class="button-icon__icon-right"
+      @click="click('icon-right')"
     />
-    <button-icon-counter v-if="counter !== null" :counter="counter" :variant="counterVariant" :style="counterStyle" />
+    <button-icon-counter
+      v-if="counter !== null"
+      :counter="counter"
+      :variant="counterVariant"
+      :style="counterStyle"
+    />
     <slot name="end" />
     <b-tooltip
-        v-if="hasTooltip"
-        teleport-to="body"
-        :delay="tooltipDelay"
-        :boundary-padding="20"
-        :placement="tooltipPlacement"
-        :target="elementRef"
-        :title="tooltipText"
+      v-if="hasTooltip"
+      teleport-to="body"
+      :delay="tooltipDelay"
+      :boundary-padding="20"
+      :placement="tooltipPlacement"
+      :target="elementRef"
+      :title="tooltipText"
     />
   </b-button>
 </template>
 
 <script setup lang="ts">
-import {computed, ref, inject, useTemplateRef} from 'vue'
+import { computed, ref, inject, useTemplateRef } from 'vue'
 import { uniqueId } from 'lodash'
 import { PhCircleNotch } from '@phosphor-icons/vue'
 
 import type { ButtonIconProps } from '@/types'
-import { PhosphorIcon, ButtonIconCounter } from "@/components"
+import { PhosphorIcon, ButtonIconCounter } from '@/components'
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
@@ -86,10 +94,9 @@ const props = withDefaults(defineProps<Omit<ButtonIconProps, 'pressed'>>(), {
   tooltipDelay: () => ({ show: 0, hide: 0 })
 })
 
-
 const emit = defineEmits(['click:icon-right'])
 
-function click(name:'icon-right') {
+function click(name: 'icon-right') {
   emit(`click:${name}`)
 }
 
@@ -141,7 +148,7 @@ const buttonProps = computed(() => ({
 
 <style lang="scss" scoped>
 .button-icon {
-  &.btn { 
+  &.btn {
     // force overriding display-block from bootstrap
     display: inline-flex;
     flex-shrink: 0;
@@ -156,7 +163,6 @@ const buttonProps = computed(() => ({
   --button-icon-square-size: calc(
     var(--bs-btn-line-height) * var(--bs-btn-font-size) + var(--bs-btn-padding-y) * 2 + var(--bs-btn-border-width) * 2
   );
-
 
   &--truncate.btn {
     max-width: 100%;

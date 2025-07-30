@@ -150,26 +150,26 @@ export default defineComponent({
     })
     const createLine = d3
       .line()
-      .x((d) => d.x)
-      .y((d) => d.y)
+      .x(d => d.x)
+      .y(d => d.y)
 
     const parseTime = d3.timeParse('%Y')
     function setSizes() {
       if (el.value) {
         width.value = el.value.offsetWidth
-        height.value =
-          props.fixedHeight !== null
+        height.value
+          = props.fixedHeight !== null
             ? props.fixedHeight
             : el.value.offsetWidth * baseHeightRatio.value
       }
     }
     function update() {
       scale.value.x.domain(
-        d3.extent(formattedData.value, (d) => d[props.timeseriesKey])
+        d3.extent(formattedData.value, d => d[props.timeseriesKey])
       )
       scale.value.y.domain([
         0,
-        d3.max(formattedData.value, (d) => d[props.seriesName])
+        d3.max(formattedData.value, d => d[props.seriesName])
       ])
 
       const points = formattedData.value.map((d) => {
@@ -186,14 +186,14 @@ export default defineComponent({
           d3
             .axisBottom(scale.value.x)
             .ticks(props.xAxisTicks)
-            .tickFormat((d) => castCall(xAxisYearFormat, d.getFullYear()))
+            .tickFormat(d => castCall(xAxisYearFormat, d.getFullYear()))
         )
       d3.select(el.value)
         .select('.line-chart__axis--y')
         .call(
           d3
             .axisLeft(scale.value.y)
-            .tickFormat((d) => d3Formatter(d, props.yAxisTickFormat))
+            .tickFormat(d => d3Formatter(d, props.yAxisTickFormat))
             .ticks(props.yAxisTicks)
         )
         .selectAll('.tick line')
@@ -221,7 +221,10 @@ export default defineComponent({
     :style="{ '--line-color': lineColor }"
     :class="{ 'line-chart--social-mode': socialMode }"
   >
-    <svg :width="width" :height="height">
+    <svg
+      :width="width"
+      :height="height"
+    >
       <g
         class="line-chart__axis line-chart__axis--x"
         :style="{
@@ -237,14 +240,16 @@ export default defineComponent({
         >
       </g>
       <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
-        <path class="line-chart__line" :d="line" />
+        <path
+          class="line-chart__line"
+          :d="line"
+        />
       </g>
     </svg>
   </div>
 </template>
 
 <style lang="scss">
-
 
 .line-chart {
   text {

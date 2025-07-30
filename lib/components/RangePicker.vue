@@ -11,13 +11,12 @@ import {
 } from 'vue'
 import { clamp, round } from 'lodash'
 
+import type { ButtonVariant } from 'bootstrap-vue-next'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
+import { IconPhosphor, IconWeight } from '@/types'
 
-import type { ButtonVariant } from "bootstrap-vue-next";
-import PhosphorIcon from '@/components/PhosphorIcon.vue';
-import {PhCaretLeft, PhCaretRight} from "@phosphor-icons/vue";
-import {IconPhosphor, IconWeight} from "@/types";
-
-type DragDropValue = {detail:number}
+interface DragDropValue { detail: number }
 /**
  * A component to wrap an HTML element with a range picker overlay.
  */
@@ -45,12 +44,12 @@ export default defineComponent({
 
         // Handle the dragging of the element
         function move(event: MouseEvent | TouchEvent) {
-          const clientX =
-            event instanceof MouseEvent
+          const clientX
+            = event instanceof MouseEvent
               ? event.clientX
               : event.touches[0].clientX
           const offset = relative ? el.offsetWidth : 0
-          //@ts-ignore
+          // @ts-ignore
           const maxX = binding.instance?.rangeWidth() - offset
           const data = clamp(startX + clientX - initialClientX, 0, maxX)
           emitEvent({ name: 'dragged', data })
@@ -63,7 +62,8 @@ export default defineComponent({
           if (event instanceof MouseEvent) {
             document.removeEventListener('mousemove', move)
             document.removeEventListener('mouseup', end)
-          } else {
+          }
+          else {
             document.removeEventListener('touchmove', move)
             document.removeEventListener('touchend', end)
           }
@@ -77,7 +77,8 @@ export default defineComponent({
             initialClientX = event.clientX
             document.addEventListener('mousemove', move)
             document.addEventListener('mouseup', end)
-          } else {
+          }
+          else {
             initialClientX = event.touches[0].clientX
             document.addEventListener('touchmove', move)
             document.addEventListener('touchend', end)
@@ -163,20 +164,20 @@ export default defineComponent({
       default: false
     },
     boundStartIcon: {
-      type: [String,Object] as PropType<string|IconPhosphor>,
+      type: [String, Object] as PropType<string | IconPhosphor>,
       default: PhCaretLeft
     },
     boundStartIconWeight: {
       type: String as PropType<IconWeight>,
-      default: "bold"
+      default: 'bold'
     },
     boundEndIcon: {
-      type: [String,Object] as PropType<string|IconPhosphor>,
+      type: [String, Object] as PropType<string | IconPhosphor>,
       default: PhCaretRight
     },
     boundEndIconWeight: {
       type: String as PropType<IconWeight>,
-      default: "bold"
+      default: 'bold'
     },
   },
   emits: ['update:range'],
@@ -189,13 +190,13 @@ export default defineComponent({
     const disabled = computed(() => {
       return props.range.length < 2
     })
-    const overlayStyle = computed((): { left: string; right: string } => {
+    const overlayStyle = computed((): { left: string, right: string } => {
       return {
         left: `${start.value * 100}%`,
         right: `${(1 - end.value) * 100}%`
       }
     })
-    const boundsStyle = computed((): { left: string; right: string } => {
+    const boundsStyle = computed((): { left: string, right: string } => {
       return {
         left: startOffsetWithUnit.value,
         right: endOffsetWithUnit.value
@@ -216,7 +217,7 @@ export default defineComponent({
     const endBoundStyle = computed((): { left: string } => {
       return { left: `${end.value * 100}%` }
     })
-    const classList = computed((): { [key: string]: boolean } => {
+    const classList = computed((): Record<string, boolean> => {
       return {
         [`range-picker--${props.variant}`]: !!props.variant,
         'range-picker--hover': props.hover,
@@ -227,19 +228,19 @@ export default defineComponent({
       }
     })
 
-    function toggleMoving(value:boolean) {
+    function toggleMoving(value: boolean) {
       moving.value = value ?? !moving.value
     }
-    function toggleResizing(value:boolean) {
+    function toggleResizing(value: boolean) {
       resizing.value = value ?? !resizing.value
     }
-    function snapValue(value:number): number {
+    function snapValue(value: number): number {
       return round(value / props.snap) * props.snap
     }
     function rangeWidth(): number {
       return rangePickerBounds.value?.getBoundingClientRect().width ?? 0
     }
-    function dragStartBound({ detail: dx }:DragDropValue) {
+    function dragStartBound({ detail: dx }: DragDropValue) {
       const newValue = snapValue(dx / rangeWidth())
       // Ensure start value doesn't get too close to end value
       if (newValue < end.value - props.minDistance) {
@@ -252,7 +253,7 @@ export default defineComponent({
         emit('update:range', [start.value, end.value])
       }
     }
-    function dragEndBound({ detail: dx }:DragDropValue) {
+    function dragEndBound({ detail: dx }: DragDropValue) {
       const newValue = snapValue(dx / rangeWidth())
       // Ensure end value doesn't get too close to start value
       if (newValue > start.value + props.minDistance) {
@@ -265,7 +266,7 @@ export default defineComponent({
         emit('update:range', [start.value, end.value])
       }
     }
-    function dragBounds({ detail: dx }:DragDropValue) {
+    function dragBounds({ detail: dx }: DragDropValue) {
       const diff = snapValue(end.value - start.value)
       const newValue = snapValue(dx / rangeWidth())
       start.value = round(newValue, props.precision)
@@ -281,7 +282,7 @@ export default defineComponent({
       return typeof value === 'number' ? `${value}px` : `${value}`
     }
 
-    watch(()=>props.range, (newRange) => {
+    watch(() => props.range, (newRange) => {
       start.value = newRange[0] ?? 0
       end.value = newRange[1] ?? 0
     })
@@ -308,7 +309,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="range-picker" :class="classList">
+  <div
+    class="range-picker"
+    :class="classList"
+  >
     <div class="range-picker__wrapper">
       <slot />
     </div>
@@ -325,7 +329,7 @@ export default defineComponent({
         @dragged="dragBounds"
         @started="toggleMoving(true)"
         @ended="toggleMoving(false)"
-      ></div>
+      />
       <button
         v-draggable
         :style="startBoundStyle"
@@ -334,7 +338,10 @@ export default defineComponent({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <phosphor-icon :name="boundStartIcon" :weight="boundStartIconWeight" />
+        <phosphor-icon
+          :name="boundStartIcon"
+          :weight="boundStartIconWeight"
+        />
       </button>
       <button
         v-draggable
@@ -344,14 +351,16 @@ export default defineComponent({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <phosphor-icon :name="boundEndIcon" :weight="boundEndIconWeight" />
+        <phosphor-icon
+          :name="boundEndIcon"
+          :weight="boundEndIconWeight"
+        />
       </button>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-
 
 .range-picker {
   min-height: 1rem;

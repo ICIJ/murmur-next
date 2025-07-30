@@ -54,18 +54,18 @@ export default defineComponent({
   computed: {
     stylePreTransition(): StyleTransition {
       return {
-        overflow: 'hidden',
+        'overflow': 'hidden',
         'transition-property': 'height',
         'transition-duration': `${this.duration}ms`,
-        height: this.mounted ? `${this.containerScrollHeight}px` : 0
+        'height': this.mounted ? `${this.containerScrollHeight}px` : 0
       }
     },
     styleActiveTransition(): StyleTransition {
       return {
-        overflow: 'hidden',
+        'overflow': 'hidden',
         'transition-property': 'height',
         'transition-duration': `${this.duration}ms`,
-        height: this.mounted ? `${this.activeHeight}px` : 'auto'
+        'height': this.mounted ? `${this.activeHeight}px` : 'auto'
       }
     },
     stylePostTransition(): StyleTransition {
@@ -101,7 +101,7 @@ export default defineComponent({
     await this.deferredNextTick()
     this.mounted = true
     await this.cleanLayout(null)
-    this.$container?.addEventListener('transitionend', (e) =>
+    this.$container?.addEventListener('transitionend', e =>
       this.cleanLayout(e)
     )
   },
@@ -122,7 +122,7 @@ export default defineComponent({
       }
     },
     async deferredNextTick() {
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await new Promise(resolve => setTimeout(resolve, 0))
       await this.$nextTick()
     }
   }
@@ -130,7 +130,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <component :is="tag" ref="container" :style="style">
+  <component
+    :is="tag"
+    ref="container"
+    :style="style"
+  >
     <slot />
   </component>
 </template>

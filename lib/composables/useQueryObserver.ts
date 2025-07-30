@@ -1,12 +1,8 @@
 import { computed, reactive, toRef, watch } from 'vue'
 import { first, get } from 'lodash'
-type ElementMap = {
-  [selector: string]: HTMLElement[]
-}
+type ElementMap = Record<string, HTMLElement[]>
 
-type ObserverMap = {
-  [selector: string]: MutationObserver
-}
+type ObserverMap = Record<string, MutationObserver>
 export function useQueryObserver(root = window.document, once = false) {
   const rootRef = toRef<Document | null>(root)
   const elements = reactive<ElementMap>({})
@@ -50,12 +46,12 @@ export function useQueryObserver(root = window.document, once = false) {
     return observers[selector]
   }
 
-  const querySelector = (selector:string, options = { immediate: true }) => {
+  const querySelector = (selector: string, options = { immediate: true }) => {
     const elements = querySelectorAll(selector, options)
     return computed(() => first(elements.value))
   }
 
-  const querySelectorAll = (selector:string, options = { immediate: true }) => {
+  const querySelectorAll = (selector: string, options = { immediate: true }) => {
     watch(rootRef, () => observe(selector), options)
     return computed(() => get(elements, selector, []))
   }

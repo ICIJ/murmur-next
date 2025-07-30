@@ -166,10 +166,10 @@ relativeValues.args = {
 export const HeaderLeft = Template.bind({})
 HeaderLeft.decorators = [leakIncidentsDecorator]
 HeaderLeft.args = {
-  data: data.leakSizes,
-  fixedHeight: 400,
-  xAxisTickFormat: humanReadableGb,
-  hideLegend: false,
+  'data': data.leakSizes,
+  'fixedHeight': 400,
+  'xAxisTickFormat': humanReadableGb,
+  'hideLegend': false,
   'header-left': '<h1>Header Left</h1>'
 }
 
@@ -180,13 +180,13 @@ HeaderLeft.argTypes = {
 export const HeaderRight = Template.bind({})
 HeaderRight.decorators = [leakIncidentsDecorator]
 HeaderRight.args = {
-  data: data.moviesUrl,
-  labelField: 'movie',
-  sortBy: data.sortKey,
-  hideEmptyValues: true,
-  relative: true,
-  groups: data.groups,
-  hideLegend: true,
+  'data': data.moviesUrl,
+  'labelField': 'movie',
+  'sortBy': data.sortKey,
+  'hideEmptyValues': true,
+  'relative': true,
+  'groups': data.groups,
+  'hideLegend': true,
   'header-right': ({
     sortBy
   }: {

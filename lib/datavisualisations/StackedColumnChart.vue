@@ -213,11 +213,11 @@ export default defineComponent({
       }
       return without(keys(loadedData.value[0]), props.labelField)
     })
-    const colorScale = computed(():(key:string)=> string => {
+    const colorScale = computed((): (key: string) => string => {
       return d3
         .scaleOrdinal()
         .domain(discoveredKeys.value)
-        .range(props.barColors) as unknown as (key:string)=> string
+        .range(props.barColors) as unknown as (key: string) => string
     })
 
     const hasHighlights = computed(() => {
@@ -238,7 +238,7 @@ export default defineComponent({
       () => {
         return d3
           .axisLeft(leftScale.value)
-          .tickFormat((d) => d3Formatter(d, props.yAxisTickFormat))
+          .tickFormat(d => d3Formatter(d, props.yAxisTickFormat))
           .tickSize(width.value - leftAxisLabelsWidth.value)
           .tickPadding(props.yAxisTickPadding)
       }
@@ -248,8 +248,8 @@ export default defineComponent({
         const selector = '.stacked-column-chart__left-axis__canvas .tick text'
         const defaultWidth = 0
         return (
-          elementsMaxBBox({ selector, defaultWidth }).width +
-          props.yAxisTickPadding
+          elementsMaxBBox({ selector, defaultWidth }).width
+          + props.yAxisTickPadding
         )
       }
     )
@@ -274,8 +274,8 @@ export default defineComponent({
 
     const maxRowValue = computed(() => {
       return (
-        props.maxValue ||
-        (d3.max(loadedData.value || [], (datum, i) => {
+        props.maxValue
+        || (d3.max(loadedData.value || [], (datum, i) => {
           return totalRowValue(i)
         }) as number)
       )
@@ -286,8 +286,8 @@ export default defineComponent({
         return
       }
       width.value = el.value.offsetWidth
-      height.value =
-        props.fixedHeight !== null
+      height.value
+        = props.fixedHeight !== null
           ? props.fixedHeight
           : width.value * baseHeightRatio.value
     }
@@ -392,12 +392,12 @@ export default defineComponent({
         if (index > 0) {
           const prevDesc = stack[index - 1]
           const bothValuesHeight = desc.valueHeight + prevDesc.valueHeight
-          desc.overflow =
-            desc.overflow ||
-            (prevDesc.overflow && desc.barHeight < bothValuesHeight)
+          desc.overflow
+            = desc.overflow
+              || (prevDesc.overflow && desc.barHeight < bothValuesHeight)
         }
-        desc.pushed =
-          desc.barEdge + desc.valueHeight > desc.rowEdge && desc.overflow
+        desc.pushed
+          = desc.barEdge + desc.valueHeight > desc.rowEdge && desc.overflow
         return desc
       })
     }
@@ -423,7 +423,8 @@ export default defineComponent({
       try {
         const stack = stackBarAndValue(i)
         return find(stack, { key })?.overflow
-      } catch {
+      }
+      catch {
         return false
       }
     }
@@ -432,7 +433,8 @@ export default defineComponent({
       try {
         const stack = stackBarAndValue(i)
         return find(stack, { key })?.pushed
-      } catch {
+      }
+      catch {
         return false
       }
     }
@@ -464,7 +466,7 @@ export default defineComponent({
       // Update the left axis only if the bars exists
       if (element) {
         leftAxisHeight.value = (element as HTMLElement).offsetHeight
-        //@ts-ignore
+        // @ts-ignore
         leftAxisCanvas.value.call(leftAxis.value)
       }
     })
@@ -512,7 +514,10 @@ export default defineComponent({
       'stacked-column-chart--no-direct-labeling': noDirectLabeling
     }"
   >
-    <ul v-if="!hideLegend" class="stacked-column-chart__legend list-inline">
+    <ul
+      v-if="!hideLegend"
+      class="stacked-column-chart__legend list-inline"
+    >
       <li
         v-for="key in discoveredKeys"
         :key="key"
@@ -556,6 +561,8 @@ export default defineComponent({
           >
             <div
               v-for="(key, j) in discoveredKeys"
+              :id="barUniqueId(i, key)"
+              :key="j"
               class="stacked-column-chart__groups__item__bars__item"
               :class="{
                 [`stacked-column-chart__groups__item__bars__item--${key}`]: true,
@@ -567,8 +574,6 @@ export default defineComponent({
                 'stacked-column-chart__groups__item__bars__item--value-hidden': hasValueHidden(i, key)
               }"
               :style="barStyle(i, key)"
-              :key="j"
-              :id="barUniqueId(i, key)"
               @mouseover="delayHighlight(key)"
               @mouseleave="restoreHighlights()"
             >
@@ -579,8 +584,13 @@ export default defineComponent({
                 {{ formatYDatum(datum[key]) }}
               </div>
               <teleport to="body">
-                <b-tooltip v-if="!noTooltips" :delay="barTooltipDelay" :target="barUniqueId(i, key)" placement="top">
-                  <span v-html="barTitle(i, key)"></span>
+                <b-tooltip
+                  v-if="!noTooltips"
+                  :delay="barTooltipDelay"
+                  :target="barUniqueId(i, key)"
+                  placement="top"
+                >
+                  <span v-html="barTitle(i, key)" />
                 </b-tooltip>
               </teleport>
             </div>
@@ -594,7 +604,6 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-
 
 .stacked-column-chart {
   $muted-group-opacity: 0.2;

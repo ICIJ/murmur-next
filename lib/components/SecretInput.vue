@@ -2,9 +2,9 @@
 import { computed, ref, type PropType } from 'vue'
 import HapticCopy from './HapticCopy.vue'
 import PhosphorIcon from './PhosphorIcon.vue'
-import { Size} from "bootstrap-vue-next"
-import { PhEye, PhEyeSlash } from "@phosphor-icons/vue"
-import {IconPhosphor} from "@/types";
+import { Size } from 'bootstrap-vue-next'
+import { PhEye, PhEyeSlash } from '@phosphor-icons/vue'
+import { IconPhosphor } from '@/types'
 
 const props = defineProps({
   /**
@@ -54,7 +54,7 @@ const secretInput = ref<HTMLInputElement | null>(null)
 const inputType = computed(() => {
   return props.visible ? 'text' : 'password'
 })
-const togglerIcon = computed(():IconPhosphor => {
+const togglerIcon = computed((): IconPhosphor => {
   return props.visible ? PhEyeSlash : PhEye
 })
 const hapticCopyClassList = computed(() => {
@@ -78,16 +78,24 @@ function selectInput() {
 </script>
 
 <template>
-  <b-input-group :size="size" class="secret-input">
-    <b-button v-if="!noToggler" variant="link" class="secret-input__toggler" @click="toggle">
-      <phosphor-icon :name="togglerIcon"  />
+  <b-input-group
+    :size="size"
+    class="secret-input"
+  >
+    <b-button
+      v-if="!noToggler"
+      variant="link"
+      class="secret-input__toggler"
+      @click="toggle"
+    >
+      <phosphor-icon :name="togglerIcon" />
     </b-button>
     <b-form-input
       ref="secretInput"
       class="text-monospace secret-input__input"
       readonly
       :type="inputType"
-      :modelValue="value"
+      :model-value="value"
       @click="selectInput"
     />
     <haptic-copy
@@ -103,7 +111,6 @@ function selectInput() {
 </template>
 
 <style scoped lang="scss">
-
 
 .secret-input {
   &__toggler {

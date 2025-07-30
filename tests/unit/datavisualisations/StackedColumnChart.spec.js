@@ -289,8 +289,8 @@ describe('StackedColumnChart.vue', () => {
       const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
       const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
       const bazColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
-      const totalHeight =
-        fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
+      const totalHeight
+        = fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
       expect(totalHeight).toBe(100)
     })
 
@@ -309,8 +309,8 @@ describe('StackedColumnChart.vue', () => {
       const fooColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
       const barColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
       const bazColumn = secondGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
-      const totalHeight =
-        fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
+      const totalHeight
+        = fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
       expect(totalHeight).toBe(50)
     })
 
@@ -396,8 +396,8 @@ describe('StackedColumnChart.vue', () => {
       const fooColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--foo')
       const barColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--bar')
       const bazColumn = firstGroup.find('.stacked-column-chart__groups__item__bars__item--baz')
-      const totalHeight =
-        fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
+      const totalHeight
+        = fooColumn.element.offsetHeight + barColumn.element.offsetHeight + bazColumn.element.offsetHeight
       expect(totalHeight).toBe(50)
     })
   })

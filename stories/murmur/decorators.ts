@@ -1,4 +1,4 @@
-import {BModal, BPopover, Size, useModal} from 'bootstrap-vue-next'
+import { BModal, BPopover, Size, useModal } from 'bootstrap-vue-next'
 import { SIZE } from '@/enums'
 import { toRefs } from 'vue'
 import { geoOrthographic } from 'd3-geo'
@@ -10,7 +10,7 @@ export default defineComponent({
 })
 
 export const modalDecorator = (
-  buttonLabel: string = 'Click to see the form',
+  buttonLabel = 'Click to see the form',
   modalTitle: string | null,
   size: Size = SIZE.md
 ) => ({

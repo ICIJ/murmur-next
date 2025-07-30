@@ -46,7 +46,7 @@ export const CustomSlot = {
     noIcon: true,
     default: 'Share twitter'
   },
-  render: (args) => ({
+  render: args => ({
     components: { SharingOptionsLink },
     setup() {
       return { args }
@@ -65,7 +65,7 @@ export const CustomTagAndSlot = {
     tag: 'button',
     default: 'Twitter Button'
   },
-  render: (args) => ({
+  render: args => ({
     components: { SharingOptionsLink },
     setup() {
       return { args }

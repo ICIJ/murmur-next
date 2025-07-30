@@ -9,7 +9,7 @@ export default {
     defaultColorMode: 'light',
     imageClass: ['rounded-5', 'img-fluid', 'shadow-sm']
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       ImageMode,
       ImageModeSource

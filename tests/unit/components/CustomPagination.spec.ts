@@ -30,7 +30,7 @@ describe('CustomPagination.vue', () => {
   it('calculates numberOfPages based on the totalRows and perPage prop values', () => {
     const propsData = { totalRows: 200, perPage: 20 }
     const wrapper = mount(CustomPagination, { propsData })
-    expect(wrapper.find('.custom-pagination__number-of-pages').text()).toBe("10 pages total")
+    expect(wrapper.find('.custom-pagination__number-of-pages').text()).toBe('10 pages total')
   })
 
   it('emits an event on form submit with the currentPageInput', async () => {
@@ -39,7 +39,7 @@ describe('CustomPagination.vue', () => {
     const input = wrapper.find('.form-control')
     await input.setValue(3)
     await wrapper.find({ ref: 'customPaginationForm' }).trigger('submit')
-    //@ts-expect-error
+    // @ts-expect-error
     expect(wrapper.emitted('update:modelValue')[0]).toContain(3)
   })
 
@@ -60,6 +60,6 @@ describe('CustomPagination.vue', () => {
     await wrapper.find({ ref: 'customPaginationForm' }).trigger('submit')
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.custom-pagination__errors').exists()).toBe(true)
-    expect(wrapper.find('.custom-pagination__errors').text()).toBe("Invalid page number")
+    expect(wrapper.find('.custom-pagination__errors').text()).toBe('Invalid page number')
   })
 })

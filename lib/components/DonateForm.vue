@@ -7,19 +7,15 @@ import forEach from 'lodash/forEach'
 import config from '../config'
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch } from 'vue'
-import type { Ref } from "vue"
+import type { Ref } from 'vue'
 
 type Period = 'onetime' | 'monthly' | 'yearly'
 type DonationCategory = 'conversation' | 'rules' | 'world'
-type SuggestedDonation = {
-  [category in DonationCategory]: {
-    [period in Period]: number;
-  };
-}
-type LabelForChange = {
-  monthly: { [value: number]: DonationCategory }
-  yearly: { [value: number]: DonationCategory }
-  onetime?: { [value: number]: DonationCategory }
+type SuggestedDonation = Record<DonationCategory, Record<Period, number>>
+interface LabelForChange {
+  monthly: Record<number, DonationCategory>
+  yearly: Record<number, DonationCategory>
+  onetime?: Record<number, DonationCategory>
 }
 
 /**
@@ -42,11 +38,11 @@ defineProps({
 })
 
 const { t, locale, messages } = useI18n()
-const amount = ref<number|undefined>(10)
+const amount = ref<number | undefined>(10)
 // True if the amount wasn't changed by the user yet
 const amountIsPristine = ref(true)
 const installmentPeriod: Ref<Period> = ref('monthly')
-const level = ref<DonationCategory|null>('conversation')
+const level = ref<DonationCategory | null>('conversation')
 const campaign = ref(config.get('donate-form.tracker'))
 const labelForChange = ref<LabelForChange>({
   monthly: {
@@ -62,15 +58,15 @@ const labelForChange = ref<LabelForChange>({
 })
 
 const suggestedAmount = ref<SuggestedDonation>(
-    //@ts-ignore retrieves a map of messages from the i18n json
+  // @ts-ignore retrieves a map of messages from the i18n json
   messages.value[locale.value]['donate-form']['suggesteddonation']
 )
 const listBenefits = ref<string[]>(
-    //@ts-ignore retrieves a list of messages from the i18n json
+  // @ts-ignore retrieves a list of messages from the i18n json
   messages.value[locale.value]['donate-form']['benefits']['list']
 )
 
-const ranges = computed((): {[value: number]:DonationCategory} => {
+const ranges = computed((): Record<number, DonationCategory> => {
   if (installmentPeriod.value === 'onetime') {
     return labelForChange.value['yearly']
   }
@@ -78,13 +74,13 @@ const ranges = computed((): {[value: number]:DonationCategory} => {
 })
 
 const firstRange = computed(() => {
-  const key: number = Number(keys(ranges.value)[0])
+  const key = Number(keys(ranges.value)[0])
   return ranges.value[key]
 })
 
 const changeThe = computed(() => {
   // Final label
-  let label: DonationCategory|null = null
+  let label: DonationCategory | null = null
   forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
     label = amount.value && (amount.value >= amountV) ? ranges.value[amountV] : label
   })
@@ -273,17 +269,25 @@ watch(
                 type="number"
                 min="0"
                 @change="amountIsNotPristine"
-              />
+              >
             </label>
           </div>
           <div class="mt-4">
-            <input name="org_id" value="icij" type="hidden" />
-            <input v-model="campaign" name="campaign" type="hidden" />
+            <input
+              name="org_id"
+              value="icij"
+              type="hidden"
+            >
+            <input
+              v-model="campaign"
+              name="campaign"
+              type="hidden"
+            >
             <input
               v-model="installmentPeriod"
               name="installmentPeriod"
               type="hidden"
-            />
+            >
             <button
               type="submit"
               class="btn btn-primary rounded-pill text-uppercase fw-bold"
@@ -318,7 +322,7 @@ watch(
         </ul>
       </div>
       <div>
-        <hr class="donate-form__insider__separator" />
+        <hr class="donate-form__insider__separator">
         <div class="donate-form__insider__more text-center">
           <a
             target="_blank"
@@ -334,7 +338,6 @@ watch(
 </template>
 
 <style lang="scss">
-
 
 .donate-form {
   font-size: 0.9rem;

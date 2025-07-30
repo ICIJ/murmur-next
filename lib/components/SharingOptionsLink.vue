@@ -8,7 +8,7 @@ import { h, defineComponent, PropType, VNode } from 'vue'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 // Popup instance and an interval holder
-type Popup = {
+interface Popup {
   instance: Window | null | undefined
   interval: undefined | ReturnType<typeof setTimeout>
   parent: (Window & typeof globalThis) | null
@@ -27,16 +27,14 @@ const preventDefault = (callback: Function) => {
   }
 }
 
-type SharingPlatform = {
+interface SharingPlatform {
   base: string
   icon: string
-  args: {
-    [key: string]: string
-  }
+  args: Record<string, string>
 }
 type Platform = 'email' | 'facebook' | 'linkedin' | 'twitter' | 'x'
-// eslint-disable-next-line no-unused-vars
-type SharingPlatforms = { [key in Platform]: SharingPlatform }
+
+type SharingPlatforms = Record<Platform, SharingPlatform>
 /**
  * @source https://github.com/bradvin/social-share-urls
  */
@@ -191,7 +189,7 @@ export default defineComponent({
     base(): string {
       return get(networks, [this.network, 'base'], '')
     },
-    args(): { [key: string]: string } {
+    args(): Record<string, string> {
       return get(networks, [this.network, 'args'], {})
     },
     icon(): string | null {
@@ -225,7 +223,7 @@ export default defineComponent({
     },
     renderIcon(): void | VNode | null {
       if (!this.noIcon) {
-        //@ts-ignore
+        // @ts-ignore
         return h(PhosphorIcon, { name: this.icon, weight: 'fill' })
       }
     },

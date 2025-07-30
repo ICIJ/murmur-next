@@ -2,11 +2,11 @@
 import { computed, ref, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import {BPagination, Size} from 'bootstrap-vue-next'
+import { BPagination, Size } from 'bootstrap-vue-next'
 
 import PhosphorIcon from './PhosphorIcon.vue'
-import {PhCaretLeft, PhCaretRight} from "@phosphor-icons/vue";
-import {SIZE} from "@/enums";
+import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
+import { SIZE } from '@/enums'
 
 /**
  * Define options
@@ -65,7 +65,6 @@ const props = defineProps({
     default: null
   }
 })
-
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -132,18 +131,30 @@ function updateModelValue(value: string | number): void {
           class="m-0"
           first-number
           last-number
-          @update:modelValue="updateModelValue"
+          @update:model-value="updateModelValue"
         >
           <template #prev-text="{ disabled, index, page }">
             <!-- @slot The 'Go to previous page' button content -->
-            <slot name="prev-text" v-bind="{ disabled, index, page }">
-              <phosphor-icon :name="PhCaretLeft" size="0.75em" />
+            <slot
+              name="prev-text"
+              v-bind="{ disabled, index, page }"
+            >
+              <phosphor-icon
+                :name="PhCaretLeft"
+                size="0.75em"
+              />
             </slot>
           </template>
           <template #next-text="{ disabled, index, page }">
             <!-- @slot The 'Go to next page' button content -->
-            <slot name="next-text" v-bind="{ disabled, index, page }">
-              <phosphor-icon :name="PhCaretRight" size="0.75em" />
+            <slot
+              name="next-text"
+              v-bind="{ disabled, index, page }"
+            >
+              <phosphor-icon
+                :name="PhCaretRight"
+                size="0.75em"
+              />
             </slot>
           </template>
           <template #page="{ active, content, disabled, index, page }">
@@ -173,8 +184,12 @@ function updateModelValue(value: string | number): void {
                 class="form-control"
                 :placeholder="inputPlaceholder"
                 aria-label="Jump to page"
-              />
-              <button  v-if="!compact" class="btn btn-secondary btn-sm" type="submit">
+              >
+              <button
+                v-if="!compact"
+                class="btn btn-secondary btn-sm"
+                type="submit"
+              >
                 <span class="px-1 py-3"> Go </span>
               </button>
             </b-input-group>
@@ -187,7 +202,10 @@ function updateModelValue(value: string | number): void {
             >
               {{ errors[0] }}
             </small>
-            <small v-else class="custom-pagination__number-of-pages float-start mt-1 ms-1 text-muted">
+            <small
+              v-else
+              class="custom-pagination__number-of-pages float-start mt-1 ms-1 text-muted"
+            >
               {{ t('custom-pagination.total-pages', { count: numberOfPages }) }}
             </small>
           </template>
@@ -198,7 +216,6 @@ function updateModelValue(value: string | number): void {
 </template>
 
 <style lang="scss" scoped>
-
 
 .custom-pagination {
   /* Chrome, Safari, Edge, Opera */

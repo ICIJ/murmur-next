@@ -1,6 +1,6 @@
 import { SecretInput } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
-import {SIZE} from "@/enums";
+import { SIZE } from '@/enums'
 
 export default {
   title: 'Murmur/components/SecretInput',

@@ -1,14 +1,27 @@
 <template>
-  <div v-once class="content-placeholder">
-    <div class="content-placeholder__wrapper" :style="{ backgroundSize: size }">
+  <div
+    v-once
+    class="content-placeholder"
+  >
+    <div
+      class="content-placeholder__wrapper"
+      :style="{ backgroundSize: size }"
+    >
       <div
         v-for="(row, r) in formattedRows"
         :key="r"
         class="content-placeholder__wrapper__row"
         :style="{ height: row.height }"
       >
-        <div v-for="(box, b) in row.boxes" :key="b" :style="box.style">
-          <div v-if="box.subClass" :class="box.subClass" />
+        <div
+          v-for="(box, b) in row.boxes"
+          :key="b"
+          :style="box.style"
+        >
+          <div
+            v-if="box.subClass"
+            :class="box.subClass"
+          />
         </div>
       </div>
     </div>
@@ -57,7 +70,6 @@ const formattedRows = computed((): ContentPlaceholderStyledRows => {
 </script>
 
 <style scoped lang="scss">
-
 
 @keyframes placeHolderShimmer {
   0% {

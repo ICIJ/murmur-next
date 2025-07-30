@@ -10,7 +10,7 @@ import { injectAssets } from '@/utils/assets'
 
 let iframeUniqueIdCounter = 0
 type StartsWithIcijIframe = `icij-iframe-${string}`
-type ResponsiveIframeData = {
+interface ResponsiveIframeData {
   iframeId: StartsWithIcijIframe
   pymParent: null | Parent
 }

@@ -23,7 +23,7 @@
           type="email"
           class="form-control"
           :placeholder="t('sign-up-form.placeholder').toString()"
-        />
+        >
         <button
           class="sign-up-form__fieldset__group__addon btn text-uppercase fw-bold input-group-text"
           :class="{ [variantColorClass]: true }"
@@ -33,10 +33,16 @@
         </button>
       </div>
     </fieldset>
-    <p v-if="errorMessage" class="sign-up-form__error alert alert-danger p-2 m-0 mt-2">
+    <p
+      v-if="errorMessage"
+      class="sign-up-form__error alert alert-danger p-2 m-0 mt-2"
+    >
       {{ errorMessage }}
     </p>
-    <p v-if="successMessage" class="sign-up-form__success alert alert-success p-2 m-0 mt-2">
+    <p
+      v-if="successMessage"
+      class="sign-up-form__success alert alert-success p-2 m-0 mt-2"
+    >
       {{ successMessage }}
     </p>
   </form>
@@ -49,7 +55,7 @@ import { computed, PropType, ref } from 'vue'
 import config from '../config'
 import { useI18n } from 'vue-i18n'
 import { useSendEmail } from '@/composables/useSendEmail'
-import type {ButtonVariant} from "bootstrap-vue-next";
+import type { ButtonVariant } from 'bootstrap-vue-next'
 
 /**
  * SignUpForm
@@ -110,7 +116,7 @@ const props = defineProps({
     default: 'primary'
   }
 })
-const emit = defineEmits(['error','success','subscribed'])
+const emit = defineEmits(['error', 'success', 'subscribed'])
 const { t } = useI18n()
 const email = ref('')
 const frozen = ref(false)
@@ -141,17 +147,17 @@ function done({ result, msg }: any): void {
   if (result === 'success') {
     email.value = ''
     successMessage.value = msg
-    emit('success',msg)
-
-  } else {
+    emit('success', msg)
+  }
+  else {
     error({ msg })
   }
 }
 
 // Mailchimp formats errors in list
 function error({ msg }: any): void {
-  errorMessage.value = last((msg || "Something's wrong").split('0 -')) ?? null
-  emit('error',errorMessage.value);
+  errorMessage.value = last((msg || 'Something\'s wrong').split('0 -')) ?? null
+  emit('error', errorMessage.value)
 }
 
 function resetMessages() {
@@ -169,7 +175,6 @@ function unfreeze() {
 </script>
 
 <style lang="scss">
-
 
 .sign-up-form {
   .sign-up-form__fieldset__group__addon.btn {

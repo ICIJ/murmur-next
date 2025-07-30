@@ -37,10 +37,10 @@ import type { GeometryCollection } from 'topojson-specification'
 import { PopoverPlacement } from 'bootstrap-vue-next'
 
 export default defineComponent({
+  name: 'SymbolMap',
   components: {
     OrdinalLegend
   },
-  name: 'SymbolMap',
   props: {
     categoryObjectsPath: {
       type: [String, Array],
@@ -140,7 +140,7 @@ export default defineComponent({
     const topojson = ref<any>(null)
     const topojsonPromise = ref<Promise<void> | null>(null)
     const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
-    const markerCursor = ref<{ [cursor: string]: string } | null>(null)
+    const markerCursor = ref<Record<string, string> | null>(null)
     const categoryHighlight = ref<any | null>(null)
     const featureZoom = ref<string | null>(null)
 
@@ -166,7 +166,7 @@ export default defineComponent({
       })
     }
 
-    //computed
+    // computed
     const featurePath = computed(() => {
       return d3.geoPath().projection(mapProjection.value)
     })
@@ -290,7 +290,7 @@ export default defineComponent({
       return null
     })
 
-    //methods
+    // methods
 
     function prepare() {
       if (!map.value) {
@@ -345,7 +345,7 @@ export default defineComponent({
     }
 
     function featureClass(d) {
-      return keys(pickBy(featureClassObject(d), (value) => value)).join(' ')
+      return keys(pickBy(featureClassObject(d), value => value)).join(' ')
     }
 
     function featureClassObject(d) {
@@ -393,7 +393,7 @@ export default defineComponent({
     }
 
     function markerClass(d) {
-      return keys(pickBy(markerClassObject(d), (value) => value)).join(' ')
+      return keys(pickBy(markerClassObject(d), value => value)).join(' ')
     }
 
     function markerId(d) {
@@ -424,8 +424,8 @@ export default defineComponent({
 
     function markerColorFunction({ color, ...d }) {
       return (
-        color ||
-        (isFunction(props.markerColor)
+        color
+        || (isFunction(props.markerColor)
           ? props.markerColor(d)
           : props.markerColor)
       )
@@ -544,11 +544,11 @@ export default defineComponent({
         .style('color', props.featureColor)
     }
 
-    //watch
+    // watch
     watch(
       () => props.data,
       () => {
-        //draw()
+        // draw()
         update()
       }
     )
@@ -588,8 +588,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div ref="el" :class="mapClass" class="symbol-map">
-    <slot name="legend" v-bind="{ legendData }">
+  <div
+    ref="el"
+    :class="mapClass"
+    class="symbol-map"
+  >
+    <slot
+      name="legend"
+      v-bind="{ legendData }"
+    >
       <ordinal-legend
         v-if="!hideLegend && legendData"
         v-model:highlight="categoryHighlight"
@@ -599,10 +606,16 @@ export default defineComponent({
         category-objects-path="label"
       >
         <template #marker="d">
-          <slot name="legend-marker" v-bind="d" />
+          <slot
+            name="legend-marker"
+            v-bind="d"
+          />
         </template>
         <template #label="d">
-          <slot name="legend-label" v-bind="d" />
+          <slot
+            name="legend-label"
+            v-bind="d"
+          />
         </template>
       </ordinal-legend>
     </slot>
@@ -615,7 +628,10 @@ export default defineComponent({
       :placement="tooltipPlacement"
       :target="tooltipTarget"
     >
-      <slot name="tooltip" v-bind="{ markerCursor, ...markerCursorValue }">
+      <slot
+        name="tooltip"
+        v-bind="{ markerCursor, ...markerCursorValue }"
+      >
         {{ markerLabel(markerCursorValue) }}
       </slot>
     </b-tooltip>
@@ -623,7 +639,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 
 .symbol-map {
   $muted-item-opacity: 0.2;

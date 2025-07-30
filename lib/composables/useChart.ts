@@ -6,14 +6,14 @@ import max from 'lodash/max'
 import some from 'lodash/some'
 import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted, nextTick } from 'vue'
 import { isUrl } from '@/utils/strings'
-import { Ref, SetupContext } from '@vue/runtime-core'
+import { Ref, SetupContext } from 'vue'
 import { useResizeObserver } from '@/composables/useResizeObserver'
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
 
 type ChartEmit = Pick<ChartContext<['resized', 'loaded']>, 'emit'>
 
-type ChartProps = {
+interface ChartProps {
   chartHeightRatio: { type: NumberConstructor }
   data: {
     default: () => any[] | string
@@ -26,7 +26,7 @@ type ChartProps = {
     type: StringConstructor
   }
   socialMode: { type: BooleanConstructor }
-  socialModeRatio: { default: number; type: NumberConstructor }
+  socialModeRatio: { default: number, type: NumberConstructor }
 }
 
 export function getChartProps(props: any): any {
@@ -80,10 +80,10 @@ export const chartProps = (): ChartProps => ({
 
 export const chartEmits = ['resized', 'loaded']
 
-type UseChart = {
+interface UseChart {
   dataHasHighlights: any
   loadedData: any
-  mounted: Ref<boolean>,
+  mounted: Ref<boolean>
   xAxisYearFormat: (year: number | string) => number | string
   elementsMaxBBox: ({
     selector,
@@ -93,7 +93,7 @@ type UseChart = {
     selector?: any
     defaultWidth?: any
     defaultHeight?: any
-  }) => { width: any; height: any }
+  }) => { width: any, height: any }
   d3Formatter: any
   baseHeightRatio: any
 }
@@ -103,12 +103,11 @@ export function useChart(
   props: any,
   { emit }: ChartEmit,
   isLoaded: Ref<boolean>,
-  onResized?: ()=>void,
+  onResized?: () => void,
   afterLoaded?: () => Promise<any>
 ): UseChart {
-
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
-  const loadedData = ref<unknown|unknown[]>([])
+  const loadedData = ref<unknown | unknown[]>([])
   const mounted = ref<boolean>(false)
   const dataRef = toRef(props.data)
   const dataUrlTypeRef = toRef(props.dataUrlType)
@@ -128,7 +127,8 @@ export function useChart(
     if (isString(data)) {
       // @ts-expect-error introspection in typescript is tricky
       loadedData.value = await d3[dataUrlType](data)
-    } else {
+    }
+    else {
       loadedData.value = data as unknown as []
     }
 
@@ -148,7 +148,7 @@ export function useChart(
     defaultHeight = null
   } = {}) {
     const returnDefault = { width: defaultWidth, height: defaultHeight }
-    if(!isLoaded.value || !resizeRef.value){
+    if (!isLoaded.value || !resizeRef.value) {
       return returnDefault
     }
     const elements: NodeListOf<SVGGraphicsElement> = resizeRef.value.querySelectorAll(selector)
@@ -181,7 +181,8 @@ export function useChart(
   function d3Formatter(value: any, formatter: any) {
     if (isFunction(formatter)) {
       return formatter(value)
-    } else if (isString(formatter)) {
+    }
+    else if (isString(formatter)) {
       return d3.format(formatter)(value)
     }
     return value

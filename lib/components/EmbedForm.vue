@@ -1,7 +1,10 @@
 <template>
   <div class="embed-form">
     <div class="container-fluid">
-      <h4 v-if="!noTitle" class="embed-form__heading">
+      <h4
+        v-if="!noTitle"
+        class="embed-form__heading"
+      >
         {{ t('embed-form.heading') }}
       </h4>
       <div class="row">
@@ -20,12 +23,15 @@
           <div class="d-flex justify-content-between">
             <div class="form-check align-self-end">
               <input
-                type="checkbox"
-                class="form-check-input"
                 id="responsiveOptin"
                 v-model="responsiveCheck"
-              />
-              <label class="form-check-label fw-bold" for="responsiveOptin">
+                type="checkbox"
+                class="form-check-input"
+              >
+              <label
+                class="form-check-label fw-bold"
+                for="responsiveOptin"
+              >
                 {{ t('embed-form.responsive-optin') }}
               </label>
             </div>
@@ -145,8 +151,8 @@ export default defineComponent({
       embedFormCode.value?.select()
     }
     function embedCode(withPym = responsiveCheck.value): string {
-      const width =
-        typeof props.width === 'string'
+      const width
+        = typeof props.width === 'string'
           ? props.width
           : Math.max(props.width, props.minWidth).toString()
       const height = Math.max(props.height, props.minHeight).toString()
@@ -167,7 +173,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-
 
 .embed-form {
   font-size: 0.9rem;

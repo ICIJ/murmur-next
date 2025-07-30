@@ -16,9 +16,9 @@ function isWidth(value: string | number): boolean {
   let checkState = false
   cssSuffix.forEach((suffix) => {
     if (
-      Number(valueAsStr.split(suffix)[0]) &&
-      valueAsStr.split(suffix)[1] === '' &&
-      valueAsStr.split(suffix).length === 2
+      Number(valueAsStr.split(suffix)[0])
+      && valueAsStr.split(suffix)[1] === ''
+      && valueAsStr.split(suffix).length === 2
     ) {
       checkState = true
     }
@@ -30,7 +30,7 @@ function getBoxStyle(
   left: number,
   width: number,
   isLast: boolean,
-  subClass: string = 'box'
+  subClass = 'box'
 ): BoxStyle[] {
   const arr: BoxStyle[] = []
 
@@ -40,7 +40,8 @@ function getBoxStyle(
         style: `flex-grow: ${left}; flex-shrink: 0; flex-basis: 0;`,
         subClass
       })
-    } else if (isWidth(left)) {
+    }
+    else if (isWidth(left)) {
       arr.push({
         style: `flex-grow: 0; flex-shrink: 0; flex-basis: ${left};`,
         subClass
@@ -49,7 +50,8 @@ function getBoxStyle(
   }
   if (isFlexBasis(width)) {
     arr.push({ style: `flex-grow: ${width}; flex-shrink: 0; flex-basis: 0;` })
-  } else if (isWidth(width)) {
+  }
+  else if (isWidth(width)) {
     arr.push({ style: `flex-grow: 0; flex-shrink: 0; flex-basis: ${width};` })
   }
   if (isLast) {
@@ -63,19 +65,19 @@ function getBoxStyle(
 
 function formatRows(
   rows: ContentPlaceholderRows,
-  subClass: string = 'box'
+  subClass = 'box'
 ): ContentPlaceholderStyledRows {
   return rows.map(
     (row: ContentPlaceholderRow) => {
       // Will contain all boxes in
-      const rowBoxes: Array<BoxStyle> = []
+      const rowBoxes: BoxStyle[] = []
       // Create placeholder row with initial height
       const rowObj: ContentPlaceholderStyledRow = {
         height: row.height,
         boxes: []
       }
       // Add style
-      row.boxes.forEach((box: Array<any>, index: number) => {
+      row.boxes.forEach((box: any[], index: number) => {
         const isLast: boolean = index === row.boxes.length - 1
         // Merge the box styles
         rowBoxes.push(...getBoxStyle(box[0], box[1], isLast, subClass))

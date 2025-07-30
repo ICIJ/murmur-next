@@ -12,7 +12,7 @@ import { computed, PropType, provide } from 'vue'
 import { AccordionKey } from '@/keys'
 import { Accordion, Step } from '@/types'
 
-const STEP_CHANGE_EVENT: string = 'step-change'
+const STEP_CHANGE_EVENT = 'step-change'
 
 const props = defineProps({
   step: {
@@ -58,7 +58,6 @@ provide<Accordion>(AccordionKey, {
 </script>
 
 <style lang="scss" scoped>
-
 
 .accordion-wrapper {
   $step-bullet-size: 2rem;

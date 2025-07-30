@@ -13,12 +13,12 @@ import {
   toRef
 } from 'vue'
 
-type ClassListLegend = { 'scale-legend--has-cursor': boolean }
-// eslint-disable-next-line no-unused-vars
+interface ClassListLegend { 'scale-legend--has-cursor': boolean }
+
 type ColorScaleFn = (v?: number) => string
 
 type ColorScale = ColorScaleFn | string
-// eslint-disable-next-line no-unused-vars
+
 type WidthScaleFn = (x: number) => string
 
 export default defineComponent({
@@ -143,14 +143,15 @@ export default defineComponent({
     function setCursorWrapperOffset(): void {
       const cursor = el.value?.querySelector('.scale-legend__cursor')
       if (cursor && el.value) {
-        const { x: cursorX, width: cursorWidth } =
-          cursor.getBoundingClientRect()
-        const { x: legendX, width: legendWidth } =
-          el.value.getBoundingClientRect()
+        const { x: cursorX, width: cursorWidth }
+          = cursor.getBoundingClientRect()
+        const { x: legendX, width: legendWidth }
+          = el.value.getBoundingClientRect()
         const left = legendX - cursorX - 6
         const right = legendX + legendWidth - (cursorX + cursorWidth) + 6
         cursorWrapperOffset.value = Math.max(0, left) || Math.min(0, right)
-      } else {
+      }
+      else {
         cursorWrapperOffset.value = 0
       }
     }
@@ -177,7 +178,7 @@ export default defineComponent({
       cursorWrapperOffset,
       formatNumber,
       hasCursor,
-      //CD: function below are only uses in unit tests. use callable?
+      // CD: function below are only uses in unit tests. use callable?
       widthScale,
       colorScaleFunction,
       widthScaleColor
@@ -187,9 +188,16 @@ export default defineComponent({
 </script>
 
 <template>
-  <div ref="el" :class="classList" class="scale-legend">
+  <div
+    ref="el"
+    :class="classList"
+    class="scale-legend"
+  >
     <div class="scale-legend__bound scale-legend__bound--min">
-      <slot name="legend-cursor-min" v-bind="{ min }">
+      <slot
+        name="legend-cursor-min"
+        v-bind="{ min }"
+      >
         {{ formatNumber(min) }}
       </slot>
     </div>
@@ -199,9 +207,12 @@ export default defineComponent({
       :width="width"
       class="scale-legend__scale"
       alt="legend scale"
-    />
+    >
     <div class="scale-legend__bound scale-legend__bound--max">
-      <slot name="legend-cursor-max" v-bind="{ max }">
+      <slot
+        name="legend-cursor-max"
+        v-bind="{ max }"
+      >
         {{ formatNumber(max) }}
       </slot>
     </div>
@@ -214,7 +225,10 @@ export default defineComponent({
         :style="{ transform: `translateX(${cursorWrapperOffset}px)` }"
         class="scale-legend__cursor__wrapper"
       >
-        <slot name="cursor" v-bind="{ value: cursorValue }">
+        <slot
+          name="cursor"
+          v-bind="{ value: cursorValue }"
+        >
           {{ formatNumber(cursorValue) }}
         </slot>
       </div>
@@ -223,7 +237,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 
 .scale-legend {
   position: relative;

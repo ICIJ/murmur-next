@@ -15,7 +15,7 @@ describe('GenericFooter.vue', () => {
     expect(wrapper.find('.generic-footer__version').text()).toBe('Version 1.0.0')
   })
 
-  it("doesn't render the version", () => {
+  it('doesn\'t render the version', () => {
     const wrapper = mount(GenericFooter)
     expect(wrapper.find('.generic-footer__version').exists()).toBeFalsy()
   })

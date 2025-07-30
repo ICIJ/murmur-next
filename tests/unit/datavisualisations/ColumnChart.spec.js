@@ -194,7 +194,6 @@ describe('ColumnChart.vue', () => {
       expect(ticks.at(1).text()).toBe('2006')
       expect(ticks.at(2).text()).toBe('2007')
     })
-
   })
 
   describe('a 10 columns chart with two highlights using remote CSV and no tooltips', () => {
@@ -314,7 +313,7 @@ describe('ColumnChart.vue', () => {
       const stubs = { teleport: true }
       wrapper = mount(ColumnChart, { propsData, global: { stubs, renderStubDefaultSlot: true } })
       wrapper.vm.$el.style.width = '500px'
-      await new Promise((resolve) => setTimeout(resolve))
+      await new Promise(resolve => setTimeout(resolve))
       await wrapper.vm.$nextTick()
 
       const column = wrapper.findAll('.column-chart__columns__item__bar').at(2)
@@ -327,7 +326,7 @@ describe('ColumnChart.vue', () => {
       const stubs = { teleport: true }
       wrapper = mount(ColumnChart, { propsData, global: { stubs, renderStubDefaultSlot: true } })
       wrapper.vm.$el.style.width = '500px'
-      await new Promise((resolve) => setTimeout(resolve))
+      await new Promise(resolve => setTimeout(resolve))
       await wrapper.vm.$nextTick()
 
       const column = wrapper.findAll('.column-chart__columns__item__bar').at(2)

@@ -68,7 +68,7 @@ describe('SharingOptionsLink', () => {
     expect(wrapper.vm.hasPopup()).toBeTruthy()
   })
 
-  it("shouldn't have a popup when network is `email`", () => {
+  it('shouldn\'t have a popup when network is `email`', () => {
     const propsData = { network: 'email' }
     const wrapper = mount(SharingOptionsLink, { propsData })
     expect(wrapper.vm.hasPopup()).toBeFalsy()

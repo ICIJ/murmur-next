@@ -31,7 +31,7 @@ export default {
   component: HapticCopy,
   tags: ['autodocs'],
   decorators: [
-    () => ({ template: "<div class='p-2 text-center'><story/></div>" })
+    () => ({ template: '<div class=\'p-2 text-center\'><story/></div>' })
   ],
   argTypes: {
     hideLabel: { control: 'boolean' },

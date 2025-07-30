@@ -45,7 +45,7 @@ describe('SelectableDropdown.vue', () => {
   it('has a list of items written in upper case', async () => {
     const propsData = {
       items: ['Lesotho', 'Senegal', 'Djibouti'],
-      serializer: (c) => c.toUpperCase()
+      serializer: c => c.toUpperCase()
     }
     const wrapper = mount(SelectableDropdown, { propsData })
     await flushPromises()
@@ -128,11 +128,11 @@ describe('SelectableDropdown.vue', () => {
     await flushPromises()
 
     const findAll = wrapper.findAll('.dropdown-item')
-    await findAll.at(0).trigger('click') //TODO fix me
+    await findAll.at(0).trigger('click') // TODO fix me
     expect(wrapper.emitted('click')[0]).toContain('Lesotho')
-    await findAll.at(1).trigger('click') //TODO fix me
+    await findAll.at(1).trigger('click') // TODO fix me
     expect(wrapper.emitted('click')[1]).toContain('Senegal')
-    await findAll.at(0).trigger('click') //TODO fix me
+    await findAll.at(0).trigger('click') // TODO fix me
     expect(wrapper.emitted('click')[2]).toContain('Lesotho')
   })
 

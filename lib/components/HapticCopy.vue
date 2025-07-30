@@ -16,7 +16,7 @@ import PhosphorIcon from './PhosphorIcon.vue'
 import PhosphorIconLayers from './PhosphorIconLayers.vue'
 
 import { copyHtml, copyText } from '@/utils/clipboard'
-import { PhCheckFat, PhClipboard } from "@phosphor-icons/vue"
+import { PhCheckFat, PhClipboard } from '@phosphor-icons/vue'
 
 const props = defineProps({
   /**
@@ -123,7 +123,8 @@ async function copy(): Promise<void> {
      * @event success
      */
     emit('success')
-  } catch (error) {
+  }
+  catch (error) {
     await openTooltip('haptic-copy.tooltip.failed')
     /**
      * Emitted when the text couldn't be copied
@@ -197,7 +198,10 @@ defineExpose({
           />
         </transition>
       </phosphor-icon-layers>
-      <span :class="{ 'visually-hidden': hideLabel }" class="ms-2 haptic-copy__label">
+      <span
+        :class="{ 'visually-hidden': hideLabel }"
+        class="ms-2 haptic-copy__label"
+      >
         {{ label || t('haptic-copy.label') }}
       </span>
     </slot>

@@ -249,9 +249,9 @@ export default defineComponent({
     function isRowHighlighted(i: number | string) {
       const row = get(sortedData.value, [i, props.labelField], null)
       return (
-        isArray(props.rowHighlights) &&
-        props.rowHighlights?.includes(row) &&
-        !highlightedKeys.value.length
+        isArray(props.rowHighlights)
+        && props.rowHighlights?.includes(row)
+        && !highlightedKeys.value.length
       )
     }
 
@@ -320,7 +320,8 @@ export default defineComponent({
       try {
         const stack = stackBarAndValue(i)
         return find(stack, { key })?.overflow
-      } catch {
+      }
+      catch {
         return false
       }
     }
@@ -329,7 +330,8 @@ export default defineComponent({
       try {
         const stack = stackBarAndValue(i)
         return find(stack, { key })?.pushed
-      } catch {
+      }
+      catch {
         return false
       }
     }
@@ -464,7 +466,6 @@ export default defineComponent({
   </div>
 </template>
 <style lang="scss">
-
 
 .stacked-bar-chart {
   $muted-group-opacity: 0.2;

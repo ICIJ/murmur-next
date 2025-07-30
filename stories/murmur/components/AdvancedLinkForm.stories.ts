@@ -27,7 +27,7 @@ Default.args = {
   title: 'Medtronic spends millions each year on lobbying in the US',
   link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',
   card: true,
-  forms:["markdown",'html',"raw"]
+  forms: ['markdown', 'html', 'raw']
 }
 
 export const InsideModal = Template.bind({})

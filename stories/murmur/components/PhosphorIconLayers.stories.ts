@@ -1,5 +1,5 @@
 import { PhosphorIcon, PhosphorIconLayers } from '@/components'
-import {PhArrowClockwise, PhArrowCounterClockwise, PhCircle, PhStar} from "@phosphor-icons/vue";
+import { PhArrowClockwise, PhArrowCounterClockwise, PhCircle, PhStar } from '@phosphor-icons/vue'
 
 export default {
   computed: {
@@ -27,7 +27,7 @@ export default {
   args: {
     size: '32px'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon,
       PhosphorIconLayers

@@ -14,9 +14,9 @@ import SharingOptionsLink from '@/components/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'
 import { BModal, useModal } from 'bootstrap-vue-next'
-import { PhCode } from "@phosphor-icons/vue"
+import { PhCode } from '@phosphor-icons/vue'
 
-type MetaValuesMap = {
+interface MetaValuesMap {
   url: string
   title: string
   description: string
@@ -34,8 +34,8 @@ const props = defineProps({
   url: {
     type: String,
     default: () =>
-      config.get('sharing-options.url', null) ||
-      IframeResizer.deletePymParams()
+      config.get('sharing-options.url', null)
+      || IframeResizer.deletePymParams()
   },
   /**
    * URL to use specifically with the embed form
@@ -52,8 +52,8 @@ const props = defineProps({
     default: 'row',
     validator(value: string) {
       return (
-        ['row', 'row-reverse', 'column', 'column-reverse'].indexOf(value) !==
-        -1
+        ['row', 'row-reverse', 'column', 'column-reverse'].indexOf(value)
+        !== -1
       )
     }
   },
@@ -139,11 +139,11 @@ const metaValues = computed((): MetaValuesMap => {
   }
 })
 
-function valuesFor(network: string): { [key: string]: string } {
+function valuesFor(network: string): Record<string, string> {
   const values = Object.assign(metaValues.value, props.values)
   return reduce(
     props.valuesKeys,
-    (res: { [name: string]: string }, key) => {
+    (res: Record<string, string>, key) => {
       res[key] = get(values, `${network}_${key}`, values[key])
       return res
     },
@@ -164,7 +164,10 @@ function defaultValueFor(key: string, metaSelector?: string): string {
 </script>
 
 <template>
-  <div :style="style" class="sharing-options">
+  <div
+    :style="style"
+    class="sharing-options"
+  >
     <sharing-options-link
       class="sharing-options__link"
       network="facebook"
@@ -185,11 +188,20 @@ function defaultValueFor(key: string, metaSelector?: string): string {
       network="email"
       v-bind="valuesFor('email')"
     />
-    <a class="sharing-options__link sharing-options__link--embed" @click="show" v-show="!noEmbed">
+    <a
+      v-show="!noEmbed"
+      class="sharing-options__link sharing-options__link--embed"
+      @click="show"
+    >
       <phosphor-icon :name="PhCode" />
       <span class="visually-hidden">Embed</span>
     </a>
-    <b-modal :id="embedFormId" class="text-dark" hide-footer title="Embed on your website">
+    <b-modal
+      :id="embedFormId"
+      class="text-dark"
+      hide-footer
+      title="Embed on your website"
+    >
       <embed-form
         :min-height="iframeMinHeight"
         :min-width="iframeMinWidth"

@@ -14,5 +14,11 @@ defineExpose({ ...props })
 </script>
 
 <template>
-  <source ref="element" class="image-mode-source" :src="src" :data-src="src" :data-color-mode="colorMode" />
+  <source
+    ref="element"
+    class="image-mode-source"
+    :src="src"
+    :data-src="src"
+    :data-color-mode="colorMode"
+  >
 </template>

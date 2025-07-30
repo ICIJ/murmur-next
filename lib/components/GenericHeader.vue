@@ -16,7 +16,10 @@
     >
       <!-- @slot Redefines brand -->
       <slot name="brand">
-        <a :href="homeUrl" class="navbar-brand generic-header__brand">
+        <a
+          :href="homeUrl"
+          class="navbar-brand generic-header__brand"
+        >
           <brand-expansion
             :size="45"
             :mode="shortMode"
@@ -27,9 +30,7 @@
             :mode="longMode"
             class="d-none d-sm-inline-block"
           />
-          <span class="visually-hidden"
-            >International Consortium of Investigative Journalists</span
-          >
+          <span class="visually-hidden">International Consortium of Investigative Journalists</span>
         </a>
       </slot>
       <button
@@ -38,9 +39,16 @@
         aria-label="Toggle navigation"
         @click="toggleNavbar"
       >
-        <phosphor-icon :name="PhList" size="2rem" class="text-primary" />
+        <phosphor-icon
+          :name="PhList"
+          size="2rem"
+          class="text-primary"
+        />
       </button>
-      <div class="navbar-collapse" :class="{ collapse: collapseNavbar }">
+      <div
+        class="navbar-collapse"
+        :class="{ collapse: collapseNavbar }"
+      >
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a
@@ -82,10 +90,10 @@
           </li>
         </ul>
         <b-popover
+          ref="followUsPopover"
           v-model="showFollowUsPopover"
           target="follow-us-toggler"
           placement="bottom-start"
-          ref="followUsPopover"
           click
         >
           <follow-us-popover
@@ -114,9 +122,9 @@ import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
 import { BrandMode } from '@/enums'
 import PhosphorIcon from './PhosphorIcon.vue'
-import { PhList } from "@phosphor-icons/vue";
+import { PhList } from '@phosphor-icons/vue'
 
-type BrandOptions = {
+interface BrandOptions {
   noBorder: boolean
   size: number
   color: string
@@ -183,7 +191,6 @@ function toggleNavbar(): void {
 </script>
 
 <style lang="scss">
-
 
 .generic-header {
   background: white;

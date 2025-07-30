@@ -20,12 +20,15 @@ export default class IframeResizer {
       }
     )
   }
+
   sendHeight(): Promise<void> {
-    return this.initializer.then((pymChild) => pymChild.sendHeight())
+    return this.initializer.then(pymChild => pymChild.sendHeight())
   }
+
   static create(): IframeResizer {
     return new IframeResizer()
   }
+
   static template(
     url: string,
     id: string = 'icij-' + Date.now().toString(32)
@@ -38,6 +41,7 @@ export default class IframeResizer {
       `</script>`
     ].join('\n')
   }
+
   static deletePymParams(href: string = initialHref): string {
     const url = new URL(href)
     // Remove all unwanted param
@@ -47,8 +51,9 @@ export default class IframeResizer {
     // Rebuild the URL
     return url.href
   }
+
   static isEmbedded(href: string = initialHref): boolean {
     const url = new URL(href)
-    return every(pymParams, (param) => url.searchParams.has(param))
+    return every(pymParams, param => url.searchParams.has(param))
   }
 }

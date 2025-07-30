@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {TextColorVariant} from "bootstrap-vue-next";
+import { TextColorVariant } from 'bootstrap-vue-next'
 
 defineProps({
   counter: {
@@ -8,13 +8,18 @@ defineProps({
   },
   variant: {
     type: String as PropType<TextColorVariant>,
-    default: "secondary"
+    default: 'secondary'
   }
 })
 </script>
 
 <template>
-  <b-badge v-if="counter != null" :variant="variant" class="button-icon-counter text-nowrap" pill>
+  <b-badge
+    v-if="counter != null"
+    :variant="variant"
+    class="button-icon-counter text-nowrap"
+    pill
+  >
     <slot>{{ counter }}</slot>
   </b-badge>
 </template>

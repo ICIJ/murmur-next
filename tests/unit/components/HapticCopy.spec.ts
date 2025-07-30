@@ -25,7 +25,7 @@ describe('HapticCopy.vue', () => {
     expect(wrapper.find('button').exists()).toBeTruthy()
   })
 
-  it("shouldn't hide the label", () => {
+  it('shouldn\'t hide the label', () => {
     const wrapper = mount(HapticCopy, { propsData })
     expect(wrapper.find('.haptic-copy__label').classes('visually-hidden')).toBeFalsy()
   })

@@ -52,7 +52,7 @@ const values = ref(
 )
 
 const joinedValues = computed((): string => {
-  return filter(values.value, (v) => !isNaN(v as any)).join('')
+  return filter(values.value, v => !isNaN(v as any)).join('')
 })
 
 const lastInput = computed((): HTMLElement | null => {
@@ -89,7 +89,7 @@ watch(
   () => values,
   (values) => {
     // Copy and remove values that are not numbers
-    const formattedValues = values.value.map((value) =>
+    const formattedValues = values.value.map(value =>
       String(value).replace(/\D/g, '')
     )
     // Iterate over the values to be sure
@@ -141,21 +141,24 @@ watch(
   <div class="digits-input">
     <div class="d-flex digits-input__container">
       <input
-        ref="inputs"
         v-for="d in length"
+        ref="inputs"
         :key="d - 1"
         v-model="values[d - 1]"
         :class="`digits-input__container__input--${d - 1}`"
         class="digits-input__container__input w-0 form-control"
         @keyup.delete="focusToPreviousWhenEmpty(d - 1)"
-      />
-      <input type="hidden" :value="joinedValues" :name="name" />
+      >
+      <input
+        type="hidden"
+        :value="joinedValues"
+        :name="name"
+      >
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-
 
 .digits-input {
   &__container {

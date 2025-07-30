@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, PropType} from 'vue'
+import { computed, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { uniqueId } from "lodash"
-import { ButtonVariant } from "bootstrap-vue-next"
+import { uniqueId } from 'lodash'
+import { ButtonVariant } from 'bootstrap-vue-next'
 
-import AdvancedLinkFormTab from "./AdvancedLinkFormTab.vue";
-import {Tab} from "@/components/AdvancedLinkFormTab.vue";
+import AdvancedLinkFormTab from './AdvancedLinkFormTab.vue'
+import { Tab } from '@/components/AdvancedLinkFormTab.vue'
 
 /**
  * A form with tabs to offer several copy formats to users.
@@ -28,7 +28,7 @@ const props = defineProps({
   link: {
     type: String
   },
-   /**
+  /**
    * Title associated with the link
    */
   title: {
@@ -90,75 +90,73 @@ const props = defineProps({
 const advancedLinkFormId = uniqueId('advanced-link-form-')
 
 const { t } = useI18n()
-
 const formClasses = computed(() => {
   const propsToCheck = ['card', 'pills', 'small', 'vertical']
   return propsToCheck.reduce((classes, prop) => {
-    //@ts-ignore
     classes[`advanced-link-form--${prop}`] = props[prop]
     return classes
   }, {})
 })
 
 // default tabs order
-const defaultTabs:Tab[] = ["raw", "rich", "markdown", "html"]
+const defaultTabs: Tab[] = ['raw', 'rich', 'markdown', 'html']
 
-const tabs = computed(()=>{
+const tabs = computed(() => {
   return defaultTabs
-      .filter(elem => props.forms.includes(elem))
-      .map(elem => {
-        return {
-          type: elem ,
-          title: t(`advanced-link-form.${elem}.tab`),
-          id: `${advancedLinkFormId}-${elem}`,
-        }
+    .filter(elem => props.forms.includes(elem))
+    .map((elem) => {
+      return {
+        type: elem,
+        title: t(`advanced-link-form.${elem}.tab`),
+        id: `${advancedLinkFormId}-${elem}`,
+      }
     }
-  )
+    )
 })
 
 const activeForm = computed(() => {
-    if (index.value && index.value > 0 && index.value < tabs.value.length) {
-      return tabs.value[index.value].id
-    }
-    return tabs.value[0].id
+  if (index.value && index.value > 0 && index.value < tabs.value.length) {
+    return tabs.value[index.value].id
   }
+  return tabs.value[0].id
+}
 )
 
-function onUpdate(event:string | undefined):void{
-  const id = tabs.value.findIndex(elem=> elem.id === event);
-  index.value = id < 0 ? 0: id
-
+function onUpdate(event: string | undefined): void {
+  const id = tabs.value.findIndex(elem => elem.id === event)
+  index.value = id < 0 ? 0 : id
 }
 
 </script>
 
 <template>
   <b-tabs
-      class="advanced-link-form"
-      :content-class="card ? 'mt-0' : 'mt-3'"
-      :card="card"
-      :pills="pills"
-      :model-value="activeForm"
-      @update:model-value="onUpdate"
-      :small="small"
-      :vertical="vertical"
-      :active-nav-item-class="activeNavItemClass"
-      :no-fade="noFade"
-      :class="formClasses">
+    class="advanced-link-form"
+    :content-class="card ? 'mt-0' : 'mt-3'"
+    :card="card"
+    :pills="pills"
+    :model-value="activeForm"
+    :small="small"
+    :vertical="vertical"
+    :active-nav-item-class="activeNavItemClass"
+    :no-fade="noFade"
+    :class="formClasses"
+    @update:model-value="onUpdate"
+  >
     <b-tab
-        v-for="tab in tabs" :key="tab.id"
-        :id="tab.id"
-        :title="tab.title"
+      v-for="tab in tabs"
+      :id="tab.id"
+      :key="tab.id"
+      :title="tab.title"
     >
       <advanced-link-form-tab
-          :title="tab.title"
-          :type="tab.type"
-          :data-type="tab.type"
-          :compact="small"
-          :variant="variant"
-          :link="link"
+        :title="tab.title"
+        :type="tab.type"
+        :data-type="tab.type"
+        :compact="small"
+        :variant="variant"
+        :link="link"
       />
     </b-tab>
   </b-tabs>
 </template>
-

@@ -1,4 +1,3 @@
-
 import { StoryObj } from '@storybook/vue3-vite'
 import { variantsArgType } from '~storybook/utils'
 import { SignUpForm } from '@/components'

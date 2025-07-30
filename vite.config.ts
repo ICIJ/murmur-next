@@ -27,11 +27,11 @@ export default defineConfig({
           'image-mode': ['src'],
           'image-mode-source': ['src'],
           'b-img': ['src'],
-          video: ['src', 'poster'],
-          source: ['src'],
-          img: ['src'],
-          image: ['xlink:href', 'href'],
-          use: ['xlink:href', 'href']
+          'video': ['src', 'poster'],
+          'source': ['src'],
+          'img': ['src'],
+          'image': ['xlink:href', 'href'],
+          'use': ['xlink:href', 'href']
         }
       }
     }),
@@ -79,8 +79,8 @@ export default defineConfig({
   resolve: {
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
-      vue: resolve(__dirname, './node_modules/vue'),
-      node_modules: resolve(__dirname, 'node_modules'),
+      'vue': resolve(__dirname, './node_modules/vue'),
+      'node_modules': resolve(__dirname, 'node_modules'),
       '@': fileURLToPath(new URL('./lib', import.meta.url)),
       '~storybook': resolve(__dirname, './.storybook'),
     },
@@ -90,7 +90,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern',
-        silenceDeprecations: ['legacy-js-api', 'import','mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
+        silenceDeprecations: ['legacy-js-api', 'import', 'mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
         additionalData: `
             @use 'sass:math';
             @use 'sass:color';
