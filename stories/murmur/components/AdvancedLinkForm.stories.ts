@@ -23,7 +23,7 @@ const Template: Story = (args: any) => ({
 
 export const Default = Template.bind({})
 Default.args = {
-  modelValue:1,
+  modelValue: 1,
   title: 'Medtronic spends millions each year on lobbying in the US',
   link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',
   card: true,

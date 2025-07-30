@@ -1,10 +1,10 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
-import {Tab} from "@/components/AdvancedLinkFormTab.vue";
+import { Tab } from '@/components/AdvancedLinkFormTab.vue'
 
 describe('AdvancedLinkForm.vue', () => {
-  const global = { stubs: { HapticCopy: true }, renderStubDefaultSlot:true }
+  const global = { stubs: { HapticCopy: true }, renderStubDefaultSlot: true }
   it('should be a Vue instance', () => {
     const wrapper = shallowMount(AdvancedLinkForm, { global })
     expect(wrapper.vm).toBeTruthy()
@@ -54,8 +54,7 @@ describe('AdvancedLinkForm.vue', () => {
     expect(wrapper.find('.tab-pane.active [data-type="markdown"]').exists()).toBe(true)
   })
 
-
-  describe('Display variants',()=>{
+  describe('Display variants', () => {
     it('should not use card by default', async () => {
       const wrapper = shallowMount(AdvancedLinkForm, { global })
       expect(wrapper.classes()).not.toContain('advanced-link-form--card')
@@ -80,7 +79,6 @@ describe('AdvancedLinkForm.vue', () => {
       const wrapper = shallowMount(AdvancedLinkForm, { propsData, global })
       expect(wrapper.classes()).toContain('advanced-link-form--pills')
       expect(wrapper.findComponent('b-tabs-stub').attributes('pills')).toBe('true')
-
     })
 
     it('should not use small layout by default', () => {
@@ -105,5 +103,4 @@ describe('AdvancedLinkForm.vue', () => {
       expect(wrapper.classes()).toContain('advanced-link-form--vertical')
     })
   })
-
 })
