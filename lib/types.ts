@@ -8,6 +8,7 @@ import type { ButtonVariant, PopoverPlacement, Size } from 'bootstrap-vue-next'
 import type { GeoProjection } from 'd3-geo'
 
 export type Step = symbol | string
+
 interface IconPhosphorProps {
   weight: {
     type: PropType<IconWeight>
@@ -24,7 +25,7 @@ interface IconPhosphorProps {
   }
 }
 
-export type IconPhosphor = DefineComponent<IconPhosphorProps, {}, any>
+export type IconPhosphor = DefineComponent<IconPhosphorProps, object, any>
 export type IconWeight = 'bold' | 'fill' | 'thin' | 'light' | 'regular' | 'duotone'
 export type IconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 

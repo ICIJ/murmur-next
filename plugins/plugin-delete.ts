@@ -35,8 +35,8 @@ export function Delete(options: ConfigOptions = {}): Plugin {
       const rootDirectory = process.cwd()
 
       if (Array.isArray(targetFiles)) {
-        for (let i = 0; i < targetFiles.length; i++) {
-          cleanFiles(resolve(rootDirectory, targetFiles[i]))
+        for (const target of targetFiles) {
+          cleanFiles(resolve(rootDirectory, target))
         }
       }
       else {

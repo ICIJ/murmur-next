@@ -110,7 +110,6 @@ export default defineComponent({
     })
     const colorScaleFunction = computed((): ColorScaleFn => {
       if (isString(props.colorScale)) {
-        // @ts-ignore
         const fn: () => any = scaleFunctions[props.colorScale]
         return fn()
           .domain([props.min, props.max])

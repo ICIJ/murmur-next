@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { Timeout } from 'node:timers'
 import * as d3 from 'd3'
 import find from 'lodash/find'
 import get from 'lodash/get'
@@ -130,6 +131,7 @@ export default defineComponent({
      * function returning the formatted value or a d3's formatter string.
      */
     xAxisTickFormat: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       type: [Function, String] as PropType<Function | string>,
       default: () => identity
     },
@@ -137,7 +139,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const highlightedKeys = ref(props.highlights)
-    const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
+    const highlightTimeout = ref<Timeout | undefined>(undefined)
     const isLoaded = ref(false)
     const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const {

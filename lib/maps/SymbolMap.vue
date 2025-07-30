@@ -159,10 +159,12 @@ export default defineComponent({
     )
 
     function afterLoaded() {
-      return new Promise<void>(async (resolve) => {
-        await loadTopojson()
-        draw()
-        resolve()
+      return new Promise<void>((resolve) => {
+        return loadTopojson().then(() => {
+          draw()
+          resolve()
+          return
+        })
       })
     }
 

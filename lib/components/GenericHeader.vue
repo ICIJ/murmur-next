@@ -90,7 +90,6 @@
           </li>
         </ul>
         <b-popover
-          ref="followUsPopover"
           v-model="showFollowUsPopover"
           target="follow-us-toggler"
           placement="bottom-start"
@@ -109,27 +108,15 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { BPopover } from 'bootstrap-vue-next'
-import headroom from 'vue-headroom/src/headroom.vue'
-import {
-  computed,
-  type PropType,
-  ref,
-  ComponentPublicInstance
-} from 'vue'
+import { PhList } from '@phosphor-icons/vue'
+import Headroom from 'vue-headroom/src/headroom.vue'
+import { computed, ref } from 'vue'
 
 import config from '@/config'
 import BrandExpansion from '@/components/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover.vue'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 import { BrandMode } from '@/enums'
-import PhosphorIcon from './PhosphorIcon.vue'
-import { PhList } from '@phosphor-icons/vue'
-
-interface BrandOptions {
-  noBorder: boolean
-  size: number
-  color: string
-  background: string
-}
 
 /**
  * GenericHeader
@@ -166,21 +153,13 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const followUsPopover = ref<ComponentPublicInstance<
-  typeof BPopover
-> | null>(null)
 const showFollowUsPopover = ref<boolean>(false)
 const collapseNavbar = ref(true)
 const shortMode = ref(BrandMode.Short)
 const longMode = ref(BrandMode.Long)
-const rootElement = computed((): string => {
-  return props.noHeadroom ? 'div' : 'headroom'
-})
+const rootElement = computed((): string => props.noHeadroom ? 'div' : Headroom)
 
 function closeFollowUsPopover() {
-  if (followUsPopover.value?.hide) {
-    followUsPopover.value?.hide(new Event('forceHide'))
-  }
   showFollowUsPopover.value = false
 }
 

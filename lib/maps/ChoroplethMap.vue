@@ -241,10 +241,12 @@ export default defineComponent({
     )
 
     async function afterLoaded() {
-      return new Promise<void>(async (resolve) => {
-        await loadTopojson()
-        draw()
-        resolve()
+      return new Promise<void>((resolve) => {
+        return loadTopojson().then(() => {
+          draw()
+          resolve()
+          return
+        })
       })
     }
 
@@ -358,17 +360,10 @@ export default defineComponent({
     })
     const rotatingMapProjection = computed(() => {
       const { rotateX = null, rotateY = null } = mapTransform.value
-      let proj
-      let text
       if (rotateX !== null && rotateY !== null) {
-        text = 'rotate'
-        proj = mapProjection.value.rotate([rotateX, rotateY]) ?? null
+        return mapProjection.value.rotate([rotateX, rotateY]) ?? null
       }
-      else {
-        text = 'normal'
-        proj = mapProjection.value
-      }
-      return proj
+      return mapProjection.value
     })
 
     const mapCenter = computed(() => {
@@ -675,13 +670,6 @@ export default defineComponent({
         .end()
     }
 
-    function reapplyZoom() {
-      mapTransform.value = { k: 1, x: 0, y: 0, rotateX: 0, rotateY: 0 }
-      applyZoomIdentity(d3.zoomIdentity)
-      featureZoom.value = null
-      emitResetEvent()
-    }
-
     function resetZoom(_event: MouseEvent, _d: number) {
       map.value
         ?.style('--map-scale', 1)
@@ -723,33 +711,6 @@ export default defineComponent({
         .duration(props.transitionDuration)
         .call(mapZoom.value?.transform, zoomIdentity, pointer)
         .end()
-    }
-
-    function calculateFeatureZoomIdentity(d: any) {
-      const [[x0, y0], [x1, y1]] = featurePath.value.bounds(d)
-      const scale = Math.min(
-        8,
-        0.9 / Math.max((x1 - x0) / mapWidth.value, (y1 - y0) / mapHeight.value)
-      )
-      const translateX = -(x0 + x1) / 2
-      const translateY = -(y0 + y1) / 2
-      return d3.zoomIdentity
-        .translate(mapWidth.value / 2, mapHeight.value / 2)
-        .scale(scale)
-        .translate(translateX, translateY)
-    }
-
-    function applyFeatureZoom(d: any, pointer = [0, 0]) {
-      const zoomIdentity = calculateFeatureZoomIdentity(d)
-      featureZoom.value = get(d, props.topojsonObjectsPath)
-      mapTransform.value = {
-        k: zoomIdentity.k,
-        x: zoomIdentity.x,
-        y: zoomIdentity.y,
-        rotateX: 0,
-        rotateY: 0
-      }
-      return applyZoomIdentity(zoomIdentity, pointer)
     }
 
     function applyZoom(

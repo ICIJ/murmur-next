@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TextColorVariant } from 'bootstrap-vue-next'
+import { type PropType } from 'vue'
 
 defineProps({
   counter: {

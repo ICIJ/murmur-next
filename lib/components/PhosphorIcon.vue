@@ -68,12 +68,10 @@ function findComponentByName(name: string): IconPhosphor {
   const filename = `Ph${upperFirst(camelCase(name))}`
   return defineAsyncComponent(async () => {
     try {
-      // @ts-ignore
       return await import(`node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`)
     }
     catch {
       // @ts-expect-error Importing not typescript module
-      // eslint-disable-next-line import/extensions
       return import('node_modules/@phosphor-icons/vue/dist/icons/PhSelection.vue.mjs')
     }
   })
@@ -96,7 +94,7 @@ const setComponent = (icon: string | string[] | IconPhosphor) => {
 watch(() => props.name, setComponent, { immediate: true })
 
 const currentHover = ref(false)
-watch(() => props.hover, () => { currentHover.value = props.hover }, { immediate: true })
+watch(() => props.hover, () => (currentHover.value = props.hover), { immediate: true })
 
 const weightComp = computed((): IconWeight => {
   if (isArray(props.name) && props.name.length > 1) {

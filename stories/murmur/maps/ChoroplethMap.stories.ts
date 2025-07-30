@@ -318,24 +318,29 @@ export const Default = Template.bind({})
 Default.args = {
   data: motorVehiclesPer1000people
 }
-export const hatchEmpty = Template.bind({})
-hatchEmpty.args = {
+
+export const HatchEmpty = Template.bind({})
+
+HatchEmpty.args = {
   data: motorVehiclesPer1000people,
   hatchEmpty: true
 }
 export const Zoomable = Template.bind({})
+
 Zoomable.args = {
   data: motorVehiclesPer1000people,
   hatchEmpty: true,
   zoomable: true
 }
 export const FeatureColorScale = Template.bind({})
+
 FeatureColorScale.args = {
   data: motorVehiclesPer1000people,
   featureColorScale: featureColorScale()
 }
 
 export const Topojson = Template.bind({})
+
 Topojson.args = {
   data: wineStockByDepartment,
   clickable: true,
@@ -344,6 +349,7 @@ Topojson.args = {
   topojsonObjects: 'departements',
   topojsonObjectsPath: 'properties.code'
 }
+
 const TemplateLegend: Story = (args: any) => ({
   components: { ChoroplethMap },
   setup() {
@@ -359,7 +365,9 @@ const TemplateLegend: Story = (args: any) => ({
  
     </choropleth-map>`
 })
+
 export const TopojsonLegend = TemplateLegend.bind({})
+
 TopojsonLegend.args = {
   data: wineStockByDepartment,
   clickable: true,
@@ -367,6 +375,7 @@ TopojsonLegend.args = {
   topojsonUrl: './assets/topojson/france-departments.json',
   topojsonObjects: 'departements',
   topojsonObjectsPath: 'properties.code'
+
 }
 const TemplateAnnotation: Story = (args: any) => ({
   components: { ChoroplethMap, ChoroplethMapAnnotation },
@@ -391,7 +400,9 @@ const TemplateAnnotation: Story = (args: any) => ({
       </choropleth-map-annotation>
     </choropleth-map>`
 })
+
 export const TopojsonAnnotation = TemplateAnnotation.bind({})
+
 TopojsonAnnotation.args = {
   data: wineStockByDepartment,
   clickable: true,
@@ -400,6 +411,7 @@ TopojsonAnnotation.args = {
   topojsonObjects: 'departements',
   topojsonObjectsPath: 'properties.code'
 }
+
 const TemplateCustomProjection: Story = (args: any) => ({
   components: { ChoroplethMap, ChoroplethMapAnnotation },
   setup() {
@@ -423,6 +435,7 @@ const TemplateCustomProjection: Story = (args: any) => ({
 })
 
 export const CustomProjection = TemplateCustomProjection.bind({})
+
 CustomProjection.args = {
   center: [33.435499, 35.167406],
   projection: geoOrthographic,

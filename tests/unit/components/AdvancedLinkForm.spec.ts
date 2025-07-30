@@ -1,4 +1,4 @@
-import { mount, flushPromises, shallowMount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import AdvancedLinkForm from '@/components/AdvancedLinkForm.vue'
 import {Tab} from "@/components/AdvancedLinkFormTab.vue";

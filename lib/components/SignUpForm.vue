@@ -139,7 +139,14 @@ async function subscribe() {
   resetMessages()
   freeze()
   // Send the data, catch the result no matter what and unfreeze the form
-  await send().then(done, error).finally(unfreeze)
+  try {
+    await send()
+    done(error)
+  }
+  catch (e) {
+    error(e)
+  }
+  unfreeze()
   emit('subscribed')
 }
 

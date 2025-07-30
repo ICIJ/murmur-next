@@ -16,6 +16,9 @@ interface ColumnBar {
 
 export default defineComponent({
   name: 'ColumnChart',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * Color of each column (uses the CSS variable --column-color by default)
@@ -63,6 +66,7 @@ export default defineComponent({
      * Function to apply to format x-axis ticks
      */
     xAxisTickFormat: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       type: [Function, String] as PropType<Function | string>,
       default: () => identity
     },
@@ -77,6 +81,7 @@ export default defineComponent({
      * Function to apply to format y-axis ticks
      */
     yAxisTickFormat: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       type: [Function, String] as PropType<Function | string>,
       default: () => identity
     },
@@ -174,9 +179,7 @@ export default defineComponent({
     },
     ...chartProps()
   },
-  components: {
-    PhosphorIcon
-  },
+  emits: ['select'],
   setup(props, { emit }) {
     const width = ref(0)
     const height = ref(0)
@@ -373,7 +376,6 @@ export default defineComponent({
     }
 
     function columnUniqueId(i: number) {
-      // @ts-ignore
       const { uid } = getCurrentInstance()
       return `column-${uid}-${i}`
     }

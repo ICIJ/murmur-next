@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import StackedColumnChart from '@/datavisualisations/StackedColumnChart.vue'
 
 // Mock HTML element offset so the size of the chart can be calculated
