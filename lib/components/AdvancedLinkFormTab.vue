@@ -36,16 +36,6 @@ const size = computed(() => (props.compact ? 'sm' : 'md'))
 
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 
-function select() {
-  if (props.type === 'rich') {
-    selectRich(inputRef)
-  }
-  else {
-    selectInput(inputRef)
-  }
-}
-const titleOrLink = computed(() => props.title || props.link)
-
 const text = computed(
   () => {
     switch (props.type) {
@@ -60,16 +50,23 @@ const text = computed(
     }
   }
 )
+
+const titleOrLink = computed(() => props.title || props.link)
 const linkAsHtml = computed(() => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`)
 const linkAsMarkdown = computed(() => `[${titleOrLink.value}](${props.link})`)
 const isRich = computed(() => props.type === 'rich')
 const isHTML = computed(() => props.type === 'html')
 
-const selectInput = async (target: Readonly<ShallowRef<HTMLInputElement | null>>) => {
-  // if(!target.value){
-  //   throw new Error("no target")
-  // }
+function select() {
+  if (props.type === 'rich') {
+    selectRich(inputRef)
+  }
+  else {
+    selectInput(inputRef)
+  }
+}
 
+const selectInput = async (target: Readonly<ShallowRef<HTMLInputElement | null>>) => {
   // wait for the copy to finish to select text
   await nextTick()
   // @ts-expect-error element does exist on target.value but IDE says it doesn't :'(
