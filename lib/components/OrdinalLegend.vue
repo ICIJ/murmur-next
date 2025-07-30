@@ -2,7 +2,7 @@
 import { get, isFunction, kebabCase, uniqueId } from 'lodash'
 import * as d3 from 'd3'
 import { defineComponent, PropType, computed } from 'vue'
-export type Datum = { id?: string|number; color: string; path?: string; label: string }
+export interface Datum { id?: string | number, color: string, path?: string, label: string }
 type Category = 'id' | 'color' | 'path' | 'label'
 export default defineComponent({
   name: 'OrdinalLegend',
@@ -61,7 +61,7 @@ export default defineComponent({
       }
     })
     const dataWithIds = computed(() => {
-      return props.data.map((d: any): { [key: string]: string } => {
+      return props.data.map((d: any): Record<string, string> => {
         const id = uniqueId()
         return { [props.categoryObjectsPath]: id, ...d }
       })
@@ -108,7 +108,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <ul class="ordinal-legend list-unstyled" :class="classList">
+  <ul
+    class="ordinal-legend list-unstyled"
+    :class="classList"
+  >
     <li
       v-for="d in data"
       :key="d[categoryObjectsPath]"
@@ -121,7 +124,10 @@ export default defineComponent({
         @mouseleave="updateHighlight()"
       >
         <span class="ordinal-legend__item__marker me-1">
-          <slot name="marker" :marker="{ path: d.path, color: d.color }">
+          <slot
+            name="marker"
+            :marker="{ path: d.path, color: d.color }"
+          >
             <svg :viewBox="markerViewbox">
               <path
                 :d="markerPathFunction(d)"
@@ -132,7 +138,10 @@ export default defineComponent({
           </slot>
         </span>
         <span class="ordinal-legend__item__label">
-          <slot name="label" v-bind="d">
+          <slot
+            name="label"
+            v-bind="d"
+          >
             {{ d.label }}
           </slot>
         </span>
@@ -142,7 +151,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 
 .ordinal-legend {
   $muted-item-opacity: 0.2;

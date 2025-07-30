@@ -18,7 +18,11 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Twitter"
         >
-          <phosphor-icon :name="PhXLogo" size="1.5em" fill />
+          <phosphor-icon
+            :name="PhXLogo"
+            size="1.5em"
+            fill
+          />
           <span class="visually-hidden">Twitter</span>
         </a>
       </div>
@@ -29,7 +33,11 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Facebook"
         >
-          <phosphor-icon :name="PhFacebookLogo" size="1.5em" fill />
+          <phosphor-icon
+            :name="PhFacebookLogo"
+            size="1.5em"
+            fill
+          />
           <span class="visually-hidden">Facebook</span>
         </a>
       </div>
@@ -40,7 +48,11 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Linkedin"
         >
-          <phosphor-icon :name="PhLinkedinLogo" size="1.5em" fill />
+          <phosphor-icon
+            :name="PhLinkedinLogo"
+            size="1.5em"
+            fill
+          />
           <span class="visually-hidden">Linkedin</span>
         </a>
       </div>
@@ -52,7 +64,7 @@
 import { useI18n } from 'vue-i18n'
 import SignUpForm from '@/components/SignUpForm.vue'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
-import {PhFacebookLogo, PhLinkedinLogo, PhX, PhXLogo} from "@phosphor-icons/vue";
+import { PhFacebookLogo, PhLinkedinLogo, PhX, PhXLogo } from '@phosphor-icons/vue'
 
 /**
  * FollowUsPopover
@@ -72,7 +84,6 @@ function closeSignupPopover(): void {
 </script>
 
 <style lang="scss" scoped>
-
 
 .follow-us {
   position: relative;

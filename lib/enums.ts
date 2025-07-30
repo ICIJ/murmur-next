@@ -13,15 +13,15 @@ export enum DeckTexture {
   Carbon = 'carbon'
 }
 
-export enum ICON_WEIGHT  {
+export enum ICON_WEIGHT {
   thin = 'thin',
   light = 'light',
   regular = 'regular',
   bold = 'bold',
   fill = 'fill',
-  duotone ='duotone'
+  duotone = 'duotone'
 }
-export enum SIZE  {
+export enum SIZE {
   xs = 'xs',
   sm = 'sm',
   md = 'md',
@@ -53,7 +53,7 @@ export enum VARIANT {
   outline_dark = 'outline-dark',
 }
 
-export enum PLACEMENTS  {
+export enum PLACEMENTS {
   TOP = 'top',
   TOPLEFT = 'topleft',
   TOPRIGHT = 'topright',

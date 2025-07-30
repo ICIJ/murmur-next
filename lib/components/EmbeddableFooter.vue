@@ -5,26 +5,38 @@
       target="_blank"
       class="text-white embeddable-footer__brand"
     >
-      <brand :size="40" no-border class="me-2" color="white" />
+      <brand
+        :size="40"
+        no-border
+        class="me-2"
+        color="white"
+      />
       <!-- @slot Slot to redefine title display -->
       <slot name="title">
-        <span v-html="title"></span>
+        <span v-html="title" />
       </slot>
     </a>
     <div class="embeddable-footer__lead small text-truncate">
       <!-- @slot Main slot to redefine lead text display -->
       <slot :lead="lead">
-        <span v-html="lead"></span>
+        <span v-html="lead" />
       </slot>
     </div>
     <!-- @slot Override the sharing button -->
-    <slot name="sharing-button" v-bind="{ sharingOptionsValues }">
+    <slot
+      name="sharing-button"
+      v-bind="{ sharingOptionsValues }"
+    >
       <button
         class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
         :class="{ active: showShareOptions }"
         @click="showShareOptions = !showShareOptions"
       >
-        <phosphor-icon :name="PhShareNetwork" fill size="1.2em" />
+        <phosphor-icon
+          :name="PhShareNetwork"
+          fill
+          size="1.2em"
+        />
         <span class="visually-hidden">{{ $t('embeddable-footer.share') }}</span>
       </button>
     </slot>
@@ -39,14 +51,14 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand.vue'
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
 import SharingOptions from '@/components/SharingOptions.vue'
 import config from '@/config'
-import { PhShareNetwork } from "@phosphor-icons/vue";
+import { PhShareNetwork } from '@phosphor-icons/vue'
 
 /**
  * EmbeddableFooter

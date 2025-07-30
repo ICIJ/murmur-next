@@ -6,7 +6,7 @@ import filter from 'lodash/filter'
 import identity from 'lodash/identity'
 import isEqual from 'lodash/isEqual'
 import uniqueId from 'lodash/uniqueId'
-//@ts-expect-error no typings available
+// @ts-expect-error no typings available
 import { RecycleScroller } from 'vue-virtual-scroller'
 
 import {
@@ -19,14 +19,13 @@ import {
 } from 'vue'
 
 import PhosphorIcon from './PhosphorIcon.vue'
-import { PhCheckSquare, PhSquare} from "@phosphor-icons/vue";
+import { PhCheckSquare, PhSquare } from '@phosphor-icons/vue'
 
 const KEY_ESC_CODE = 27
 const KEY_UP_CODE = 38
 const KEY_DOWN_CODE = 40
 
 type Item = any
-
 
 /**
  * The item marked as active.
@@ -159,7 +158,7 @@ const firstActiveItemIndex = computed(() => {
     : -1
 })
 
-const keysMap = computed((): { [key: string]: Function } => {
+const keysMap = computed((): Record<string, Function> => {
   return {
     [KEY_UP_CODE]: activatePreviousItem,
     [KEY_DOWN_CODE]: activateNextItem,
@@ -185,14 +184,14 @@ watch(activeItems, (itemOrItems) => {
    * @type {String, Object, Array, Number}
    */
   modelValue.value = props.multiple ? itemOrItems : itemOrItems[0]
-},{ deep: true })
+}, { deep: true })
 
 function indexIcon(item: Item) {
   return itemActivated(item) ? PhCheckSquare : PhSquare
 }
 
 function itemActivated(item: Item) {
-  return findIndex(activeItems.value, (i) => props.eq(item, i)) > -1
+  return findIndex(activeItems.value, i => props.eq(item, i)) > -1
 }
 
 function clickToSelectItem(item: Item) {
@@ -206,7 +205,8 @@ function clickToSelectItem(item: Item) {
 
   if (props.multiple) {
     addItem(item)
-  } else {
+  }
+  else {
     selectItem(item)
   }
 }
@@ -235,16 +235,18 @@ function clickToSelectRangeToItem(item: Item) {
 
 function selectItem(item: Item) {
   if (itemActivated(item) && activeItems.value.length === 1) {
-    activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))
-  } else {
+    activeItems.value = filter(activeItems.value, i => !props.eq(item, i))
+  }
+  else {
     activeItems.value = [item]
   }
 }
 
 function addItem(item: Item) {
   if (itemActivated(item)) {
-    activeItems.value = filter(activeItems.value, (i) => !props.eq(item, i))
-  } else {
+    activeItems.value = filter(activeItems.value, i => !props.eq(item, i))
+  }
+  else {
     activeItems.value = [...activeItems.value, item]
   }
 }
@@ -253,14 +255,16 @@ function selectRangeToItem(item: Item) {
   // No activated items
   if (!activeItems.value.length || !props.multiple) {
     selectItem(item)
-  } else {
+  }
+  else {
     const index = items_.value.indexOf(item)
     if (index > firstActiveItemIndex.value) {
       activeItems.value = items_.value.slice(
         firstActiveItemIndex.value,
         index + 1
       )
-    } else {
+    }
+    else {
       activeItems.value = items_.value.slice(
         index,
         firstActiveItemIndex.value + 1
@@ -326,7 +330,8 @@ function bindKeys() {
 function toggleKeys() {
   if (props.hide) {
     unbindKeys()
-  } else {
+  }
+  else {
     bindKeys()
   }
 }
@@ -367,16 +372,28 @@ function serialize(item: Item) {
         @click.shift="clickToSelectRangeToItem(item)"
       >
         <!-- @slot Item content -->
-        <slot name="item" :item="item">
-          <div v-if="multiple" class="selectable-dropdown__item__check">
-            <phosphor-icon :name="indexIcon(item)" class="me-2" />
+        <slot
+          name="item"
+          :item="item"
+        >
+          <div
+            v-if="multiple"
+            class="selectable-dropdown__item__check"
+          >
+            <phosphor-icon
+              :name="indexIcon(item)"
+              class="me-2"
+            />
           </div>
           <div
             class="flex-grow-1 text-truncate selectable-dropdown__item__label"
           >
             <!-- @slot Item's label content -->
-            <slot name="item-label" :item="item">
-                {{ serialize(item) }}
+            <slot
+              name="item-label"
+              :item="item"
+            >
+              {{ serialize(item) }}
             </slot>
           </div>
         </slot>

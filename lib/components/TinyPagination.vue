@@ -1,5 +1,8 @@
 <template>
-  <div class="tiny-pagination" :class="paginationClassList">
+  <div
+    class="tiny-pagination"
+    :class="paginationClassList"
+  >
     <b-button
       v-if="!noFirst"
       class="tiny-pagination__nav tiny-pagination__nav--bound  tiny-pagination__nav--first"
@@ -13,7 +16,10 @@
         name="first"
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
-        <phosphor-icon :name="firstPageIcon" hover-weight="bold" />
+        <phosphor-icon
+          :name="firstPageIcon"
+          hover-weight="bold"
+        />
         <span class="visually-hidden">{{ firstLabel ?? t('tiny-pagination.first') }}</span>
       </slot>
     </b-button>
@@ -30,11 +36,18 @@
         name="previous"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <phosphor-icon :name="previousPageIcon" hover-weight="bold" />
+        <phosphor-icon
+          :name="previousPageIcon"
+          hover-weight="bold"
+        />
         <span class="visually-hidden">{{ previousLabel ?? t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
-    <form class="tiny-pagination__form form-inline" v-if="row" @submit.prevent="applyRowForm">
+    <form
+      v-if="row"
+      class="tiny-pagination__form form-inline"
+      @submit.prevent="applyRowForm"
+    >
       <b-form-input
         v-model="currentRowInput"
         v-input-autowidth="{ minWidth: '2em' }"
@@ -47,17 +60,33 @@
         :max="totalRows - 1"
         :aria-label="t('tiny-pagination.ariaRow')"
       />
-      <div class="tiny-pagination__form__label" v-ellipsis-tooltip="{ title }">
+      <div
+        v-ellipsis-tooltip="{ title }"
+        class="tiny-pagination__form__label"
+      >
         <!-- @slot Display number of rows and current range -->
-        <slot name="number-of-rows" v-bind="{ modelValue, lastRangeRow, numberOfPages, totalRows }">
+        <slot
+          name="number-of-rows"
+          v-bind="{ modelValue, lastRangeRow, numberOfPages, totalRows }"
+        >
           {{ title }}
         </slot>
       </div>
     </form>
-    <form v-else class="tiny-pagination__form form-inline" @submit.prevent="applyPageForm">
-      <label v-show="!compact" class="tiny-pagination__form__label me-1 mb-0">
+    <form
+      v-else
+      class="tiny-pagination__form form-inline"
+      @submit.prevent="applyPageForm"
+    >
+      <label
+        v-show="!compact"
+        class="tiny-pagination__form__label me-1 mb-0"
+      >
         <!-- @slot Display page label -->
-        <slot name="page" v-bind="{ modelValue, numberOfPages }">
+        <slot
+          name="page"
+          v-bind="{ modelValue, numberOfPages }"
+        >
           {{ t('tiny-pagination.page') }}
         </slot>
       </label>
@@ -73,9 +102,15 @@
         :max="numberOfPages"
         :aria-label="inputAriaLabel ?? t('tiny-pagination.aria')"
       />
-      <div class="tiny-pagination__form__label" v-ellipsis-tooltip="{ title }">
+      <div
+        v-ellipsis-tooltip="{ title }"
+        class="tiny-pagination__form__label"
+      >
         <!-- @slot Display number of pages -->
-        <slot name="number-of-pages" v-bind="{ modelValue, numberOfPages }">
+        <slot
+          name="number-of-pages"
+          v-bind="{ modelValue, numberOfPages }"
+        >
           {{ title }}
         </slot>
       </div>
@@ -93,7 +128,10 @@
         name="next"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <phosphor-icon :name="nextPageIcon" hover-weight="bold" />
+        <phosphor-icon
+          :name="nextPageIcon"
+          hover-weight="bold"
+        />
         <span class="visually-hidden">{{ nextLabel ?? t('tiny-pagination.next') }}</span>
       </slot>
     </b-button>
@@ -110,7 +148,10 @@
         name="last"
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
-        <phosphor-icon :name="lastPageIcon" hover-weight="bold" />
+        <phosphor-icon
+          :name="lastPageIcon"
+          hover-weight="bold"
+        />
         <span class="visually-hidden">{{ lastLabel ?? t('tiny-pagination.last') }}</span>
       </slot>
     </b-button>
@@ -120,7 +161,7 @@
 <script lang="ts" setup>
 import { BButton, BFormInput } from 'bootstrap-vue-next'
 import { computed, PropType, ref, watch } from 'vue'
-import { directive as vInputAutowidth } from "vue-input-autowidth"
+import { directive as vInputAutowidth } from 'vue-input-autowidth'
 import { useI18n } from 'vue-i18n'
 import type { ButtonVariant, Size } from 'bootstrap-vue-next'
 
@@ -214,28 +255,28 @@ const props = defineProps({
    * Phosphor icon of the previous page button
    */
   previousPageIcon: {
-    type: [String, Object, Array] as string|string[]|IconPhosphor,
+    type: [String, Object, Array] as string | string[] | IconPhosphor,
     default: PhCaretLeft
   },
   /**
    * Phosphor icon of the next page button
    */
   nextPageIcon: {
-    type: [String, Object, Array] as string|string[]|IconPhosphor,
+    type: [String, Object, Array] as string | string[] | IconPhosphor,
     default: PhCaretRight
   },
   /**
    * Phosphor icon of the first page button
    */
   firstPageIcon: {
-    type: [String, Object, Array] as string|string[]|IconPhosphor,
+    type: [String, Object, Array] as string | string[] | IconPhosphor,
     default: PhCaretDoubleLeft
   },
   /**
    * Phosphor icon of the last page button
    */
   lastPageIcon: {
-    type: [String, Object, Array] as string|string[]|IconPhosphor,
+    type: [String, Object, Array] as string | string[] | IconPhosphor,
     default: PhCaretDoubleRight
   },
   /**
@@ -299,7 +340,7 @@ const props = defineProps({
     type: String,
     default: null
   }
-});
+})
 
 const { t, n } = useI18n()
 
@@ -338,7 +379,8 @@ watch(modelValue, (value) => {
   // Determine the row offset based on the perPage value.
   if (props.perPage === 1) {
     currentRowInput.value = +value
-  } else {
+  }
+  else {
     // Update currentRowInput value based on totalRows and calculated rowOffset
     currentRowInput.value = props.totalRows ? +props.perPage * (+value - 1) + 1 : 0
   }
@@ -404,7 +446,6 @@ function applyLastPage(): void {
 </script>
 
 <style lang="scss" scoped>
-
 
 .tiny-pagination {
   display: inline-flex;

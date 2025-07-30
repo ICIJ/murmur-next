@@ -7,9 +7,9 @@ import {
   PhMoon,
   PhNewspaper,
   PhScanSmiley
-} from "@phosphor-icons/vue"
+} from '@phosphor-icons/vue'
 
-import { variantsArgType,iconWeightsArgType } from '~storybook/utils'
+import { variantsArgType, iconWeightsArgType } from '~storybook/utils'
 import { PhosphorIcon } from '@/components'
 
 export default {
@@ -54,7 +54,7 @@ export default {
     spin: false,
     spinDuration: '1s'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon
     },
@@ -132,7 +132,6 @@ export const WithComponent = {
   }
 }
 
-
 export const WithArray = {
   args: {
     name: ['windows-logo', 'fill'],
@@ -165,7 +164,7 @@ export const WithText = {
     name: 'globe',
     variant: 'primary'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon
     },
@@ -199,7 +198,7 @@ export const Sizings = {
   args: {
     name: 'globe'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon
     },
@@ -226,7 +225,7 @@ export const Scaling = {
     weight: 'duotone',
     variant: 'primary'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon
     },

@@ -1,10 +1,10 @@
-import ellipsisTooltip from "@/directives/EllipsisTooltip.ts"
+import ellipsisTooltip from '@/directives/EllipsisTooltip.ts'
 
 export default {
   title: 'Murmur/directives/v-ellipsis-tooltip',
   tags: ['autodocs'],
   argTypes: {},
-  render: (args) => ({
+  render: args => ({
     setup() {
       return { args }
     },

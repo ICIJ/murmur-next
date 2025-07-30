@@ -6,8 +6,8 @@ import { defineComponent, computed, ref, watch } from 'vue'
 import { chartProps, getChartProps, useChart } from '@/composables/useChart'
 import { ComponentPublicInstance } from 'vue'
 
-type Datum = {value:number|number[],highlight?:boolean,label?:string}
-type Bar = {width:number,height:number, x:number,y:number} & Datum;
+interface Datum { value: number | number[], highlight?: boolean, label?: string }
+type Bar = { width: number, height: number, x: number, y: number } & Datum
 export default defineComponent({
   name: 'BarChart',
   props: {
@@ -85,11 +85,11 @@ export default defineComponent({
     ...chartProps()
   },
   setup(props, { emit }) {
-    const el = ref<ComponentPublicInstance<HTMLElement> |null>(null)
+    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const width = ref(0)
     const isLoaded = ref(false)
-    const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter } =
-      useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
+    const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter }
+      = useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
     // onMounted(() => {
     //   window.addEventListener('resize', onResize)
     //   onResize()
@@ -98,7 +98,7 @@ export default defineComponent({
     //   window.removeEventListener('resize', onResize)
     // })
 
-    const sortedData = computed(():[] => {
+    const sortedData = computed((): [] => {
       if (!loadedData.value) {
         return []
       }
@@ -139,15 +139,15 @@ export default defineComponent({
     const scale = computed(() => {
       const x = d3
         .scaleLinear()
-        //@ts-expect-error D3 api
-        .domain([0, d3.max(sortedData.value, (d:Datum) => d.value)])
+        // @ts-expect-error D3 api
+        .domain([0, d3.max(sortedData.value, (d: Datum) => d.value)])
         .range([0, padded.value.width - valueWidth.value])
       return { x }
     })
-    const bars = computed(():Bar[] => {
-      return sortedData.value.map((d:Datum, i) => {
+    const bars = computed((): Bar[] => {
+      return sortedData.value.map((d: Datum, i) => {
         return {
-          //@ts-expect-error D3 api
+          // @ts-expect-error D3 api
           width: Math.abs(scale.value.x(d.value)),
           height: Math.abs(props.barHeight),
           value: d.value,
@@ -158,7 +158,7 @@ export default defineComponent({
       })
     })
     const labels = computed(() => {
-      return sortedData.value.map((d:Datum, i) => {
+      return sortedData.value.map((d: Datum, i) => {
         return {
           label: d.label,
           x: labelWidth.value,
@@ -170,7 +170,7 @@ export default defineComponent({
       return (props.barHeight + props.barGap) * sortedData.value.length
     })
 
-    function formatXDatum(d:number|number[]) {
+    function formatXDatum(d: number | number[]) {
       return d3Formatter(d, props.xAxisTickFormat)
     }
     function onResize() {
@@ -214,7 +214,10 @@ export default defineComponent({
       'bar-chart--social-mode': socialMode
     }"
   >
-    <svg :width="width" :height="height">
+    <svg
+      :width="width"
+      :height="height"
+    >
       <g
         :style="{ transform: `translate(0, ${margin.top}px)` }"
         class="bar-chart__labels"
@@ -240,7 +243,12 @@ export default defineComponent({
           class="bar-chart__bars__item"
           :class="{ 'bar-chart__bars__item--highlight': bar.highlight }"
         >
-          <rect :width="bar.width" :height="bar.height" :x="bar.x" :y="bar.y" />
+          <rect
+            :width="bar.width"
+            :height="bar.height"
+            :x="bar.x"
+            :y="bar.y"
+          />
           <text
             class="bar-chart__bars__item__value"
             :x="bar.width + valueGap"
@@ -257,7 +265,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss">
-
 
 .bar-chart {
   text {

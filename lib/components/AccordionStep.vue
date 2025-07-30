@@ -85,7 +85,6 @@ const props = defineProps({
   active: { type: Boolean as PropType<boolean | undefined>, default: false }
 })
 
-
 const emit = defineEmits(['next-step', 'previous-step'])
 
 const accordion = inject<Accordion>(AccordionKey)

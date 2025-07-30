@@ -1,14 +1,14 @@
 import { memoize, flatten } from 'lodash'
 
-let assetUniqueIdCounter: number = 0
+let assetUniqueIdCounter = 0
 
 export const injectAsset = memoize(function (
   file: string,
-  id: string = `dynamic-asset-${assetUniqueIdCounter++}`
+  id = `dynamic-asset-${assetUniqueIdCounter++}`
 ): Promise<unknown> {
   return new Promise((resolve: (value?: unknown) => void) => {
-    const parent: HTMLElement =
-      document.querySelector('body') || document.querySelector('head')!
+    const parent: HTMLElement
+      = document.querySelector('body') || document.querySelector('head')!
     const parts = file.split('.')
     const ext = parts[parts.length - 1].toLowerCase()
     switch (ext) {

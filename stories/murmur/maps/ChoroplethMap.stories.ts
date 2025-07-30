@@ -1,7 +1,7 @@
-import {ChoroplethMap, ChoroplethMapAnnotation} from '@/maps'
-import {StoryObj} from '@storybook/vue3-vite'
-import {scaleThreshold} from 'd3'
-import {geoOrthographic} from 'd3-geo'
+import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
+import { StoryObj } from '@storybook/vue3-vite'
+import { scaleThreshold } from 'd3'
+import { geoOrthographic } from 'd3-geo'
 
 const motorVehiclesPer1000people = {
   MCO: 899,

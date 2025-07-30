@@ -2,9 +2,9 @@ import get from 'lodash/get'
 import each from 'lodash/each'
 import { ref } from 'vue'
 import defaultValues from './config.default'
-import { Ref } from '@vue/runtime-core'
+import { Ref } from 'vue'
 
-type ConfigMap = { [key: string]: any }
+type ConfigMap = Record<string, any>
 
 export class Config {
   _VALUES: Ref<ConfigMap>
@@ -15,11 +15,13 @@ export class Config {
     this.merge(values)
     return this
   }
+
   merge(values = {}) {
     return each(values, (value, key) => {
       this.set(key, value)
     })
   }
+
   set(key: string, value: any) {
     const levels = key.split('.')
     this._VALUES.value = this._VALUES.value ?? {}
@@ -27,14 +29,17 @@ export class Config {
     if (levels.length > 1) {
       const scope = this.scope(levels.shift() as string)
       this._VALUES.value[key] = scope.set(levels.join('.'), value)
-    } else {
+    }
+    else {
       this._VALUES.value[key] = value
     }
     return value
   }
+
   get(key: string, defaultValue?: NonNullable<unknown> | null) {
     return get(this._VALUES.value, key, defaultValue)
   }
+
   is(key: string) {
     const value = this.get(key, null)
     switch (value) {
@@ -58,16 +63,20 @@ export class Config {
         return !!value
     }
   }
+
   isnt(key: string) {
     return !this.is(key)
   }
+
   scope(name: string) {
     this.scopes[name] = this.scopes[name] ?? new Config()
     return this.scopes[name]
   }
+
   get values() {
     return this._VALUES.value
   }
+
   get scopes() {
     this._SCOPES.value = this._SCOPES.value ?? ref({})
     return this._SCOPES.value

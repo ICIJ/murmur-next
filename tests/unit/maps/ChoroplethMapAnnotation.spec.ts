@@ -9,8 +9,7 @@ import { ParentKey } from '@/keys.js'
 import { computed } from 'vue'
 import { geoRobinson } from 'd3-geo-projection'
 import { GeoProjection } from 'd3-geo'
-import {PLACEMENTS} from "@/enums";
-
+import { PLACEMENTS } from '@/enums'
 
 describe('ChoroplethMapAnnotation', () => {
   const generateParentMock = ({
@@ -20,7 +19,7 @@ describe('ChoroplethMapAnnotation', () => {
     height = 500,
     k = 1
   }) => ({
-    rotatingMapProjection: computed((): GeoProjection | (()=>number[]) => {
+    rotatingMapProjection: computed((): GeoProjection | (() => number[]) => {
       if (rX && rY) {
         return () => [rX, rY]
       }
@@ -68,7 +67,7 @@ describe('ChoroplethMapAnnotation', () => {
   describe('placements', () => {
     const mockParentMap: ParentMap = generateParentMock({})
     const provide: ParentMapProvide = { [ParentKey]: mockParentMap }
-    const testPlacement = (placement:PLACEMENTS|undefined, expectedResults: any) => {
+    const testPlacement = (placement: PLACEMENTS | undefined, expectedResults: any) => {
       it(`computes placement correctly for ${placement}`, () => {
         const wrapper = shallowMount(ChoroplethMapAnnotation, {
           propsData: {

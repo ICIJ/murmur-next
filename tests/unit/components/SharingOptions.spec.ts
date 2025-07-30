@@ -4,7 +4,6 @@ import SharingOptions from '@/components/SharingOptions'
 import { BModal } from 'bootstrap-vue-next'
 
 describe('SharingOptions', () => {
-
   const propsData = {
     url: 'https://medicaldevices.icij.org/',
     values: {

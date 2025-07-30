@@ -217,7 +217,7 @@ export default defineComponent({
     const topojson = ref<any>(null)
     const topojsonPromise = ref<any | null>(null)
     const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
-    const featureCursor = ref<{ [cursor: string]: string } | null>(null)
+    const featureCursor = ref<Record<string, string> | null>(null)
     const featureZoom = ref<string | null>(null)
     const isLoaded = ref<boolean>(false)
     const mapTransform = ref<MapTransform>({
@@ -363,7 +363,8 @@ export default defineComponent({
       if (rotateX !== null && rotateY !== null) {
         text = 'rotate'
         proj = mapProjection.value.rotate([rotateX, rotateY]) ?? null
-      } else {
+      }
+      else {
         text = 'normal'
         proj = mapProjection.value
       }
@@ -483,7 +484,8 @@ export default defineComponent({
       // User can zoom on the map
       if (props.zoomable && props.spherical) {
         map.value?.call(mapRotate.value).call(mapSphericalZoom.value)
-      } else if (props.zoomable) {
+      }
+      else if (props.zoomable) {
         map.value?.call(mapZoom.value)
       }
       // An initial zoom value is given
@@ -548,7 +550,7 @@ export default defineComponent({
     }
 
     function featureClass(d: string) {
-      return keys(pickBy(featureClassObject(d), (value) => value)).join(' ')
+      return keys(pickBy(featureClassObject(d), value => value)).join(' ')
     }
 
     function featureClassObject(d: string) {
@@ -602,7 +604,7 @@ export default defineComponent({
       if (featureZoom.value === get(d, props.topojsonObjectsPath)) {
         return resetZoom(event, d)
       }
-      //TODO CD: it was a promise, should it be one?
+      // TODO CD: it was a promise, should it be one?
       setFeatureZoom(d, d3.pointer(event, map.value?.node()))
       /**
        * A zoom on a feature ended
@@ -757,7 +759,8 @@ export default defineComponent({
       const zoomScale = clamp(zoom, props.zoomMin, props.zoomMax)
       if (props.spherical) {
         return setSphericalZoom(zoomScale, transitionDuration)
-      } else {
+      }
+      else {
         return setPlanarZoom(zoomScale, transitionDuration)
       }
     }
@@ -864,7 +867,11 @@ export default defineComponent({
         patternUnits="userSpaceOnUse"
         width="1"
       >
-        <rect :fill="featureColorScaleEnd" height="1" width="1" />
+        <rect
+          :fill="featureColorScaleEnd"
+          height="1"
+          width="1"
+        />
         <line
           :style="{ stroke: featureColorScaleStart, strokeWidth: 1 }"
           x1="0"
@@ -877,9 +884,15 @@ export default defineComponent({
         :transform-origin="transformOrigin"
         class="choropleth-map__main__tracked"
       >
-        <g v-if="graticule" class="choropleth-map__main__graticule"></g>
-        <g class="choropleth-map__main__features"></g>
-        <g v-if="outline" class="choropleth-map__main__outline"></g>
+        <g
+          v-if="graticule"
+          class="choropleth-map__main__graticule"
+        />
+        <g class="choropleth-map__main__features" />
+        <g
+          v-if="outline"
+          class="choropleth-map__main__outline"
+        />
         <slot v-if="isReady" />
       </g>
     </svg>
@@ -904,7 +917,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 
 .choropleth-map {
   --map-scale: 1;

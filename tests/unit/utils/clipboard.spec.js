@@ -10,7 +10,8 @@ describe('clipboard.js', () => {
   it('should reject the promise', async () => {
     try {
       await copyText('uwu')
-    } catch (error) {
+    }
+    catch (error) {
       expect(error.text).toBe('uwu')
     }
   })

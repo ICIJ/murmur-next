@@ -133,9 +133,9 @@ BigList.decorators = [
     setup() {
       const args = toRefs(ctx.args)
       onBeforeMount(async () => {
-        const url =
-          'https://raw.githubusercontent.com/high54/Communes-France-JSON/master/france.json'
-        const cities = await fetch(url).then((data) => data.json())
+        const url
+          = 'https://raw.githubusercontent.com/high54/Communes-France-JSON/master/france.json'
+        const cities = await fetch(url).then(data => data.json())
         args.items.value = [
           ...new Set(
             cities

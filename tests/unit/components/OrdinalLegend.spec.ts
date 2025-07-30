@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { describe, expect, it, beforeEach } from 'vitest'
-import OrdinalLegend, {Datum} from '@/components/OrdinalLegend.vue'
+import OrdinalLegend, { Datum } from '@/components/OrdinalLegend.vue'
 
 describe('OrdinalLegend.vue', () => {
   let wrapper: any

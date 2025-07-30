@@ -1,10 +1,9 @@
 <script lang="ts">
 import { geoDistance, GeoProjection } from 'd3-geo'
-import {computed, defineComponent, inject, PropType, toRaw} from 'vue'
+import { computed, defineComponent, inject, PropType, toRaw } from 'vue'
 import { ParentKey } from '@/keys'
 import { ParentMap } from '@/types'
-import {PLACEMENTS} from "@/enums";
-
+import { PLACEMENTS } from '@/enums'
 
 export default defineComponent({
   name: 'ChoroplethMapAnnotation',
@@ -129,7 +128,7 @@ export default defineComponent({
       return { x, y }
     })
 
-    const mapK = computed(():number => {
+    const mapK = computed((): number => {
       return mapTransform.value.k
     })
 
@@ -205,7 +204,8 @@ export default defineComponent({
     const wrapperTransformOriginX = computed(() => {
       if (isRight.value) {
         return 'left'
-      } else if (isLeft.value) {
+      }
+      else if (isLeft.value) {
         return 'right'
       }
       return 'center'
@@ -214,7 +214,8 @@ export default defineComponent({
     const wrapperTransformOriginY = computed(() => {
       if (isTop.value) {
         return 'bottom'
-      } else if (isBottom.value) {
+      }
+      else if (isBottom.value) {
         return 'top'
       }
       return 'center'
@@ -224,12 +225,13 @@ export default defineComponent({
         if (!projection.value?.invert) {
           return 0
         }
-        const mapCenter:[number,number] = projection.value.invert([
+        const mapCenter: [number, number] = projection.value.invert([
           mapRect.value.width / 2,
           mapRect.value.height / 2
         ])
         return geoDistance(center.value, mapCenter)
-      } catch (_) {
+      }
+      catch (_) {
         return 0
       }
     })
@@ -262,7 +264,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <g :class="classList" class="choropleth-map-annotation">
+  <g
+    :class="classList"
+    class="choropleth-map-annotation"
+  >
     <foreignObject
       :height="height"
       :transform="transform"
@@ -284,7 +289,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 
 .choropleth-map-annotation {
   --color: #{$body-color};

@@ -37,15 +37,15 @@ const classList = computed(() => {
 })
 
 const sources = computed(() => {
-  return imageModeSources.value.map((source) => source.dataset)
+  return imageModeSources.value.map(source => source.dataset)
 })
 
 const source = computed(() => {
-  return sources.value.find((source) => source.colorMode === colorMode.value)
+  return sources.value.find(source => source.colorMode === colorMode.value)
 })
 
 const defaultSource = computed(() => {
-  return sources.value.find((source) => source.colorMode === props.defaultColorMode || !source.colorMode)
+  return sources.value.find(source => source.colorMode === props.defaultColorMode || !source.colorMode)
 })
 
 const src = computed(() => {
@@ -54,8 +54,17 @@ const src = computed(() => {
 </script>
 
 <template>
-  <picture ref="element" :class="classList">
+  <picture
+    ref="element"
+    :class="classList"
+  >
     <slot />
-    <img :src="src" :alt="alt" :height="height" :width="width" :class="imageClass" />
+    <img
+      :src="src"
+      :alt="alt"
+      :height="height"
+      :width="width"
+      :class="imageClass"
+    >
   </picture>
 </template>

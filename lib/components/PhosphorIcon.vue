@@ -7,8 +7,8 @@
     @mouseleave="currentHover = hover ?? false"
   >
     <component
-      :size="rawSize"
       :is="component"
+      :size="rawSize"
       :color="color"
       :weight="weightComp"
     >
@@ -40,7 +40,8 @@
         :dur="fadeDuration"
         repeatCount="indefinite"
         values="1; 0; 1"
-        keyTimes="0; 0.5; 1"/>
+        keyTimes="0; 0.5; 1"
+      />
     </component>
   </span>
 </template>
@@ -51,25 +52,26 @@ import isArray from 'lodash/isArray'
 import isObject from 'lodash/isObject'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
-import {IconPhosphor, IconWeight, PhosphorIconProps} from "@/types";
-import {ICON_WEIGHT} from "@/enums";
+import { IconPhosphor, IconWeight, PhosphorIconProps } from '@/types'
+import { ICON_WEIGHT } from '@/enums'
 
-const props = withDefaults(defineProps<PhosphorIconProps>(),{
-  scale:1,
-  fill:false,
-  weight:'regular',
-  beatDuration:'1s',
-  fadeDuration:'1s',
-  spinDuration:'1s'
+const props = withDefaults(defineProps<PhosphorIconProps>(), {
+  scale: 1,
+  fill: false,
+  weight: 'regular',
+  beatDuration: '1s',
+  fadeDuration: '1s',
+  spinDuration: '1s'
 })
 
-function findComponentByName(name: string) :IconPhosphor{
+function findComponentByName(name: string): IconPhosphor {
   const filename = `Ph${upperFirst(camelCase(name))}`
   return defineAsyncComponent(async () => {
     try {
-      //@ts-ignore
+      // @ts-ignore
       return await import(`node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`)
-    } catch {
+    }
+    catch {
       // @ts-expect-error Importing not typescript module
       // eslint-disable-next-line import/extensions
       return import('node_modules/@phosphor-icons/vue/dist/icons/PhSelection.vue.mjs')
@@ -79,12 +81,14 @@ function findComponentByName(name: string) :IconPhosphor{
 
 const component = shallowRef()
 
-const setComponent = (icon: string |  string[] | IconPhosphor) => {
+const setComponent = (icon: string | string[] | IconPhosphor) => {
   if (isArray(icon)) {
     setComponent(icon[0])
-  } else if (isObject(icon)) {
+  }
+  else if (isObject(icon)) {
     component.value = icon
-  } else {
+  }
+  else {
     component.value = findComponentByName(icon)
   }
 }
@@ -94,9 +98,8 @@ watch(() => props.name, setComponent, { immediate: true })
 const currentHover = ref(false)
 watch(() => props.hover, () => { currentHover.value = props.hover }, { immediate: true })
 
-
-const weightComp = computed(() :IconWeight=> {
-  if (isArray(props.name) && props.name.length > 1 ) {
+const weightComp = computed((): IconWeight => {
+  if (isArray(props.name) && props.name.length > 1) {
     const weight = props.name[1] as IconWeight
     return ICON_WEIGHT[weight]
   }
@@ -119,7 +122,7 @@ const weightComp = computed(() :IconWeight=> {
 const color = computed(() => {
   let colorVariant = 'currentColor'
 
-  if(props.variant){
+  if (props.variant) {
     colorVariant = `var(--bs-${props.variant}, currentColor)`
   }
 
@@ -139,7 +142,7 @@ const isRawSize = computed(() => {
 })
 
 const hasSize = computed(() => {
-  return ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(props.size??"")
+  return ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(props.size ?? '')
 })
 
 const rawSize = computed(() => {

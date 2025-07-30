@@ -11,22 +11,27 @@
               target="_blank"
               class="generic-footer__icij__logo text-decoration-none"
             >
-              <brand-expansion :mode="mode" dark :responsive="responsive"/>
-              <span class="visually-hidden"
-                >International Consortium of Investigative Journalists</span
-              >
+              <brand-expansion
+                :mode="mode"
+                dark
+                :responsive="responsive"
+              />
+              <span class="visually-hidden">International Consortium of Investigative Journalists</span>
             </a>
           </h5>
           <p>
             <!-- @slot Override office's address  -->
             <slot name="address">
-              1800 M Street NW, Front 1 #33019<br />
+              1800 M Street NW, Front 1 #33019<br>
               Washington, D.C. 20033 USA
             </slot>
           </p>
           <p>
             <strong>
-              <a :href="contactEmailMailto" class="">{{ contactEmail }}</a>
+              <a
+                :href="contactEmailMailto"
+                class=""
+              >{{ contactEmail }}</a>
             </strong>
           </p>
           <!-- @slot Additional content on the left side of the footer -->
@@ -34,8 +39,13 @@
         </div>
         <div class="col-12 col-lg-7">
           <div class="row justify-content-end">
-            <div v-if="showAboutUs" class="col-6 col-lg-4">
-              <h5 class="text-uppercase mb-3">About Us</h5>
+            <div
+              v-if="showAboutUs"
+              class="col-6 col-lg-4"
+            >
+              <h5 class="text-uppercase mb-3">
+                About Us
+              </h5>
               <ul class="list-unstyled">
                 <li class="list-unstyled-item">
                   <a
@@ -54,7 +64,10 @@
                   </a>
                 </li>
                 <li class="list-unstyled-item">
-                  <a href="https://www.icij.org/about/awards/" target="_blank">
+                  <a
+                    href="https://www.icij.org/about/awards/"
+                    target="_blank"
+                  >
                     ICIJ's Awards
                   </a>
                 </li>
@@ -75,7 +88,10 @@
                   </a>
                 </li>
                 <li class="list-unstyled-item">
-                  <a href="https://www.icij.org/journalists/" target="_blank">
+                  <a
+                    href="https://www.icij.org/journalists/"
+                    target="_blank"
+                  >
                     Journalists
                   </a>
                 </li>
@@ -146,7 +162,10 @@
               </h5>
               <ul class="list-unstyled">
                 <li class="list-unstyled-item">
-                  <a href="https://www.facebook.com/ICIJ.org" target="_blank">
+                  <a
+                    href="https://www.facebook.com/ICIJ.org"
+                    target="_blank"
+                  >
                     Facebook
                   </a>
                 </li>
@@ -159,17 +178,26 @@
                   </a>
                 </li>
                 <li class="list-unstyled-item">
-                  <a href="https://twitter.com/ICIJorg" target="_blank">
+                  <a
+                    href="https://twitter.com/ICIJorg"
+                    target="_blank"
+                  >
                     Twitter
                   </a>
                 </li>
                 <li class="list-unstyled-item">
-                  <a href="https://instagram.com/icijorg" target="_blank">
+                  <a
+                    href="https://instagram.com/icijorg"
+                    target="_blank"
+                  >
                     Instagram
                   </a>
                 </li>
                 <li class="list-unstyled-item">
-                  <a href="https://www.icij.org/signup/" target="_blank">
+                  <a
+                    href="https://www.icij.org/signup/"
+                    target="_blank"
+                  >
                     Sign-up
                   </a>
                 </li>
@@ -184,8 +212,11 @@
           International Consortium of Investigative Journalists.
         </strong>
         {{ $t('generic-footer.all-rights') }}
-        <br />
-        <span v-if="version" class="text-muted generic-footer__version">
+        <br>
+        <span
+          v-if="version"
+          class="text-muted generic-footer__version"
+        >
           {{ $t('generic-footer.version', { version }) }}
         </span>
       </p>
@@ -194,13 +225,13 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
+import { computed } from 'vue'
 
 import config from '../config'
 import BrandExpansion from './BrandExpansion.vue'
 
-import {BrandMode} from '@/enums'
-import {breakpointsBootstrapV5, useBreakpoints} from "@vueuse/core";
+import { BrandMode } from '@/enums'
+import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core'
 
 /**
  * GenericFooter
@@ -243,9 +274,9 @@ const props = defineProps({
 const breakpoints = useBreakpoints(breakpointsBootstrapV5)
 const xs = breakpoints.smaller('sm')
 
-const mode = computed(()=>{
-  if(props.adaptive){
-    return  xs.value?BrandMode.Short:BrandMode.Long
+const mode = computed(() => {
+  if (props.adaptive) {
+    return xs.value ? BrandMode.Short : BrandMode.Long
   }
   return BrandMode.Long
 })
@@ -263,7 +294,6 @@ const contactEmailMailto = computed((): string => {
 </script>
 
 <style lang="scss" scoped>
-
 
 .generic-footer {
   background: $black;

@@ -2,7 +2,7 @@ import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { Ref } from 'vue'
 import ResizeObserver from 'resize-observer-polyfill'
 
-export function useResizeObserver (resizableRef?: Ref) {
+export function useResizeObserver(resizableRef?: Ref) {
   const resizeRef: Ref<HTMLElement> = resizableRef ?? ref()
   const resizeState = reactive({
     dimensions: {} as DOMRect,
@@ -33,4 +33,3 @@ export function useResizeObserver (resizableRef?: Ref) {
 
   return { resizeState, resizeRef }
 }
-

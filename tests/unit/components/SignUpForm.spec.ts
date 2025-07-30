@@ -29,7 +29,7 @@ describe('SignUpForm', () => {
     expect(wrapper.find('label').exists()).toBeFalsy()
   })
 
-  it("doesn't render the form horizontally by default", () => {
+  it('doesn\'t render the form horizontally by default', () => {
     const wrapper = mount(SignUpForm)
     expect(wrapper.classes('sign-up-form--horizontal')).toBeFalsy()
   })
@@ -62,9 +62,9 @@ describe('SignUpForm', () => {
     await wrapper.find('form').trigger('submit.prevent')
     await wrapper.vm.$nextTick()
 
-    let submitEmitted:unknown[] = wrapper.emitted().submit;
+    const submitEmitted: unknown[] = wrapper.emitted().submit
     expect(submitEmitted).toBeDefined()
-    let submitEmittedElement = submitEmitted[0] as unknown[];
+    const submitEmittedElement = submitEmitted[0] as unknown[]
     expect(submitEmittedElement).toBeDefined()
     expect(submitEmittedElement[0]).toBeDefined()
   })
@@ -81,19 +81,19 @@ describe('SignUpForm', () => {
     const msg = '☮️'
     mockSend.mockResolvedValueOnce({ result: 'success', msg })
     const wrapper = mount(SignUpForm)
-    const emailInput = wrapper.find('input[name=EMAIL]');
+    const emailInput = wrapper.find('input[name=EMAIL]')
     await emailInput.setValue('data@icij.org')
     await wrapper.trigger('submit')
     const emptyEmailInput = wrapper.find('input[name=EMAIL]').element as HTMLInputElement
     expect(emptyEmailInput.value).toBe('')
   })
 
-  it("sends the email but doesn't drop it when the result is an error", async () => {
+  it('sends the email but doesn\'t drop it when the result is an error', async () => {
     const msg = '❎'
     mockSend.mockRejectedValueOnce({ result: 'error', msg })
     const wrapper = mount(SignUpForm)
-    const emailInput = wrapper.find('input[name=EMAIL]');
-    const email = 'data@icij.org';
+    const emailInput = wrapper.find('input[name=EMAIL]')
+    const email = 'data@icij.org'
     await emailInput.setValue(email)
     await wrapper.trigger('submit')
     const emptyEmailInput = wrapper.find('input[name=EMAIL]').element as HTMLInputElement
@@ -115,7 +115,7 @@ describe('SignUpForm', () => {
 
     const wrapper = mount(SignUpForm)
     await wrapper.trigger('submit')
-      //@ts-expect-error error is emitted as an array of strings
+    // @ts-expect-error error is emitted as an array of strings
     expect(wrapper.emitted().error[0][0]).toBe('❎')
   })
 
@@ -124,8 +124,8 @@ describe('SignUpForm', () => {
     const wrapper = mount(SignUpForm)
     await wrapper.trigger('submit')
 
-    //@ts-expect-error error is emitted as an array of strings
-    expect(wrapper.emitted().error[0][0]).toBe("Something's wrong")
+    // @ts-expect-error error is emitted as an array of strings
+    expect(wrapper.emitted().error[0][0]).toBe('Something\'s wrong')
   })
 
   it('changes the color variant of the button', async () => {
@@ -134,7 +134,7 @@ describe('SignUpForm', () => {
     let element = wrapper.find('.sign-up-form__fieldset__group__addon.btn-primary')
     expect(element.exists()).toBeTruthy()
 
-    //variant is secondary
+    // variant is secondary
     await wrapper.setProps({ variant: 'secondary' })
     element = wrapper.find('.sign-up-form__fieldset__group__addon.btn-secondary')
     expect(element.exists()).toBeTruthy()

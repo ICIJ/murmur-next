@@ -4,7 +4,7 @@ import * as components from './components'
 import * as datavisualisations from './datavisualisations'
 import * as maps from './maps'
 import config from './config'
-import { App,Component, DefineComponent } from 'vue'
+import { App, Component, DefineComponent } from 'vue'
 
 export { default as AccordionWrapper } from './components/AccordionWrapper.vue'
 export { default as AccordionStep } from './components/AccordionStep.vue'
@@ -58,12 +58,12 @@ export { useResizeObserver } from './composables/useResizeObserver'
 export { useColorMode } from './composables/useColorMode'
 export { useQueryObserver } from './composables/useQueryObserver'
 
-type ComponentMap = {[name:string]:Component|DefineComponent}
+type ComponentMap = Record<string, Component | DefineComponent>
 
-type PluginOptions = {
-  useI18n?: boolean,
-  useBootstrap?: boolean,
-  useConfig?: boolean,
+interface PluginOptions {
+  useI18n?: boolean
+  useBootstrap?: boolean
+  useConfig?: boolean
   registerComponents?: boolean
 }
 
@@ -74,13 +74,13 @@ const Murmur = {
   get config() {
     return config
   },
-  get components() :ComponentMap{
+  get components(): ComponentMap {
     return components
   },
-  get datavisualisations() : ComponentMap{
+  get datavisualisations(): ComponentMap {
     return datavisualisations
   },
-  get maps() : ComponentMap{
+  get maps(): ComponentMap {
     return maps
   },
   setLocaleMessage(lang: string, message: any) {
@@ -103,7 +103,6 @@ const Murmur = {
     useConfig = true,
     registerComponents = true
   }: PluginOptions = {}) {
-
     if (useBootstrap) {
       app.use(createBootstrap())
     }
@@ -117,13 +116,13 @@ const Murmur = {
     }
 
     if (registerComponents) {
-      Object.keys(this.components).forEach((key) =>
+      Object.keys(this.components).forEach(key =>
         app.component(key, this.components[key])
       )
-      Object.keys(this.datavisualisations).forEach((key) =>
+      Object.keys(this.datavisualisations).forEach(key =>
         app.component(key, this.datavisualisations[key])
       )
-      Object.keys(this.maps).forEach((key) =>
+      Object.keys(this.maps).forEach(key =>
         app.component(key, this.maps[key])
       )
     }

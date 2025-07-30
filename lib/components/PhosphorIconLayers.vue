@@ -28,7 +28,11 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <span class="phosphor-icon-layers" :style="style" :class="classList">
+  <span
+    class="phosphor-icon-layers"
+    :style="style"
+    :class="classList"
+  >
     <slot />
   </span>
 </template>

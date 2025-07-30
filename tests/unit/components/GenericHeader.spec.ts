@@ -99,10 +99,10 @@ describe('GenericHeader.vue', () => {
     })
     const popovertoggler = wrapper.find('#follow-us-toggler')
     await popovertoggler.trigger('mouseenter')
-    //given popover shown
+    // given popover shown
     expect(wrapper.vm.showFollowUsPopover).toBe(true)
     const navbarToggler = wrapper.find('.navbar-toggler')
-    //when show navbar
+    // when show navbar
     await navbarToggler.trigger('click')
     // popover should be hidden
     expect(wrapper.vm.showFollowUsPopover).toBe(false)

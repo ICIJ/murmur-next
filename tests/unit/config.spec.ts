@@ -90,7 +90,7 @@ describe('config.ts', () => {
     expect(murmurConfig.is('activated')).toBeFalsy()
   })
 
-  it("should give the value of a given key as false (when it's true)", () => {
+  it('should give the value of a given key as false (when it\'s true)', () => {
     murmurConfig.set('activated', 0)
     expect(murmurConfig.isnt('activated')).toBeTruthy()
     murmurConfig.set('activated', '0')
@@ -117,7 +117,7 @@ describe('config.ts', () => {
   })
 
   it('should create a nested reactive property from inside the component', async () => {
-    //configVTU.global.plugins.push(Murmur);
+    // configVTU.global.plugins.push(Murmur);
     const component = {
       setup() {
         const app = getCurrentInstance()

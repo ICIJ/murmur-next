@@ -14,7 +14,7 @@ describe('EmbedForm.vue', () => {
     expect(wrapper.vm).toBeTruthy()
   })
 
-  it("shows title when props.noTitle isn't passed", () => {
+  it('shows title when props.noTitle isn\'t passed', () => {
     const wrapper = shallowMount(EmbedForm, { propsData, global })
     expect(wrapper.find('.embed-form__heading').exists()).toBeTruthy()
   })
@@ -27,7 +27,7 @@ describe('EmbedForm.vue', () => {
     expect(wrapper.find('.embed-form__heading').exists()).toBeFalsy()
   })
 
-  it("shows a preview panel when props.noPreview isn't passed", () => {
+  it('shows a preview panel when props.noPreview isn\'t passed', () => {
     const wrapper = shallowMount(EmbedForm, { propsData, global })
     expect(wrapper.find('.embed-form__preview').exists()).toBeTruthy()
   })

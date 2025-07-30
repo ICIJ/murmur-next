@@ -26,7 +26,7 @@ describe('SlideUpDown', () => {
     expect(wrapper.element.style.height).toBe('auto')
   })
 
-  it("isn't visible if props.active is passed as `false`", async () => {
+  it('isn\'t visible if props.active is passed as `false`', async () => {
     const active = false
     const wrapper = mount(SlideUpDown, {
       propsData: { active }
