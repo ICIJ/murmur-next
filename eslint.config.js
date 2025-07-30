@@ -24,7 +24,7 @@ export default [
 
   // Node scripts for common tasks
   {
-    files: ["bin/**/*.{cjs,mjs,js}"],
+    files: ["{bin,loaders}/**/*.{cjs,mjs,js}"],
     languageOptions: {
       globals: {
         ...globals.node,
