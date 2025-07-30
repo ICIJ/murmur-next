@@ -16,6 +16,7 @@
     "dev": "yarn storybook",
     "build:lib": "vite build",
     "lint": "eslint",
+    "lint:modified": "yarn lint $(git diff --name-only HEAD | xargs)",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write lib/ stories/ .storybook/ tests/",
     "storybook": "storybook dev -p 6006 --no-open",
