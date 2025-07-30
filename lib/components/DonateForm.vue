@@ -58,11 +58,11 @@ const labelForChange = ref<LabelForChange>({
 })
 
 const suggestedAmount = ref<SuggestedDonation>(
-  // @ts-ignore retrieves a map of messages from the i18n json
+  // @ts-expect-error retrieves a map of messages from the i18n json
   messages.value[locale.value]['donate-form']['suggesteddonation']
 )
 const listBenefits = ref<string[]>(
-  // @ts-ignore retrieves a list of messages from the i18n json
+  // @ts-expect-error retrieves a list of messages from the i18n json
   messages.value[locale.value]['donate-form']['benefits']['list']
 )
 

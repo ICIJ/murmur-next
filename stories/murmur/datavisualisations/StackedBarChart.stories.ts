@@ -10,6 +10,7 @@ export default {
 }
 
 type Story = StoryObj<typeof StackedBarChart>
+
 const Template: Story = (args: any) => ({
   components: { StackedBarChart },
   setup() {
@@ -21,6 +22,7 @@ const Template: Story = (args: any) => ({
       <template #header-right v-if="args['header-right']!==null">${args['header-right']?.({ sortBy: args.sortBy }) ?? ''}</template>
     </StackedBarChart>`
 })
+
 const leakIncidentsDecorator = () => ({
   template: `
   <h4>
@@ -37,6 +39,7 @@ const leakIncidentsDecorator = () => ({
     Source: ICIJ.
   </p>`
 })
+
 const data = {
   fixedHeight: 400,
   incidentReports: [
@@ -105,17 +108,20 @@ const data = {
     { label: 'Offshore Leaks', value: 260 }
   ]
 }
+
 export const Default = Template.bind({})
 Default.decorators = [leakIncidentsDecorator]
 Default.args = {
   data: data.incidentReports
 }
+
 export const LabelAbove = Template.bind({})
 LabelAbove.decorators = [leakIncidentsDecorator]
 LabelAbove.args = {
   data: data.incidentReports,
   labelAbove: true
 }
+
 const leaksSizeDecorator = () => ({
   template: `
    <h4>Leaks size</h4>
@@ -134,28 +140,30 @@ FixedHeightHideLegend.args = {
   hideLegend: true
 }
 
-export const hideEmptyValues = Template.bind({})
-hideEmptyValues.decorators = []
-hideEmptyValues.args = {
+export const HideEmptyValues = Template.bind({})
+HideEmptyValues.decorators = []
+HideEmptyValues.args = {
   data: data.moviesUrl,
   labelField: 'movie',
   groups: data.groups,
   hideEmptyValues: true
 }
-export const sortByKey = Template.bind({})
-sortByKey.decorators = []
-sortByKey.args = {
+
+export const SortByKey = Template.bind({})
+SortByKey.decorators = []
+SortByKey.args = {
   data: data.moviesUrl,
   labelField: 'movie',
   sortBy: data.sortKey,
   groups: data.groups
 }
-sortByKey.argTypes = {
+SortByKey.argTypes = {
   sortBy: { control: 'select', options: data.sortKeys }
 }
-export const relativeValues = Template.bind({})
-relativeValues.decorators = []
-relativeValues.args = {
+
+export const RelativeValues = Template.bind({})
+RelativeValues.decorators = []
+RelativeValues.args = {
   data: data.moviesUrl,
   labelField: 'movie',
   sortBy: data.sortKey,

@@ -1,12 +1,8 @@
-// Node.js built-ins
 import { resolve } from 'path'
 import { fileURLToPath, URL } from 'node:url'
-
-// Vite and plugins
 import { defineConfig } from 'vite'
-// @ts-ignore
 import Vue from '@vitejs/plugin-vue'
-import DTS from 'vite-plugin-dts' // generates d.ts files
+import DTS from 'vite-plugin-dts'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'

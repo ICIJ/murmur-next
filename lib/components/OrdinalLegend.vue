@@ -1,5 +1,5 @@
 <script lang="ts">
-import { get, isFunction, kebabCase, uniqueId } from 'lodash'
+import { get, isFunction, kebabCase } from 'lodash'
 import * as d3 from 'd3'
 import { defineComponent, PropType, computed } from 'vue'
 export interface Datum { id?: string | number, color: string, path?: string, label: string }
@@ -53,6 +53,7 @@ export default defineComponent({
       }
       return `0 0 ${width} ${height}`
     })
+
     const classList = computed(() => {
       return {
         'ordinal-legend--horizontal': props.horizontal,
@@ -60,12 +61,7 @@ export default defineComponent({
         'ordinal-legend--has-value': props.value !== null
       }
     })
-    const dataWithIds = computed(() => {
-      return props.data.map((d: any): Record<string, string> => {
-        const id = uniqueId()
-        return { [props.categoryObjectsPath]: id, ...d }
-      })
-    })
+
     function itemClassList(d: Datum) {
       const id = d[props.categoryObjectsPath]
       return {
@@ -74,11 +70,13 @@ export default defineComponent({
         'ordinal-legend__item--selected': id === props.value
       }
     }
+
     function markerPathFunction(d?: Datum): string {
       return isFunction(props.markerPath) && d
         ? props.markerPath(d)
         : props.markerPath as string
     }
+
     function update(d: Datum) {
       /**
        * Fired when user clicks on an item
@@ -87,6 +85,7 @@ export default defineComponent({
        */
       emit('update', get(d, props.categoryObjectsPath, null))
     }
+
     function updateHighlight(d = {}) {
       /**
        * Fired when user hover an item
@@ -95,6 +94,7 @@ export default defineComponent({
        */
       emit('update:highlight', get(d, props.categoryObjectsPath, null))
     }
+
     return {
       classList,
       markerViewbox,

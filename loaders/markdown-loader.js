@@ -45,7 +45,7 @@ module.exports = function (src) {
   const { html, data: { hoistedTags, links }, dataBlockString } = markdown.render(content)
 
   // check if relative links are valid
-  links && links.forEach((link) => {
+  links?.forEach?.((link) => {
     link = decodeURIComponent(link)
 
     const shortname = link

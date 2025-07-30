@@ -1,5 +1,5 @@
 <script lang="ts">
-// import { VBTooltip } from 'bootstrap-vue/esm/directives/tooltip/tooltip'
+import type { Timeout } from 'node:timers'
 import * as d3 from 'd3'
 import keys from 'lodash/keys'
 import find from 'lodash/find'
@@ -181,7 +181,7 @@ export default defineComponent({
     const height = ref(0)
     const leftAxisHeight = ref(0)
     const highlightedKeys = ref(props.highlights)
-    const highlightTimeout = ref<NodeJS.Timeout | undefined>(undefined)
+    const highlightTimeout = ref<Timeout | undefined>(undefined)
     const isLoaded = ref(false)
     const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
     const { querySelector, querySelectorAll } = useQueryObserver(el.value)
@@ -357,7 +357,6 @@ export default defineComponent({
     }
 
     function barUniqueId(i: string | number, key: string) {
-      // @ts-ignore
       const { uid } = getCurrentInstance()
       return `bar-${uid}-${i}-${key}`
     }
@@ -466,7 +465,6 @@ export default defineComponent({
       // Update the left axis only if the bars exists
       if (element) {
         leftAxisHeight.value = (element as HTMLElement).offsetHeight
-        // @ts-ignore
         leftAxisCanvas.value.call(leftAxis.value)
       }
     })

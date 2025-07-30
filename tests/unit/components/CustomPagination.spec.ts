@@ -39,7 +39,8 @@ describe('CustomPagination.vue', () => {
     const input = wrapper.find('.form-control')
     await input.setValue(3)
     await wrapper.find({ ref: 'customPaginationForm' }).trigger('submit')
-    // @ts-expect-error
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(1)
+    // @ts-expect-error We know the emitted value is an array with one element
     expect(wrapper.emitted('update:modelValue')[0]).toContain(3)
   })
 

@@ -20,9 +20,10 @@ export const $popup: Popup = {
 }
 
 // Prevent propagation when an event is fired through the given callback
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const preventDefault = (callback: Function) => {
   return (event: Event) => {
-    event && event.preventDefault()
+    event?.preventDefault?.()
     callback()
   }
 }
@@ -199,9 +200,7 @@ export default defineComponent({
       return reduce(
         this.args,
         (obj, prop, param) => {
-          // @ts-ignore
           if (this.$props[prop]) {
-            // @ts-ignore
             obj[param] = this.$props[prop]
           }
           return obj
@@ -223,7 +222,6 @@ export default defineComponent({
     },
     renderIcon(): void | VNode | null {
       if (!this.noIcon) {
-        // @ts-ignore
         return h(PhosphorIcon, { name: this.icon, weight: 'fill' })
       }
     },

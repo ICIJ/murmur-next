@@ -103,6 +103,7 @@ describe('ColumnChart.vue', () => {
     let wrapper
 
     beforeAll(async () => {
+      // eslint-disable-next-line no-import-assign
       d3.json = vi.fn().mockResolvedValue([
         { date: 2019, value: 50 },
         { date: 2020, value: 100 }
@@ -200,6 +201,7 @@ describe('ColumnChart.vue', () => {
     let wrapper
 
     beforeAll(() => {
+      // eslint-disable-next-line no-import-assign
       d3.csv = vi.fn().mockReturnValue([
         { date: 2000, indicator: 0, highlight: false },
         { date: 2001, indicator: 10, highlight: false },
@@ -288,6 +290,7 @@ describe('ColumnChart.vue', () => {
     let wrapper
 
     beforeAll(() => {
+      // eslint-disable-next-line no-import-assign
       d3.json = vi.fn().mockResolvedValue([
         { date: 2019, value: 30 },
         { date: 2020, value: 60 },

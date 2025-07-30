@@ -3,11 +3,6 @@ import { computed, ref, watch } from 'vue'
 import { useResizeObserver } from '@/composables/useResizeObserver'
 import { RequestAnimationFrameWrapper } from '@/utils/animation'
 
-interface ActiveTextTruncateData {
-  textLivePosition: number
-  resizeObserverKey: string | null
-}
-
 const props = defineProps({
   /**
    * Number of Pixel Per Millisecond for the text transition.

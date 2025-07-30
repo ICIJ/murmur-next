@@ -64,16 +64,6 @@ import { useI18n } from 'vue-i18n'
 import HapticCopy from '@/components/HapticCopy.vue'
 import IframeResizer from '@/utils/iframe-resizer'
 
-interface ComponentInterface {
-  currentUrl: string
-  responsiveCheck: boolean
-  width: string
-  minWidth: number
-  height: number
-  minHeight: number
-  iframeCodeFor: Function
-  pymCodeFor: Function
-}
 /**
  * Embed Form
  */
@@ -139,17 +129,20 @@ export default defineComponent({
     const currentUrl = computed(() => {
       return props.url || window?.location?.href
     })
+
     function iframeCodeFor(_url = currentUrl, width: string, height: string) {
-      return `<iframe width="${width}" height="${height}" src="${IframeResizer.deletePymParams(
-        props.url
-      )}" frameborder="0" allowfullscreen></iframe>`
+      const src = IframeResizer.deletePymParams(props.url)
+      return `<iframe width="${width}" height="${height}" src="${src}" frameborder="0" allowfullscreen></iframe>`
     }
+
     function pymCodeFor(url = currentUrl): string {
       return IframeResizer.template(url.value)
     }
+
     function selectCode(): void {
       embedFormCode.value?.select()
     }
+
     function embedCode(withPym = responsiveCheck.value): string {
       const width
         = typeof props.width === 'string'

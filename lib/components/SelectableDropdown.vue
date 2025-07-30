@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import castArray from 'lodash/castArray'
-import eq from 'lodash/eq'
+import equals from 'lodash/eq'
 import findIndex from 'lodash/findIndex'
 import filter from 'lodash/filter'
 import identity from 'lodash/identity'
@@ -103,7 +103,7 @@ const props = defineProps({
    */
   eq: {
     type: Function,
-    default: eq
+    default: equals
   },
   /**
    * Display height of the items in pixels used to calculate the scroll size and position
@@ -158,6 +158,7 @@ const firstActiveItemIndex = computed(() => {
     : -1
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const keysMap = computed((): Record<string, Function> => {
   return {
     [KEY_UP_CODE]: activatePreviousItem,

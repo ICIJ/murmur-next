@@ -36,7 +36,6 @@ describe('DonateForm.vue', () => {
     const wrapper = shallowMount(DonateForm)
 
     expect(getInput(wrapper, 'input[name="amount"]')).toBe('10')
-    const amount = 3
     await updateAmount(wrapper, 3)
     expect(getInput(wrapper, 'input[name="amount"]')).toBe('3')
   })

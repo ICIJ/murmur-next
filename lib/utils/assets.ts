@@ -11,24 +11,23 @@ export const injectAsset = memoize(function (
       = document.querySelector('body') || document.querySelector('head')!
     const parts = file.split('.')
     const ext = parts[parts.length - 1].toLowerCase()
-    switch (ext) {
-      case 'js':
-        const script = document.createElement('script')
-        script.setAttribute('type', 'text/javascript')
-        script.onload = resolve
-        parent.appendChild(script)
-        script.setAttribute('src', file)
-        script.setAttribute('id', id)
-        break
-      case 'css':
-        const css = document.createElement('link')
-        css.setAttribute('rel', 'stylesheet')
-        css.setAttribute('type', 'text/css')
-        css.onload = resolve
-        parent.appendChild(css)
-        css.setAttribute('href', file)
-        css.setAttribute('id', id)
-        break
+
+    if (ext === 'js') {
+      const script = document.createElement('script')
+      script.setAttribute('type', 'text/javascript')
+      script.onload = resolve
+      parent.appendChild(script)
+      script.setAttribute('src', file)
+      script.setAttribute('id', id)
+    }
+    else if (ext === 'css') {
+      const css = document.createElement('link')
+      css.setAttribute('rel', 'stylesheet')
+      css.setAttribute('type', 'text/css')
+      css.onload = resolve
+      parent.appendChild(css)
+      css.setAttribute('href', file)
+      css.setAttribute('id', id)
     }
   })
 })
@@ -42,8 +41,10 @@ export const injectAssets = function (...args: string[]): Promise<void> {
         resolve()
       }
     }
-    for (let i = 0; i < files.length; i++) {
-      injectAsset(files[i]).then(allFilesLoaded)
+    for (const file of files) {
+      injectAsset(file)
+        .then(allFilesLoaded)
+        .catch(() => null)
     }
   })
 }
