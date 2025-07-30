@@ -138,10 +138,10 @@ const variantColorClass = computed(() => {
 async function subscribe() {
   resetMessages()
   freeze()
-  // Send the data, catch the result no matter what and unfreeze the form
+  // Send the data, catch the result no matter what and unfreeze the form 
   try {
-    await send()
-    done(error)
+    const { result, msg } = await send()
+    done({ result, msg })
   }
   catch (e) {
     error(e)
