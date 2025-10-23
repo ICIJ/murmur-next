@@ -1,5 +1,7 @@
 import { HapticCopy } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
+import { BBadge } from 'bootstrap-vue-next'
+
 type Story = StoryObj<typeof HapticCopy>
 
 const Template: Story = (args: any, { argTypes }: any) => ({
@@ -14,16 +16,23 @@ const Template: Story = (args: any, { argTypes }: any) => ({
 export const Default = Template.bind({})
 Default.args = {
   text: 'Lorem info sit amet',
-  class: 'btn-info'
+  variant: 'info'
 }
 
 export const Feedback = Template.bind({})
-Feedback.template = `<HapticCopy  v-bind="args" /></button>`
 Feedback.args = {
   hideLabel: true,
   tooltipPlacement: 'right',
   text: 'Lorem info sit amet',
-  class: 'btn-secondary'
+  variant: 'secondary'
+}
+
+export const PillBadge = Template.bind({})
+PillBadge.args = {
+  text: 'Lorem info sit amet',
+  variant: 'warning',
+  pill: true,
+  tag: BBadge
 }
 
 export default {

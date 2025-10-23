@@ -20,6 +20,10 @@ import { copyHtml, copyText } from '@/utils/clipboard'
 import { PhCheckFat, PhClipboard } from '@phosphor-icons/vue'
 
 const props = defineProps({
+  tag: {
+    type: [String, Object] as PropType<string | ComponentPublicInstance>,
+    default: BButton
+  },
   /**
    * Text to copy to the clipboard
    */
@@ -93,6 +97,12 @@ const tooltipContent = ref<string>('')
 const tooltipTimeout = ref<Timeout | undefined>(undefined)
 const showClipboardTooltip = ref(false)
 const buttonId = computed(() => uniqueId('haptic-copy-'))
+const buttonBinding = computed(() => {
+  if (props.tag?.props?.['variant']) {
+    return { variant: props.variant }
+  }
+  return { }
+})
 
 function copyTextToClipboard(): Promise<void> {
   return el.value ? copyText(String(props.text), el.value.$el) : Promise.resolve()
@@ -172,11 +182,12 @@ defineExpose({
 </script>
 
 <template>
-  <b-button
+  <component
+    :is="tag"
     :id="buttonId"
     ref="el"
+    v-bind="buttonBinding"
     class="haptic-copy"
-    :variant="variant"
     @mouseleave="closeTooltip"
     @click.stop="copy"
   >
@@ -218,7 +229,7 @@ defineExpose({
     >
       {{ tooltipContent }}
     </b-tooltip>
-  </b-button>
+  </component>
 </template>
 <style lang="scss">
 .haptic-copy {
