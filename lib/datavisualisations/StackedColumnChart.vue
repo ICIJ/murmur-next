@@ -1,505 +1,448 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { Timeout } from 'node:timers'
 import * as d3 from 'd3'
-import keys from 'lodash/keys'
+import keysFn from 'lodash/keys'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
-import sortBy from 'lodash/sortBy'
+import sortByFn from 'lodash/sortBy'
 import without from 'lodash/without'
 import {
   ComponentPublicInstance,
   computed,
-  defineComponent,
   getCurrentInstance,
   ref,
   nextTick,
   watch
 } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/useChart'
+import { getChartProps, useChart } from '@/composables/useChart'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 
-export default defineComponent({
-  name: 'StackedColumnChart',
-  props: {
-    /**
-     * Field of each object containing data (for each group)
-     */
-    keys: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Group name to display in the legend
-     */
-    groups: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Colors of each bar group
-     */
-    barColors: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Max with of each bar.
-     */
-    barMaxWidth: {
-      type: String,
-      default: '100%'
-    },
-    /**
-     * Hide bars that have no values.
-     */
-    hideEmptyValues: {
-      type: Boolean
-    },
-    /**
-     * Hide the legend.
-     */
-    hideLegend: {
-      type: Boolean
-    },
-    /**
-     * Enforce the height of the chart (regardless of the width or number of row)
-     */
-    fixedHeight: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Function to apply to format x-axis ticks
-     */
-    xAxisTickFormat: {
-      type: [Function, String],
-      default: () => identity
-    },
-    /**
-     * Function to apply to format y-axis ticks (bars value). It can be a
-     * function returning the formatted value or a d3's formatter string.
-     */
-    yAxisTickFormat: {
-      type: [Function, String],
-      default: () => identity
-    },
-    /**
-     * Padding on y-axis ticks
-     */
-    yAxisTickPadding: {
-      type: Number,
-      default: 10
-    },
-    /**
-     * Field containing the label for each column
-     */
-    labelField: {
-      type: String,
-      default: 'date'
-    },
-    /**
-     * Sort groups by one or several keys.
-     */
-    sortBy: {
-      type: [Array, String],
-      default: null
-    },
-    /**
-     * Column height is relative to each group's total
-     */
-    relative: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * A list of highlighted groups
-     */
-    highlights: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Delay to apply when set the first highlight
-     */
-    highlightDelay: {
-      type: Number,
-      default: 400
-    },
-    /**
-     * A list of entire column to highlight
-     */
-    columnHighlights: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Delay to apply when restoring highlights to initial state
-     */
-    restoreHighlightDelay: {
-      type: Number,
-      default: 50
-    },
-    /**
-     * Deactivate direct labeling on bars
-     */
-    noDirectLabeling: {
-      type: Boolean
-    },
-    /**
-     * Set max value instead of extracting it from the data.
-     */
-    maxValue: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Function to define tooltip content.
-     */
-    tooltipDisplay: {
-      type: Function,
-      default: ({
-        formattedKey,
-        formattedValue
-      }: {
-        formattedKey: string
-        formattedValue: string
-      }): string => {
-        return `<h6 class="mb-0">${formattedKey}</h6><div>${formattedValue}</div>`
-      }
-    },
-    /**
-     * Hide bar tooltips
-     */
-    noTooltips: {
-      type: Boolean
-    },
-    ...chartProps()
+defineOptions({
+  name: 'StackedColumnChart'
+})
+
+const props = withDefaults(defineProps<{
+  /**
+   * Field of each object containing data (for each group)
+   */
+  keys?: any[]
+  /**
+   * Group name to display in the legend
+   */
+  groups?: any[]
+  /**
+   * Colors of each bar group
+   */
+  barColors?: any[]
+  /**
+   * Max with of each bar.
+   */
+  barMaxWidth?: string
+  /**
+   * Hide bars that have no values.
+   */
+  hideEmptyValues?: boolean
+  /**
+   * Hide the legend.
+   */
+  hideLegend?: boolean
+  /**
+   * Enforce the height of the chart (regardless of the width or number of row)
+   */
+  fixedHeight?: number | null
+  /**
+   * Function to apply to format x-axis ticks
+   */
+  xAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Function to apply to format y-axis ticks (bars value). It can be a
+   * function returning the formatted value or a d3's formatter string.
+   */
+  yAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Padding on y-axis ticks
+   */
+  yAxisTickPadding?: number
+  /**
+   * Field containing the label for each column
+   */
+  labelField?: string
+  /**
+   * Sort groups by one or several keys.
+   */
+  sortBy?: string | string[] | null
+  /**
+   * Column height is relative to each group's total
+   */
+  relative?: boolean
+  /**
+   * A list of highlighted groups
+   */
+  highlights?: any[]
+  /**
+   * Delay to apply when set the first highlight
+   */
+  highlightDelay?: number
+  /**
+   * A list of entire column to highlight
+   */
+  columnHighlights?: any[]
+  /**
+   * Delay to apply when restoring highlights to initial state
+   */
+  restoreHighlightDelay?: number
+  /**
+   * Deactivate direct labeling on bars
+   */
+  noDirectLabeling?: boolean
+  /**
+   * Set max value instead of extracting it from the data.
+   */
+  maxValue?: number | null
+  /**
+   * Function to define tooltip content.
+   */
+  tooltipDisplay?: (params: { value?: any, formattedKey: string, formattedValue: string, key?: string }) => string
+  /**
+   * Hide bar tooltips
+   */
+  noTooltips?: boolean
+  data?: string | object[] | null
+  dataUrlType?: 'json' | 'csv' | 'tsv'
+  chartHeightRatio?: number
+  socialMode?: boolean
+  socialModeRatio?: number
+}>(), {
+  keys: () => [],
+  groups: () => [],
+  barColors: () => [],
+  barMaxWidth: '100%',
+  hideEmptyValues: false,
+  hideLegend: false,
+  fixedHeight: null,
+  xAxisTickFormat: () => identity,
+  yAxisTickFormat: () => identity,
+  yAxisTickPadding: 10,
+  labelField: 'date',
+  sortBy: null,
+  relative: false,
+  highlights: () => [],
+  highlightDelay: 400,
+  columnHighlights: () => [],
+  restoreHighlightDelay: 50,
+  noDirectLabeling: false,
+  maxValue: null,
+  tooltipDisplay: ({ formattedKey, formattedValue }) => {
+    return `<h6 class="mb-0">${formattedKey}</h6><div>${formattedValue}</div>`
   },
-  setup(props, { emit }) {
-    const width = ref(0)
-    const height = ref(0)
-    const leftAxisHeight = ref(0)
-    const highlightedKeys = ref(props.highlights)
-    const highlightTimeout = ref<Timeout | undefined>(undefined)
-    const isLoaded = ref(false)
-    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-    const { querySelector, querySelectorAll } = useQueryObserver(el.value)
+  noTooltips: false,
+  data: null,
+  dataUrlType: 'json',
+  chartHeightRatio: undefined,
+  socialMode: false,
+  socialModeRatio: 5 / 4
+})
 
-    const {
-      elementsMaxBBox,
-      baseHeightRatio,
-      loadedData,
-      mounted,
-      d3Formatter,
-      dataHasHighlights
-    } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
+const emit = defineEmits<{
+  loaded: [data: any]
+}>()
 
-    const sortedData = computed(() => {
-      if (!isLoaded.value) {
-        return []
-      }
-      return !props.sortBy
-        ? loadedData.value
-        : sortBy(loadedData.value, props.sortBy)
-    })
+const width = ref(0)
+const height = ref(0)
+const leftAxisHeight = ref(0)
+const highlightedKeys = ref(props.highlights)
+const highlightTimeout = ref<Timeout | undefined>(undefined)
+const isLoaded = ref(false)
+const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
+const { querySelector, querySelectorAll } = useQueryObserver(el.value)
 
-    const discoveredKeys = computed((): any[] => {
-      if (props.keys.length) {
-        return props.keys
-      }
-      if (!loadedData.value) {
-        return []
-      }
-      return without(keys(loadedData.value[0]), props.labelField)
-    })
-    const colorScale = computed((): (key: string) => string => {
-      return d3
-        .scaleOrdinal()
-        .domain(discoveredKeys.value)
-        .range(props.barColors) as unknown as (key: string) => string
-    })
+const {
+  elementsMaxBBox,
+  baseHeightRatio,
+  loadedData,
+  mounted,
+  d3Formatter
+} = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
 
-    const hasHighlights = computed(() => {
-      return !!highlightedKeys.value.length
-    })
+const sortedData = computed(() => {
+  if (!isLoaded.value) {
+    return []
+  }
+  return !props.sortBy
+    ? loadedData.value
+    : sortByFn(loadedData.value, props.sortBy)
+})
 
-    const hasColumnHighlights = computed(() => {
-      return !!props.columnHighlights.length
-    })
-    const leftScale = computed(() => {
-      return d3
-        .scaleLinear()
-        .domain([0, maxRowValue.value])
-        .range([leftAxisHeight.value, 0])
-    })
+const discoveredKeys = computed((): any[] => {
+  if (props.keys.length) {
+    return props.keys
+  }
+  if (!loadedData.value) {
+    return []
+  }
+  return without(keysFn(loadedData.value[0]), props.labelField)
+})
 
-    const leftAxis = computed(
-      () => {
-        return d3
-          .axisLeft(leftScale.value)
-          .tickFormat(d => d3Formatter(d, props.yAxisTickFormat))
-          .tickSize(width.value - leftAxisLabelsWidth.value)
-          .tickPadding(props.yAxisTickPadding)
-      }
-    )
-    const leftAxisLabelsWidth = computed(
-      () => {
-        const selector = '.stacked-column-chart__left-axis__canvas .tick text'
-        const defaultWidth = 0
-        return (
-          elementsMaxBBox({ selector, defaultWidth }).width
-          + props.yAxisTickPadding
-        )
-      }
-    )
+const colorScale = computed((): (key: string) => string => {
+  return d3
+    .scaleOrdinal()
+    .domain(discoveredKeys.value)
+    .range(props.barColors) as unknown as (key: string) => string
+})
 
-    const leftAxisCanvas = computed(() => {
-      return d3
-        .select(el.value)
-        .select('.stacked-column-chart__left-axis__canvas')
-    })
+const hasHighlights = computed(() => {
+  return !!highlightedKeys.value.length
+})
 
-    const paddedStyle = computed(() => {
-      return {
-        marginLeft: props.noDirectLabeling
-          ? `${leftAxisLabelsWidth.value + props.yAxisTickPadding}px`
-          : 0
-      }
-    })
+const hasColumnHighlights = computed(() => {
+  return !!props.columnHighlights.length
+})
 
-    const barTooltipDelay = computed(() => {
-      return hasHighlights.value ? 0 : props.highlightDelay
-    })
+const leftScale = computed(() => {
+  return d3
+    .scaleLinear()
+    .domain([0, maxRowValue.value])
+    .range([leftAxisHeight.value, 0])
+})
 
-    const maxRowValue = computed(() => {
-      return (
-        props.maxValue
-        || (d3.max(loadedData.value || [], (datum, i) => {
-          return totalRowValue(i)
-        }) as number)
-      )
-    })
+const leftAxis = computed(() => {
+  return d3
+    .axisLeft(leftScale.value)
+    .tickFormat(d => d3Formatter(d, props.yAxisTickFormat))
+    .tickSize(width.value - leftAxisLabelsWidth.value)
+    .tickPadding(props.yAxisTickPadding)
+})
 
-    function setSizes() {
-      if (!el.value) {
-        return
-      }
-      width.value = el.value.offsetWidth
-      height.value
-        = props.fixedHeight !== null
-          ? props.fixedHeight
-          : width.value * baseHeightRatio.value
+const leftAxisLabelsWidth = computed(() => {
+  const selector = '.stacked-column-chart__left-axis__canvas .tick text'
+  const defaultWidth = 0
+  return (
+    elementsMaxBBox({ selector, defaultWidth }).width
+    + props.yAxisTickPadding
+  )
+})
+
+const leftAxisCanvas = computed(() => {
+  return d3
+    .select(el.value)
+    .select('.stacked-column-chart__left-axis__canvas')
+})
+
+const paddedStyle = computed(() => {
+  return {
+    marginLeft: props.noDirectLabeling
+      ? `${leftAxisLabelsWidth.value + props.yAxisTickPadding}px`
+      : 0
+  }
+})
+
+const barTooltipDelay = computed(() => {
+  return hasHighlights.value ? 0 : props.highlightDelay
+})
+
+const maxRowValue = computed(() => {
+  return (
+    props.maxValue
+    || (d3.max(loadedData.value || [], (datum, i) => {
+      return totalRowValue(i)
+    }) as number)
+  )
+})
+
+function setSizes() {
+  if (!el.value) {
+    return
+  }
+  width.value = el.value.offsetWidth
+  height.value
+    = props.fixedHeight !== null
+      ? props.fixedHeight
+      : width.value * baseHeightRatio.value
+}
+
+function groupName(key: string) {
+  const index = discoveredKeys.value.indexOf(key)
+  return props.groups[index] || key
+}
+
+function highlight(key: string) {
+  highlightedKeys.value = [key]
+}
+
+function restoreHighlights() {
+  clearTimeout(highlightTimeout.value)
+  const delay = props.restoreHighlightDelay
+  // Delay the restoration so it can be cancelled by a new highlight
+  highlightTimeout.value = setTimeout(
+    () => (highlightedKeys.value = props.highlights),
+    delay
+  )
+}
+
+function delayHighlight(key: string) {
+  clearTimeout(highlightTimeout.value)
+  // Reduce the delay to zero if there is already a highlighted key
+  const isDelayed = !hasHighlights.value
+  const delay = isDelayed ? props.highlightDelay : 0
+  highlightTimeout.value = setTimeout(() => highlight(key), delay)
+}
+
+function isHighlighted(key: string) {
+  return highlightedKeys.value.indexOf(key) > -1
+}
+
+function isColumnHighlighted(i: string | number) {
+  const column = get(sortedData.value, [i, props.labelField], null)
+  return (
+    props.columnHighlights.includes(column) && !highlightedKeys.value.length
+  )
+}
+
+function totalRowValue(i: string | number) {
+  return d3.sum(discoveredKeys.value, (key: string) => {
+    return sortedData.value[i as number][key]
+  })
+}
+
+function barStyle(i: string | number, key: string) {
+  const value = sortedData.value[i as number][key]
+  let totalWidth = props.relative ? totalRowValue(i) : maxRowValue.value
+  if (!totalWidth) {
+    console.error('totalWidth as divider cannot be ' + totalWidth)
+    totalWidth = 100
+  }
+  const height = `${100 * (value / totalWidth)}%`
+  const backgroundColor = colorScale.value(key)
+  const maxWidth = props.barMaxWidth
+  return { maxWidth, height, backgroundColor }
+}
+
+function barTitle(i: string | number, key: string) {
+  const value = sortedData.value[i as number][key]
+  const formattedValue = d3Formatter(value, props.yAxisTickFormat)
+  const formattedKey = groupName(key)
+  return props.tooltipDisplay({ value, formattedValue, key, formattedKey })
+}
+
+function barUniqueId(i: string | number, key: string) {
+  const { uid } = getCurrentInstance()!
+  return `bar-${uid}-${i}-${key}`
+}
+
+function stackBarAndValue(i: string | number) {
+  if (!sortedData.value) {
+    return []
+  }
+  // Collect sizes first
+  const stack = discoveredKeys.value.map((key: string) => {
+    const { bar, row, value } = queryBarAndValue(i as number, key)
+    if (!bar || !row || !value) {
+      throw new Error('Empty values for bar, row or value')
     }
-
-    function groupName(key: string) {
-      const index = discoveredKeys.value.indexOf(key)
-      return props.groups[index] || key
-    }
-
-    function highlight(key: string) {
-      highlightedKeys.value = [key]
-    }
-
-    function restoreHighlights() {
-      clearTimeout(highlightTimeout.value)
-      const delay = props.restoreHighlightDelay
-      // Delay the restoration so it can be cancelled by a new highlight
-      highlightTimeout.value = setTimeout(
-        () => (highlightedKeys.value = props.highlights),
-        delay
-      )
-    }
-
-    function delayHighlight(key: string) {
-      clearTimeout(highlightTimeout.value)
-      // Reduce the delay to zero if there is already a highlighted key
-      const isDelayed = !hasHighlights.value
-      const delay = isDelayed ? props.highlightDelay : 0
-      highlightTimeout.value = setTimeout(() => highlight(key), delay)
-    }
-
-    function isHighlighted(key: string) {
-      return highlightedKeys.value.indexOf(key) > -1
-    }
-
-    function isColumnHighlighted(i: string | number) {
-      const column = get(sortedData.value, [i, props.labelField], null)
-      return (
-        props.columnHighlights.includes(column) && !highlightedKeys.value.length
-      )
-    }
-
-    function totalRowValue(i: string | number) {
-      return d3.sum(discoveredKeys.value, (key: string) => {
-        return sortedData.value[i][key]
-      })
-    }
-
-    function barStyle(i: string | number, key: string) {
-      const value = sortedData.value[i][key]
-      let totalWidth = props.relative ? totalRowValue(i) : maxRowValue.value
-      if (!totalWidth) {
-        console.error('totalWidth as divider cannot be ' + totalWidth)
-        totalWidth = 100
-      }
-      const height = `${100 * (value / totalWidth)}%`
-      const backgroundColor = colorScale.value(key)
-      const maxWidth = props.barMaxWidth
-      return { maxWidth, height, backgroundColor }
-    }
-
-    function barTitle(i: string | number, key: string) {
-      const value = sortedData.value[i][key]
-      const formattedValue = d3Formatter(value, props.yAxisTickFormat)
-      const formattedKey = groupName(key)
-      return props.tooltipDisplay({ value, formattedValue, key, formattedKey })
-    }
-
-    function barUniqueId(i: string | number, key: string) {
-      const { uid } = getCurrentInstance()
-      return `bar-${uid}-${i}-${key}`
-    }
-
-    function stackBarAndValue(i: string | number) {
-      if (!sortedData.value) {
-        return []
-      }
-      // Collect sizes first
-      const stack = discoveredKeys.value.map((key: string) => {
-        const { bar, row, value } = queryBarAndValue(i as number, key)
-        if (!bar || !row || !value) {
-          throw new Error('Empty values for bar, row or value')
-        }
-        const barEdge = bar.getBoundingClientRect().top + bar.offsetHeight
-        const barHeight = bar.offsetHeight
-        const rowEdge = row.getBoundingClientRect().top + row.offsetHeight
-        const valueHeight = value.offsetHeight
-        return {
-          key,
-          barEdge,
-          barHeight,
-          rowEdge,
-          valueHeight,
-          overflow: false,
-          pushed: false
-        }
-      })
-      // Infer value's display
-      return stack.map((desc, index) => {
-        desc.overflow = desc.valueHeight >= desc.barHeight
-        if (index > 0) {
-          const prevDesc = stack[index - 1]
-          const bothValuesHeight = desc.valueHeight + prevDesc.valueHeight
-          desc.overflow
-            = desc.overflow
-              || (prevDesc.overflow && desc.barHeight < bothValuesHeight)
-        }
-        desc.pushed
-          = desc.barEdge + desc.valueHeight > desc.rowEdge && desc.overflow
-        return desc
-      })
-    }
-
-    function queryBarAndValue(i: number, key: string) {
-      if (!mounted.value) {
-        return {}
-      }
-      const rowSelector = '.stacked-column-chart__groups__item'
-      const row = querySelectorAll(rowSelector)[i] as HTMLElement
-      const barSelector = `.stacked-column-chart__groups__item__bars__item--${key}`
-      const bar = row.querySelector(barSelector) as HTMLElement
-      const valueSelector = '.stacked-column-chart__groups__item__bars__item__value'
-      const value = bar.querySelector(valueSelector) as HTMLElement
-      return { bar, row, value }
-    }
-
-    function isHidden(i: string | number, key: string) {
-      return props.hideEmptyValues && !sortedData.value[i][key]
-    }
-
-    function hasValueOverflow(i: string | number, key: string) {
-      try {
-        const stack = stackBarAndValue(i)
-        return find(stack, { key })?.overflow
-      }
-      catch {
-        return false
-      }
-    }
-
-    function hasValuePushed(i: string | number, key: string) {
-      try {
-        const stack = stackBarAndValue(i)
-        return find(stack, { key })?.pushed
-      }
-      catch {
-        return false
-      }
-    }
-
-    function hasValueHidden(i: string | number, key: string) {
-      const keyIndex = discoveredKeys.value.indexOf(key)
-      const nextKey = discoveredKeys.value[keyIndex + 1]
-      if (!nextKey) {
-        return false
-      }
-      return hasValueOverflow(i, key) && hasValueOverflow(i, nextKey)
-    }
-    function formatXDatum(d: string) {
-      return d3Formatter(d, props.yAxisTickFormat)
-    }
-    function formatYDatum(d: string) {
-      return d3Formatter(d, props.yAxisTickFormat)
-    }
-    watch(
-      () => props.highlights,
-      (newHighlights) => {
-        highlightedKeys.value = newHighlights
-      }
-    )
-    watch(sortedData, async () => {
-      await nextTick()
-      // This must be set after the column have been rendered
-      const element = querySelector('.stacked-column-chart__groups__item__bars')
-      // Update the left axis only if the bars exists
-      if (element) {
-        leftAxisHeight.value = (element as HTMLElement).offsetHeight
-        leftAxisCanvas.value.call(leftAxis.value)
-      }
-    })
-
+    const barEdge = bar.getBoundingClientRect().top + bar.offsetHeight
+    const barHeight = bar.offsetHeight
+    const rowEdge = row.getBoundingClientRect().top + row.offsetHeight
+    const valueHeight = value.offsetHeight
     return {
-      colorScale,
-      dataHasHighlights,
-      discoveredKeys,
-      el,
-      hasColumnHighlights,
-      hasHighlights,
-      height,
-      loadedData,
-      paddedStyle,
-      sortedData,
-      width,
-      barTooltipDelay,
-      barTitle,
-      barUniqueId,
-      barStyle,
-      delayHighlight,
-      formatXDatum,
-      formatYDatum,
-      groupName,
-      hasValueHidden,
-      hasValueOverflow,
-      hasValuePushed,
-      isColumnHighlighted,
-      isHidden,
-      isHighlighted,
-      restoreHighlights
+      key,
+      barEdge,
+      barHeight,
+      rowEdge,
+      valueHeight,
+      overflow: false,
+      pushed: false
     }
+  })
+  // Infer value's display
+  return stack.map((desc, index) => {
+    desc.overflow = desc.valueHeight >= desc.barHeight
+    if (index > 0) {
+      const prevDesc = stack[index - 1]
+      const bothValuesHeight = desc.valueHeight + prevDesc.valueHeight
+      desc.overflow
+        = desc.overflow
+          || (prevDesc.overflow && desc.barHeight < bothValuesHeight)
+    }
+    desc.pushed
+      = desc.barEdge + desc.valueHeight > desc.rowEdge && desc.overflow
+    return desc
+  })
+}
+
+function queryBarAndValue(i: number, key: string) {
+  if (!mounted.value) {
+    return {}
+  }
+  const rowSelector = '.stacked-column-chart__groups__item'
+  const row = querySelectorAll(rowSelector)[i] as HTMLElement
+  const barSelector = `.stacked-column-chart__groups__item__bars__item--${key}`
+  const bar = row.querySelector(barSelector) as HTMLElement
+  const valueSelector = '.stacked-column-chart__groups__item__bars__item__value'
+  const value = bar.querySelector(valueSelector) as HTMLElement
+  return { bar, row, value }
+}
+
+function isHidden(i: string | number, key: string) {
+  return props.hideEmptyValues && !sortedData.value[i as number][key]
+}
+
+function hasValueOverflow(i: string | number, key: string) {
+  try {
+    const stack = stackBarAndValue(i)
+    return find(stack, { key })?.overflow
+  }
+  catch {
+    return false
+  }
+}
+
+function hasValuePushed(i: string | number, key: string) {
+  try {
+    const stack = stackBarAndValue(i)
+    return find(stack, { key })?.pushed
+  }
+  catch {
+    return false
+  }
+}
+
+function hasValueHidden(i: string | number, key: string) {
+  const keyIndex = discoveredKeys.value.indexOf(key)
+  const nextKey = discoveredKeys.value[keyIndex + 1]
+  if (!nextKey) {
+    return false
+  }
+  return hasValueOverflow(i, key) && hasValueOverflow(i, nextKey)
+}
+
+function formatXDatum(d: string) {
+  return d3Formatter(d, props.yAxisTickFormat)
+}
+
+function formatYDatum(d: string) {
+  return d3Formatter(d, props.yAxisTickFormat)
+}
+
+watch(
+  () => props.highlights,
+  (newHighlights) => {
+    highlightedKeys.value = newHighlights
+  }
+)
+
+watch(sortedData, async () => {
+  await nextTick()
+  // This must be set after the column have been rendered
+  const element = querySelector('.stacked-column-chart__groups__item__bars')
+  // Update the left axis only if the bars exists
+  if (element) {
+    leftAxisHeight.value = (element as HTMLElement).offsetHeight
+    leftAxisCanvas.value.call(leftAxis.value as any)
   }
 })
 </script>
+
 <template>
   <div
     ref="el"
@@ -601,6 +544,7 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
 <style lang="scss">
 
 .stacked-column-chart {

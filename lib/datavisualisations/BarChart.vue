@@ -1,203 +1,156 @@
-<script lang="ts">
+<script setup lang="ts">
 import * as d3 from 'd3'
 import identity from 'lodash/identity'
-import sortBy from 'lodash/sortBy'
-import { defineComponent, computed, ref, watch } from 'vue'
-import { chartProps, getChartProps, useChart } from '@/composables/useChart'
-import { ComponentPublicInstance } from 'vue'
+import sortByFn from 'lodash/sortBy'
+import { computed, ref, watch, ComponentPublicInstance } from 'vue'
+import { getChartProps, useChart } from '@/composables/useChart'
+
+defineOptions({
+  name: 'BarChart'
+})
 
 interface Datum { value: number | number[], highlight?: boolean, label?: string }
 type Bar = { width: number, height: number, x: number, y: number } & Datum
-export default defineComponent({
-  name: 'BarChart',
-  props: {
-    /**
-     * Height of each bar
-     */
-    barHeight: {
-      type: Number,
-      default: 30
-    },
-    /**
-     * Distance between each bar
-     */
-    barGap: {
-      type: Number,
-      default: 15
-    },
-    /**
-     * Color of each bar (uses the CSS variable --bar-color by default)
-     */
-    barColor: {
-      type: String,
-      default: null
-    },
-    /**
-     * Color of each highlighted bar (uses the CSS variable --bar-highlight-color by default)
-     */
-    barHighlightColor: {
-      type: String,
-      default: null
-    },
-    /**
-     * Enforce a width for each bar's label
-     */
-    fixedLabelWidth: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Enforce a width for each bar's value
-     */
-    fixedValueWidth: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Distance between a bar and its label
-     */
-    labelGap: {
-      type: Number,
-      default: 10
-    },
-    /**
-     * Distance between a bar and its value
-     */
-    valueGap: {
-      type: Number,
-      default: 5
-    },
-    /**
-     * Sort bars by one or several keys.
-     */
-    sortBy: {
-      type: [Array, String],
-      default: null
-    },
-    /**
-     * Function to apply to format x-axis ticks (bar value). It can be a
-     * function returning the formatted value or a d3's formatter string.
-     */
-    xAxisTickFormat: {
-      type: [Function, String],
-      default: () => identity
-    },
-    ...chartProps()
-  },
-  setup(props, { emit }) {
-    const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-    const width = ref(0)
-    const isLoaded = ref(false)
-    const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter }
-      = useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
-    // onMounted(() => {
-    //   window.addEventListener('resize', onResize)
-    //   onResize()
-    // })
-    // beforeUnmount(()=> {
-    //   window.removeEventListener('resize', onResize)
-    // })
 
-    const sortedData = computed((): [] => {
-      if (!loadedData.value) {
-        return []
-      }
-      return !props.sortBy
-        ? loadedData.value
-        : sortBy(sortedData.value, props.sortBy)
-    })
-    const labelWidth = computed(() => {
-      if (props.fixedLabelWidth) {
-        return props.fixedLabelWidth
-      }
-      const selector = '.bar-chart__labels__item'
-      const defaultWidth = 100
-      return elementsMaxBBox({ selector, defaultWidth }).width
-    })
-    const valueWidth = computed(() => {
-      if (props.fixedValueWidth) {
-        return props.fixedValueWidth
-      }
-      const selector = '.bar-chart__bars__item__value'
-      const defaultWidth = 0
-      return elementsMaxBBox({ selector, defaultWidth }).width + props.valueGap
-    })
+const props = withDefaults(defineProps<{
+  barHeight?: number
+  barGap?: number
+  barColor?: string | null
+  barHighlightColor?: string | null
+  fixedLabelWidth?: number | null
+  fixedValueWidth?: number | null
+  labelGap?: number
+  valueGap?: number
+  sortBy?: string | string[] | null
+  xAxisTickFormat?: ((v: any) => string) | string
+  data?: string | object[] | null
+  dataUrlType?: 'json' | 'csv' | 'tsv'
+  chartHeightRatio?: number
+  socialMode?: boolean
+  socialModeRatio?: number
+}>(), {
+  barHeight: 30,
+  barGap: 15,
+  barColor: null,
+  barHighlightColor: null,
+  fixedLabelWidth: null,
+  fixedValueWidth: null,
+  labelGap: 10,
+  valueGap: 5,
+  sortBy: null,
+  xAxisTickFormat: () => identity,
+  data: null,
+  dataUrlType: 'json',
+  chartHeightRatio: undefined,
+  socialMode: false,
+  socialModeRatio: 5 / 4
+})
 
-    const margin = computed(() => {
-      const left = labelWidth.value + props.labelGap
-      const right = 0
-      const top = 0
-      const bottom = 0
-      return { left, right, top, bottom }
-    })
+const emit = defineEmits<{
+  loaded: [data: any]
+}>()
 
-    const padded = computed(() => {
-      const widthP = width.value - margin.value.left - margin.value.right
-      const heightP = height.value - margin.value.top - margin.value.bottom
-      return { width: widthP, height: heightP }
-    })
-    const scale = computed(() => {
-      const x = d3
-        .scaleLinear()
-        // @ts-expect-error D3 api
-        .domain([0, d3.max(sortedData.value, (d: Datum) => d.value)])
-        .range([0, padded.value.width - valueWidth.value])
-      return { x }
-    })
-    const bars = computed((): Bar[] => {
-      return sortedData.value.map((d: Datum, i) => {
-        return {
-          // @ts-expect-error D3 api
-          width: Math.abs(scale.value.x(d.value)),
-          height: Math.abs(props.barHeight),
-          value: d.value,
-          highlight: d.highlight,
-          x: 0,
-          y: (props.barHeight + props.barGap) * i
-        }
-      })
-    })
-    const labels = computed(() => {
-      return sortedData.value.map((d: Datum, i) => {
-        return {
-          label: d.label,
-          x: labelWidth.value,
-          y: 4 + props.barHeight / 2 + (props.barHeight + props.barGap) * i
-        }
-      })
-    })
-    const height = computed(() => {
-      return (props.barHeight + props.barGap) * sortedData.value.length
-    })
+const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
+const width = ref(0)
+const isLoaded = ref(false)
+const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter }
+  = useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
 
-    function formatXDatum(d: number | number[]) {
-      return d3Formatter(d, props.xAxisTickFormat)
-    }
-    function onResize() {
-      if (el.value) {
-        width.value = el.value?.offsetWidth
-      }
-    }
-    function initialize() {
-      // @ts-expect-error D3 api
-      d3.axisBottom().scale(scale.value.x)
-    }
-
-    watch(width, () => {
-      initialize()
-    })
-
-    return {
-      el,
-      dataHasHighlights,
-      width,
-      height,
-      margin,
-      labels,
-      bars,
-      formatXDatum
-    }
+const sortedData = computed((): [] => {
+  if (!loadedData.value) {
+    return []
   }
+  return !props.sortBy
+    ? loadedData.value
+    : sortByFn(sortedData.value, props.sortBy)
+})
+
+const labelWidth = computed(() => {
+  if (props.fixedLabelWidth) {
+    return props.fixedLabelWidth
+  }
+  const selector = '.bar-chart__labels__item'
+  const defaultWidth = 100
+  return elementsMaxBBox({ selector, defaultWidth }).width
+})
+
+const valueWidth = computed(() => {
+  if (props.fixedValueWidth) {
+    return props.fixedValueWidth
+  }
+  const selector = '.bar-chart__bars__item__value'
+  const defaultWidth = 0
+  return elementsMaxBBox({ selector, defaultWidth }).width + props.valueGap
+})
+
+const margin = computed(() => {
+  const left = labelWidth.value + props.labelGap
+  const right = 0
+  const top = 0
+  const bottom = 0
+  return { left, right, top, bottom }
+})
+
+const padded = computed(() => {
+  const widthP = width.value - margin.value.left - margin.value.right
+  const heightP = height.value - margin.value.top - margin.value.bottom
+  return { width: widthP, height: heightP }
+})
+
+const scale = computed(() => {
+  const x = d3
+    .scaleLinear()
+    // @ts-expect-error D3 api
+    .domain([0, d3.max(sortedData.value, (d: Datum) => d.value)])
+    .range([0, padded.value.width - valueWidth.value])
+  return { x }
+})
+
+const bars = computed((): Bar[] => {
+  return sortedData.value.map((d: Datum, i) => {
+    return {
+      // @ts-expect-error D3 api
+      width: Math.abs(scale.value.x(d.value)),
+      height: Math.abs(props.barHeight),
+      value: d.value,
+      highlight: d.highlight,
+      x: 0,
+      y: (props.barHeight + props.barGap) * i
+    }
+  })
+})
+
+const labels = computed(() => {
+  return sortedData.value.map((d: Datum, i) => {
+    return {
+      label: d.label,
+      x: labelWidth.value,
+      y: 4 + props.barHeight / 2 + (props.barHeight + props.barGap) * i
+    }
+  })
+})
+
+const height = computed(() => {
+  return (props.barHeight + props.barGap) * sortedData.value.length
+})
+
+function formatXDatum(d: number | number[]) {
+  return d3Formatter(d, props.xAxisTickFormat)
+}
+
+function onResize() {
+  if (el.value) {
+    width.value = el.value?.offsetWidth
+  }
+}
+
+function initialize() {
+  // @ts-expect-error D3 api
+  d3.axisBottom().scale(scale.value.x)
+}
+
+watch(width, () => {
+  initialize()
 })
 </script>
 

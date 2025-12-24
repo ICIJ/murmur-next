@@ -1,11 +1,14 @@
-<script lang="ts">
+<script setup lang="ts">
 import querystring from 'querystring-es3'
 import reduce from 'lodash/reduce'
-import noop from 'lodash/noop'
 import get from 'lodash/get'
-import { h, defineComponent, PropType, VNode } from 'vue'
+import { computed, reactive } from 'vue'
 
 import PhosphorIcon from '@/components/PhosphorIcon.vue'
+
+defineOptions({
+  name: 'SharingOptionsLink'
+})
 
 // Popup instance and an interval holder
 interface Popup {
@@ -13,19 +16,11 @@ interface Popup {
   interval: undefined | ReturnType<typeof setTimeout>
   parent: (Window & typeof globalThis) | null
 }
-export const $popup: Popup = {
+
+const $popup: Popup = {
   instance: null,
   interval: undefined,
   parent: typeof window !== 'undefined' ? window : null
-}
-
-// Prevent propagation when an event is fired through the given callback
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-const preventDefault = (callback: Function) => {
-  return (event: Event) => {
-    event?.preventDefault?.()
-    callback()
-  }
 }
 
 interface SharingPlatform {
@@ -39,7 +34,7 @@ type SharingPlatforms = Record<Platform, SharingPlatform>
 /**
  * @source https://github.com/bradvin/social-share-urls
  */
-export const networks: SharingPlatforms = {
+const networks: SharingPlatforms = {
   email: {
     base: 'mailto:?',
     icon: 'envelope',
@@ -89,178 +84,165 @@ export const networks: SharingPlatforms = {
   }
 }
 
-/**
- * SharingOptionsLink
- */
-export default defineComponent({
-  name: 'SharingOptionsLink',
-  components: {
-    PhosphorIcon
-  },
-  props: {
-    /**
-     * Root element type
-     */
-    tag: {
-      type: String,
-      default: 'a'
-    },
-    /**
-     * Social network to use
-     */
-    network: {
-      type: String as PropType<Platform>,
-      required: true,
-      validator(val: string) {
-        return Object.keys(networks).includes(val)
-      }
-    },
-    /**
-     * Disable icon
-     */
-    noIcon: {
-      type: Boolean
-    },
-    /**
-     * Shared URL
-     */
-    url: {
-      type: String,
-      default: null
-    },
-    /**
-     * Shared text
-     */
-    title: {
-      type: String,
-      default: null
-    },
-    /**
-     * Shared description
-     */
-    description: {
-      type: String,
-      default: null
-    },
-    /**
-     * Shared image
-     */
-    media: {
-      type: String,
-      default: null
-    },
-    /**
-     * Twitter user
-     */
-    user: {
-      type: String,
-      default: null
-    },
-    /**
-     * Shared hashtags
-     */
-    hashtags: {
-      type: String,
-      default: null
-    }
-  },
-  data() {
-    return {
-      popup: {
-        status: 'no',
-        resizable: 'yes',
-        toolbar: 'no',
-        menubar: 'no',
-        scrollbars: 'no',
-        location: 'no',
-        directories: 'no',
-        width: 626,
-        height: 436,
-        top: 0,
-        left: 0,
-        screenY: 0,
-        screenX: 0
-      }
-    }
-  },
-  computed: {
-    href(): string {
-      return this.base + querystring.stringify(this.query)
-    },
-    base(): string {
-      return get(networks, [this.network, 'base'], '')
-    },
-    args(): Record<string, string> {
-      return get(networks, [this.network, 'args'], {})
-    },
-    icon(): string | null {
-      return get(networks, [this.network, 'icon'], null)
-    },
-    query(): any {
-      return reduce(
-        this.args,
-        (obj, prop, param) => {
-          if (this.$props[prop]) {
-            obj[param] = this.$props[prop]
-          }
-          return obj
-        },
-        {}
-      )
-    },
-    name(): string {
-      return get(networks, [this.network, 'name'], this.network)
-    },
-    popupParams(): string {
-      return querystring.stringify(this.popup).split('&').join(',')
-    }
-  },
-  methods: {
-    click(): void {
-      this.cleanExistingPopupInstance()
-      this.openPopup()
-    },
-    renderIcon(): void | VNode | null {
-      if (!this.noIcon) {
-        return h(PhosphorIcon, { name: this.icon, weight: 'fill' })
-      }
-    },
-    openPopup(): void {
-      // Create the popup
-      $popup.instance = $popup.parent?.open(
-        this.href,
-        'sharer',
-        this.popupParams
-      )
-      $popup.instance?.focus()
-      // Watch for popup closing
-      $popup.interval = setInterval(this.cleanExistingPopupInterval, 500)
-    },
-    cleanExistingPopupInstance(): void {
-      if ($popup.instance && $popup.interval) {
-        clearInterval($popup.interval)
-        $popup.interval = undefined
-        $popup.instance.close()
-      }
-    },
-    cleanExistingPopupInterval() {
-      if ($popup.instance && $popup.instance.closed) {
-        clearInterval($popup.interval)
-        $popup.interval = undefined
-        $popup.instance = null
-      }
-    },
-    hasPopup(): boolean {
-      return this.network !== 'email'
-    }
-  },
-  render(): void | VNode | null {
-    const click = this.hasPopup() ? preventDefault(this.click) : noop
-    const href = this.href
-    const children = this.$slots.default
-      ? this.$slots.default()
-      : [this.renderIcon(), h('span', { class: 'visually-hidden' }, this.name)]
-    return h(this.tag, { attrs: { href }, onClick: click }, children)
-  }
+const props = withDefaults(defineProps<{
+  /**
+   * Root element type
+   */
+  tag?: string
+  /**
+   * Social network to use
+   */
+  network: Platform
+  /**
+   * Disable icon
+   */
+  noIcon?: boolean
+  /**
+   * Shared URL
+   */
+  url?: string | null
+  /**
+   * Shared text
+   */
+  title?: string | null
+  /**
+   * Shared description
+   */
+  description?: string | null
+  /**
+   * Shared image
+   */
+  media?: string | null
+  /**
+   * Twitter user
+   */
+  user?: string | null
+  /**
+   * Shared hashtags
+   */
+  hashtags?: string | null
+}>(), {
+  tag: 'a',
+  noIcon: false,
+  url: null,
+  title: null,
+  description: null,
+  media: null,
+  user: null,
+  hashtags: null
 })
+
+const popup = reactive({
+  status: 'no',
+  resizable: 'yes',
+  toolbar: 'no',
+  menubar: 'no',
+  scrollbars: 'no',
+  location: 'no',
+  directories: 'no',
+  width: 626,
+  height: 436,
+  top: 0,
+  left: 0,
+  screenY: 0,
+  screenX: 0
+})
+
+const href = computed((): string => {
+  return base.value + querystring.stringify(query.value)
+})
+
+const base = computed((): string => {
+  return get(networks, [props.network, 'base'], '')
+})
+
+const args = computed((): Record<string, string> => {
+  return get(networks, [props.network, 'args'], {})
+})
+
+const icon = computed((): string | null => {
+  return get(networks, [props.network, 'icon'], null)
+})
+
+const query = computed((): any => {
+  return reduce(
+    args.value,
+    (obj, prop, param) => {
+      if (props[prop]) {
+        obj[param] = props[prop]
+      }
+      return obj
+    },
+    {}
+  )
+})
+
+const name = computed((): string => {
+  return get(networks, [props.network, 'name'], props.network)
+})
+
+const popupParams = computed((): string => {
+  return querystring.stringify(popup).split('&').join(',')
+})
+
+function click(): void {
+  cleanExistingPopupInstance()
+  openPopup()
+}
+
+function openPopup(): void {
+  // Create the popup
+  $popup.instance = $popup.parent?.open(
+    href.value,
+    'sharer',
+    popupParams.value
+  )
+  $popup.instance?.focus()
+  // Watch for popup closing
+  $popup.interval = setInterval(cleanExistingPopupInterval, 500)
+}
+
+function cleanExistingPopupInstance(): void {
+  if ($popup.instance && $popup.interval) {
+    clearInterval($popup.interval)
+    $popup.interval = undefined
+    $popup.instance.close()
+  }
+}
+
+function cleanExistingPopupInterval() {
+  if ($popup.instance && $popup.instance.closed) {
+    clearInterval($popup.interval)
+    $popup.interval = undefined
+    $popup.instance = null
+  }
+}
+
+function hasPopup(): boolean {
+  return props.network !== 'email'
+}
+
+function handleClick(event: Event): void {
+  if (hasPopup()) {
+    event.preventDefault()
+    click()
+  }
+}
 </script>
+
+<template>
+  <component
+    :is="tag"
+    :href="href"
+    @click="handleClick"
+  >
+    <slot>
+      <phosphor-icon
+        v-if="!noIcon"
+        :name="icon"
+        weight="fill"
+      />
+      <span class="visually-hidden">{{ name }}</span>
+    </slot>
+  </component>
+</template>

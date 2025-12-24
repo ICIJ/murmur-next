@@ -1,54 +1,40 @@
-<template>
-  <div :id="iframeId" />
-</template>
-
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import type { Parent } from 'pym.js'
 
 import { injectAssets } from '@/utils/assets'
 
+defineOptions({
+  name: 'ResponsiveIframe'
+})
+
 let iframeUniqueIdCounter = 0
 type StartsWithIcijIframe = `icij-iframe-${string}`
-interface ResponsiveIframeData {
-  iframeId: StartsWithIcijIframe
-  pymParent: null | Parent
-}
 
-/**
- * ResponsiveIframe
- */
-export default defineComponent({
-  name: 'ResponsiveIframe',
-  props: {
-    /**
-     * URL of the generated iframe code.
-     */
-    url: {
-      type: String,
-      required: true
-    },
-    /**
-     * Option to pass to the constructor of the pymParent instance
-     */
-    options: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  data(): ResponsiveIframeData {
-    return {
-      iframeId: `icij-iframe-${++iframeUniqueIdCounter}`,
-      pymParent: null
-    }
-  },
-  async mounted(): Promise<void> {
-    await injectAssets('https://pym.nprapps.org/pym.v1.min.js')
-    this.pymParent = new window.pym.Parent(
-      this.iframeId,
-      this.url,
-      this.options
-    )
-  }
+const props = defineProps<{
+  /**
+   * URL of the generated iframe code.
+   */
+  url: string
+  /**
+   * Option to pass to the constructor of the pymParent instance
+   */
+  options?: object
+}>()
+
+const iframeId = ref<StartsWithIcijIframe>(`icij-iframe-${++iframeUniqueIdCounter}`)
+const pymParent = ref<Parent | null>(null)
+
+onMounted(async (): Promise<void> => {
+  await injectAssets('https://pym.nprapps.org/pym.v1.min.js')
+  pymParent.value = new window.pym.Parent(
+    iframeId.value,
+    props.url,
+    props.options ?? {}
+  )
 })
 </script>
+
+<template>
+  <div :id="iframeId" />
+</template>
