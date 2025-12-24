@@ -6,55 +6,124 @@ import * as maps from './maps'
 import config from './config'
 import { App, Component, DefineComponent } from 'vue'
 
+// Accordion
 export { default as AccordionWrapper } from './components/Accordion/AccordionWrapper.vue'
 export { default as AccordionStep } from './components/Accordion/AccordionStep.vue'
+
+// ActiveTextTruncate
 export { default as ActiveTextTruncate } from './components/ActiveTextTruncate/ActiveTextTruncate.vue'
-export { default as AdvancedLinkForm } from './components/AdvancedLinkForm/AdvancedLinkForm.vue'
-export { default as AdvancedLinkFormTab } from './components/AdvancedLinkForm/AdvancedLinkFormTab.vue'
+
+// Brand
 export { default as Brand } from './components/Brand/Brand.vue'
 export { default as BrandExpansion } from './components/Brand/BrandExpansion.vue'
+
+// Button
 export { default as ButtonIcon } from './components/Button/ButtonIcon.vue'
 export { default as ButtonIconCounter } from './components/Button/ButtonIconCounter.vue'
-export { default as ConfirmButton } from './components/Button/ConfirmButton.vue'
+export { default as ButtonConfirm } from './components/Button/ButtonConfirm.vue'
+/** @deprecated Use ButtonConfirm instead */
+export { default as ConfirmButton } from './components/Button/ButtonConfirm.vue'
+
+// ContentPlaceholder
 export { default as ContentPlaceholder } from './components/ContentPlaceholder/ContentPlaceholder.vue'
-export { default as CustomPagination } from './components/Pagination/CustomPagination.vue'
-export { default as DigitsInput } from './components/DigitsInput/DigitsInput.vue'
-export { default as DonateForm } from './components/DonateForm/DonateForm.vue'
+
+// EmbeddableFooter
 export { default as EmbeddableFooter } from './components/EmbeddableFooter/EmbeddableFooter.vue'
-export { default as EmbedForm } from './components/EmbedForm/EmbedForm.vue'
+
+// FollowUsPopover
 export { default as FollowUsPopover } from './components/FollowUsPopover/FollowUsPopover.vue'
+
+// Form
+export { default as FormAdvancedLink } from './components/Form/FormAdvancedLink/FormAdvancedLink.vue'
+/** @deprecated Use FormAdvancedLink instead */
+export { default as AdvancedLinkForm } from './components/Form/FormAdvancedLink/FormAdvancedLink.vue'
+export { default as FormAdvancedLinkTab } from './components/Form/FormAdvancedLink/FormAdvancedLinkTab.vue'
+/** @deprecated Use FormAdvancedLinkTab instead */
+export { default as AdvancedLinkFormTab } from './components/Form/FormAdvancedLink/FormAdvancedLinkTab.vue'
+export { default as FormDonate } from './components/Form/FormDonate.vue'
+/** @deprecated Use FormDonate instead */
+export { default as DonateForm } from './components/Form/FormDonate.vue'
+export { default as FormEmbed } from './components/Form/FormEmbed.vue'
+/** @deprecated Use FormEmbed instead */
+export { default as EmbedForm } from './components/Form/FormEmbed.vue'
+export { default as FormSignUp } from './components/Form/FormSignUp.vue'
+/** @deprecated Use FormSignUp instead */
+export { default as SignUpForm } from './components/Form/FormSignUp.vue'
+
+// Form/FormControl
+export { default as FormControlDigits } from './components/Form/FormControl/FormControlDigits.vue'
+/** @deprecated Use FormControlDigits instead */
+export { default as DigitsInput } from './components/Form/FormControl/FormControlDigits.vue'
+export { default as FormControlRange } from './components/Form/FormControl/FormControlRange.vue'
+/** @deprecated Use FormControlRange instead */
+export { default as RangePicker } from './components/Form/FormControl/FormControlRange.vue'
+export { default as FormControlSecret } from './components/Form/FormControl/FormControlSecret.vue'
+/** @deprecated Use FormControlSecret instead */
+export { default as SecretInput } from './components/Form/FormControl/FormControlSecret.vue'
+export { default as FormControlSelectableDropdown } from './components/Form/FormControl/FormControlSelectableDropdown.vue'
+/** @deprecated Use FormControlSelectableDropdown instead */
+export { default as SelectableDropdown } from './components/Form/FormControl/FormControlSelectableDropdown.vue'
+
+// Generic
 export { default as GenericFooter } from './components/Generic/GenericFooter.vue'
 export { default as GenericHeader } from './components/Generic/GenericHeader.vue'
+
+// HapticCopy
 export { default as HapticCopy } from './components/HapticCopy/HapticCopy.vue'
+
+// ImageMode
 export { default as ImageMode } from './components/ImageMode/ImageMode.vue'
 export { default as ImageModeSource } from './components/ImageMode/ImageModeSource.vue'
-export { default as OrdinalLegend } from './components/Legend/OrdinalLegend.vue'
+
+// Legend
+export { default as LegendOrdinal } from './components/Legend/LegendOrdinal.vue'
+/** @deprecated Use LegendOrdinal instead */
+export { default as OrdinalLegend } from './components/Legend/LegendOrdinal.vue'
+export { default as LegendScale } from './components/Legend/LegendScale.vue'
+/** @deprecated Use LegendScale instead */
+export { default as ScaleLegend } from './components/Legend/LegendScale.vue'
+
+// Pagination
+export { default as Pagination } from './components/Pagination/Pagination.vue'
+/** @deprecated Use Pagination instead */
+export { default as CustomPagination } from './components/Pagination/Pagination.vue'
+export { default as PaginationTiny } from './components/Pagination/PaginationTiny.vue'
+/** @deprecated Use PaginationTiny instead */
+export { default as TinyPagination } from './components/Pagination/PaginationTiny.vue'
+
+// PhosphorIcon
 export { default as PhosphorIcon } from './components/PhosphorIcon/PhosphorIcon.vue'
 export { default as PhosphorIconLayers } from './components/PhosphorIcon/PhosphorIconLayers.vue'
-export { default as RangePicker } from './components/RangePicker/RangePicker.vue'
+
+// ResponsiveIframe
 export { default as ResponsiveIframe } from './components/ResponsiveIframe/ResponsiveIframe.vue'
-export { default as ScaleLegend } from './components/Legend/ScaleLegend.vue'
-export { default as SecretInput } from './components/SecretInput/SecretInput.vue'
-export { default as SelectableDropdown } from './components/SelectableDropdown/SelectableDropdown.vue'
+
+// SharingOptions
 export { default as SharingOptions } from './components/SharingOptions/SharingOptions.vue'
 export { default as SharingOptionsLink } from './components/SharingOptions/SharingOptionsLink.vue'
-export { default as SignUpForm } from './components/SignUpForm/SignUpForm.vue'
-export { default as SlideUpDown } from './components/SlideUpDown/SlideUpDown.vue'
-export { default as TexturedDeck } from './components/TexturedDeck/TexturedDeck.vue'
-export { default as TinyPagination } from './components/Pagination/TinyPagination.vue'
 
+// SlideUpDown
+export { default as SlideUpDown } from './components/SlideUpDown/SlideUpDown.vue'
+
+// TexturedDeck
+export { default as TexturedDeck } from './components/TexturedDeck/TexturedDeck.vue'
+
+// Datavisualisations
 export { default as BarChart } from './datavisualisations/BarChart/BarChart.vue'
 export { default as ColumnChart } from './datavisualisations/ColumnChart/ColumnChart.vue'
 export { default as LineChart } from './datavisualisations/LineChart/LineChart.vue'
-export { default as StackedBarChart } from './datavisualisations/BarChart/StackedBarChart.vue'
-export { default as StackedColumnChart } from './datavisualisations/ColumnChart/StackedColumnChart.vue'
+export { default as StackedBarChart } from './datavisualisations/StackedBarChart/StackedBarChart.vue'
+export { default as StackedColumnChart } from './datavisualisations/StackedColumnChart/StackedColumnChart.vue'
 
+// Maps
 export { default as ChoroplethMap } from './maps/ChoroplethMap/ChoroplethMap.vue'
 export { default as ChoroplethMapAnnotation } from './maps/ChoroplethMap/ChoroplethMapAnnotation.vue'
 export { default as SymbolMap } from './maps/SymbolMap/SymbolMap.vue'
 
+// Directives
 export { default as EllipsisTooltip } from './directives/EllipsisTooltip'
 
+// Composables
 export { useChart } from './composables/useChart'
 export { useResizeObserver } from './composables/useResizeObserver'
 export { useColorMode } from './composables/useColorMode'
