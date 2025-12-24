@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import CustomPagination from '@/components/Pagination/CustomPagination.vue'
+import CustomPagination from '@/components/Pagination/Pagination.vue'
 
 describe('CustomPagination.vue', () => {
   it('is a Vue instance', () => {

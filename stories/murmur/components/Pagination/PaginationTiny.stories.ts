@@ -1,10 +1,10 @@
 import { buttonSizesArgType } from '~storybook/utils'
-import { TinyPagination } from '@/components'
+import { PaginationTiny } from '@/components'
 import { SIZE } from '@/enums'
 
 export default {
-  title: 'Murmur/components/Pagination/TinyPagination',
-  component: TinyPagination,
+  title: 'Murmur/components/Pagination/PaginationTiny',
+  component: PaginationTiny,
   tags: ['autodocs'],
   argTypes: {
     size: buttonSizesArgType,

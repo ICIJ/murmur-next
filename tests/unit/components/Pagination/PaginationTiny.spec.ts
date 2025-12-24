@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import TinyPagination from '@/components/Pagination/TinyPagination.vue'
+import TinyPagination from '@/components/Pagination/PaginationTiny.vue'
 
 describe('TinyPagination.vue', () => {
   it('is a Vue instance', () => {
