@@ -1,15 +1,4 @@
-<script setup lang="ts">
-import querystring from 'querystring-es3'
-import reduce from 'lodash/reduce'
-import get from 'lodash/get'
-import { computed, reactive } from 'vue'
-
-import PhosphorIcon from '@/components/PhosphorIcon.vue'
-
-defineOptions({
-  name: 'SharingOptionsLink'
-})
-
+<script lang="ts">
 // Popup instance and an interval holder
 interface Popup {
   instance: Window | null | undefined
@@ -17,7 +6,7 @@ interface Popup {
   parent: (Window & typeof globalThis) | null
 }
 
-const $popup: Popup = {
+export const $popup: Popup = {
   instance: null,
   interval: undefined,
   parent: typeof window !== 'undefined' ? window : null
@@ -34,7 +23,7 @@ type SharingPlatforms = Record<Platform, SharingPlatform>
 /**
  * @source https://github.com/bradvin/social-share-urls
  */
-const networks: SharingPlatforms = {
+export const networks: SharingPlatforms = {
   email: {
     base: 'mailto:?',
     icon: 'envelope',
@@ -83,6 +72,19 @@ const networks: SharingPlatforms = {
     }
   }
 }
+</script>
+
+<script setup lang="ts">
+import querystring from 'querystring-es3'
+import reduce from 'lodash/reduce'
+import get from 'lodash/get'
+import { computed, reactive } from 'vue'
+
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
+
+defineOptions({
+  name: 'SharingOptionsLink'
+})
 
 const props = withDefaults(defineProps<{
   /**
@@ -228,6 +230,15 @@ function handleClick(event: Event): void {
     click()
   }
 }
+
+defineExpose({
+  base,
+  args,
+  query,
+  hasPopup,
+  openPopup,
+  cleanExistingPopupInstance
+})
 </script>
 
 <template>
