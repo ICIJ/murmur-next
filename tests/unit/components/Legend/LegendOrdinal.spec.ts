@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { describe, expect, it, beforeEach } from 'vitest'
-import OrdinalLegend from '@/components/Legend/OrdinalLegend.vue'
+import OrdinalLegend from '@/components/Legend/LegendOrdinal.vue'
 
 describe('OrdinalLegend.vue', () => {
   let wrapper: any
