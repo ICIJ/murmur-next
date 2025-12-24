@@ -94,7 +94,7 @@ const hasCursor = computed((): boolean => {
 
 const colorScaleFunction = computed((): ColorScaleFn => {
   if (isString(props.colorScale)) {
-    const fn: () => any = scaleFunctions[props.colorScale]
+    const fn: () => any = (scaleFunctions as unknown as Record<string, () => any>)[props.colorScale]
     return fn()
       .domain([props.min, props.max])
       .range([props.colorScaleStart, props.colorScaleEnd])

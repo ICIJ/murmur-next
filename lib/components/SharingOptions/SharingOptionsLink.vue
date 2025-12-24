@@ -166,12 +166,14 @@ const icon = computed((): string | null => {
   return get(networks, [props.network, 'icon'], null)
 })
 
-const query = computed((): any => {
+const query = computed((): Record<string, string> => {
+  type PropKey = 'url' | 'title' | 'description' | 'media' | 'user' | 'hashtags'
   return reduce(
     args.value,
-    (obj, prop, param) => {
-      if (props[prop]) {
-        obj[param] = props[prop]
+    (obj: Record<string, string>, prop: string, param: string) => {
+      const value = props[prop as PropKey]
+      if (value) {
+        obj[param] = value
       }
       return obj
     },
