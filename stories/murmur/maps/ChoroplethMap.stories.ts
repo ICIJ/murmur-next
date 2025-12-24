@@ -522,7 +522,7 @@ export const HatchEmpty: Story = {
   render: args => ({
     components: { ChoroplethMap },
     setup: () => ({ args }),
-    template: `<ChoroplethMap v-bind="args" />`
+    template: `<div class="bg-light p-4"><ChoroplethMap v-bind="args" /></div>`
   }),
   parameters: {
     docs: {
@@ -542,7 +542,7 @@ export const Zoomable: Story = {
   render: args => ({
     components: { ChoroplethMap },
     setup: () => ({ args }),
-    template: `<ChoroplethMap v-bind="args" />`
+    template: `<div class="bg-light p-4"><ChoroplethMap v-bind="args" /></div>`
   }),
   parameters: {
     docs: {
@@ -565,7 +565,7 @@ export const Clickable: Story = {
   render: args => ({
     components: { ChoroplethMap },
     setup: () => ({ args }),
-    template: `<ChoroplethMap v-bind="args" />`
+    template: `<div class="bg-light p-4"><ChoroplethMap v-bind="args" /></div>`
   }),
   parameters: {
     docs: {
