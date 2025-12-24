@@ -4,7 +4,7 @@ import { leakSizeDecorator } from '../../decorators'
 import { humanReadableGb } from '../../utils'
 
 export default {
-  title: 'Murmur/datavisualisations/ColumnChart/StackedColumnChart',
+  title: 'Murmur/datavisualisations/StackedColumnChart/StackedColumnChart',
   component: StackedColumnChart,
   tags: ['autodocs'],
   argTypes: {}

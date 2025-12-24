@@ -3,7 +3,7 @@ import { StoryObj } from '@storybook/vue3-vite'
 import { humanReadableGb } from '../../utils'
 
 export default {
-  title: 'Murmur/datavisualisations/BarChart/StackedBarChart',
+  title: 'Murmur/datavisualisations/StackedBarChart/StackedBarChart',
   component: StackedBarChart,
   tags: ['autodocs'],
   argTypes: {}
