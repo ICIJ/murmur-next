@@ -2,14 +2,14 @@ import { promises as fs } from 'fs'
 import { join, resolve } from 'path'
 import { zipObjectDeep } from 'lodash'
 import { shallowMount } from '@vue/test-utils'
-import ChoroplethMap from '@/maps/ChoroplethMap.vue'
+import ChoroplethMap from '@/maps/ChoroplethMap/ChoroplethMap.vue'
 
 vi.mock('d3', async () => {
   return {
     ...(await vi.importActual('d3')),
     json: async (url) => {
       const pathname = url.split('https://icij.github.io/murmur/').pop()
-      const abspath = resolve(__dirname, join('../../../public', pathname))
+      const abspath = resolve(__dirname, join('../../../../public', pathname))
       const raw = await fs.readFile(abspath, 'UTF-8')
       return JSON.parse(raw)
     },

@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import {
   default as ChoroplethMapAnnotation
-} from '@/maps/ChoroplethMapAnnotation.vue'
+} from '@/maps/ChoroplethMap/ChoroplethMapAnnotation.vue'
 import type { ParentMap, ParentMapProvide } from '@/types.js'
 import { ParentKey } from '@/keys.js'
 import { computed } from 'vue'
