@@ -241,7 +241,7 @@ const markerCursorValue = computed(() => {
 })
 
 const loadedDataWithIds = computed(() => {
-  return loadedData.value?.map((d: any) => {
+  return (loadedData.value || []).map((d: any) => {
     return {
       ...set({}, props.markerObjectsPath, uniqueId()),
       ...d
