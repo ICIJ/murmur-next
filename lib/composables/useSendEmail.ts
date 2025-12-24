@@ -40,12 +40,12 @@ export function useSendEmail(
     url.searchParams.set('SIGNUP', tracker)
     url.searchParams.set('MMERGE24', parentReferrer.value)
     url.searchParams.set(emailField, emailValue)
-    groups.value.map(group => url.searchParams.set(group, '1'))
+    groups.value.map((group: string) => url.searchParams.set(group, '1'))
 
     return url.href
   })
 
-  function send() {
+  function send(): Promise<FormDataResult> {
     return new Promise((resolve, reject) => {
       jsonp(
         submitUrl.value,
