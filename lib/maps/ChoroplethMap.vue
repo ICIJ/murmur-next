@@ -226,16 +226,6 @@ const planarCenter = computed((): [number, number] => {
   return [lng, lat]
 })
 
-const featureColorScaleEnd = computed(() => {
-  const defaultColor = '#852308'
-  const node = map.value?.node()
-  if (isLoaded.value && node) {
-    const computedStyle = window.getComputedStyle(node)
-    return computedStyle.getPropertyValue('--primary') || defaultColor
-  }
-  return defaultColor
-})
-
 const featureColorScaleStart = computed(() => {
   // `socialMode` is always different from null but accessing it will make
   // this computed property reactive.
@@ -244,6 +234,16 @@ const featureColorScaleStart = computed(() => {
   if (isLoaded.value && props.socialMode !== null && node) {
     const computedStyle = window.getComputedStyle(node)
     return computedStyle.getPropertyValue('color') || defaultColor
+  }
+  return defaultColor
+})
+
+const featureColorScaleEnd = computed(() => {
+  const defaultColor = '#7a0177'
+  const node = map.value?.node()
+  if (isLoaded.value && node) {
+    const computedStyle = window.getComputedStyle(node)
+    return computedStyle.getPropertyValue('--bs-primary') || defaultColor
   }
   return defaultColor
 })
