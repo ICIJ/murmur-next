@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<{
   colorScale: 'scaleLinear',
   colorScaleEnd: () => {
     const computedStyle = window.getComputedStyle(document.body)
-    return computedStyle.getPropertyValue('--primary') || '#000'
+    return computedStyle.getPropertyValue('--bs-primary') || '#000'
   },
   colorScaleStart: '#fff'
 })
