@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import SignUpForm from '@/components/SignUpForm/SignUpForm.vue'
+import SignUpForm from '@/components/Form/FormSignUp.vue'
 import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
 import { PhFacebookLogo, PhLinkedinLogo, PhX, PhXLogo } from '@phosphor-icons/vue'
 

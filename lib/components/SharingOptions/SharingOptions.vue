@@ -8,7 +8,7 @@ import {
   type PropType
 } from 'vue'
 
-import EmbedForm from '@/components/EmbedForm/EmbedForm.vue'
+import EmbedForm from '@/components/Form/FormEmbed.vue'
 import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
 import SharingOptionsLink from '@/components/SharingOptions/SharingOptionsLink.vue'
 import config from '@/config'
