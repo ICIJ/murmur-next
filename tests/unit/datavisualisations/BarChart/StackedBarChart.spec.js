@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import StackedBarChart from '@/datavisualisations/StackedBarChart.vue'
+import StackedBarChart from '@/datavisualisations/BarChart/StackedBarChart.vue'
 
 // Mock HTML element offset so the size of the chart can be calculated
 // dynamicly using JSDOM and tests

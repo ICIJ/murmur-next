@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import { mount, flushPromises } from '@vue/test-utils'
-import ColumnChart from '@/datavisualisations/ColumnChart.vue'
+import ColumnChart from '@/datavisualisations/ColumnChart/ColumnChart.vue'
 
 vi.mock('d3', async () => {
   return {
