@@ -102,8 +102,7 @@ It allows you to add custom annotations at specific geographic coordinates.
 
 type Story = StoryObj<typeof ChoroplethMapAnnotation>
 
-export const Default: Story = {
-  name: 'ICIJ Offices (Spherical)',
+export const Spherical: Story = {
   render: () => ({
     components: { ChoroplethMap, ChoroplethMapAnnotation },
     setup() {
@@ -150,7 +149,6 @@ export const Default: Story = {
 }
 
 export const ParisSwimmingPools: Story = {
-  name: 'Paris Swimming Pools',
   render: () => ({
     components: { ChoroplethMap, ChoroplethMapAnnotation },
     setup() {
