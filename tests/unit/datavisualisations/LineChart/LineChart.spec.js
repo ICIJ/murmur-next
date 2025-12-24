@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import { mount } from '@vue/test-utils'
-import LineChart from '@/datavisualisations/LineChart.vue'
+import LineChart from '@/datavisualisations/LineChart/LineChart.vue'
 
 vi.mock('d3', async () => {
   return {

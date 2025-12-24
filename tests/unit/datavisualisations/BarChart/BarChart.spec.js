@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import BarChart from '@/datavisualisations/BarChart.vue'
+import BarChart from '@/datavisualisations/BarChart/BarChart.vue'
 
 vi.mock('d3', async () => {
   return {
