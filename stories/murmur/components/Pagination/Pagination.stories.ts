@@ -1,11 +1,11 @@
 import { StoryObj } from '@storybook/vue3-vite'
 import { buttonSizesArgType } from '~storybook/utils'
-import { CustomPagination } from '@/components'
+import { Pagination } from '@/components'
 import { SIZE } from '@/enums'
 
 export default {
-  title: 'Murmur/components/Pagination/CustomPagination',
-  component: CustomPagination,
+  title: 'Murmur/components/Pagination/Pagination',
+  component: Pagination,
   tags: ['autodocs'],
   argTypes: {
     modelValue: { type: 'number', min: 0 },
@@ -16,13 +16,13 @@ export default {
   }
 }
 
-type Story = StoryObj<typeof CustomPagination>
+type Story = StoryObj<typeof Pagination>
 const Template: Story = (args: any) => ({
-  components: { CustomPagination },
+  components: { Pagination },
   setup() {
     return { args }
   },
-  template: '<CustomPagination v-bind="args" />'
+  template: '<Pagination v-bind="args" />'
 })
 
 export const Default = Template.bind({})
