@@ -1,9 +1,9 @@
 import { ColumnChart } from '@/datavisualisations'
 import { StoryObj } from '@storybook/vue3-vite'
-import { leakSizeDecorator } from '../decorators'
+import { leakSizeDecorator } from '../../decorators'
 
 export default {
-  title: 'Murmur/datavisualisations/ColumnChart',
+  title: 'Murmur/datavisualisations/ColumnChart/ColumnChart',
   component: ColumnChart,
   tags: ['autodocs'],
   argTypes: {}

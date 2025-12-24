@@ -2,7 +2,7 @@ import { BarChart } from '@/datavisualisations'
 import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
-  title: 'Murmur/datavisualisations/BarChart',
+  title: 'Murmur/datavisualisations/BarChart/BarChart',
   component: BarChart,
   tags: ['autodocs'],
   argTypes: {}

@@ -2,7 +2,7 @@ import { LineChart } from '@/datavisualisations'
 import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
-  title: 'Murmur/datavisualisations/LineChart',
+  title: 'Murmur/datavisualisations/LineChart/LineChart',
   component: LineChart,
   tags: ['autodocs'],
   argTypes: {}
