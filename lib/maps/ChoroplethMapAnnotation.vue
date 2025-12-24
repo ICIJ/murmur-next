@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { geoDistance, GeoProjection } from 'd3-geo'
-import { computed, inject, toRaw } from 'vue'
+import { computed, inject } from 'vue'
 import { ParentKey } from '@/keys'
 import { ParentMap } from '@/types'
 import { PLACEMENTS } from '@/enums'
@@ -68,7 +68,7 @@ const hasParent = computed(() => !!parent)
 const mapRect = computed(() => parent?.mapRect?.value ?? { width: 0, height: 0 })
 const rotatingMapProjection = computed(() => parent?.rotatingMapProjection?.value)
 const mapTransform = computed(() => {
-  return parent ? toRaw(parent.mapTransform) : { k: 1 }
+  return parent?.mapTransform?.value ?? { k: 1 }
 })
 
 const translateY = computed(() => {
@@ -110,6 +110,9 @@ const projection = computed(() => {
 })
 
 const position = computed(() => {
+  // Access rotation values to ensure recomputation when globe rotates
+  // (D3 projections are mutated in place, so Vue doesn't detect changes)
+  const { rotateX: _rx, rotateY: _ry } = mapTransform.value
   const [x, y] = projection.value?.(center.value) || []
   return { x, y }
 })
