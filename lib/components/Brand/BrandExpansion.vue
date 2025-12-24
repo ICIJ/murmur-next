@@ -166,12 +166,12 @@ const breakpoints = useBreakpoints({
   [BrandMode.Long]: 1047.01
 })
 const baseWidth = computed((): number => {
-  const widths = {
+  const widths: Record<BrandMode, number> = {
     [BrandMode.Short]: 401.256,
     [BrandMode.Medium]: 901.24,
     [BrandMode.Long]: 1047.01
   }
-  return widths[props.mode]
+  return widths[props.mode as BrandMode]
 })
 
 const sizeAsNumber = computed((): number => {

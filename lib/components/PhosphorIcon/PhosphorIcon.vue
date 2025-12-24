@@ -97,21 +97,22 @@ const currentHover = ref(false)
 watch(() => props.hover, () => (currentHover.value = props.hover), { immediate: true })
 
 const weightComp = computed((): IconWeight => {
+  const weights = ICON_WEIGHT as Record<string, IconWeight>
   if (isArray(props.name) && props.name.length > 1) {
     const weight = props.name[1] as IconWeight
-    return ICON_WEIGHT[weight]
+    return weights[weight]
   }
 
   if (currentHover.value && props.hoverWeight) {
-    return ICON_WEIGHT[props.hoverWeight]
+    return weights[props.hoverWeight]
   }
 
   if (props.fill) {
     return ICON_WEIGHT.fill
   }
 
-  if (ICON_WEIGHT[props.weight]) {
-    return ICON_WEIGHT[props.weight]
+  if (props.weight && weights[props.weight]) {
+    return weights[props.weight]
   }
 
   return ICON_WEIGHT.regular
