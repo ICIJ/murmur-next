@@ -8,12 +8,11 @@ export default create({
   brandTarget: '_self',
   brandImage,
 
-  colorPrimary: '#00F',
-  colorSecondary: '#F00',
+  colorPrimary: '#ff8080', 
+  colorSecondary: '#f00',
 
   // UI
-  appBg: '#000',
-  appContentBg: '#171717',
+  appBg: '#0d0d0d',
   appPreviewBg: '#FFF',
   appBorderColor: 'rgba(0,0,0,.1)',
   appBorderRadius: 4,
@@ -22,16 +21,11 @@ export default create({
   fontBase: '"Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   fontCode: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
 
-  // Text colors
-  textColor: '#C9CDCF',
-  textInverseColor: '#222425',
-  textMutedColor: '#798186',
-
   // Toolbar default and active colors
-  barTextColor: '#333',
-  barHoverColor: '#000',
+  barTextColor: '#eee',
+  barHoverColor: '#ff8080',
   barSelectedColor: '#F00',
-  barBg: '#e9e9e9',
+  barBg: '#000',
 
   // Form colors
   buttonBg: '#222425',
