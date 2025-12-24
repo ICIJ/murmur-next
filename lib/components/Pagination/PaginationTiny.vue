@@ -168,7 +168,7 @@ import type { ButtonVariant, Size } from 'bootstrap-vue-next'
 import { SIZE } from '@/enums'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
 import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import { PhCaretDoubleLeft, PhCaretRight } from '@phosphor-icons/vue'
+import { PhCaretDoubleLeft, PhCaretDoubleRight, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
 import type { IconPhosphor } from '@/types'
 
 /**
@@ -373,7 +373,7 @@ const lastRangeRow = computed(() => +pageValue.value * props.perPage)
 const currentPageInput = ref<number>(0)
 const currentRowInput = ref<number>(0)
 
-watch(modelValue, (value) => {
+watch(modelValue, (value: number) => {
   // Update currentPageInput value based on totalRows
   currentPageInput.value = props.totalRows ? +value : 0
   // Determine the row offset based on the perPage value.
