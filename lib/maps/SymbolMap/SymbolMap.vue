@@ -17,8 +17,8 @@ import {
   uniqueId
 } from 'lodash'
 
-import config from '../config'
-import OrdinalLegend from '../components/OrdinalLegend.vue'
+import config from '@/config'
+import OrdinalLegend from '@/components/Legend/OrdinalLegend.vue'
 import { getChartProps, useChart } from '@/composables/useChart'
 import {
   ComponentPublicInstance,
