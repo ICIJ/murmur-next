@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, getCurrentInstance } from 'vue'
 import type { Parent } from 'pym.js'
 
 import { injectAssets } from '@/utils/assets'
@@ -8,7 +8,6 @@ defineOptions({
   name: 'ResponsiveIframe'
 })
 
-let iframeUniqueIdCounter = 0
 type StartsWithIcijIframe = `icij-iframe-${string}`
 
 const props = defineProps<{
@@ -22,7 +21,8 @@ const props = defineProps<{
   options?: object
 }>()
 
-const iframeId = ref<StartsWithIcijIframe>(`icij-iframe-${++iframeUniqueIdCounter}`)
+const instance = getCurrentInstance()
+const iframeId = ref<StartsWithIcijIframe>(`icij-iframe-${instance?.uid ?? Math.random()}`)
 const pymParent = ref<Parent | null>(null)
 
 onMounted(async (): Promise<void> => {
