@@ -438,7 +438,7 @@ const cursorValue = computed(() => {
 })
 
 const isReady = computed(() => {
-  return loadedData.value && isLoaded.value && topojson.value
+  return isLoaded.value && topojson.value
 })
 
 function prepare() {
