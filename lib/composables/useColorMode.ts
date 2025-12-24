@@ -14,7 +14,7 @@ export function useColorMode(element = window?.document?.body, defaultColorMode 
   }
 
   // MutationObserver to watch for changes to the data-bs-theme attribute
-  let observer = null
+  let observer: MutationObserver | null = null
 
   onMounted(() => {
     // Set initial color mode
