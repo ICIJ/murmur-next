@@ -67,6 +67,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   loaded: [data: any]
+  resized: []
 }>()
 
 const highlightedKeys = ref(props.highlights)

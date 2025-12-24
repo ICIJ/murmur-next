@@ -100,6 +100,7 @@ const emit = defineEmits<{
   reset: []
   zoomed: [d: any]
   loaded: [data: any]
+  resized: []
 }>()
 
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)

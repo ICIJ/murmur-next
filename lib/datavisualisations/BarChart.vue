@@ -48,6 +48,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   loaded: [data: any]
+  resized: []
 }>()
 
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
