@@ -434,7 +434,10 @@ function setMapNodeSize({ width, height }: { width: number, height: number }) {
 }
 
 const cursorValue = computed(() => {
-  return (featureCursor.value as any)?.data ?? null
+  if (featureCursor.value && loadedData.value) {
+    return loadedData.value[featureCursor.value] ?? null
+  }
+  return null
 })
 
 const isReady = computed(() => {
