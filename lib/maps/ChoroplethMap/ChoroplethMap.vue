@@ -30,7 +30,7 @@ import { ParentKey } from '@/keys'
 import { MapTransform, ParentMap } from '@/types'
 import config from '@/config'
 import { getChartProps, useChart } from '@/composables/useChart'
-import ScaleLegend from '@/components/Legend/ScaleLegend.vue'
+import ScaleLegend from '@/components/Legend/LegendScale.vue'
 
 defineOptions({
   name: 'ChoroplethMap'
