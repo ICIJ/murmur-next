@@ -41,8 +41,9 @@ describe('ChoroplethMap.vue', () => {
         propsData,
         global: { renderDefaultStub: true }
       })
-      wrapper.vm.$refs.resizable.style.width = '500px'
+      wrapper.vm.resizable.style.width = '500px'
       await wrapper.vm.loadTopojson()
+      wrapper.vm.draw()
       await wrapper.vm.$nextTick()
     })
 
@@ -129,8 +130,9 @@ describe('ChoroplethMap.vue', () => {
         }
       }
       wrapper = shallowMount(ChoroplethMap, { propsData })
-      wrapper.vm.$refs.resizable.style.width = '500px'
+      wrapper.vm.resizable.style.width = '500px'
       await wrapper.vm.loadTopojson()
+      wrapper.vm.draw()
       await wrapper.vm.$nextTick()
       // Since JSDOM badly lack SVG support, we need to mock
       // some low level attributes such as size of the SVG element.
