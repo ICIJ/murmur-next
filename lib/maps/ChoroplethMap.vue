@@ -134,7 +134,7 @@ const props = withDefaults(defineProps<{
    * Neutral color of the map s features in social mode.
    */
   socialColor?: string
-  data?: string | object[] | null
+  data?: string | object[] | Record<string, number> | null
   dataUrlType?: 'json' | 'csv' | 'tsv'
   chartHeightRatio?: number
   socialMode?: boolean
@@ -158,7 +158,7 @@ const props = withDefaults(defineProps<{
   zoomMax: 8,
   zoom: null,
   center: null,
-  projection: () => geoRobinson,
+  projection: geoRobinson,
   outline: false,
   graticule: false,
   height: '300px',
@@ -424,6 +424,14 @@ const minValue = computed((): number => {
 const transformOrigin = computed(() => {
   return props.spherical ? '50% 50%' : '0 0'
 })
+
+function setMapNodeSize({ width, height }: { width: number, height: number }) {
+  const node = map.value?.node()
+  if (node) {
+    (node as any)['width'] = width;
+    (node as any)['height'] = height
+  }
+}
 
 const cursorValue = computed(() => {
   return (featureCursor.value as any)?.data ?? null
@@ -759,6 +767,15 @@ provide<ParentMap>(ParentKey, {
   mapRect,
   mapTransform,
   rotatingMapProjection
+})
+
+defineExpose({
+  featureCursor,
+  loadTopojson,
+  updateFeatureCursor,
+  setMapNodeSize,
+  draw,
+  resizable
 })
 </script>
 
