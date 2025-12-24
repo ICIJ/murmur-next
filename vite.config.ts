@@ -41,6 +41,9 @@ export default defineConfig({
         'vitest.config.ts',
       ],
       outDir: 'dist/lib',
+      tsconfigPath: './tsconfig.json',
+      // Suppress vite-plugin-dts diagnostic output (bogus TS2614 Vue import errors)
+      logLevel: 'silent',
     }),
     VueI18nPlugin({
       /* options */
