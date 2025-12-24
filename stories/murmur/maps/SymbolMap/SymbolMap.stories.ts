@@ -80,7 +80,7 @@ function powerPlantMarkerWidth(data: typeof powerPlants) {
 }
 
 export default {
-  title: 'Murmur/maps/SymbolMap',
+  title: 'Murmur/maps/SymbolMap/SymbolMap',
   component: SymbolMap,
   tags: ['autodocs'],
   argTypes: {

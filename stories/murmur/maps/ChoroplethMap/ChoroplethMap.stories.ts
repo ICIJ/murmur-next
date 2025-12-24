@@ -302,7 +302,7 @@ function featureColorScale() {
 }
 
 export default {
-  title: 'Murmur/maps/ChoroplethMap',
+  title: 'Murmur/maps/ChoroplethMap/ChoroplethMap',
   component: ChoroplethMap,
   tags: ['autodocs'],
   argTypes: {

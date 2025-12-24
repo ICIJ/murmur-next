@@ -56,7 +56,7 @@ const wineStockByDepartment: Record<string, number> = {
 }
 
 export default {
-  title: 'Murmur/maps/ChoroplethMapAnnotation',
+  title: 'Murmur/maps/ChoroplethMap/ChoroplethMapAnnotation',
   component: ChoroplethMapAnnotation,
   tags: ['autodocs'],
   argTypes: {
