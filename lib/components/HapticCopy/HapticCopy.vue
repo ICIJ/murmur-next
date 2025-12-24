@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Timeout } from 'node:timers'
 import { BButton, BTooltip, PopoverPlacement, ButtonVariant } from 'bootstrap-vue-next'
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
@@ -94,7 +93,7 @@ const { t, te } = useI18n()
 const tooltip = ref<ComponentPublicInstance | null>(null)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
 const tooltipContent = ref<string>('')
-const tooltipTimeout = ref<Timeout | undefined>(undefined)
+const tooltipTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
 const showClipboardTooltip = ref(false)
 const buttonId = computed(() => uniqueId('haptic-copy-'))
 const buttonBinding = computed(() => {

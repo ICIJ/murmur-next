@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Timeout } from 'node:timers'
 import * as d3 from 'd3'
 import keysFn from 'lodash/keys'
 import find from 'lodash/find'
@@ -153,7 +152,7 @@ const width = ref(0)
 const height = ref(0)
 const leftAxisHeight = ref(0)
 const highlightedKeys = ref(props.highlights)
-const highlightTimeout = ref<Timeout | undefined>(undefined)
+const highlightTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
 const isLoaded = ref(false)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
 const { querySelector, querySelectorAll } = useQueryObserver(el.value)
@@ -331,12 +330,22 @@ function barUniqueId(i: string | number, key: string) {
   return `bar-${uid}-${i}-${key}`
 }
 
-function stackBarAndValue(i: string | number) {
+interface StackItem {
+  key: string
+  barEdge: number
+  barHeight: number
+  rowEdge: number
+  valueHeight: number
+  overflow: boolean
+  pushed: boolean
+}
+
+function stackBarAndValue(i: string | number): StackItem[] {
   if (!sortedData.value) {
     return []
   }
   // Collect sizes first
-  const stack = discoveredKeys.value.map((key: string) => {
+  const stack: StackItem[] = discoveredKeys.value.map((key: string) => {
     const { bar, row, value } = queryBarAndValue(i as number, key)
     if (!bar || !row || !value) {
       throw new Error('Empty values for bar, row or value')
@@ -356,7 +365,7 @@ function stackBarAndValue(i: string | number) {
     }
   })
   // Infer value's display
-  return stack.map((desc, index) => {
+  return stack.map((desc: StackItem, index: number) => {
     desc.overflow = desc.valueHeight >= desc.barHeight
     if (index > 0) {
       const prevDesc = stack[index - 1]
@@ -427,7 +436,7 @@ function formatYDatum(d: string) {
 
 watch(
   () => props.highlights,
-  (newHighlights) => {
+  (newHighlights: any[]) => {
     highlightedKeys.value = newHighlights
   }
 )
