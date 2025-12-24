@@ -344,7 +344,6 @@ by configuring \`topojsonUrl\`, \`topojsonObjects\`, and \`topojsonObjectsPath\`
 type Story = StoryObj<typeof ChoroplethMap>
 
 export const Default: Story = {
-  name: 'Motor Vehicles per 1000 People',
   args: {
     data: motorVehiclesPer1000people,
     hatchEmpty: true,
@@ -373,7 +372,6 @@ export const Default: Story = {
 }
 
 export const CustomColorScale: Story = {
-  name: 'Custom Color Scale',
   args: {
     data: motorVehiclesPer1000people,
     featureColorScale: featureColorScale()
@@ -411,7 +409,6 @@ const featureColorScale = scaleThreshold()
 }
 
 export const FrenchDepartments: Story = {
-  name: 'French Departments (Custom TopoJSON)',
   args: {
     data: wineStockByDepartment,
     clickable: true,
@@ -460,7 +457,6 @@ Configure the TopoJSON source with:
 }
 
 export const SphericalProjection: Story = {
-  name: 'Spherical Projection',
   args: {
     center: [33.435499, 35.167406],
     projection: geoOrthographic,

@@ -119,13 +119,12 @@ The component expects an array of objects with at least \`latitude\` and \`longi
 type Story = StoryObj<typeof SymbolMap>
 
 export const Default: Story = {
-  name: 'ICIJ Offices',
   args: {
     data: icijOffices,
     horizontalLegend: true,
     zoomable: true
   },
-  render: (args) => ({
+  render: args => ({
     components: { SymbolMap },
     setup() {
       return { args }
@@ -152,7 +151,6 @@ export const Default: Story = {
 }
 
 export const NuclearPowerPlants: Story = {
-  name: 'Nuclear Power Plants',
   args: {
     data: powerPlants,
     markerPath: powerPlantMarkerPath,
@@ -162,7 +160,7 @@ export const NuclearPowerPlants: Story = {
     horizontalLegend: true,
     tooltipPlacement: 'right'
   },
-  render: (args) => ({
+  render: args => ({
     components: { SymbolMap },
     setup() {
       return { args }
@@ -217,8 +215,7 @@ The marker width is dynamically calculated based on the power output (MWe), and 
   }
 }
 
-export const CustomTopojson: Story = {
-  name: 'Custom Topojson (Marseille)',
+export const Marseille: Story = {
   args: {
     data: 'https://gist.githubusercontent.com/pirhoo/c42b180b774177bd9882899e009dddbe/raw/marseille-sport-facilities.json',
     markerWidth: 7,
@@ -227,7 +224,7 @@ export const CustomTopojson: Story = {
     topojsonObjects: 'collection',
     topojsonUrl: 'https://gist.githubusercontent.com/pirhoo/a734b72bcf69f81f034b676e0aac4788/raw/marseille.topojson'
   },
-  render: (args) => ({
+  render: args => ({
     components: { SymbolMap },
     setup() {
       return { args }
@@ -273,7 +270,7 @@ export const Zoomable: Story = {
     horizontalLegend: true,
     zoomable: true
   },
-  render: (args) => ({
+  render: args => ({
     components: { SymbolMap },
     setup() {
       return { args }
@@ -296,7 +293,7 @@ export const FitToMarkers: Story = {
     horizontalLegend: true,
     categoryObjectsPath: 'country'
   },
-  render: (args) => ({
+  render: args => ({
     components: { SymbolMap },
     setup() {
       return { args }
@@ -317,7 +314,7 @@ export const HiddenLegend: Story = {
     data: icijOffices,
     hideLegend: true
   },
-  render: (args) => ({
+  render: args => ({
     components: { SymbolMap },
     setup() {
       return { args }
