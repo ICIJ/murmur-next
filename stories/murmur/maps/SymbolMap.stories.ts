@@ -275,7 +275,7 @@ export const Zoomable: Story = {
     setup() {
       return { args }
     },
-    template: `<SymbolMap v-bind="args" />`
+    template: `<div class="bg-light p-4"><SymbolMap v-bind="args" /></div>`
   }),
   parameters: {
     docs: {
@@ -298,7 +298,7 @@ export const FitToMarkers: Story = {
     setup() {
       return { args }
     },
-    template: `<SymbolMap v-bind="args" />`
+    template: `<div class="bg-light p-4"><SymbolMap v-bind="args" /></div>`
   }),
   parameters: {
     docs: {
@@ -319,7 +319,7 @@ export const HiddenLegend: Story = {
     setup() {
       return { args }
     },
-    template: `<SymbolMap v-bind="args" />`
+    template: `<div class="bg-light p-4"><SymbolMap v-bind="args" /></div>`
   }),
   parameters: {
     docs: {

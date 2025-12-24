@@ -217,20 +217,22 @@ export const BasicAnnotation: Story = {
       return { args, wineStockByDepartment }
     },
     template: `
-      <ChoroplethMap
-        :data="wineStockByDepartment"
-        topojson-url="./assets/topojson/france-departments.json"
-        topojson-objects="departements"
-        topojson-objects-path="properties.code"
-        zoomable
-      >
-        <ChoroplethMapAnnotation v-bind="args">
-          <div class="text-center">
-            <strong>Bordeaux</strong><br />
-            <small>Wine Region</small>
-          </div>
-        </ChoroplethMapAnnotation>
-      </ChoroplethMap>
+      <div class="bg-light p-4">
+        <ChoroplethMap
+          :data="wineStockByDepartment"
+          topojson-url="./assets/topojson/france-departments.json"
+          topojson-objects="departements"
+          topojson-objects-path="properties.code"
+          zoomable
+        >
+          <ChoroplethMapAnnotation v-bind="args">
+            <div class="text-center">
+              <strong>Bordeaux</strong><br />
+              <small>Wine Region</small>
+            </div>
+          </ChoroplethMapAnnotation>
+        </ChoroplethMap>
+      </div>
     `
   }),
   parameters: {
