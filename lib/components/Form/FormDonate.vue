@@ -58,11 +58,9 @@ const labelForChange = ref<LabelForChange>({
 })
 
 const suggestedAmount = ref<SuggestedDonation>(
-  // @ts-expect-error retrieves a map of messages from the i18n json
   messages.value[locale.value]['donate-form']['suggesteddonation']
 )
 const listBenefits = ref<string[]>(
-  // @ts-expect-error retrieves a list of messages from the i18n json
   messages.value[locale.value]['donate-form']['benefits']['list']
 )
 
@@ -123,7 +121,7 @@ watch(installmentPeriod, () => {
 
 watch(
   () => amount.value,
-  (v) => {
+  (v: number) => {
     level.value = changeThe.value
 
     // Set manual amount

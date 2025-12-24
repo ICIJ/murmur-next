@@ -169,14 +169,14 @@ const keysMap = computed((): Record<string, Function> => {
 
 watch(toRef(props, 'hide'), toggleKeys)
 
-watch(modelValue, (itemOrItems) => {
+watch(modelValue, (itemOrItems: unknown) => {
   const items = castArray(itemOrItems)
   if (!isEqual(activeItems.value, items)) {
     activateItemOrItems(itemOrItems)
   }
 }, { deep: true, immediate: false })
 
-watch(activeItems, (itemOrItems) => {
+watch(activeItems, (itemOrItems: unknown[]) => {
   /**
    * Fired when the selected value changes. It will pass a canonical value
    * or an array of values if the property `multiple` is set to true.
