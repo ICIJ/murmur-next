@@ -4,7 +4,7 @@ import { identity, iteratee, sortBy as sortByFn } from 'lodash'
 import * as d3 from 'd3'
 
 import { getChartProps, useChart } from '@/composables/useChart'
-import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
 
 defineOptions({
   name: 'ColumnChart'
