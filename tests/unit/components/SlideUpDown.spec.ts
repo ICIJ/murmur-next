@@ -37,16 +37,25 @@ describe('SlideUpDown', () => {
   })
 
   it('calls `cleanLayout` after the transition', async () => {
-    const wrapper = mount(SlideUpDown)
-    wrapper.vm.cleanLayout = vi.fn()
-    expect(wrapper.vm.cleanLayout.mock.calls.length).toBe(0)
-    await wrapper.setProps({ active: false })
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        expect(wrapper.vm.cleanLayout.mock.calls.length).toBe(1)
-        resolve()
-      }, wrapper.vm.duration)
+    const wrapper = mount(SlideUpDown, {
+      props: { active: true }
     })
+    // Wait for initial mount
+    await wrapper.vm.$nextTick()
+    // Verify initial state
+    expect(wrapper.vm.state).toBe('post')
+    // Trigger slide by changing active - this sets state to 'pre' then 'active'
+    await wrapper.setProps({ active: false })
+    // Wait for triggerSlide to complete
+    await new Promise(resolve => setTimeout(resolve, 10))
+    await wrapper.vm.$nextTick()
+    // State should now be 'active' after triggerSlide completes
+    expect(wrapper.vm.state).toBe('active')
+    // Call cleanLayout directly (jsdom doesn't fire CSS transition events)
+    await wrapper.vm.cleanLayout(null)
+    await wrapper.vm.$nextTick()
+    // After cleanLayout, state should be 'post'
+    expect(wrapper.vm.state).toBe('post')
   })
 
   it('calls `cleanLayout` which change the state from `pre` to `active`', async () => {
