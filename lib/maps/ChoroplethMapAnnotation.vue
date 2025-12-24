@@ -63,14 +63,12 @@ const props = withDefaults(defineProps<{
 
 const parent = inject<ParentMap>(ParentKey)
 
-if (!parent) {
-  throw new Error('parent is undefined')
-}
+const hasParent = computed(() => !!parent)
 
-const mapRect = parent.mapRect
-const rotatingMapProjection = parent.rotatingMapProjection
+const mapRect = computed(() => parent?.mapRect?.value ?? { width: 0, height: 0 })
+const rotatingMapProjection = computed(() => parent?.rotatingMapProjection?.value)
 const mapTransform = computed(() => {
-  return toRaw(parent.mapTransform)
+  return parent ? toRaw(parent.mapTransform) : { k: 1 }
 })
 
 const translateY = computed(() => {
@@ -108,11 +106,11 @@ const center = computed((): [number, number] => {
 })
 
 const projection = computed(() => {
-  return rotatingMapProjection.value as GeoProjection
+  return rotatingMapProjection.value as GeoProjection | undefined
 })
 
 const position = computed(() => {
-  const [x, y] = projection.value(center.value) || []
+  const [x, y] = projection.value?.(center.value) || []
   return { x, y }
 })
 
@@ -214,9 +212,10 @@ const geoDistanceFromCenter = computed(() => {
     if (!projection.value?.invert) {
       return 0
     }
+    const rect = mapRect.value
     const mapCenter: [number, number] = projection.value.invert([
-      mapRect.value.width / 2,
-      mapRect.value.height / 2
+      rect.width / 2,
+      rect.height / 2
     ])!
     return geoDistance(center.value, mapCenter)
   }
@@ -232,6 +231,7 @@ const isVisible = computed(() => {
 
 <template>
   <g
+    v-if="hasParent"
     :class="classList"
     class="choropleth-map-annotation"
   >
