@@ -1,21 +1,21 @@
-import { ScaleLegend } from '@/components'
+import { LegendScale } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
 
 import * as d3 from 'd3'
 export default {
-  title: 'Murmur/components/Legend/ScaleLegend',
-  component: ScaleLegend,
+  title: 'Murmur/components/Legend/LegendScale',
+  component: LegendScale,
   tags: ['autodocs'],
   argTypes: {}
 }
 
-type Story = StoryObj<typeof ScaleLegend>
+type Story = StoryObj<typeof LegendScale>
 const Template: Story = (args: any) => ({
-  components: { ScaleLegend },
+  components: { LegendScale },
   setup() {
     return { args }
   },
-  template: '<ScaleLegend v-bind="args" >{{args.default}}</ScaleLegend>'
+  template: '<LegendScale v-bind="args" >{{args.default}}</LegendScale>'
 })
 
 export const Default = Template.bind({})
@@ -50,15 +50,15 @@ HighlightValue.args = {
 }
 
 export const CustomizedWithSlot: Story = (args: any) => ({
-  components: { ScaleLegend },
+  components: { LegendScale },
   setup() {
     return { args }
   },
-  template: `<ScaleLegend v-bind="args" ><template #cursor="{ value }">
+  template: `<LegendScale v-bind="args" ><template #cursor="{ value }">
         <div class="bg-dark text-light px-3 py-2">
             {{value}}
         </div>
-    </template></ScaleLegend>`
+    </template></LegendScale>`
 })
 CustomizedWithSlot.decorators = [
   () => ({ template: `<div style="margin:40px;"><story/></div>` })

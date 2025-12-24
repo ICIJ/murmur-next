@@ -1,4 +1,4 @@
-import { OrdinalLegend } from '@/components'
+import { LegendOrdinal } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
 
 const data = {
@@ -10,19 +10,19 @@ const data = {
   ]
 }
 export default {
-  title: 'Murmur/components/Legend/OrdinalLegend',
-  component: OrdinalLegend,
+  title: 'Murmur/components/Legend/LegendOrdinal',
+  component: LegendOrdinal,
   tags: ['autodocs'],
   argTypes: {}
 }
 
-type Story = StoryObj<typeof OrdinalLegend>
+type Story = StoryObj<typeof LegendOrdinal>
 const Template: Story = (args: any) => ({
-  components: { OrdinalLegend },
+  components: { LegendOrdinal },
   setup() {
     return { args }
   },
-  template: '<OrdinalLegend v-bind="args" />'
+  template: '<LegendOrdinal v-bind="args" />'
 })
 
 export const Default = Template.bind({})
