@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import SlideUpDown from '@/components/SlideUpDown.vue'
 
 describe('SlideUpDown', () => {
