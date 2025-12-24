@@ -117,6 +117,14 @@ onMounted(async () => {
     cleanLayout(e)
   )
 })
+
+defineExpose({
+  state,
+  mounted,
+  duration: computed(() => props.duration),
+  triggerSlide,
+  cleanLayout
+})
 </script>
 
 <template>
