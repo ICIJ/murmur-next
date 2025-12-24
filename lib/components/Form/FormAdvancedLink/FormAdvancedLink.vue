@@ -91,11 +91,11 @@ const advancedLinkFormId = uniqueId('advanced-link-form-')
 
 const { t } = useI18n()
 const formClasses = computed(() => {
-  const propsToCheck = ['card', 'pills', 'small', 'vertical']
+  const propsToCheck = ['card', 'pills', 'small', 'vertical'] as const
   return propsToCheck.reduce((classes, prop) => {
     classes[`advanced-link-form--${prop}`] = props[prop]
     return classes
-  }, {})
+  }, {} as Record<string, boolean>)
 })
 
 // default tabs order
@@ -123,7 +123,7 @@ const activeForm = computed(() => {
 )
 
 function onUpdate(event: string | undefined): void {
-  const id = tabs.value.findIndex(elem => elem.id === event)
+  const id = tabs.value.findIndex((elem: { id: string }) => elem.id === event)
   index.value = id < 0 ? 0 : id
 }
 

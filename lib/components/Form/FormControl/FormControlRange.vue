@@ -264,7 +264,7 @@ function valueWithUnit(value: number | string): string {
   return typeof value === 'number' ? `${value}px` : `${value}`
 }
 
-watch(() => props.range, (newRange) => {
+watch(() => props.range, (newRange: [number, number]) => {
   start.value = newRange[0] ?? 0
   end.value = newRange[1] ?? 0
 })

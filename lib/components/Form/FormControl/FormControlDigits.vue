@@ -87,15 +87,15 @@ function focusToPreviousWhenEmpty(d: number) {
 
 watch(
   () => values,
-  (values) => {
+  (valuesRef: typeof values) => {
     // Copy and remove values that are not numbers
-    const formattedValues = values.value.map(value =>
+    const formattedValues = valuesRef.value.map((value: string) =>
       String(value).replace(/\D/g, '')
     )
     // Iterate over the values to be sure
     // they are not exceeding 10 and should
     // be spread to the next inputs
-    formattedValues.forEach((value, d) => {
+    formattedValues.forEach((value: string, d: number) => {
       // The value must be spread to the next input only
       // if it's higher than 9 (more than one digit)
       if (value !== null && Number(value) > 9) {
@@ -110,8 +110,8 @@ watch(
     })
     // We update the values data attribute only if they changed
     // to avoid an infinite update cycle
-    if (JSON.stringify(values.value) !== JSON.stringify(formattedValues)) {
-      values.value = formattedValues.slice(0, props.length)
+    if (JSON.stringify(valuesRef.value) !== JSON.stringify(formattedValues)) {
+      valuesRef.value = formattedValues.slice(0, props.length)
     }
     focusToNextInput()
   },

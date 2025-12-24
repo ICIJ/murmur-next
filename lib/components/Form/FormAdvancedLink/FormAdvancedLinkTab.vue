@@ -69,7 +69,6 @@ function select() {
 const selectInput = async (target: Readonly<ShallowRef<HTMLInputElement | null>>) => {
   // wait for the copy to finish to select text
   await nextTick()
-  // @ts-expect-error element does exist on target.value but IDE says it doesn't :'(
   target.value?.element.select()
 }
 
