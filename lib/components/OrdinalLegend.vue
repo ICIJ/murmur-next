@@ -1,110 +1,96 @@
-<script lang="ts">
+<script setup lang="ts">
 import { get, isFunction, kebabCase } from 'lodash'
 import * as d3 from 'd3'
-import { defineComponent, PropType, computed } from 'vue'
+import { computed } from 'vue'
+
+defineOptions({
+  name: 'OrdinalLegend'
+})
+
 export interface Datum { id?: string | number, color: string, path?: string, label: string }
 type Category = 'id' | 'color' | 'path' | 'label'
-export default defineComponent({
-  name: 'OrdinalLegend',
-  props: {
-    data: {
-      type: Array as PropType<Datum[]>,
-      default: () => []
-    },
-    horizontal: {
-      type: Boolean
-    },
-    markerPath: {
-      type: [String, Function],
-      default:
-        'M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256z'
-    },
-    categoryObjectsPath: {
-      type: String as PropType<Category>,
-      default: 'id'
-    },
-    highlight: {
-      type: [String, Number],
-      default: null
-    },
-    value: {
-      type: [String, Number],
-      default: null
-    }
-  },
-  emits: ['update', 'update:highlight'],
-  setup(props, { emit }) {
-    const markerBoundingClientRect = computed((): DOMRect | undefined => {
-      const svg = d3
-        .select('body')
-        .append('svg')
-        .attr('width', 2046)
-        .attr('height', 2046)
-      const marker = svg.append('path').attr('d', markerPathFunction())
-      const rect: DOMRect | undefined = marker.node()?.getBoundingClientRect()
-      svg.remove()
-      return rect
-    })
 
-    const markerViewbox = computed(() => {
-      const { width, height } = markerBoundingClientRect.value ?? {
-        width: 0,
-        height: 0
-      }
-      return `0 0 ${width} ${height}`
-    })
+const props = withDefaults(defineProps<{
+  data?: Datum[]
+  horizontal?: boolean
+  markerPath?: string | ((d: Datum) => string)
+  categoryObjectsPath?: Category
+  highlight?: string | number | null
+  value?: string | number | null
+}>(), {
+  data: () => [],
+  horizontal: false,
+  markerPath: 'M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256z',
+  categoryObjectsPath: 'id',
+  highlight: null,
+  value: null
+})
 
-    const classList = computed(() => {
-      return {
-        'ordinal-legend--horizontal': props.horizontal,
-        'ordinal-legend--has-highlight': props.highlight !== null,
-        'ordinal-legend--has-value': props.value !== null
-      }
-    })
+const emit = defineEmits<{
+  'update': [value: string | number | null]
+  'update:highlight': [value: string | number | null]
+}>()
 
-    function itemClassList(d: Datum) {
-      const id = d[props.categoryObjectsPath]
-      return {
-        [`ordinal-legend__item--identifier-${kebabCase(d.label)}`]: true,
-        'ordinal-legend__item--highlighted': id === props.highlight,
-        'ordinal-legend__item--selected': id === props.value
-      }
-    }
+const markerBoundingClientRect = computed((): DOMRect | undefined => {
+  const svg = d3
+    .select('body')
+    .append('svg')
+    .attr('width', 2046)
+    .attr('height', 2046)
+  const marker = svg.append('path').attr('d', markerPathFunction())
+  const rect: DOMRect | undefined = marker.node()?.getBoundingClientRect()
+  svg.remove()
+  return rect
+})
 
-    function markerPathFunction(d?: Datum): string {
-      return isFunction(props.markerPath) && d
-        ? props.markerPath(d)
-        : props.markerPath as string
-    }
+const markerViewbox = computed(() => {
+  const { width, height } = markerBoundingClientRect.value ?? {
+    width: 0,
+    height: 0
+  }
+  return `0 0 ${width} ${height}`
+})
 
-    function update(d: Datum) {
-      /**
-       * Fired when user clicks on an item
-       * @event update
-       * @param Mixed Value of the category identifier
-       */
-      emit('update', get(d, props.categoryObjectsPath, null))
-    }
-
-    function updateHighlight(d = {}) {
-      /**
-       * Fired when user hover an item
-       * @event update:highlight
-       * @param Mixed Value of the category identifier
-       */
-      emit('update:highlight', get(d, props.categoryObjectsPath, null))
-    }
-
-    return {
-      classList,
-      markerViewbox,
-      updateHighlight,
-      itemClassList,
-      markerPathFunction,
-      update
-    }
+const classList = computed(() => {
+  return {
+    'ordinal-legend--horizontal': props.horizontal,
+    'ordinal-legend--has-highlight': props.highlight !== null,
+    'ordinal-legend--has-value': props.value !== null
   }
 })
+
+function itemClassList(d: Datum) {
+  const id = d[props.categoryObjectsPath]
+  return {
+    [`ordinal-legend__item--identifier-${kebabCase(d.label)}`]: true,
+    'ordinal-legend__item--highlighted': id === props.highlight,
+    'ordinal-legend__item--selected': id === props.value
+  }
+}
+
+function markerPathFunction(d?: Datum): string {
+  return isFunction(props.markerPath) && d
+    ? props.markerPath(d)
+    : props.markerPath as string
+}
+
+function update(d: Datum) {
+  /**
+   * Fired when user clicks on an item
+   * @event update
+   * @param Mixed Value of the category identifier
+   */
+  emit('update', get(d, props.categoryObjectsPath, null))
+}
+
+function updateHighlight(d: Datum | Record<string, never> = {}) {
+  /**
+   * Fired when user hover an item
+   * @event update:highlight
+   * @param Mixed Value of the category identifier
+   */
+  emit('update:highlight', get(d, props.categoryObjectsPath, null))
+}
 </script>
 
 <template>
