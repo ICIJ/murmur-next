@@ -81,6 +81,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   loaded: [data: any]
   select: [datum: any]
+  resized: []
 }>()
 
 const width = ref(0)

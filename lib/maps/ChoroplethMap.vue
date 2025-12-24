@@ -176,6 +176,7 @@ const emit = defineEmits<{
   reset: []
   zoomed: [d: any]
   loaded: [data: any]
+  resized: []
 }>()
 
 const resizable = ref<ComponentPublicInstance<HTMLElement> | null>(null)
