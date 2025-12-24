@@ -113,7 +113,7 @@ onMounted(async () => {
   await deferredNextTick()
   mounted.value = true
   await cleanLayout(null)
-  container.value?.addEventListener('transitionend', e =>
+  container.value?.addEventListener('transitionend', (e: TransitionEvent) =>
     cleanLayout(e)
   )
 })

@@ -108,9 +108,8 @@ const scale = computed(() => {
 })
 
 const bars = computed((): Bar[] => {
-  return sortedData.value.map((d: Datum, i) => {
+  return sortedData.value.map((d: Datum, i: number) => {
     return {
-      // @ts-expect-error D3 api
       width: Math.abs(scale.value.x(d.value)),
       height: Math.abs(props.barHeight),
       value: d.value,
@@ -122,7 +121,7 @@ const bars = computed((): Bar[] => {
 })
 
 const labels = computed(() => {
-  return sortedData.value.map((d: Datum, i) => {
+  return sortedData.value.map((d: Datum, i: number) => {
     return {
       label: d.label,
       x: labelWidth.value,
