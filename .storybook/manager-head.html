@@ -1,11 +1,21 @@
 <style>
-#root .sidebar-container {
-  background-image: url("/assets/img/texture-rock-sidebar.png");
+#root .sidebar-container:has([data-radix-scroll-area-viewport]) [data-radix-scroll-area-viewport], 
+#root .sidebar-container:not(:has([data-radix-scroll-area-viewport])) { 
+  background-image: url("./assets/img/texture-rock-sidebar.png");
   background-repeat: no-repeat;
   background-size: 100% auto;
+  background-attachment: local;
 }
 
-#root .sidebar-container a[href] svg[type="document"] {
+#root .sidebar-header {
+  align-items: flex-start;
+}
+
+#root .sidebar-container .sidebar-item a[href] svg[type="document"] {
   color: #9797ff;
+}
+
+#root .sidebar-container .sidebar-item[data-selected=true] a[href] svg {
+  color: #fff;
 }
 </style>
