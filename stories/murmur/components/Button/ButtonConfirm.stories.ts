@@ -1,20 +1,20 @@
-import { ConfirmButton } from '@/components'
+import { ButtonConfirm } from '@/components'
 import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
-  title: 'Murmur/components/Button/ConfirmButton',
-  component: ConfirmButton,
+  title: 'Murmur/components/Button/ButtonConfirm',
+  component: ButtonConfirm,
   tags: ['autodocs'],
   argTypes: {}
 }
 
-type Story = StoryObj<typeof ConfirmButton>
+type Story = StoryObj<typeof ButtonConfirm>
 const Template: Story = (args: any) => ({
-  components: { ConfirmButton },
+  components: { ButtonConfirm },
   setup() {
     return { args }
   },
-  template: `<ConfirmButton v-bind="args" >Click to confirm</ConfirmButton>`
+  template: `<ButtonConfirm v-bind="args" >Click to confirm</ButtonConfirm>`
 })
 
 function confirmedFn() {
