@@ -1,4 +1,4 @@
-import { type Directive } from 'vue'
+import { type Directive, type DirectiveBinding } from 'vue'
 
 import {
   bind,
@@ -10,7 +10,7 @@ import {
 } from '@/utils/floatingUi'
 
 export default {
-  mounted(el, binding) {
+  mounted(el: ElementWithPopper, binding: DirectiveBinding) {
     const props = resolveDirectiveProps(binding, el)
     const tooltip = resolveActiveStatus(binding.value)
     const text = resolveContent(binding.value, el)
@@ -33,7 +33,7 @@ export default {
     resizeObserver.observe(el)
     toggleTooltip(el)
   },
-  beforeUnmount(el) {
+  beforeUnmount(el: ElementWithPopper) {
     unbind(el)
   }
 } satisfies Directive<ElementWithPopper>

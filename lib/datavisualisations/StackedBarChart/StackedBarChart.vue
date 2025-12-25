@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Timeout } from 'node:timers'
 import * as d3 from 'd3'
 import find from 'lodash/find'
 import get from 'lodash/get'
@@ -71,7 +70,7 @@ const emit = defineEmits<{
 }>()
 
 const highlightedKeys = ref(props.highlights)
-const highlightTimeout = ref<Timeout | undefined>(undefined)
+const highlightTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
 const isLoaded = ref(false)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
 
@@ -201,11 +200,21 @@ function barStyle(i: number | string, key: string) {
   return { width, backgroundColor }
 }
 
-function stackBarAndValue(i: number | string) {
+interface StackItem {
+  key: string
+  barEdge: number
+  barWidth: number
+  rowEdge: number
+  valueWidth: number
+  overflow: boolean
+  pushed: boolean
+}
+
+function stackBarAndValue(i: number | string): StackItem[] {
   if (!mounted.value) {
     return []
   }
-  const stack = discoveredKeys.value.map((key: string) => {
+  const stack: StackItem[] = discoveredKeys.value.map((key: string) => {
     const { bar, row, value } = queryBarAndValue(i as number, key)
     if (!bar || !row || !value) {
       throw new Error('Values not retrieved')
@@ -284,7 +293,7 @@ function formatXDatum(d: string) {
   return d3Formatter(d, props.xAxisTickFormat)
 }
 
-watch(() => props.highlights, (newHighlights) => {
+watch(() => props.highlights, (newHighlights: any[]) => {
   highlightedKeys.value = newHighlights
 })
 </script>

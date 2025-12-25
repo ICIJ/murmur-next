@@ -60,7 +60,7 @@ const classList = computed(() => {
 })
 
 function itemClassList(d: Datum) {
-  const id = d[props.categoryObjectsPath]
+  const id = d[props.categoryObjectsPath as Category] as string | number | undefined
   return {
     [`ordinal-legend__item--identifier-${kebabCase(d.label)}`]: true,
     'ordinal-legend__item--highlighted': id === props.highlight,

@@ -161,11 +161,9 @@ const Murmur = {
     return Murmur.i18n.global.mergeLocaleMessage(lang, message)
   },
   setLocale(lang: 'fr' | 'en') {
-    // @ts-expect-error not sure why typescript sees an error here
     return (Murmur.i18n.global.locale.value = lang)
   },
   getLocale() {
-    // @ts-expect-error not sure why typescript sees an error here
     return Murmur.i18n.global.locale.value
   },
   install(app: App<Element>, {

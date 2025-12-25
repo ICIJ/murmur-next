@@ -4,6 +4,12 @@ import type { Parent } from 'pym.js'
 
 import { injectAssets } from '@/utils/assets'
 
+declare global {
+  interface Window {
+    pym: { Parent: new (id: string, url: string, options: object) => Parent }
+  }
+}
+
 defineOptions({
   name: 'ResponsiveIframe'
 })

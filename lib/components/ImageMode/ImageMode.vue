@@ -37,15 +37,15 @@ const classList = computed(() => {
 })
 
 const sources = computed(() => {
-  return imageModeSources.value.map(source => source.dataset)
+  return imageModeSources.value.map((source: HTMLElement) => source.dataset)
 })
 
 const source = computed(() => {
-  return sources.value.find(source => source.colorMode === colorMode.value)
+  return sources.value.find((source: DOMStringMap) => source.colorMode === colorMode.value)
 })
 
 const defaultSource = computed(() => {
-  return sources.value.find(source => source.colorMode === props.defaultColorMode || !source.colorMode)
+  return sources.value.find((source: DOMStringMap) => source.colorMode === props.defaultColorMode || !source.colorMode)
 })
 
 const src = computed(() => {
