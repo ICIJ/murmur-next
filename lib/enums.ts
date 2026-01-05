@@ -21,6 +21,7 @@ export enum ICON_WEIGHT {
   fill = 'fill',
   duotone = 'duotone'
 }
+
 export enum SIZE {
   xs = 'xs',
   sm = 'sm',
@@ -29,6 +30,7 @@ export enum SIZE {
   xl = 'xl',
   xxl = 'xxl'
 }
+
 export enum VARIANT {
   action = 'action',
   primary = 'primary',
