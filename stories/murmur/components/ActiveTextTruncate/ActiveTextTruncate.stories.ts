@@ -14,8 +14,8 @@ export default {
   }
 }
 
-const longUrl =
-  'https://www.icij.org/investigations/luanda-leaks/banking-documents-reveal-consulting-giants-cash-windfall-under-angolan-billionaire-isabel-dos-santos/'
+const longUrl
+  = 'https://www.icij.org/investigations/luanda-leaks/banking-documents-reveal-consulting-giants-cash-windfall-under-angolan-billionaire-isabel-dos-santos/'
 
 export const Default = {
   args: { direction: 'ltr' },

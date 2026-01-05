@@ -12,8 +12,8 @@ export default {
   }
 }
 
-const embedUrl =
-  'https://projects.icij.org/the-implant-files/graphics/#/device-related-incidents-in-europe'
+const embedUrl
+  = 'https://projects.icij.org/the-implant-files/graphics/#/device-related-incidents-in-europe'
 
 export const Default = {
   args: {
