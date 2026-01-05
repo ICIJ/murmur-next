@@ -111,9 +111,9 @@ export const BigList = {
       const modelValue = ref<string[]>([])
 
       onBeforeMount(async () => {
-        const url =
-          'https://raw.githubusercontent.com/high54/Communes-France-JSON/master/france.json'
-        const cities = await fetch(url).then((data) => data.json())
+        const url
+          = 'https://raw.githubusercontent.com/high54/Communes-France-JSON/master/france.json'
+        const cities = await fetch(url).then(data => data.json())
         items.value = [
           ...new Set(
             cities.map((city: any) => city.Code_postal + ' - ' + city.Nom_commune).sort()
