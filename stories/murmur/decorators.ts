@@ -70,6 +70,7 @@ export const bgPolkaDecorator = () => ({
 export const bgFlexPolkaDecorator = () => ({
   template: '<div class="p-2 bg-polka d-flex"><story/></div>'
 })
+
 export const bgInlineFlexPolkaDecorator = () => ({
   template: '<div class="p-2 bg-polka d-inline-flex"><story/></div>'
 })
