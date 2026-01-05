@@ -172,7 +172,6 @@ export const SphericalProjection = {
     spherical: true,
     zoomable: true
   },
-  decorators: [() => ({ template: '<div class="bg-dark p-4"><story /></div>' })],
   render: (args: any) => ({
     components: { ChoroplethMap, ChoroplethMapAnnotation },
     setup: () => ({ args }),

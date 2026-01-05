@@ -2,6 +2,7 @@ import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
 import { StoryObj } from '@storybook/vue3-vite'
 import { geoOrthographic } from 'd3-geo'
 import { scaleSequential } from 'd3'
+import { bgPolkaDecorator } from '../../decorators'
 
 const offices = [
   { latitude: 48.859116, longitude: 2.331839, label: 'Paris, France' },
@@ -59,6 +60,7 @@ export default {
   title: 'Murmur/maps/ChoroplethMap/ChoroplethMapAnnotation',
   component: ChoroplethMapAnnotation,
   tags: ['autodocs'],
+  decorators: [bgPolkaDecorator],
   argTypes: {
     latitude: { control: 'number' },
     longitude: { control: 'number' },
@@ -109,34 +111,32 @@ export const Spherical: Story = {
       return { offices, geoOrthographic }
     },
     template: `
-      <div class="bg-light p-4">
-        <h4>ICIJ Offices</h4>
-        <p class="mb-4">A non-exhaustive list of ICIJ offices and operations.</p>
-        <ChoroplethMap
-          color="#faa"
-          outline-color="#000"
-          graticule-color="#eee"
-          graticule
-          outline
-          hide-legend
-          zoomable
-          spherical
-          :zoom-min="0.9"
-          :projection="geoOrthographic"
+      <h4>ICIJ Offices</h4>
+      <p class="mb-4">A non-exhaustive list of ICIJ offices and operations.</p>
+      <ChoroplethMap
+        color="#faa"
+        outline-color="#000"
+        graticule-color="#eee"
+        graticule
+        outline
+        hide-legend
+        zoomable
+        spherical
+        :zoom-min="0.9"
+        :projection="geoOrthographic"
+      >
+        <ChoroplethMapAnnotation :latitude="38.9072" :longitude="-77.0369" placement="top">
+          <p class="small mb-2">Washington DC (Headquarter)</p>
+        </ChoroplethMapAnnotation>
+        <ChoroplethMapAnnotation
+          v-for="(office, o) in offices"
+          :key="o"
+          :latitude="office.latitude"
+          :longitude="office.longitude"
         >
-          <ChoroplethMapAnnotation :latitude="38.9072" :longitude="-77.0369" placement="top">
-            <p class="small mb-2">Washington DC (Headquarter)</p>
-          </ChoroplethMapAnnotation>
-          <ChoroplethMapAnnotation
-            v-for="(office, o) in offices"
-            :key="o"
-            :latitude="office.latitude"
-            :longitude="office.longitude"
-          >
-            <span :title="office.label">●</span>
-          </ChoroplethMapAnnotation>
-        </ChoroplethMap>
-      </div>
+          <span :title="office.label">●</span>
+        </ChoroplethMapAnnotation>
+      </ChoroplethMap>
     `
   }),
   parameters: {
@@ -162,38 +162,36 @@ export const ParisSwimmingPools: Story = {
       }
     },
     template: `
-      <div class="bg-light p-4">
-        <h4>Paris Public Swimming Pools</h4>
-        <p class="mb-4">Only 6 are olympic-size swimming pools (50m).</p>
-        <ChoroplethMap
-          :data="swimmingPoolsByArrondissement"
-          :feature-color-scale="swimmingPoolsColorScale"
-          topojson-url="./assets/topojson/paris-arrondissements.json"
-          topojson-objects="arrondissements"
-          topojson-objects-path="properties.ar"
+      <h4>Paris Public Swimming Pools</h4>
+      <p class="mb-4">Only 6 are olympic-size swimming pools (50m).</p>
+      <ChoroplethMap
+        :data="swimmingPoolsByArrondissement"
+        :feature-color-scale="swimmingPoolsColorScale"
+        topojson-url="./assets/topojson/paris-arrondissements.json"
+        topojson-objects="arrondissements"
+        topojson-objects-path="properties.ar"
+      >
+        <ChoroplethMapAnnotation
+          v-for="(pool, i) in poolsRegular"
+          :key="'regular-' + i"
+          :latitude="pool.latitude"
+          :longitude="pool.longitude"
         >
-          <ChoroplethMapAnnotation
-            v-for="(pool, i) in poolsRegular"
-            :key="'regular-' + i"
-            :latitude="pool.latitude"
-            :longitude="pool.longitude"
-          >
-            <span :title="pool.name">●</span>
-          </ChoroplethMapAnnotation>
-          <ChoroplethMapAnnotation
-            v-for="(pool, i) in pools50m"
-            :key="'50m-' + i"
-            :latitude="pool.latitude"
-            :longitude="pool.longitude"
-            placement="topright"
-          >
-            <div class="ps-1 small text-start">
-              {{ pool.name.replace('Piscine ', '') }}<br />
-              <small>▼</small>
-            </div>
-          </ChoroplethMapAnnotation>
-        </ChoroplethMap>
-      </div>
+          <span :title="pool.name">●</span>
+        </ChoroplethMapAnnotation>
+        <ChoroplethMapAnnotation
+          v-for="(pool, i) in pools50m"
+          :key="'50m-' + i"
+          :latitude="pool.latitude"
+          :longitude="pool.longitude"
+          placement="topright"
+        >
+          <div class="ps-1 small text-start">
+            {{ pool.name.replace('Piscine ', '') }}<br />
+            <small>▼</small>
+          </div>
+        </ChoroplethMapAnnotation>
+      </ChoroplethMap>
     `
   }),
   parameters: {
@@ -217,22 +215,20 @@ export const BasicAnnotation: Story = {
       return { args, wineStockByDepartment }
     },
     template: `
-      <div class="bg-light p-4">
-        <ChoroplethMap
-          :data="wineStockByDepartment"
-          topojson-url="./assets/topojson/france-departments.json"
-          topojson-objects="departements"
-          topojson-objects-path="properties.code"
-          zoomable
-        >
-          <ChoroplethMapAnnotation v-bind="args">
-            <div class="text-center">
-              <strong>Bordeaux</strong><br />
-              <small>Wine Region</small>
-            </div>
-          </ChoroplethMapAnnotation>
-        </ChoroplethMap>
-      </div>
+      <ChoroplethMap
+        :data="wineStockByDepartment"
+        topojson-url="./assets/topojson/france-departments.json"
+        topojson-objects="departements"
+        topojson-objects-path="properties.code"
+        zoomable
+      >
+        <ChoroplethMapAnnotation v-bind="args">
+          <div class="text-center">
+            <strong>Bordeaux</strong><br />
+            <small>Wine Region</small>
+          </div>
+        </ChoroplethMapAnnotation>
+      </ChoroplethMap>
     `
   }),
   parameters: {
@@ -251,33 +247,31 @@ export const ScaleWithZoom: Story = {
       return { geoOrthographic }
     },
     template: `
-      <div class="bg-dark p-4">
-        <ChoroplethMap
-          :center="[33.435499, 35.167406]"
-          :projection="geoOrthographic"
-          :zoom-min="0.9"
-          color="#aaf"
-          outline-color="var(--bs-body-color)"
-          graticule-color="var(--bs-border-color-translucent)"
-          graticule
-          hide-legend
-          outline
-          spherical
-          zoomable
+      <ChoroplethMap
+        :center="[33.435499, 35.167406]"
+        :projection="geoOrthographic"
+        :zoom-min="0.9"
+        color="#aaf"
+        outline-color="var(--bs-body-color)"
+        graticule-color="var(--bs-border-color-translucent)"
+        graticule
+        hide-legend
+        outline
+        spherical
+        zoomable
+      >
+        <ChoroplethMapAnnotation
+          :latitude="35.167406"
+          :longitude="33.435499"
+          :height="15"
+          :width="15"
+          class="text-center"
+          drop-shadow="none"
+          scale
         >
-          <ChoroplethMapAnnotation
-            :latitude="35.167406"
-            :longitude="33.435499"
-            :height="15"
-            :width="15"
-            class="text-center"
-            drop-shadow="none"
-            scale
-          >
-            <div class="border border-warning" style="height: 15px; width: 15px"></div>
-          </ChoroplethMapAnnotation>
-        </ChoroplethMap>
-      </div>
+          <div class="border border-warning" style="height: 15px; width: 15px"></div>
+        </ChoroplethMapAnnotation>
+      </ChoroplethMap>
     `
   }),
   parameters: {
