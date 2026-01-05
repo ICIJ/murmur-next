@@ -1,6 +1,6 @@
 import { AccordionWrapper, AccordionStep } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
-import { bgStripedDecorator } from '../../decorators'
+import { bgPolkaDecorator } from '../../decorators'
 
 export default {
   title: 'Murmur/components/Accordion/AccordionWrapper',
@@ -23,7 +23,7 @@ export const Default = {
     step: stepsEnum.MAILVELOPE,
     class: 'p-2'
   },
-  decorators: [bgStripedDecorator],
+  decorators: [bgPolkaDecorator],
   render: (args: any) => ({
     components: { AccordionWrapper, AccordionStep, BButton },
     setup: () => ({ stepsEnum, args }),

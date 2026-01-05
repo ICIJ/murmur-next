@@ -1,11 +1,11 @@
 import { ActiveTextTruncate } from '@/components'
-import { bgStripedDecorator } from '../../decorators'
+import { bgFlexPolkaDecorator } from '../../decorators'
 
 export default {
   title: 'Murmur/components/ActiveTextTruncate/ActiveTextTruncate',
   component: ActiveTextTruncate,
   tags: ['autodocs'],
-  decorators: [bgStripedDecorator],
+  decorators: [bgFlexPolkaDecorator],
   argTypes: {
     direction: { control: 'inline-radio', options: ['ltr', 'rtl'] },
     ppms: { control: 'number' },
