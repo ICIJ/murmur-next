@@ -257,8 +257,8 @@ export const ScaleWithZoom: Story = {
           :projection="geoOrthographic"
           :zoom-min="0.9"
           color="#aaf"
-          outline-color="#fff"
-          graticule-color="#333"
+          outline-color="var(--bs-body-color)"
+          graticule-color="var(--bs-border-color-translucent)"
           graticule
           hide-legend
           outline
