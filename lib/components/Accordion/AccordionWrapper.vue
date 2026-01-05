@@ -1,6 +1,6 @@
 <template>
   <div class="accordion-wrapper">
-    <div class="accordion-wrapper__content ms-5">
+    <div class="accordion-wrapper__content">
       <!-- @slot Content with all the steps declarations -->
       <slot />
     </div>
