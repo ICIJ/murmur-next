@@ -10,9 +10,10 @@ import {
 import { clamp, round } from 'lodash'
 
 import type { ButtonVariant } from 'bootstrap-vue-next'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
-import { IconPhosphor, IconWeight } from '@/types'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import IPhCaretLeftBold from '~icons/ph/caret-left-bold'
+import IPhCaretRightBold from '~icons/ph/caret-right-bold'
+import type { Component } from 'vue'
 
 interface DragDropValue { detail: number }
 
@@ -129,10 +130,8 @@ const props = withDefaults(defineProps<{
    * true, the component will have rounded corners.
    */
   rounded?: boolean
-  boundStartIcon?: string | IconPhosphor
-  boundStartIconWeight?: IconWeight
-  boundEndIcon?: string | IconPhosphor
-  boundEndIconWeight?: IconWeight
+  boundStartIcon?: string | Component
+  boundEndIcon?: string | Component
 }>(), {
   hover: false,
   startOffset: 0,
@@ -142,10 +141,8 @@ const props = withDefaults(defineProps<{
   minDistance: 0.01,
   variant: 'primary',
   rounded: false,
-  boundStartIcon: () => PhCaretLeft,
-  boundStartIconWeight: 'bold',
-  boundEndIcon: () => PhCaretRight,
-  boundEndIconWeight: 'bold'
+  boundStartIcon: () => IPhCaretLeftBold,
+  boundEndIcon: () => IPhCaretRightBold
 })
 
 const emit = defineEmits<{
@@ -304,10 +301,9 @@ defineExpose({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <phosphor-icon
-          :name="boundStartIcon"
-          :weight="boundStartIconWeight"
-        />
+        <app-icon>
+          <component :is="boundStartIcon" />
+        </app-icon>
       </button>
       <button
         v-draggable
@@ -317,10 +313,9 @@ defineExpose({
         @started="toggleResizing(true)"
         @ended="toggleResizing(false)"
       >
-        <phosphor-icon
-          :name="boundEndIcon"
-          :weight="boundEndIconWeight"
-        />
+        <app-icon>
+          <component :is="boundEndIcon" />
+        </app-icon>
       </button>
     </div>
   </div>
