@@ -91,9 +91,13 @@ export { default as PaginationTiny } from './components/Pagination/PaginationTin
 /** @deprecated Use PaginationTiny instead */
 export { default as TinyPagination } from './components/Pagination/PaginationTiny.vue'
 
-// PhosphorIcon
-export { default as PhosphorIcon } from './components/PhosphorIcon/PhosphorIcon.vue'
-export { default as PhosphorIconLayers } from './components/PhosphorIcon/PhosphorIconLayers.vue'
+// AppIcon
+export { default as AppIcon } from './components/AppIcon/AppIcon.vue'
+export { default as AppIconLayers } from './components/AppIcon/AppIconLayers.vue'
+/** @deprecated Use AppIcon instead */
+export { default as PhosphorIcon } from './components/AppIcon/AppIcon.vue'
+/** @deprecated Use AppIconLayers instead */
+export { default as PhosphorIconLayers } from './components/AppIcon/AppIconLayers.vue'
 
 // ResponsiveIframe
 export { default as ResponsiveIframe } from './components/ResponsiveIframe/ResponsiveIframe.vue'

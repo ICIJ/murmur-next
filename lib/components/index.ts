@@ -83,9 +83,13 @@ export { default as PaginationTiny } from './Pagination/PaginationTiny.vue'
 /** @deprecated Use PaginationTiny instead */
 export { default as TinyPagination } from './Pagination/PaginationTiny.vue'
 
-// PhosphorIcon
-export { default as PhosphorIcon } from './PhosphorIcon/PhosphorIcon.vue'
-export { default as PhosphorIconLayers } from './PhosphorIcon/PhosphorIconLayers.vue'
+// AppIcon
+export { default as AppIcon } from './AppIcon/AppIcon.vue'
+export { default as AppIconLayers } from './AppIcon/AppIconLayers.vue'
+/** @deprecated Use AppIcon instead */
+export { default as PhosphorIcon } from './AppIcon/AppIcon.vue'
+/** @deprecated Use AppIconLayers instead */
+export { default as PhosphorIconLayers } from './AppIcon/AppIconLayers.vue'
 
 // ResponsiveIframe
 export { default as ResponsiveIframe } from './ResponsiveIframe/ResponsiveIframe.vue'
