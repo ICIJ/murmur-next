@@ -18,8 +18,10 @@ import {
   PropType
 } from 'vue'
 
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import { PhCheckSquare, PhSquare } from '@phosphor-icons/vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import IPhCheckSquare from '~icons/ph/check-square'
+import IPhSquare from '~icons/ph/square'
+import type { Component } from 'vue'
 
 const KEY_ESC_CODE = 27
 const KEY_UP_CODE = 38
@@ -187,8 +189,8 @@ watch(activeItems, (itemOrItems: unknown[]) => {
   modelValue.value = props.multiple ? itemOrItems : itemOrItems[0]
 }, { deep: true })
 
-function indexIcon(item: Item) {
-  return itemActivated(item) ? PhCheckSquare : PhSquare
+function indexIcon(item: Item): Component {
+  return itemActivated(item) ? IPhCheckSquare : IPhSquare
 }
 
 function itemActivated(item: Item) {
@@ -381,10 +383,9 @@ function serialize(item: Item) {
             v-if="multiple"
             class="selectable-dropdown__item__check"
           >
-            <phosphor-icon
-              :name="indexIcon(item)"
-              class="me-2"
-            />
+            <app-icon class="me-2">
+              <component :is="indexIcon(item)" />
+            </app-icon>
           </div>
           <div
             class="flex-grow-1 text-truncate selectable-dropdown__item__label"

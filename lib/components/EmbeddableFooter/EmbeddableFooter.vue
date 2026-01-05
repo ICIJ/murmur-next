@@ -32,11 +32,9 @@
         :class="{ active: showShareOptions }"
         @click="showShareOptions = !showShareOptions"
       >
-        <phosphor-icon
-          :name="PhShareNetwork"
-          fill
-          size="1.2em"
-        />
+        <app-icon size="1.2em">
+          <i-ph-share-network-fill />
+        </app-icon>
         <span class="visually-hidden">{{ $t('embeddable-footer.share') }}</span>
       </button>
     </slot>
@@ -55,10 +53,9 @@ import { ref, onMounted } from 'vue'
 
 import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand/Brand.vue'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
 import SharingOptions from '@/components/SharingOptions/SharingOptions.vue'
 import config from '@/config'
-import { PhShareNetwork } from '@phosphor-icons/vue'
 
 /**
  * EmbeddableFooter

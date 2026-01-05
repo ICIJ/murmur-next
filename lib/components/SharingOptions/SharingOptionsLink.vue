@@ -78,9 +78,20 @@ export const networks: SharingPlatforms = {
 import querystring from 'querystring-es3'
 import reduce from 'lodash/reduce'
 import get from 'lodash/get'
-import { computed, reactive } from 'vue'
+import { computed, reactive, type Component } from 'vue'
 
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import IPhEnvelopeFill from '~icons/ph/envelope-fill'
+import IPhFacebookLogoFill from '~icons/ph/facebook-logo-fill'
+import IPhLinkedinLogoFill from '~icons/ph/linkedin-logo-fill'
+import IPhXLogoFill from '~icons/ph/x-logo-fill'
+
+const iconMap: Record<string, Component> = {
+  'envelope': IPhEnvelopeFill,
+  'facebook-logo': IPhFacebookLogoFill,
+  'linkedin-logo': IPhLinkedinLogoFill,
+  'x-logo': IPhXLogoFill
+}
 
 defineOptions({
   name: 'SharingOptionsLink'
@@ -162,8 +173,12 @@ const args = computed((): Record<string, string> => {
   return get(networks, [props.network, 'args'], {})
 })
 
-const icon = computed((): string | null => {
+const iconName = computed((): string | null => {
   return get(networks, [props.network, 'icon'], null)
+})
+
+const iconComponent = computed((): Component | null => {
+  return iconName.value ? iconMap[iconName.value] ?? null : null
 })
 
 const query = computed((): Record<string, string> => {
@@ -250,11 +265,9 @@ defineExpose({
     @click="handleClick"
   >
     <slot>
-      <phosphor-icon
-        v-if="!noIcon"
-        :name="icon"
-        weight="fill"
-      />
+      <app-icon v-if="!noIcon && iconComponent">
+        <component :is="iconComponent" />
+      </app-icon>
       <span class="visually-hidden">{{ name }}</span>
     </slot>
   </component>

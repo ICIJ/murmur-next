@@ -4,7 +4,7 @@
       class="btn btn-link text-secondary follow-us__close"
       @click="closeSignupPopover"
     >
-      <phosphor-icon :name="PhX" />
+      <app-icon><i-ph-x /></app-icon>
     </button>
     <sign-up-form class="p-3" />
     <div class="px-3 pb-1 text-uppercase text-muted fw-bold">
@@ -18,11 +18,9 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Twitter"
         >
-          <phosphor-icon
-            :name="PhXLogo"
-            size="1.5em"
-            fill
-          />
+          <app-icon size="1.5em">
+            <i-ph-x-logo-fill />
+          </app-icon>
           <span class="visually-hidden">Twitter</span>
         </a>
       </div>
@@ -33,11 +31,9 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Facebook"
         >
-          <phosphor-icon
-            :name="PhFacebookLogo"
-            size="1.5em"
-            fill
-          />
+          <app-icon size="1.5em">
+            <i-ph-facebook-logo-fill />
+          </app-icon>
           <span class="visually-hidden">Facebook</span>
         </a>
       </div>
@@ -48,11 +44,9 @@
           class="text-primary border border-primary rounded-circle bg-white follow-us__social-btn"
           title="Linkedin"
         >
-          <phosphor-icon
-            :name="PhLinkedinLogo"
-            size="1.5em"
-            fill
-          />
+          <app-icon size="1.5em">
+            <i-ph-linkedin-logo-fill />
+          </app-icon>
           <span class="visually-hidden">Linkedin</span>
         </a>
       </div>
@@ -63,8 +57,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import SignUpForm from '@/components/Form/FormSignUp.vue'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import { PhFacebookLogo, PhLinkedinLogo, PhX, PhXLogo } from '@phosphor-icons/vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
 
 /**
  * FollowUsPopover

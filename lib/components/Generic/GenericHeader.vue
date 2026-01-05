@@ -39,11 +39,12 @@
         aria-label="Toggle navigation"
         @click="toggleNavbar"
       >
-        <phosphor-icon
-          :name="PhList"
+        <app-icon
           size="2rem"
           class="text-primary"
-        />
+        >
+          <i-ph-list />
+        </app-icon>
       </button>
       <div
         class="navbar-collapse"
@@ -108,14 +109,13 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { BPopover } from 'bootstrap-vue-next'
-import { PhList } from '@phosphor-icons/vue'
 import Headroom from 'vue-headroom/src/headroom.vue'
 import { computed, ref } from 'vue'
 
 import config from '@/config'
 import BrandExpansion from '@/components/Brand/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover/FollowUsPopover.vue'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
 import { BrandMode } from '@/enums'
 
 /**

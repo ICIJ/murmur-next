@@ -9,12 +9,11 @@ import {
 } from 'vue'
 
 import EmbedForm from '@/components/Form/FormEmbed.vue'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
 import SharingOptionsLink from '@/components/SharingOptions/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'
 import { BModal, useModal } from 'bootstrap-vue-next'
-import { PhCode } from '@phosphor-icons/vue'
 
 interface MetaValuesMap {
   url: string
@@ -193,7 +192,7 @@ function defaultValueFor(key: string, metaSelector?: string): string {
       class="sharing-options__link sharing-options__link--embed"
       @click="show"
     >
-      <phosphor-icon :name="PhCode" />
+      <app-icon><i-ph-code /></app-icon>
       <span class="visually-hidden">Embed</span>
     </a>
     <b-modal

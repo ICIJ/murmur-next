@@ -4,8 +4,9 @@ import { useI18n } from 'vue-i18n'
 
 import { BPagination, Size } from 'bootstrap-vue-next'
 
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import IPhCaretLeft from '~icons/ph/caret-left'
+import IPhCaretRight from '~icons/ph/caret-right'
 import { SIZE } from '@/enums'
 
 /**
@@ -139,10 +140,9 @@ function updateModelValue(value: string | number): void {
               name="prev-text"
               v-bind="{ disabled, index, page }"
             >
-              <phosphor-icon
-                :name="PhCaretLeft"
-                size="0.75em"
-              />
+              <app-icon size="0.75em">
+                <i-ph-caret-left />
+              </app-icon>
             </slot>
           </template>
           <template #next-text="{ disabled, index, page }">
@@ -151,10 +151,9 @@ function updateModelValue(value: string | number): void {
               name="next-text"
               v-bind="{ disabled, index, page }"
             >
-              <phosphor-icon
-                :name="PhCaretRight"
-                size="0.75em"
-              />
+              <app-icon size="0.75em">
+                <i-ph-caret-right />
+              </app-icon>
             </slot>
           </template>
           <template #page="{ active, content, disabled, index, page }">
