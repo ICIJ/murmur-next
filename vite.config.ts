@@ -6,12 +6,12 @@ import DTS from 'vite-plugin-dts'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 
 // Project imports
 import Delete from './plugins/plugin-delete'
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
-import { PhosphorVuePreset } from './bin/presets'
-import { PhosphorVueResolver } from './bin/resolvers'
 export default defineConfig({
   base: '/',
   assetsInclude: ['/sb-preview/**'],
@@ -51,28 +51,43 @@ export default defineConfig({
       include: resolve(__dirname, 'lib/locales')
     }),
     /**
+     * The Icons plugin from unplugin-icons provides on-demand icon loading
+     * from Iconify icon sets (e.g., Phosphor via @iconify-json/ph).
+     */
+    Icons({
+      compiler: 'vue3',
+      autoInstall: false
+    }),
+    /**
      * The "Components" plugin resolvers automatically import components in Vue
-     * templates. For PhosphorVueResolver we use a homemade resolver
-     * that simply imports icons (example: `<ph-plus>`).
+     * templates. IconsResolver enables auto-importing icons with the "i-" prefix
+     * (example: `<i-ph-caret-left />`).
      */
     Components({
       dts: false,
       dirs: [],
       resolvers: [
         BootstrapVueNextResolver(),
-        PhosphorVueResolver()
+        IconsResolver({
+          prefix: 'i',
+          enabledCollections: ['ph']
+        })
       ]
     }),
     /**
      * The "AutoImport" plugin offers a mechanism similar to the "Components" plugin
-     * but it targets JavaScript variables and references. This allows importing components
-     * directly in `<script setup>` or in Vue template refs (example: `<component :is="PhPlus" />`)
+     * but it targets JavaScript variables and references.
      */
     AutoImport({
       dts: false,
       vueTemplate: true,
-      imports: [PhosphorVuePreset()],
-      resolvers: [PhosphorVueResolver()]
+      imports: [],
+      resolvers: [
+        IconsResolver({
+          prefix: 'i',
+          enabledCollections: ['ph']
+        })
+      ]
     })
   ],
   resolve: {
