@@ -1,29 +1,20 @@
 import { GenericHeader } from '@/components'
-import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
   title: 'Murmur/components/Generic/GenericHeader',
   component: GenericHeader,
   tags: ['autodocs'],
   argTypes: {
-    brandOptions: { type: 'select' }
+    brandOptions: { control: 'select' }
   }
 }
 
-type Story = StoryObj<typeof GenericHeader>
-const Template: Story = (args: any) => ({
-  components: { GenericHeader },
-  setup() {
-    return { args }
-  },
-  template: '<GenericHeader v-bind="args" ></GenericHeader>'
-})
+export const Default = {
+  args: {},
+  decorators: [() => ({ template: '<div style="height: 1800px"><story/></div>' })],
+  parameters: { layout: 'fullscreen' }
+}
 
-export const Default = Template.bind({})
-Default.args = {}
-Default.decorators = [
-  () => ({ template: '<div style="height: 1800px"><story/></div>' })
-]
-Default.parameters = { layout: 'fullscreen' }
-export const NoHeadroom = Template.bind({})
-NoHeadroom.args = { noHeadroom: true, position: 'relative' }
+export const NoHeadroom = {
+  args: { noHeadroom: true, position: 'relative' }
+}
