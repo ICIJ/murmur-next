@@ -2,6 +2,7 @@ import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
 import { scaleThreshold } from 'd3'
 import { geoOrthographic } from 'd3-geo'
 import { motorVehiclesPer1000people, wineStockByDepartment } from '../fixtures'
+import { bgPolkaDecorator } from '../../decorators'
 
 export default {
   title: 'Murmur/maps/ChoroplethMap/ChoroplethMap',
@@ -14,7 +15,7 @@ export default {
     clickable: { control: 'boolean' },
     hideLegend: { control: 'boolean' }
   },
-  decorators: [() => ({ template: '<div class="bg-light p-4"><story /></div>' })],
+  decorators: [bgPolkaDecorator],
   parameters: {
     docs: {
       description: {
