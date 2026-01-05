@@ -9,8 +9,8 @@ export default {
   argTypes: {}
 }
 
-const dataUrl =
-  'https://gist.githubusercontent.com/pirhoo/259a1a5159db4a665d0c043fac71beef/raw/e74087b06cd12be2b2d3a8ca995730e38719cd4b/colums-incidents.json'
+const dataUrl
+  = 'https://gist.githubusercontent.com/pirhoo/259a1a5159db4a665d0c043fac71beef/raw/e74087b06cd12be2b2d3a8ca995730e38719cd4b/colums-incidents.json'
 
 const discreteData = [
   { leak: 'Paradise Papers', size: 1.4 * 1e3 },
@@ -82,10 +82,10 @@ export const DynamicData = {
   render: () => ({
     components: { ColumnChart },
     setup() {
-      const data = ref<{ date: string; value: number }[]>([])
+      const data = ref<{ date: string, value: number }[]>([])
 
       function generateData() {
-        const newData: { date: string; value: number }[] = []
+        const newData: { date: string, value: number }[] = []
         const startYear = 1995 + ~~(Math.random() * 10)
         const groups = ~~(5 + Math.random() * 15)
         for (let g = 0; g < groups; g++) {
