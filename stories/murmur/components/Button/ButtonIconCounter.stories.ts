@@ -3,7 +3,6 @@ import { variantsArgType } from '~storybook/utils'
 import { VARIANT } from '@/enums'
 
 export default {
-  components: { ButtonIconCounter },
   title: 'Murmur/components/Button/ButtonIconCounter',
   component: ButtonIconCounter,
   tags: ['autodocs'],
