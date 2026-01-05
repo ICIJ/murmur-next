@@ -2,8 +2,6 @@ import globals from "globals"
 import icijeslint from "@icij/eslint-config"
 import storybook from 'eslint-plugin-storybook'
 
-import { globals as iconsGlobals } from "./bin/icons.js"
-
 export default [
   {
     ignores: ["**/*.config.js", "public", ".storybook"]
@@ -49,7 +47,6 @@ export default [
   {
     languageOptions: {
       globals: {
-        ...iconsGlobals,
         process: true
       }
     },
