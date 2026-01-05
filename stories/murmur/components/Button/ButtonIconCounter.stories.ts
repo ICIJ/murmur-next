@@ -13,7 +13,7 @@ export default {
     variant: variantsArgType
   },
   args: {
-    variant: VARIANT.SECONDARY,
+    variant: VARIANT.secondary,
     counter: 123
   }
 }

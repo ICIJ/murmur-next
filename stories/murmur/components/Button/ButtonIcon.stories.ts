@@ -65,7 +65,7 @@ export const IconLeft = {
     `
   }),
   args: {
-    variant: VARIANT.PRIMARY,
+    variant: VARIANT.primary,
     size: 'md'
   }
 }
@@ -86,7 +86,7 @@ export const IconBothSide = {
     `
   }),
   args: {
-    variant: VARIANT.PRIMARY,
+    variant: VARIANT.primary,
     size: 'md'
   }
 }
@@ -104,7 +104,7 @@ export const IconRight = {
     `
   }),
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md'
   }
 }
@@ -122,7 +122,7 @@ export const WithCounter = {
     `
   }),
   args: {
-    variant: VARIANT.OUTLINE_PRIMARY,
+    variant: VARIANT.outline_primary,
     size: 'md'
   }
 }
@@ -140,7 +140,7 @@ export const HideLabel = {
     `
   }),
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md'
   }
 }
@@ -158,7 +158,7 @@ export const Square = {
     `
   }),
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md',
     pill: false
   }
@@ -177,7 +177,7 @@ export const SquareWithCounter = {
     `
   }),
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md',
     pill: false
   }
@@ -196,14 +196,14 @@ export const SquarePill = {
     `
   }),
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md'
   }
 }
 
 export const Truncated = {
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md',
     truncate: true
   },
@@ -224,7 +224,7 @@ export const Truncated = {
 
 export const Loading = {
   args: {
-    variant: VARIANT.ACTION,
+    variant: VARIANT.action,
     size: 'md',
     pill: true
   },
@@ -248,7 +248,7 @@ export const Loading = {
 
 export const LoadingSpinner = {
   args: {
-    variant: VARIANT.SECONDARY,
+    variant: VARIANT.secondary,
     size: 'md',
     pill: true
   },
