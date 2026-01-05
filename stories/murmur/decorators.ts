@@ -63,9 +63,17 @@ export const toggleDecorator = (_storyFn: any, context: any) => ({
     </div>`
 })
 
-export const bgStripedDecorator = () => ({
-  template: '<div class="p-2 bg-striped"><story/></div>'
+export const bgPolkaDecorator = () => ({
+  template: '<div class="p-2 bg-polka"><story/></div>'
 })
+
+export const bgFlexPolkaDecorator = () => ({
+  template: '<div class="p-2 bg-polka d-flex"><story/></div>'
+})
+export const bgInlineFlexPolkaDecorator = () => ({
+  template: '<div class="p-2 bg-polka d-inline-flex"><story/></div>'
+})
+
 export const leakSizeDecorator = () => ({
   template: `
   <h4>Leaks size</h4>
@@ -85,6 +93,7 @@ export const icijOfficesDecorator = () => ({
     <story/>
  `
 })
+
 export const choroplethDecorator = () => ({
   components: [ChoroplethMap],
   decorators: [icijOfficesDecorator],
