@@ -4,22 +4,17 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue-next/dist/bootstrap-vue-next';
 
-.bg-striped {
-  background: repeating-linear-gradient(45deg,
-      #dfdddd,
-      #dfdddd 10px,
-      #cfcccc 10px,
-      #cfcccc 20px);
-  width: 500px;
+.bg-polka {
+  background-color: #e6e6e6;
+  background-image: radial-gradient(#000000 0.5px, #e6e6e6 0.5px);
+  background-size: 10px 10px;
 }
 
 @include color-mode(dark) {
-  .bg-striped {
-    background: repeating-linear-gradient(45deg,
-        #222,
-        #333 10px,
-        #444 10px,
-        #444 20px);
+  .bg-polka {
+    background-color: #333;
+    background-image: radial-gradient(#eee 0.5px, #333 0.5px);
+    background-size: 10px 10px;
   }
 }
 
