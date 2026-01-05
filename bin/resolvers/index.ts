@@ -1,1 +1,1 @@
-export { PhosphorVueResolver } from './phosphor-vue'
+// Resolvers exports
