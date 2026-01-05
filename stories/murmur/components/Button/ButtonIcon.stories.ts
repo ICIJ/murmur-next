@@ -38,7 +38,7 @@ export default {
     counterVariant: variantsArgType
   },
   args: {
-    variant: 'primary',
+    variant: VARIANT.primary,
     size: 'md',
     pill: false,
     loading: false
@@ -104,7 +104,7 @@ export const IconRight = {
     `
   }),
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md'
   }
 }
@@ -140,7 +140,7 @@ export const HideLabel = {
     `
   }),
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md'
   }
 }
@@ -158,7 +158,7 @@ export const Square = {
     `
   }),
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md',
     pill: false
   }
@@ -177,7 +177,7 @@ export const SquareWithCounter = {
     `
   }),
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md',
     pill: false
   }
@@ -196,14 +196,14 @@ export const SquarePill = {
     `
   }),
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md'
   }
 }
 
 export const Truncated = {
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md',
     truncate: true
   },
@@ -224,7 +224,7 @@ export const Truncated = {
 
 export const Loading = {
   args: {
-    variant: VARIANT.action,
+    variant: VARIANT.primary,
     size: 'md',
     pill: true
   },
