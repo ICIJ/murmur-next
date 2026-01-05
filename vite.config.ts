@@ -89,7 +89,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern',
-        silenceDeprecations: ['legacy-js-api', 'import', 'mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
+        silenceDeprecations: ['legacy-js-api', 'import', 'color-functions', 'global-builtin', 'if-function'],
         additionalData: `
             @use 'sass:math';
             @use 'sass:color';
