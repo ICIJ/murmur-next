@@ -118,6 +118,22 @@ export interface ButtonIconProps {
   counterVariant?: TextColorVariant
   counterStyle?: string | object
 }
+export interface AppIconProps {
+  size?: IconSize | string
+  scale?: number
+  variant?: TextColorVariant
+  hoverVariant?: TextColorVariant
+  beat?: boolean
+  beatDuration?: string
+  fade?: boolean
+  fadeDuration?: string
+  spin?: boolean
+  spinReverse?: boolean
+  spinDuration?: string
+  hover?: boolean
+}
+
+/** @deprecated Use AppIconProps instead */
 export interface PhosphorIconProps {
   name: string | string[] | IconPhosphor
   size?: IconSize | string
