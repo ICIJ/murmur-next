@@ -1,4 +1,3 @@
-import { StoryObj } from '@storybook/vue3-vite'
 import { buttonSizesArgType } from '~storybook/utils'
 import { Pagination } from '@/components'
 import { SIZE } from '@/enums'
@@ -8,48 +7,53 @@ export default {
   component: Pagination,
   tags: ['autodocs'],
   argTypes: {
-    modelValue: { type: 'number', min: 0 },
-    perPage: { type: 'number', min: 0 },
-    totalRows: { type: 'number', min: 0 },
-    pages: { type: 'number', min: 0 },
+    modelValue: { control: 'number' },
+    perPage: { control: 'number' },
+    totalRows: { control: 'number' },
+    pages: { control: 'number' },
     size: buttonSizesArgType
+  },
+  args: {
+    modelValue: 1,
+    perPage: 10,
+    totalRows: 200
   }
 }
 
-type Story = StoryObj<typeof Pagination>
-const Template: Story = (args: any) => ({
-  components: { Pagination },
-  setup() {
-    return { args }
-  },
-  template: '<Pagination v-bind="args" />'
-})
-
-export const Default = Template.bind({})
-Default.args = { modelValue: 1, perPage: 10, totalRows: 200 }
-export const Small = Template.bind({})
-Small.args = { modelValue: 1, perPage: 10, totalRows: 200, size: SIZE.sm }
-export const Medium = Template.bind({})
-Medium.args = { modelValue: 1, perPage: 10, totalRows: 200, size: 'md' }
-export const Large = Template.bind({})
-Large.args = { modelValue: 1, perPage: 10, totalRows: 200, size: SIZE.lg }
-export const Compact = Template.bind({})
-Compact.args = { modelValue: 1, perPage: 10, totalRows: 200, compact: true }
-export const Pills = Template.bind({})
-Pills.args = { modelValue: 1, perPage: 10, totalRows: 200, pills: true }
-export const PillsSmall = Template.bind({})
-PillsSmall.args = {
-  modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
-  pills: true,
-  size: SIZE.sm
+export const Default = {
+  args: {}
 }
-export const PillsCompact = Template.bind({})
-PillsCompact.args = {
-  modelValue: 1,
-  perPage: 10,
-  totalRows: 200,
-  pills: true,
-  compact: true
+
+export const Small = {
+  args: { size: SIZE.sm }
+}
+
+export const Medium = {
+  args: { size: 'md' }
+}
+
+export const Large = {
+  args: { size: SIZE.lg }
+}
+
+export const Compact = {
+  args: { compact: true }
+}
+
+export const Pills = {
+  args: { pills: true }
+}
+
+export const PillsSmall = {
+  args: {
+    pills: true,
+    size: SIZE.sm
+  }
+}
+
+export const PillsCompact = {
+  args: {
+    pills: true,
+    compact: true
+  }
 }
