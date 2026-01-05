@@ -1,5 +1,4 @@
 import { SharingOptionsLink } from '@/components'
-import { StoryObj } from '@storybook/vue3-vite'
 
 export default {
   title: 'Murmur/components/SharingOptions/SharingOptionsLink',
@@ -9,33 +8,16 @@ export default {
     network: {
       control: 'select',
       options: ['twitter', 'facebook', 'linkedin', 'email']
-    },
-    default: {
-      control: 'string'
     }
-  },
-  args: {
-    default: null
   }
 }
 
-type Story = StoryObj<typeof SharingOptionsLink>
-
-const Template: Story = (args: any) => ({
-  components: { SharingOptionsLink },
-  setup() {
-    return { args }
-  },
-  template:
-    '<sharing-options-link v-bind="args" />'
-})
-
-export const Default = Template.bind({})
-
-Default.args = {
-  network: 'twitter',
-  class: 'btn btn-outline-primary mx-1',
-  url: 'https://www.icij.org'
+export const Default = {
+  args: {
+    network: 'twitter',
+    class: 'btn btn-outline-primary mx-1',
+    url: 'https://www.icij.org'
+  }
 }
 
 export const CustomSlot = {
@@ -43,15 +25,12 @@ export const CustomSlot = {
     network: 'twitter',
     class: 'btn btn-outline-primary mx-1',
     url: 'https://www.icij.org',
-    noIcon: true,
-    default: 'Share twitter'
+    noIcon: true
   },
-  render: args => ({
+  render: (args: any) => ({
     components: { SharingOptionsLink },
-    setup() {
-      return { args }
-    },
-    template: '<sharing-options-link v-bind="args">{{args.default}}</sharing-options-link>'
+    setup: () => ({ args }),
+    template: '<SharingOptionsLink v-bind="args">Share twitter</SharingOptionsLink>'
   })
 }
 
@@ -62,14 +41,11 @@ export const CustomTagAndSlot = {
     class: 'btn btn-warning',
     url: 'https://www.icij.org',
     noIcon: true,
-    tag: 'button',
-    default: 'Twitter Button'
+    tag: 'button'
   },
-  render: args => ({
+  render: (args: any) => ({
     components: { SharingOptionsLink },
-    setup() {
-      return { args }
-    },
-    template: '<sharing-options-link v-bind="args">{{args.default}}</sharing-options-link>'
+    setup: () => ({ args }),
+    template: '<SharingOptionsLink v-bind="args">Twitter Button</SharingOptionsLink>'
   })
 }

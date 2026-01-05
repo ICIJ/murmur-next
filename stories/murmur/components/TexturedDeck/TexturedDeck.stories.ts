@@ -1,7 +1,5 @@
-import { TexturedDeck } from '@/components'
-import { StoryObj } from '@storybook/vue3-vite'
+import { TexturedDeck, Brand } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
-import { Brand } from '@/components'
 
 export default {
   title: 'Murmur/components/TexturedDeck/TexturedDeck',
@@ -10,79 +8,100 @@ export default {
   argTypes: {
     modelValue: {
       control: 'select',
-      options: ['brick', 'crack', 'rock', 'sand']
+      options: ['brick', 'crack', 'rock', 'sand', 'carbon']
     },
     size: {
       control: 'select',
-      options: ['cover', 'contain', 'auto', '50%', '50%', 'auto']
+      options: ['cover', 'contain', 'auto', '50%']
     }
   }
 }
 
-type Story = StoryObj<typeof TexturedDeck>
-const Template: Story = (args: any) => ({
-  components: { TexturedDeck },
-  setup() {
-    return { args }
-  },
-  template: `<TexturedDeck class="p-5 m-4" v-bind="args" >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    </TexturedDeck>`
-})
+const loremText =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 
-export const Default = Template.bind({})
-Default.args = {}
-export const Black = Template.bind({})
-Black.args = {
-  black: true
+const shortLorem =
+  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+
+export const Default = {
+  args: {},
+  render: (args: any) => ({
+    components: { TexturedDeck },
+    setup: () => ({ args, loremText }),
+    template: '<TexturedDeck class="p-5 m-4" v-bind="args">{{ loremText }}</TexturedDeck>'
+  })
 }
 
-export const BrickDonate = (args: any) => ({
-  components: { TexturedDeck, BButton },
-  setup() {
-    return { args }
-  },
-  template: `<textured-deck class="p-5 m-4 row no-gutters align-items-center" v-bind="args">
-        <div class="col">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </div>
+export const Black = {
+  args: { black: true },
+  render: (args: any) => ({
+    components: { TexturedDeck },
+    setup: () => ({ args, loremText }),
+    template: '<TexturedDeck class="p-5 m-4" v-bind="args">{{ loremText }}</TexturedDeck>'
+  })
+}
+
+export const BrickDonate = {
+  args: { modelValue: 'brick' },
+  render: (args: any) => ({
+    components: { TexturedDeck, BButton },
+    setup: () => ({ args, shortLorem }),
+    template: `
+      <TexturedDeck class="p-5 m-4 row no-gutters align-items-center" v-bind="args">
+        <div class="col">{{ shortLorem }}</div>
         <div class="col-4 text-center">
-            <b-button variant="primary" class="text-dark">
-                Donate now
-            </b-button>
+          <BButton variant="primary" class="text-dark">Donate now</BButton>
         </div>
-    </textured-deck>`
-})
+      </TexturedDeck>
+    `
+  })
+}
 
-BrickDonate.args = {
-  modelValue: 'brick'
+export const CrackBrand = {
+  args: { modelValue: 'crack' },
+  render: (args: any) => ({
+    components: { TexturedDeck, Brand },
+    setup: () => ({ args, shortLorem }),
+    template: `
+      <TexturedDeck class="p-5 m-4 d-flex align-items-center" v-bind="args">
+        <Brand class="me-5" /> {{ shortLorem }}
+      </TexturedDeck>
+    `
+  })
 }
-export const CrackBrand = (args: any) => ({
-  components: { TexturedDeck, Brand },
-  setup() {
-    return { args }
-  },
-  template: `<textured-deck class="p-5 m-4 d-flex align-items-center" v-bind="args">
-        <brand class="me-5" /> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </textured-deck>`
-})
 
-CrackBrand.args = {
-  modelValue: 'crack'
+export const Rock = {
+  args: { modelValue: 'rock' },
+  render: (args: any) => ({
+    components: { TexturedDeck },
+    setup: () => ({ args, loremText }),
+    template: '<TexturedDeck class="p-5 m-4" v-bind="args">{{ loremText }}</TexturedDeck>'
+  })
 }
-export const Rock = Template.bind({})
-Rock.args = {
-  modelValue: 'rock'
+
+export const Sand = {
+  args: { modelValue: 'sand' },
+  render: (args: any) => ({
+    components: { TexturedDeck },
+    setup: () => ({ args, loremText }),
+    template: '<TexturedDeck class="p-5 m-4" v-bind="args">{{ loremText }}</TexturedDeck>'
+  })
 }
-export const Sand = Template.bind({})
-Sand.args = {
-  modelValue: 'sand'
+
+export const Crack = {
+  args: { modelValue: 'crack' },
+  render: (args: any) => ({
+    components: { TexturedDeck },
+    setup: () => ({ args, loremText }),
+    template: '<TexturedDeck class="p-5 m-4" v-bind="args">{{ loremText }}</TexturedDeck>'
+  })
 }
-export const Crack = Template.bind({})
-Crack.args = {
-  modelValue: 'crack'
-}
-export const Carbon = Template.bind({})
-Carbon.args = {
-  modelValue: 'carbon'
+
+export const Carbon = {
+  args: { modelValue: 'carbon' },
+  render: (args: any) => ({
+    components: { TexturedDeck },
+    setup: () => ({ args, loremText }),
+    template: '<TexturedDeck class="p-5 m-4" v-bind="args">{{ loremText }}</TexturedDeck>'
+  })
 }
