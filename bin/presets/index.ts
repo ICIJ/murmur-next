@@ -1,1 +1,1 @@
-export { PhosphorVuePreset } from './phosphor-vue'
+// Presets exports
