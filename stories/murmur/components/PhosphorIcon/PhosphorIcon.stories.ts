@@ -13,60 +13,20 @@ import { variantsArgType, iconWeightsArgType } from '~storybook/utils'
 import { PhosphorIcon } from '@/components'
 
 export default {
-  computed: {
-    PhLightbulb() {
-      return PhLightbulb
-    },
-    PhScanSmiley() {
-      return PhScanSmiley
-    },
-    PhNewspaper() {
-      return PhNewspaper
-    },
-    PhLinkBreak() {
-      return PhLinkBreak
-    },
-    PhMoon() {
-      return PhMoon
-    },
-    PhChat() {
-      return PhChat
-    },
-    PhGlobe() {
-      return PhGlobe
-    }
-  },
   title: 'Murmur/components/PhosphorIcon/PhosphorIcon',
-  tags: ['autodocs'],
   component: PhosphorIcon,
+  tags: ['autodocs'],
   argTypes: {
     variant: variantsArgType,
     weight: iconWeightsArgType,
-    spin: {
-      control: { type: 'boolean' }
-    },
-    size: {
-      control: { type: 'string' }
-    }
+    spin: { control: 'boolean' },
+    size: { control: 'text' }
   },
   args: {
     weight: 'regular',
     spin: false,
     spinDuration: '1s'
-  },
-  render: args => ({
-    components: {
-      PhosphorIcon
-    },
-    setup() {
-      return {
-        args
-      }
-    },
-    template: `
-      <phosphor-icon v-bind="args"/>
-    `
-  })
+  }
 }
 
 export const Default = {
@@ -119,7 +79,7 @@ export const VariantPrimary = {
 export const VariantSecondary = {
   args: {
     name: 'rocket',
-    variant: 'primary',
+    variant: 'secondary',
     size: '2xl'
   }
 }
@@ -164,32 +124,34 @@ export const WithText = {
     name: 'globe',
     variant: 'primary'
   },
-  render: args => ({
-    components: {
-      PhosphorIcon
-    },
-    setup() {
-      return {
-        args
-      }
-    },
+  render: (args: any) => ({
+    components: { PhosphorIcon },
+    setup: () => ({
+      args,
+      PhChat,
+      PhLightbulb,
+      PhLinkBreak,
+      PhMoon,
+      PhNewspaper,
+      PhScanSmiley
+    }),
     template: `
       <h2>
-        <phosphor-icon v-bind="args" />
+        <PhosphorIcon v-bind="args" />
         An ICIJ poem
       </h2>
       <p>
-        In the shadows of whispers <phosphor-icon :name="PhChat" /> and silk veils,<br />
-        The ink of truth flows like moonlight <phosphor-icon :name="PhMoon" /> on paper,<br />
-        ICIJ, a lantern <phosphor-icon :name="PhLightbulb" /> in the murk,<br />
+        In the shadows of whispers <PhosphorIcon :name="PhChat" /> and silk veils,<br />
+        The ink of truth flows like moonlight <PhosphorIcon :name="PhMoon" /> on paper,<br />
+        ICIJ, a lantern <PhosphorIcon :name="PhLightbulb" /> in the murk,<br />
         Unveils the hidden and the hushed.
       </p>
       <p>
-        Words not bound by chains <phosphor-icon :name="PhLinkBreak" />, but by liberty,<br />
-        The silent scream <phosphor-icon name="user-sound" /> of the unseen,<br />
-        With each page turned, a revelation <phosphor-icon :name="PhNewspaper" />,<br />
-        A mirror held to the world's face <phosphor-icon :name="PhScanSmiley" />.
-      </p>   
+        Words not bound by chains <PhosphorIcon :name="PhLinkBreak" />, but by liberty,<br />
+        The silent scream <PhosphorIcon name="user-sound" /> of the unseen,<br />
+        With each page turned, a revelation <PhosphorIcon :name="PhNewspaper" />,<br />
+        A mirror held to the world's face <PhosphorIcon :name="PhScanSmiley" />.
+      </p>
     `
   })
 }
@@ -198,23 +160,17 @@ export const Sizings = {
   args: {
     name: 'globe'
   },
-  render: args => ({
-    components: {
-      PhosphorIcon
-    },
-    setup() {
-      return {
-        args
-      }
-    },
+  render: (args: any) => ({
+    components: { PhosphorIcon },
+    setup: () => ({ args, PhGlobe }),
     template: `
-      <p><phosphor-icon :name="PhGlobe" size="2xs" /> Stories that rock the world (<code>2xs</code>).</p>
-      <p><phosphor-icon :name="PhGlobe" size="xs" /> Stories that rock the world (<code>xs</code>).</p>
-      <p><phosphor-icon :name="PhGlobe" size="sm" /> Stories that rock the world (<code>sm</code>).</p>
-      <p><phosphor-icon :name="PhGlobe" /> Stories that rock the world (<code>md</code>).</p>
-      <p><phosphor-icon :name="PhGlobe" size="lg" /> Stories that rock the world (<code>lg</code>).</p>
-      <p><phosphor-icon :name="PhGlobe" size="xl" /> Stories that rock the world (<code>xl</code>).</p>
-      <p><phosphor-icon :name="PhGlobe" size="2xl" /> Stories that rock the world (<code>2xl</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" size="2xs" /> Stories that rock the world (<code>2xs</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" size="xs" /> Stories that rock the world (<code>xs</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" size="sm" /> Stories that rock the world (<code>sm</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" /> Stories that rock the world (<code>md</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" size="lg" /> Stories that rock the world (<code>lg</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" size="xl" /> Stories that rock the world (<code>xl</code>).</p>
+      <p><PhosphorIcon :name="PhGlobe" size="2xl" /> Stories that rock the world (<code>2xl</code>).</p>
     `
   })
 }
@@ -225,27 +181,21 @@ export const Scaling = {
     weight: 'duotone',
     variant: 'primary'
   },
-  render: args => ({
-    components: {
-      PhosphorIcon
-    },
-    setup() {
-      return {
-        args
-      }
-    },
+  render: (args: any) => ({
+    components: { PhosphorIcon },
+    setup: () => ({ args }),
     template: `
       <p>
-        <phosphor-icon v-bind="args" scale="1" />      
-        <phosphor-icon v-bind="args" scale="2" />      
-        <phosphor-icon v-bind="args" scale="3" />      
-        <phosphor-icon v-bind="args" scale="4" />      
-        <phosphor-icon v-bind="args" scale="5" />      
-        <phosphor-icon v-bind="args" scale="6" />      
-        <phosphor-icon v-bind="args" scale="7" />      
-        <phosphor-icon v-bind="args" scale="8" />      
-        <phosphor-icon v-bind="args" scale="9" />      
-        <phosphor-icon v-bind="args" scale="10" />      
+        <PhosphorIcon v-bind="args" scale="1" />
+        <PhosphorIcon v-bind="args" scale="2" />
+        <PhosphorIcon v-bind="args" scale="3" />
+        <PhosphorIcon v-bind="args" scale="4" />
+        <PhosphorIcon v-bind="args" scale="5" />
+        <PhosphorIcon v-bind="args" scale="6" />
+        <PhosphorIcon v-bind="args" scale="7" />
+        <PhosphorIcon v-bind="args" scale="8" />
+        <PhosphorIcon v-bind="args" scale="9" />
+        <PhosphorIcon v-bind="args" scale="10" />
       </p>
     `
   })
