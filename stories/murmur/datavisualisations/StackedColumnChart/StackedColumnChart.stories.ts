@@ -9,8 +9,8 @@ export default {
   argTypes: {}
 }
 
-const incidentReportsUrl =
-  'https://gist.githubusercontent.com/pirhoo/4055e8d1ee3016805eaf1d2feabdd895/raw/a3d2ba8e9d19fcd9fc659dab50ec075248178238/stacked-colums-incidents.json'
+const incidentReportsUrl
+  = 'https://gist.githubusercontent.com/pirhoo/4055e8d1ee3016805eaf1d2feabdd895/raw/a3d2ba8e9d19fcd9fc659dab50ec075248178238/stacked-colums-incidents.json'
 const incidentReportsGroups = ['Deaths', 'Injuries', 'Malfunctions']
 
 const icijStaff = [

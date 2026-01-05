@@ -29,8 +29,8 @@ const leakSizes = [
   { label: 'Offshore Leaks', value: 260 }
 ]
 
-const moviesUrl =
-  'https://gist.githubusercontent.com/pirhoo/20ce1b795555210c926967a291f8a7ad/raw/13d972b7d2b98b174c33fff38aac2b7d69c85fa7/stacked-bars-movies.json'
+const moviesUrl
+  = 'https://gist.githubusercontent.com/pirhoo/20ce1b795555210c926967a291f8a7ad/raw/13d972b7d2b98b174c33fff38aac2b7d69c85fa7/stacked-bars-movies.json'
 const movieGroups = ['Budget', 'Box Office']
 const sortKeys = ['movie', 'budget', 'box_office']
 
