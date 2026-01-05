@@ -9,7 +9,7 @@ export default mergeConfig(
     test: {
       globals: true,
       clearMocks: false,
-      setupFiles: ['tests/unit/setup.js'],
+      setupFiles: ['tests/unit/setup.ts'],
       reporters: 'default',
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/*'],
