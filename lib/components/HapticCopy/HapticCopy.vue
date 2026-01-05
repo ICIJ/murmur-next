@@ -12,11 +12,12 @@ import {
 } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import PhosphorIconLayers from '@/components/PhosphorIcon/PhosphorIconLayers.vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIconLayers from '@/components/AppIcon/AppIconLayers.vue'
 
 import { copyHtml, copyText } from '@/utils/clipboard'
-import { PhCheckFat, PhClipboard } from '@phosphor-icons/vue'
+import IPhCheckFatFill from '~icons/ph/check-fat-fill'
+import IPhClipboard from '~icons/ph/clipboard'
 
 const props = defineProps({
   tag: {
@@ -192,23 +193,24 @@ defineExpose({
   >
     <!-- @slot Main content of the button (including the icon) -->
     <slot>
-      <phosphor-icon-layers>
+      <app-icon-layers>
         <transition name="spin">
-          <phosphor-icon
+          <app-icon
             v-if="!tooltipTimeout"
             class="haptic-copy__icon"
-            :name="PhClipboard"
-          />
+          >
+            <i-ph-clipboard />
+          </app-icon>
         </transition>
         <transition name="spin">
-          <phosphor-icon
+          <app-icon
             v-if="tooltipTimeout"
             class="haptic-copy__icon"
-            :name="PhCheckFat"
-            weight="fill"
-          />
+          >
+            <i-ph-check-fat-fill />
+          </app-icon>
         </transition>
-      </phosphor-icon-layers>
+      </app-icon-layers>
       <span
         :class="{ 'visually-hidden': hideLabel }"
         class="ms-2 haptic-copy__label"

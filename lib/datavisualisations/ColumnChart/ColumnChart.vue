@@ -4,7 +4,7 @@ import { identity, iteratee, sortBy as sortByFn } from 'lodash'
 import * as d3 from 'd3'
 
 import { getChartProps, useChart } from '@/composables/useChart'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
 
 defineOptions({
   name: 'ColumnChart'
@@ -355,10 +355,9 @@ watch(() => props.socialMode, update, { immediate: true })
             :y="bar.y"
           >
             <div class="column-chart__columns__item__hover-icon">
-              <phosphor-icon
-                :name="hoverIcon"
-                :size="hoverIconSize"
-              />
+              <app-icon :size="hoverIconSize">
+                <component :is="hoverIcon" />
+              </app-icon>
             </div>
           </foreignObject>
         </g>
