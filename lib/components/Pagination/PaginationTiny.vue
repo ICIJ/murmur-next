@@ -16,10 +16,9 @@
         name="first"
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
-        <phosphor-icon
-          :name="firstPageIcon"
-          hover-weight="bold"
-        />
+        <app-icon>
+          <component :is="firstPageIcon" />
+        </app-icon>
         <span class="visually-hidden">{{ firstLabel ?? t('tiny-pagination.first') }}</span>
       </slot>
     </b-button>
@@ -36,10 +35,9 @@
         name="previous"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <phosphor-icon
-          :name="previousPageIcon"
-          hover-weight="bold"
-        />
+        <app-icon>
+          <component :is="previousPageIcon" />
+        </app-icon>
         <span class="visually-hidden">{{ previousLabel ?? t('tiny-pagination.previous') }}</span>
       </slot>
     </b-button>
@@ -128,10 +126,9 @@
         name="next"
         v-bind="{ modelValue, numberOfPages, hasPrevious, hasNext }"
       >
-        <phosphor-icon
-          :name="nextPageIcon"
-          hover-weight="bold"
-        />
+        <app-icon>
+          <component :is="nextPageIcon" />
+        </app-icon>
         <span class="visually-hidden">{{ nextLabel ?? t('tiny-pagination.next') }}</span>
       </slot>
     </b-button>
@@ -148,10 +145,9 @@
         name="last"
         v-bind="{ modelValue, numberOfPages, hasFirst, hasPrevious, hasNext, hasLast }"
       >
-        <phosphor-icon
-          :name="lastPageIcon"
-          hover-weight="bold"
-        />
+        <app-icon>
+          <component :is="lastPageIcon" />
+        </app-icon>
         <span class="visually-hidden">{{ lastLabel ?? t('tiny-pagination.last') }}</span>
       </slot>
     </b-button>
@@ -160,16 +156,18 @@
 
 <script lang="ts" setup>
 import { BButton, BFormInput } from 'bootstrap-vue-next'
-import { computed, PropType, ref, watch } from 'vue'
+import { computed, PropType, ref, watch, type Component } from 'vue'
 import { directive as vInputAutowidth } from 'vue-input-autowidth'
 import { useI18n } from 'vue-i18n'
 import type { ButtonVariant, Size } from 'bootstrap-vue-next'
 
 import { SIZE } from '@/enums'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
-import PhosphorIcon from '@/components/PhosphorIcon/PhosphorIcon.vue'
-import { PhCaretDoubleLeft, PhCaretDoubleRight, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
-import type { IconPhosphor } from '@/types'
+import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import IPhCaretDoubleLeft from '~icons/ph/caret-double-left'
+import IPhCaretDoubleRight from '~icons/ph/caret-double-right'
+import IPhCaretLeft from '~icons/ph/caret-left'
+import IPhCaretRight from '~icons/ph/caret-right'
 
 /**
  * Grabs and syncs the currentPage variable passed down from the parent in v-model
@@ -255,29 +253,29 @@ const props = defineProps({
    * Phosphor icon of the previous page button
    */
   previousPageIcon: {
-    type: [String, Object, Array] as string | string[] | IconPhosphor,
-    default: PhCaretLeft
+    type: [String, Object, Array] as PropType<string | string[] | Component>,
+    default: () => IPhCaretLeft
   },
   /**
    * Phosphor icon of the next page button
    */
   nextPageIcon: {
-    type: [String, Object, Array] as string | string[] | IconPhosphor,
-    default: PhCaretRight
+    type: [String, Object, Array] as PropType<string | string[] | Component>,
+    default: () => IPhCaretRight
   },
   /**
    * Phosphor icon of the first page button
    */
   firstPageIcon: {
-    type: [String, Object, Array] as string | string[] | IconPhosphor,
-    default: PhCaretDoubleLeft
+    type: [String, Object, Array] as PropType<string | string[] | Component>,
+    default: () => IPhCaretDoubleLeft
   },
   /**
    * Phosphor icon of the last page button
    */
   lastPageIcon: {
-    type: [String, Object, Array] as string | string[] | IconPhosphor,
-    default: PhCaretDoubleRight
+    type: [String, Object, Array] as PropType<string | string[] | Component>,
+    default: () => IPhCaretDoubleRight
   },
   /**
    * Navigation button variants

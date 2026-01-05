@@ -11,33 +11,29 @@
     @mouseleave="currentHover = false"
   >
     <slot name="start" />
-    <phosphor-icon
+    <app-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
       v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset, delay: tooltipDelay }"
-      :name="iconLeftOrSpinner"
       :size="iconLeftSize"
-      :weight="iconLeftWeight"
-      :hover-weight="iconLeftHoverWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
       :variant="iconLeftVariant"
       :hover-variant="iconLeftHoverVariant"
       :hover="currentHover"
       class="button-icon__icon-left"
-    />
+    >
+      <component :is="iconLeftOrSpinner" />
+    </app-icon>
     <span
       v-if="!hideLabel"
       class="button-icon__label"
     >
       <slot v-bind="{ labelOrLoadingText }">{{ labelOrLoadingText }}</slot>
     </span>
-    <phosphor-icon
+    <app-icon
       v-if="iconRight"
       v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset, delay: tooltipDelay }"
-      :name="iconRightOrSpinner"
       :size="iconRightSize"
-      :weight="iconRightWeight"
-      :hover-weight="iconRightHoverWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
       :variant="iconRightVariant"
@@ -45,7 +41,9 @@
       :hover="currentHover"
       class="button-icon__icon-right"
       @click="click('icon-right')"
-    />
+    >
+      <component :is="iconRightOrSpinner" />
+    </app-icon>
     <button-icon-counter
       v-if="counter !== null"
       :counter="counter"
@@ -66,12 +64,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, inject, useTemplateRef } from 'vue'
+import { computed, ref, inject, useTemplateRef, type Component } from 'vue'
 import { uniqueId } from 'lodash'
-import { PhCircleNotch } from '@phosphor-icons/vue'
+import IPhCircleNotch from '~icons/ph/circle-notch'
 
 import type { ButtonIconProps } from '@/types'
-import { PhosphorIcon, ButtonIconCounter } from '@/components'
+import { AppIcon, ButtonIconCounter } from '@/components'
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
@@ -84,7 +82,7 @@ defineOptions({
 const props = withDefaults(defineProps<Omit<ButtonIconProps, 'pressed'>>(), {
   square: false,
   iconLeftLabelOffset: 19,
-  iconSpinner: PhCircleNotch,
+  iconSpinner: () => IPhCircleNotch as Component,
   hideLabel: false,
   hideTooltip: false,
   tag: 'button',
