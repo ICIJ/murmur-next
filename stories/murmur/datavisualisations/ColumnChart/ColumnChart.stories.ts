@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { ColumnChart } from '@/datavisualisations'
 import { leakSizeDecorator } from '../../decorators'
+import IPhInfo from '~icons/ph/info'
 
 export default {
   title: 'Murmur/datavisualisations/ColumnChart/ColumnChart',
@@ -39,7 +40,7 @@ export const Default = {
     data: dataUrl,
     xAxisTickCollapse: true,
     hover: true,
-    hoverIcon: 'info'
+    hoverIcon: IPhInfo
   },
   decorators: [leakInjuriesDecorator]
 }
