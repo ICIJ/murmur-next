@@ -1,159 +1,134 @@
+import { ref, onBeforeMount } from 'vue'
 import { FormControlSelectableDropdown } from '@/components'
-import { StoryObj } from '@storybook/vue3-vite'
-import { onBeforeMount, toRefs } from 'vue'
 
-const data = {
-  country: 'Peru',
-  countries: [],
-  filteredCountries: ['Spain', 'Peru', 'France'],
-  twoCountries: ['Spain', 'France'],
-  treeCountries: ['Spain', 'Peru', 'France'],
-  allCountries: ['France', 'United States of America', 'Spain', 'Peru'],
-  countryCollection: [
-    { label: 'Spain' },
-    { label: 'Peru' },
-    { label: 'France' }
-  ],
-  selectedGames: [{ uid: 'sf1' }, { uid: 'sf3' }, { uid: 'sf5' }],
-  streetFighters: [
-    { label: 'Street Fighter (I)', uid: 'sf1' },
-    { label: 'Street Fighter (II)', uid: 'sf2' },
-    { label: 'Street Fighter (III)', uid: 'sf3' },
-    { label: 'Street Fighter (IV)', uid: 'sf4' },
-    { label: 'Street Fighter (V)', uid: 'sf5' }
-  ],
-  frenchCities: [],
-  selectedFrenchCities: []
-}
+const countries = ['France', 'United States of America', 'Spain', 'Peru']
+const countryCollection = [{ label: 'Spain' }, { label: 'Peru' }, { label: 'France' }]
+const streetFighters = [
+  { label: 'Street Fighter (I)', uid: 'sf1' },
+  { label: 'Street Fighter (II)', uid: 'sf2' },
+  { label: 'Street Fighter (III)', uid: 'sf3' },
+  { label: 'Street Fighter (IV)', uid: 'sf4' },
+  { label: 'Street Fighter (V)', uid: 'sf5' }
+]
 
-const countryArgTypes = {
-  modelValue: { control: 'multi-select', options: data.allCountries }
-}
-const SFArgTypes = {
-  modelValue: { control: 'object' }
-}
 export default {
   title: 'Murmur/components/Form/FormControl/FormControlSelectableDropdown',
   component: FormControlSelectableDropdown,
-  tags: ['autodocs']
-}
-
-type Story = StoryObj<typeof FormControlSelectableDropdown>
-const Template: Story = (args: any, { updateArgs }) => ({
-  components: { FormControlSelectableDropdown },
-  setup() {
-    return { args }
-  },
-  template:
-    '<FormControlSelectableDropdown @update:modelValue="handleModelValue" v-bind="args" />',
-  methods: {
-    handleModelValue(modelValue) {
-      updateArgs({ ...args, modelValue })
-    }
+  tags: ['autodocs'],
+  argTypes: {
+    modelValue: { control: 'object' },
+    items: { control: 'object' },
+    multiple: { control: 'boolean' },
+    deactivateKeys: { control: 'boolean' }
   }
-})
+}
 
-export const Default = Template.bind({})
-Default.args = {
-  modelValue: data.country,
-  items: data.allCountries
+export const Default = {
+  args: {
+    modelValue: 'Peru',
+    items: countries
+  }
 }
-Default.argTypes = countryArgTypes
-export const WithSerializer = Template.bind({})
-WithSerializer.args = {
-  modelValue: data.country,
-  items: data.allCountries,
-  deactivateKeys: true,
-  serializer: (item: string) => item.toUpperCase()
-}
-WithSerializer.argTypes = countryArgTypes
-export const WithSerializerLabel = Template.bind({})
-WithSerializerLabel.args = {
-  modelValue: data.country,
-  items: data.countryCollection,
-  serializer: (item: { label: string }) => item.label,
-  deactivateKeys: true,
-  multiple: true
-}
-export const WithSerializerAndEqualFn = Template.bind({})
 
-WithSerializerAndEqualFn.args = {
-  eq: (item: any, other: any) => item.uid === other.uid,
-  serializer: (item: { label: string }) => item.label,
-  items: data.streetFighters,
-  deactivateKeys: true,
-  multiple: true,
-  modelValue: data.selectedGames
+export const WithSerializer = {
+  args: {
+    modelValue: 'Peru',
+    items: countries,
+    deactivateKeys: true,
+    serializer: (item: string) => item.toUpperCase()
+  }
 }
-WithSerializerAndEqualFn.argTypes = SFArgTypes
 
-export const Multiple = Template.bind({})
-Multiple.args = {
-  modelValue: data.country,
-  items: data.allCountries,
-  deactivateKeys: true,
-  multiple: true
+export const WithSerializerLabel = {
+  args: {
+    modelValue: 'Peru',
+    items: countryCollection,
+    serializer: (item: { label: string }) => item.label,
+    deactivateKeys: true,
+    multiple: true
+  }
 }
-Multiple.argTypes = countryArgTypes
-export const DynamicList = Template.bind({})
-DynamicList.decorators = [
-  (_storyFn: any, context: any) => ({
+
+export const WithSerializerAndEqualFn = {
+  args: {
+    eq: (item: any, other: any) => item.uid === other.uid,
+    serializer: (item: { label: string }) => item.label,
+    items: streetFighters,
+    deactivateKeys: true,
+    multiple: true,
+    modelValue: [{ uid: 'sf1' }, { uid: 'sf3' }, { uid: 'sf5' }]
+  }
+}
+
+export const Multiple = {
+  args: {
+    modelValue: 'Peru',
+    items: countries,
+    deactivateKeys: true,
+    multiple: true
+  }
+}
+
+export const DynamicList = {
+  args: {
+    modelValue: ['Spain', 'Peru', 'France'],
+    items: countries,
+    deactivateKeys: true,
+    multiple: true
+  },
+  render: (args: any) => ({
+    components: { FormControlSelectableDropdown },
     setup() {
-      const { modelValue } = toRefs(context.args)
-      function onClickThree() {
-        modelValue.value = data.treeCountries
+      const modelValue = ref(args.modelValue)
+      const setThree = () => {
+        modelValue.value = ['Spain', 'Peru', 'France']
       }
-      function onClickTwo() {
-        modelValue.value = data.twoCountries
+      const setTwo = () => {
+        modelValue.value = ['Spain', 'France']
       }
-      return { onClickTwo, onClickThree }
+      return { args, modelValue, setThree, setTwo }
     },
-    template: `    
-    <story/>
-    <button class="btn btn-outline-secondary mt-2 mx-2" @click="onClickThree">
-      Tree countries
-    </button>
-    <button class="btn btn-outline-secondary mt-2 mx-2" @click="onClickTwo">
-      Two countries
-    </button>`
+    template: `
+      <FormControlSelectableDropdown v-bind="args" v-model="modelValue" />
+      <button class="btn btn-outline-secondary mt-2 mx-2" @click="setThree">Three countries</button>
+      <button class="btn btn-outline-secondary mt-2 mx-2" @click="setTwo">Two countries</button>
+    `
   })
-]
-DynamicList.args = {
-  modelValue: data.filteredCountries,
-  items: data.allCountries,
-  deactivateKeys: true,
-  multiple: true
 }
 
-DynamicList.argTypes = countryArgTypes
-
-export const BigList = Template.bind({})
-BigList.decorators = [
-  (fn: any, ctx: any) => ({
+export const BigList = {
+  args: {
+    modelValue: [],
+    items: [],
+    deactivateKeys: true,
+    multiple: true,
+    scrollerHeight: '500px'
+  },
+  render: (args: any) => ({
+    components: { FormControlSelectableDropdown },
     setup() {
-      const args = toRefs(ctx.args)
+      const items = ref<string[]>([])
+      const modelValue = ref<string[]>([])
+
       onBeforeMount(async () => {
-        const url
-          = 'https://raw.githubusercontent.com/high54/Communes-France-JSON/master/france.json'
-        const cities = await fetch(url).then(data => data.json())
-        args.items.value = [
+        const url =
+          'https://raw.githubusercontent.com/high54/Communes-France-JSON/master/france.json'
+        const cities = await fetch(url).then((data) => data.json())
+        items.value = [
           ...new Set(
-            cities
-              .map((city: any) => city.Code_postal + ' - ' + city.Nom_commune)
-              .sort()
+            cities.map((city: any) => city.Code_postal + ' - ' + city.Nom_commune).sort()
           )
-        ]
+        ] as string[]
       })
 
-      return { ...args }
+      return { args, items, modelValue }
     },
-    template: `<story />`
+    template: `
+      <FormControlSelectableDropdown
+        v-bind="args"
+        v-model="modelValue"
+        :items="items"
+      />
+    `
   })
-]
-BigList.args = {
-  modelValue: [],
-  items: data.frenchCities,
-  deactivateKeys: true,
-  multiple: true,
-  scrollerHeight: '500px'
 }

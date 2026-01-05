@@ -1,9 +1,8 @@
-import { FormControlRange } from '@/components'
-import { StoryObj } from '@storybook/vue3-vite'
-import { BBadge } from 'bootstrap-vue-next'
-import { ColumnChart } from '../../../../../lib/main'
-import { range } from 'lodash'
 import { computed } from 'vue'
+import { range } from 'lodash'
+import { FormControlRange } from '@/components'
+import { ColumnChart } from '@/datavisualisations'
+import { BBadge } from 'bootstrap-vue-next'
 
 export default {
   title: 'Murmur/components/Form/FormControl/FormControlRange',
@@ -15,86 +14,76 @@ export default {
   }
 }
 
-type Story = StoryObj<typeof FormControlRange>
-
-const Template: Story = (args: any) => ({
-  components: { FormControlRange, BBadge },
-  setup() {
-    return { args }
-  },
-  template: `
-    <FormControlRange v-bind="args" class="p-3" />
-  `
-})
-
-export const Default = Template.bind({})
-
-export const WithOffsets = (args: any) => ({
-  components: { FormControlRange, BBadge },
-  setup() {
-    return { args }
-  },
-  template: `
-        <FormControlRange v-bind="args" >
-            <div class="bg-white p-3 text-center text-uppercase">
-                <b-badge>{{ args.range[0] * 100 }}%</b-badge> - <b-badge>{{ args.range[1] * 100 }}%</b-badge>
-            </div>
-        </FormControlRange>
-    `
-})
-WithOffsets.args = {
-  range: [0.2, 0.8]
+export const Default = {
+  args: {}
 }
-export const WithColumnChart = (args: any) => ({
-  components: { FormControlRange, ColumnChart },
-  setup() {
-    const rangeStartYear = computed(() => {
-      const start = args.rangeYears[0]
-      const year = Math.ceil(start * (args.dataPerYear.length - 1))
-      return args.dataPerYear[year].date
-    })
-    const rangeEndYear = computed(() => {
-      const end = args.rangeYears[1]
-      return args.dataPerYear[Math.floor(end * (args.dataPerYear.length - 1))]
-        .date
-    })
-    const highlightedYears = computed(() => {
-      return range(rangeStartYear.value, rangeEndYear.value + 1)
-    })
-    return { args, highlightedYears }
-  },
-  template: `
-        <div class="bg-light p-5">
-            <FormControlRange :snap="1 / args.dataPerYear.length" variant="dark" v-model:range="args.rangeYears" class="py-2" hover>
-                <column-chart :bar-padding=0 :bar-margin=20 :highlights="highlightedYears" :data="args.dataPerYear" :fixed-height="200" no-y-axis no-tooltips />
-            </FormControlRange>
-        </div>
 
+export const WithOffsets = {
+  args: { range: [0.2, 0.8] },
+  render: (args: any) => ({
+    components: { FormControlRange, BBadge },
+    setup: () => ({ args }),
+    template: `
+      <FormControlRange v-bind="args">
+        <div class="bg-white p-3 text-center text-uppercase">
+          <BBadge>{{ args.range[0] * 100 }}%</BBadge> - <BBadge>{{ args.range[1] * 100 }}%</BBadge>
+        </div>
+      </FormControlRange>
     `
-})
-WithColumnChart.args = {
-  range: [0.2, 0.8],
-  rangeYears: [0, 1 / 5],
-  dataPerYear: [
-    {
-      date: 2018,
-      value: 120
+  })
+}
+
+const dataPerYear = [
+  { date: 2018, value: 120 },
+  { date: 2019, value: 100 },
+  { date: 2020, value: 80 },
+  { date: 2021, value: 110 },
+  { date: 2022, value: 130 }
+]
+
+export const WithColumnChart = {
+  args: {
+    range: [0.2, 0.8],
+    rangeYears: [0, 1 / 5],
+    dataPerYear
+  },
+  render: (args: any) => ({
+    components: { FormControlRange, ColumnChart },
+    setup() {
+      const rangeStartYear = computed(() => {
+        const start = args.rangeYears[0]
+        const year = Math.ceil(start * (args.dataPerYear.length - 1))
+        return args.dataPerYear[year].date
+      })
+      const rangeEndYear = computed(() => {
+        const end = args.rangeYears[1]
+        return args.dataPerYear[Math.floor(end * (args.dataPerYear.length - 1))].date
+      })
+      const highlightedYears = computed(() => {
+        return range(rangeStartYear.value, rangeEndYear.value + 1)
+      })
+      return { args, highlightedYears }
     },
-    {
-      date: 2019,
-      value: 100
-    },
-    {
-      date: 2020,
-      value: 80
-    },
-    {
-      date: 2021,
-      value: 110
-    },
-    {
-      date: 2022,
-      value: 130
-    }
-  ]
+    template: `
+      <div class="bg-light p-5">
+        <FormControlRange
+          :snap="1 / args.dataPerYear.length"
+          variant="dark"
+          v-model:range="args.rangeYears"
+          class="py-2"
+          hover
+        >
+          <ColumnChart
+            :bar-padding="0"
+            :bar-margin="20"
+            :highlights="highlightedYears"
+            :data="args.dataPerYear"
+            :fixed-height="200"
+            no-y-axis
+            no-tooltips
+          />
+        </FormControlRange>
+      </div>
+    `
+  })
 }
