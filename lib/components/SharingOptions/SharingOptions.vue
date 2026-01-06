@@ -4,8 +4,7 @@ import reduce from 'lodash/reduce'
 import uniqueId from 'lodash/uniqueId'
 import {
   computed,
-  type CSSProperties,
-  type PropType
+  type CSSProperties
 } from 'vue'
 
 import EmbedForm from '@/components/Form/FormEmbed.vue'
@@ -26,77 +25,56 @@ interface MetaValuesMap {
   twitter_user: string
 }
 
-const props = defineProps({
+export interface SharingOptionsProps {
   /**
    * URL to be shared.
    */
-  url: {
-    type: String,
-    default: () =>
-      config.get('sharing-options.url', null)
-      || IframeResizer.deletePymParams()
-  },
+  url?: string
   /**
    * URL to use specifically with the embed form
    */
-  embedUrl: {
-    type: String,
-    default: null
-  },
+  embedUrl?: string | null
   /**
-   * Direction of the sharing options. Can be: <em>row</em>, <em>row-reverse</em>,
-   * <em>column</em> or <em>column-reverse</em>.
+   * Direction of the sharing options. Can be: 'row', 'row-reverse', 'column' or 'column-reverse'.
    */
-  direction: {
-    default: 'row',
-    validator(value: string) {
-      return (
-        ['row', 'row-reverse', 'column', 'column-reverse'].indexOf(value)
-        !== -1
-      )
-    }
-  },
+  direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
   /**
-   * Sharing contents which can be generic (<em>title</em>, <em>description</em>, etc.)
-   * or specific to a network (<em>twitter_title</em>, <em>facebook_description</em>, etc.).
+   * Sharing contents which can be generic (title, description, etc.)
+   * or specific to a network (twitter_title, facebook_description, etc.).
    */
-  values: {
-    type: Object,
-    default: () => ({})
-  },
+  values?: Record<string, unknown>
   /**
    * The list of all the keys to automatically inject in each social button.
    */
-  valuesKeys: {
-    default: () => ['url', 'title', 'description', 'media', 'user'],
-    type: Array as PropType<string[]>
-  },
+  valuesKeys?: string[]
   /**
    * Disable embed button.
    */
-  noEmbed: {
-    type: Boolean
-  },
+  noEmbed?: boolean
   /**
    * Minimum height of the iframe in the embed form.
    */
-  iframeMinHeight: {
-    type: Number,
-    default: 100
-  },
+  iframeMinHeight?: number
   /**
    * Minimum width of the iframe in the embed form.
    */
-  iframeMinWidth: {
-    type: Number,
-    default: 100
-  },
+  iframeMinWidth?: number
   /**
-   * Prevent from reading default value from the <code>meta</code>.
+   * Prevent from reading default value from the meta tags.
    */
-  noMeta: {
-    type: Boolean
-  }
+  noMeta?: boolean
+}
+
+const props = withDefaults(defineProps<SharingOptionsProps>(), {
+  url: () => config.get('sharing-options.url', null) || IframeResizer.deletePymParams(),
+  embedUrl: null,
+  direction: 'row',
+  values: () => ({}),
+  valuesKeys: () => ['url', 'title', 'description', 'media', 'user'],
+  noEmbed: false,
+  iframeMinHeight: 100,
+  iframeMinWidth: 100,
+  noMeta: false
 })
 
 const embedFormId = uniqueId('embed-form-')
