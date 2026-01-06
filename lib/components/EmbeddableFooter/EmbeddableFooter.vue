@@ -57,52 +57,40 @@ import AppIcon from '@/components/App/AppIcon.vue'
 import SharingOptions from '@/components/SharingOptions/SharingOptions.vue'
 import config from '@/config'
 
-/**
- * EmbeddableFooter
- */
-defineProps({
+export interface EmbeddableFooterProps {
   /**
    * Title to display next to ICIJ logo.
    */
-  title: {
-    type: String,
-    default: () => config.get('project.name')
-  },
+  title?: string
   /**
    * Lead sentence to display next to the title.
    */
-  lead: {
-    type: String,
-    default: ''
-  },
+  lead?: string
   /**
    * Minimum height for the iframe generated in the embed form.
    */
-  iframeMinHeight: {
-    type: Number,
-    default: 100
-  },
+  iframeMinHeight?: number
   /**
    * Minimum width for the iframe generated in the embed form.
    */
-  iframeMinWidth: {
-    type: Number,
-    default: 100
-  },
+  iframeMinWidth?: number
   /**
    * Target of the ICIJ logo and title links.
    */
-  homeUrl: {
-    type: String,
-    default: () => config.get('app.home')
-  },
+  homeUrl?: string
   /**
    * Sharing option values to bind to the sharing-options component in the bottom-right corner.
    */
-  sharingOptionsValues: {
-    type: Object,
-    default: () => ({})
-  }
+  sharingOptionsValues?: Record<string, unknown>
+}
+
+withDefaults(defineProps<EmbeddableFooterProps>(), {
+  title: () => config.get('project.name'),
+  lead: '',
+  iframeMinHeight: 100,
+  iframeMinWidth: 100,
+  homeUrl: () => config.get('app.home'),
+  sharingOptionsValues: () => ({})
 })
 
 // Reactive state
