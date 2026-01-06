@@ -5,7 +5,6 @@ import findIndex from 'lodash/findIndex'
 import filter from 'lodash/filter'
 import identity from 'lodash/identity'
 import isEqual from 'lodash/isEqual'
-import uniqueId from 'lodash/uniqueId'
 // @ts-expect-error no typings available
 import { RecycleScroller } from 'vue-virtual-scroller'
 
