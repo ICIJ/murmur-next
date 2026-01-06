@@ -16,7 +16,7 @@ defineOptions({
 
 type StartsWithIcijIframe = `icij-iframe-${string}`
 
-const props = defineProps<{
+export interface ResponsiveIframeProps {
   /**
    * URL of the generated iframe code.
    */
@@ -25,7 +25,9 @@ const props = defineProps<{
    * Option to pass to the constructor of the pymParent instance
    */
   options?: object
-}>()
+}
+
+const props = defineProps<ResponsiveIframeProps>()
 
 const instance = getCurrentInstance()
 const iframeId = ref<StartsWithIcijIframe>(`icij-iframe-${instance?.uid ?? Math.random()}`)

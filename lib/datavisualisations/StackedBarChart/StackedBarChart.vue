@@ -16,7 +16,7 @@ defineOptions({
   name: 'StackedBarChart'
 })
 
-const props = withDefaults(defineProps<{
+export interface StackedBarChartProps {
   /**
    * Colors for each bar segment/key.
    */
@@ -105,7 +105,9 @@ const props = withDefaults(defineProps<{
    * Aspect ratio to use in social mode.
    */
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<StackedBarChartProps>(), {
   barColors: () => [],
   fixedHeight: null,
   groups: () => [],

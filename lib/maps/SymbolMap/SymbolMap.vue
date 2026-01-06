@@ -33,7 +33,7 @@ defineOptions({
   name: 'SymbolMap'
 })
 
-const props = withDefaults(defineProps<{
+export interface SymbolMapProps {
   /**
    * Path in data objects to the category value for grouping markers.
    */
@@ -150,7 +150,9 @@ const props = withDefaults(defineProps<{
    * Aspect ratio to use in social mode.
    */
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<SymbolMapProps>(), {
   categoryObjectsPath: 'category',
   clickable: false,
   hideLegend: false,

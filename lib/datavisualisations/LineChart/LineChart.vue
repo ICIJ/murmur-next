@@ -19,7 +19,7 @@ defineOptions({
 const castCall = (fnOrValue = identity, ...rest: any[]) =>
   isFunction(fnOrValue) ? fnOrValue(...rest) : fnOrValue
 
-const props = withDefaults(defineProps<{
+export interface LineChartProps {
   /**
    * Color of the line. Falls back to theme's dark color.
    */
@@ -72,7 +72,9 @@ const props = withDefaults(defineProps<{
    * Aspect ratio to use in social mode.
    */
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<LineChartProps>(), {
   lineColor: null,
   fixedLabelWidth: null,
   fixedHeight: null,

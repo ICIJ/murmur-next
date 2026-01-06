@@ -18,7 +18,7 @@ interface ColumnBar {
   y: number
 }
 
-const props = withDefaults(defineProps<{
+export interface ColumnChartProps {
   /**
    * Color of the columns. Falls back to theme's dark color.
    */
@@ -131,7 +131,9 @@ const props = withDefaults(defineProps<{
    * Aspect ratio to use in social mode.
    */
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<ColumnChartProps>(), {
   columnColor: null,
   columnHighlightColor: null,
   fixedHeight: null,

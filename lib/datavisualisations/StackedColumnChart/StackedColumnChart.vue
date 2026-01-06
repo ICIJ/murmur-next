@@ -21,7 +21,7 @@ defineOptions({
   name: 'StackedColumnChart'
 })
 
-const props = withDefaults(defineProps<{
+export interface StackedColumnChartProps {
   /**
    * Field of each object containing data (for each group)
    */
@@ -112,7 +112,9 @@ const props = withDefaults(defineProps<{
   chartHeightRatio?: number
   socialMode?: boolean
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<StackedColumnChartProps>(), {
   keys: () => [],
   groups: () => [],
   barColors: () => [],

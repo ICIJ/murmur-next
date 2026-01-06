@@ -12,7 +12,7 @@ defineOptions({
 interface Datum { value: number | number[], highlight?: boolean, label?: string }
 type Bar = { width: number, height: number, x: number, y: number } & Datum
 
-const props = withDefaults(defineProps<{
+export interface BarChartProps {
   /**
    * Height of each bar in pixels.
    */
@@ -73,7 +73,9 @@ const props = withDefaults(defineProps<{
    * Aspect ratio to use in social mode.
    */
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<BarChartProps>(), {
   barHeight: 30,
   barGap: 15,
   barColor: null,

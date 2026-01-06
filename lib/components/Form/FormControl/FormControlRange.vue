@@ -86,7 +86,7 @@ const vDraggable = {
   }
 }
 
-const props = withDefaults(defineProps<{
+export interface FormControlRangeProps {
   /**
    * Initial values of the range bounds. Should contain two numbers.
    * indicating the start and end of the range.
@@ -132,7 +132,9 @@ const props = withDefaults(defineProps<{
   rounded?: boolean
   boundStartIcon?: string | Component
   boundEndIcon?: string | Component
-}>(), {
+}
+
+const props = withDefaults(defineProps<FormControlRangeProps>(), {
   hover: false,
   startOffset: 0,
   endOffset: 0,

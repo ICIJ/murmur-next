@@ -36,7 +36,7 @@ defineOptions({
   name: 'ChoroplethMap'
 })
 
-const props = withDefaults(defineProps<{
+export interface ChoroplethMapProps {
   /**
    * Covers the empty values with a hatched pattern.
    */
@@ -139,7 +139,9 @@ const props = withDefaults(defineProps<{
   chartHeightRatio?: number
   socialMode?: boolean
   socialModeRatio?: number
-}>(), {
+}
+
+const props = withDefaults(defineProps<ChoroplethMapProps>(), {
   hatchEmpty: false,
   hideLegend: false,
   featureColorScale: null,

@@ -97,7 +97,7 @@ defineOptions({
   name: 'SharingOptionsLink'
 })
 
-const props = withDefaults(defineProps<{
+export interface SharingOptionsLinkProps {
   /**
    * Root element type
    */
@@ -134,7 +134,9 @@ const props = withDefaults(defineProps<{
    * Shared hashtags
    */
   hashtags?: string | null
-}>(), {
+}
+
+const props = withDefaults(defineProps<SharingOptionsLinkProps>(), {
   tag: 'a',
   noIcon: false,
   url: null,

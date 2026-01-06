@@ -9,7 +9,7 @@ defineOptions({
   name: 'EmbedForm'
 })
 
-const props = withDefaults(defineProps<{
+export interface FormEmbedProps {
   /**
    * Hide the form title
    */
@@ -38,7 +38,9 @@ const props = withDefaults(defineProps<{
    * URL of the iframe code
    */
   url?: string | null
-}>(), {
+}
+
+const props = withDefaults(defineProps<FormEmbedProps>(), {
   noTitle: false,
   noPreview: false,
   width: '100%',

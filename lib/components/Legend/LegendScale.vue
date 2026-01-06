@@ -18,7 +18,7 @@ defineOptions({
 type ColorScaleFn = (v?: number) => string
 type WidthScaleFn = (x: number) => string
 
-const props = withDefaults(defineProps<{
+export interface LegendScaleProps {
   width?: number
   height?: number
   cursorValue?: number | null
@@ -27,7 +27,9 @@ const props = withDefaults(defineProps<{
   colorScale?: ColorScaleFn | string
   colorScaleEnd?: string
   colorScaleStart?: string
-}>(), {
+}
+
+const props = withDefaults(defineProps<LegendScaleProps>(), {
   width: 150,
   height: 16,
   cursorValue: null,

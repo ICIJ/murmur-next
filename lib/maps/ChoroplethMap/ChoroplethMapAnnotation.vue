@@ -9,7 +9,7 @@ defineOptions({
   name: 'ChoroplethMapAnnotation'
 })
 
-const props = withDefaults(defineProps<{
+export interface ChoroplethMapAnnotationProps {
   /**
    * Latitude of the annotation.
    */
@@ -51,7 +51,9 @@ const props = withDefaults(defineProps<{
    * and leftbottom. If `null`, the annotation will be centered.
    */
   placement?: PLACEMENTS | null
-}>(), {
+}
+
+const props = withDefaults(defineProps<ChoroplethMapAnnotationProps>(), {
   height: 150,
   width: 150,
   scale: false,

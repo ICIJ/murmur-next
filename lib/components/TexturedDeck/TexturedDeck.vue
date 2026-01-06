@@ -11,7 +11,7 @@ defineOptions({
 
 type TexturedDeckValue = DeckTexture | number
 
-const props = withDefaults(defineProps<{
+export interface TexturedDeckProps {
   /**
    * Name of the texture file ('silk', 'brick', 'rock', 'sand', 'crack', 'carbon')
    */
@@ -32,7 +32,9 @@ const props = withDefaults(defineProps<{
    * Host where to find the textures (without tailing slash)
    */
   backgroundBaseUrl?: string
-}>(), {
+}
+
+const props = withDefaults(defineProps<TexturedDeckProps>(), {
   modelValue: DeckTexture.Brick,
   size: 'cover',
   tag: 'div',

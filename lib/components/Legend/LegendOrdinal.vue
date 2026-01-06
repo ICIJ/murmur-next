@@ -10,14 +10,16 @@ defineOptions({
 export interface Datum { id?: string | number, color: string, path?: string, label: string }
 type Category = 'id' | 'color' | 'path' | 'label'
 
-const props = withDefaults(defineProps<{
+export interface LegendOrdinalProps {
   data?: Datum[]
   horizontal?: boolean
   markerPath?: string | ((d: Datum) => string)
   categoryObjectsPath?: Category
   highlight?: string | number | null
   value?: string | number | null
-}>(), {
+}
+
+const props = withDefaults(defineProps<LegendOrdinalProps>(), {
   data: () => [],
   horizontal: false,
   markerPath: 'M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256z',

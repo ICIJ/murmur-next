@@ -17,7 +17,7 @@ const STATE = {
   POST: 'post'
 }
 
-const props = withDefaults(defineProps<{
+export interface SlideUpDownProps {
   /**
    * Toggler property. Set to <em>false</em> to hide the component.
    */
@@ -30,7 +30,9 @@ const props = withDefaults(defineProps<{
    * HTML tag to render this component to.
    */
   tag?: string
-}>(), {
+}
+
+const props = withDefaults(defineProps<SlideUpDownProps>(), {
   active: false,
   duration: 200,
   tag: 'div'
