@@ -3,18 +3,19 @@ import { get, isFunction, kebabCase } from 'lodash'
 import * as d3 from 'd3'
 import { computed } from 'vue'
 
+import { LegendCategory } from '@/enums'
+
 defineOptions({
   name: 'OrdinalLegend'
 })
 
 export interface Datum { id?: string | number, color: string, path?: string, label: string }
-type Category = 'id' | 'color' | 'path' | 'label'
 
 export interface LegendOrdinalProps {
   data?: Datum[]
   horizontal?: boolean
   markerPath?: string | ((d: Datum) => string)
-  categoryObjectsPath?: Category
+  categoryObjectsPath?: LegendCategory
   highlight?: string | number | null
   value?: string | number | null
 }
@@ -23,7 +24,7 @@ const props = withDefaults(defineProps<LegendOrdinalProps>(), {
   data: () => [],
   horizontal: false,
   markerPath: 'M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256z',
-  categoryObjectsPath: 'id',
+  categoryObjectsPath: LegendCategory.id,
   highlight: null,
   value: null
 })
@@ -62,7 +63,7 @@ const classList = computed(() => {
 })
 
 function itemClassList(d: Datum) {
-  const id = d[props.categoryObjectsPath as Category] as string | number | undefined
+  const id = d[props.categoryObjectsPath as LegendCategory] as string | number | undefined
   return {
     [`ordinal-legend__item--identifier-${kebabCase(d.label)}`]: true,
     'ordinal-legend__item--highlighted': id === props.highlight,
