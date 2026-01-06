@@ -6,17 +6,19 @@ import max from 'lodash/max'
 import some from 'lodash/some'
 import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted, nextTick } from 'vue'
 import { isUrl } from '@/utils/strings'
-import { Ref, SetupContext } from 'vue'
+import type { Ref, SetupContext, ComputedRef } from 'vue'
 import { useResizeObserver } from '@/composables/useResizeObserver'
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
 
 type ChartEmit = Pick<ChartContext<['resized', 'loaded']>, 'emit'>
 
-interface ChartProps {
+export type ChartData = object[] | Record<string, number> | string | null
+
+interface ChartPropsDefinition {
   chartHeightRatio: { type: NumberConstructor }
   data: {
-    default: () => any[] | string
+    default: () => object[] | string
     validator(value: string): boolean
     type: (ArrayConstructor | StringConstructor | ObjectConstructor)[]
   }
@@ -29,17 +31,31 @@ interface ChartProps {
   socialModeRatio: { default: number, type: NumberConstructor }
 }
 
-export function getChartProps(props: any): any {
+export interface ChartPropsRefs {
+  chartHeightRatio: Ref<number | undefined>
+  data: Ref<ChartData>
+  dataUrlType: Ref<'json' | 'csv' | 'tsv'>
+  socialMode: Ref<boolean>
+  socialModeRatio: Ref<number>
+}
+
+export function getChartProps(props: {
+  chartHeightRatio?: number
+  data?: ChartData
+  dataUrlType?: 'json' | 'csv' | 'tsv'
+  socialMode?: boolean
+  socialModeRatio?: number
+}): ChartPropsRefs {
   return {
     chartHeightRatio: toRef(props, 'chartHeightRatio'),
     data: toRef(props, 'data'),
-    dataUrlType: toRef(props, 'dataUrlType'),
-    socialMode: toRef(props, 'socialMode'),
-    socialModeRatio: toRef(props, 'socialModeRatio')
+    dataUrlType: toRef(props, 'dataUrlType') as Ref<'json' | 'csv' | 'tsv'>,
+    socialMode: toRef(props, 'socialMode') as Ref<boolean>,
+    socialModeRatio: toRef(props, 'socialModeRatio') as Ref<number>
   }
 }
 
-export const chartProps = (): ChartProps => ({
+export const chartProps = (): ChartPropsDefinition => ({
   data: {
     type: [Array, String, Object],
     default: () => [],
@@ -80,34 +96,39 @@ export const chartProps = (): ChartProps => ({
 
 export const chartEmits = ['resized', 'loaded']
 
-interface UseChart {
-  dataHasHighlights: any
-  loadedData: any
+export type LoadedData = object[] | Record<string, number> | null
+
+export interface ElementsMaxBBoxOptions {
+  selector?: string
+  defaultWidth?: number | null
+  defaultHeight?: number | null
+}
+
+export interface ElementsMaxBBox {
+  width: number | null | undefined
+  height: number | null | undefined
+}
+
+export interface UseChartReturn {
+  dataHasHighlights: ComputedRef<boolean>
+  loadedData: Ref<LoadedData>
   mounted: Ref<boolean>
   xAxisYearFormat: (year: number | string) => number | string
-  elementsMaxBBox: ({
-    selector,
-    defaultWidth,
-    defaultHeight
-  }?: {
-    selector?: any
-    defaultWidth?: any
-    defaultHeight?: any
-  }) => { width: any, height: any }
-  d3Formatter: any
-  baseHeightRatio: any
+  elementsMaxBBox: (options?: ElementsMaxBBoxOptions) => ElementsMaxBBox
+  d3Formatter: (value: number | string, formatter?: ((v: number | string) => string) | string) => string | number
+  baseHeightRatio: ComputedRef<number>
 }
 
 export function useChart(
   resizableRef: Ref<ComponentPublicInstance<HTMLElement> | null>,
-  props: any,
+  props: ChartPropsRefs,
   { emit }: ChartEmit,
   isLoaded: Ref<boolean>,
   onResized?: () => void,
-  afterLoaded?: () => Promise<any>
-): UseChart {
+  afterLoaded?: () => Promise<void>
+): UseChartReturn {
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
-  const loadedData = ref<unknown | unknown[]>([])
+  const loadedData = ref<LoadedData>(null)
   const mounted = ref<boolean>(false)
   const dataRef = toRef(props.data)
   const dataUrlTypeRef = toRef(props.dataUrlType)
