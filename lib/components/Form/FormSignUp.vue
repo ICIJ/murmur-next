@@ -50,71 +50,57 @@
 
 <script setup lang="ts">
 import last from 'lodash/last'
-import { computed, PropType, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import config from '@/config'
 import { useI18n } from 'vue-i18n'
 import { useSendEmail } from '@/composables/useSendEmail'
 import type { ButtonVariant } from 'bootstrap-vue-next'
 
-/**
- * SignUpForm
- */
-const props = defineProps({
+export interface FormSignUpProps {
   /**
    * Mailchimp URL to send the data to.
    */
-  action: {
-    type: String,
-    default: () => config.get('signup-form.action')
-  },
+  action?: string
   /**
    * Mailchimp email field parameter
    */
-  emailField: {
-    type: String,
-    default: () => config.get('signup-form.email-field')
-  },
+  emailField?: string
   /**
    * Mailchimp default groups. Can be an array or a comma-separated list of groups.
    */
-  defaultGroups: {
-    type: [String, Array] as PropType<string | string[]>,
-    default: () => config.get('signup-form.default-groups')
-  },
+  defaultGroups?: string | string[]
   /**
    * Disable the main label.
    */
-  noLabel: {
-    type: Boolean
-  },
+  noLabel?: boolean
   /**
    * Horizontal layout of the form.
    */
-  horizontal: {
-    type: Boolean
-  },
+  horizontal?: boolean
   /**
    * Mailchimp tracker tag to identify the origin.
    */
-  tracker: {
-    type: String,
-    default: () => config.get('signup-form.tracker')
-  },
+  tracker?: string
   /**
    * Referrer URL can't be passed explicitly
    */
-  referrer: {
-    type: String,
-    default: null
-  },
+  referrer?: string | null
   /**
    * Color variant of the sign-up button
    */
-  variant: {
-    type: String as PropType<ButtonVariant>,
-    default: 'primary'
-  }
+  variant?: ButtonVariant
+}
+
+const props = withDefaults(defineProps<FormSignUpProps>(), {
+  action: () => config.get('signup-form.action'),
+  emailField: () => config.get('signup-form.email-field'),
+  defaultGroups: () => config.get('signup-form.default-groups'),
+  noLabel: false,
+  horizontal: false,
+  tracker: () => config.get('signup-form.tracker'),
+  referrer: null,
+  variant: 'primary'
 })
 const emit = defineEmits(['error', 'success', 'subscribed'])
 const { t } = useI18n()
