@@ -3,45 +3,35 @@ import { computed, ref, watch } from 'vue'
 import { useResizeObserver } from '@/composables/useResizeObserver'
 import { RequestAnimationFrameWrapper } from '@/utils/animation'
 
-const props = defineProps({
+export interface ActiveTextTruncateProps {
   /**
    * Number of Pixel Per Millisecond for the text transition.
    */
-  ppms: {
-    type: Number,
-    default: 0.025
-  },
+  ppms?: number
   /**
-   * Maximum width of the fading mask.
+   * Maximum width of the fading mask (must be greater than 0).
    */
-  fadingMaxWidth: {
-    type: Number,
-    default: 50,
-    validator: (value: number) => value > 0
-  },
+  fadingMaxWidth?: number
   /**
-   * Minimum width of the fading mask.
+   * Minimum width of the fading mask (must be greater than 0).
    */
-  fadingMinWidth: {
-    type: Number,
-    default: 0.001,
-    validator: (value: number) => value > 0
-  },
+  fadingMinWidth?: number
   /**
    * Delay to start moving the text (in milliseconds).
    */
-  delay: {
-    type: Number,
-    default: 1000
-  },
+  delay?: number
   /**
-   * Direction of the truncate
+   * Direction of the truncate ('ltr' or 'rtl').
    */
-  direction: {
-    type: String,
-    default: 'ltr',
-    validator: (value: string) => ['ltr', 'rtl'].indexOf(value) > -1
-  }
+  direction?: 'ltr' | 'rtl'
+}
+
+const props = withDefaults(defineProps<ActiveTextTruncateProps>(), {
+  ppms: 0.025,
+  fadingMaxWidth: 50,
+  fadingMinWidth: 0.001,
+  delay: 1000,
+  direction: 'ltr'
 })
 
 const emit = defineEmits(['cancel', 'end', 'start'])
