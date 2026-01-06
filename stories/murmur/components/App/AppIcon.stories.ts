@@ -20,7 +20,7 @@ import IPhScanSmiley from '~icons/ph/scan-smiley'
 import IPhBalloonDuotone from '~icons/ph/balloon-duotone'
 
 export default {
-  title: 'Murmur/components/AppIcon/AppIcon',
+  title: 'Murmur/components/App/AppIcon',
   component: AppIcon,
   tags: ['autodocs'],
   argTypes: {

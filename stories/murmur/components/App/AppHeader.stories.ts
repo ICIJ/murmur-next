@@ -1,8 +1,8 @@
-import { GenericHeader } from '@/components'
+import { AppHeader } from '@/components'
 
 export default {
-  title: 'Murmur/components/Generic/GenericHeader',
-  component: GenericHeader,
+  title: 'Murmur/components/App/AppHeader',
+  component: AppHeader,
   tags: ['autodocs'],
   argTypes: {
     brandOptions: { control: 'select' }

@@ -8,7 +8,7 @@ import IPhArrowClockwiseBold from '~icons/ph/arrow-clockwise-bold'
 import IPhArrowCounterClockwiseBold from '~icons/ph/arrow-counter-clockwise-bold'
 
 export default {
-  title: 'Murmur/components/AppIcon/AppIconLayers',
+  title: 'Murmur/components/App/AppIconLayers',
   component: AppIconLayers,
   tags: ['autodocs'],
   argTypes: {

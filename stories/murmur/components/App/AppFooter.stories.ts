@@ -1,8 +1,8 @@
-import { GenericFooter } from '@/components'
+import { AppFooter } from '@/components'
 
 export default {
-  title: 'Murmur/components/Generic/GenericFooter',
-  component: GenericFooter,
+  title: 'Murmur/components/App/AppFooter',
+  component: AppFooter,
   tags: ['autodocs'],
   argTypes: {}
 }
