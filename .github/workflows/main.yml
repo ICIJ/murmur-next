@@ -1,5 +1,4 @@
-# Workflow name
-name: Build and Publish Storybook to GitHub Pages
+name: CI Pipeline
 
 on:
   push:

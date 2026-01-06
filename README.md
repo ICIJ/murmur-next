@@ -10,8 +10,7 @@ Murmur is <a href="https://icij.org">ICIJ</a>'s Design System for Bootstrap 5 an
 
 |                    | Status                                                                                                                                                   |
 |-------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Github Actions** | ![Github Actions](https://github.com/ICIJ/murmur-next/actions/workflows/deploy-github-pages.yaml/badge.svg)                                              |
-|   **Code Climate** | [![Code Climate](https://api.codeclimate.com/v1/badges/e487295b939be72d5f15/maintainability)](ttps://codeclimate.com/github/ICIJ/murmur/maintainability) |
+| **Github Actions** | ![Github Actions](https://github.com/ICIJ/murmur-next/actions/workflows/main.yml/badge.svg)                                              |
 |    **NPM version** | [![NPM version](https://img.shields.io/npm/v/@icij/murmur-next)](https://www.npmjs.com/package/@icij/murmur-next)                                        |
 |  **NPM downloads** | [![NPM download](https://img.shields.io/npm/dm/@icij/murmur-next)](https://www.npmjs.com/package/@icij/murmur-next)                                      |
 
