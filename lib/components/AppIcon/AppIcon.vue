@@ -19,18 +19,57 @@ import { computed, ref, watch, type Component } from 'vue'
 import type { IconSize, TextColorVariant } from '@/types'
 
 export interface AppIconProps {
+  /**
+   * Icon component or registered component name to render.
+   */
   name?: string | Component
+  /**
+   * Size of the icon. Can be a preset ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') or a CSS value.
+   */
   size?: IconSize | string
+  /**
+   * Scale factor to apply to the icon size.
+   */
   scale?: number
+  /**
+   * Bootstrap color variant for the icon.
+   */
   variant?: TextColorVariant
+  /**
+   * Bootstrap color variant to apply on hover.
+   */
   hoverVariant?: TextColorVariant
+  /**
+   * Enable pulsing beat animation.
+   */
   beat?: boolean
+  /**
+   * Duration of the beat animation.
+   */
   beatDuration?: string
+  /**
+   * Enable fade in/out animation.
+   */
   fade?: boolean
+  /**
+   * Duration of the fade animation.
+   */
   fadeDuration?: string
+  /**
+   * Enable spinning animation.
+   */
   spin?: boolean
+  /**
+   * Reverse the direction of the spin animation.
+   */
   spinReverse?: boolean
+  /**
+   * Duration of the spin animation.
+   */
   spinDuration?: string
+  /**
+   * Set the icon to its hover state.
+   */
   hover?: boolean
 }
 

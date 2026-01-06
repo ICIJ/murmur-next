@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import type { IconSize } from '@/types'
 
 export interface AppIconLayersProps {
+  /**
+   * Size of the icon layers container. Can be a preset ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') or a CSS value.
+   */
   size?: IconSize | string
 }
 
