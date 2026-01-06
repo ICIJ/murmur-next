@@ -9,31 +9,25 @@ defineOptions({
   name: 'DigitsInput'
 })
 
-/**
- * Define props
- */
-const props = defineProps({
+export interface FormControlDigitsProps {
   /**
    * Number of digits to display
    */
-  length: {
-    type: Number,
-    default: 6
-  },
+  length?: number
   /**
    * Value of the input
    */
-  modelValue: {
-    type: [String, Number],
-    default: ''
-  },
+  modelValue?: string | number
   /**
    * Name of the input
    */
-  name: {
-    type: String,
-    default: ''
-  }
+  name?: string
+}
+
+const props = withDefaults(defineProps<FormControlDigitsProps>(), {
+  length: 6,
+  modelValue: '',
+  name: ''
 })
 
 /**
