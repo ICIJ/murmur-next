@@ -46,14 +46,14 @@ const classList = computed(() => {
   position: relative;
   height: var(--app-icon-raw-size, 1em);
   width: var(--app-icon-raw-size, 1em);
-  @include ph-icon-layers-size($ph-icon-size-scale-base);
+  @include app-icon-layers-size($app-icon-size-scale-base);
 
-  @each $size, $value in $ph-icon-sizes {
+  @each $size, $value in $app-icon-sizes {
     &--size-#{$size} {
-      @include ph-icon-layers-size($value);
+      @include app-icon-layers-size($value);
 
       &:deep(.app-icon:not(.app-icon--has-size)) {
-        @include ph-icon-size($value);
+        @include app-icon-size($value);
       }
     }
   }

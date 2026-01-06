@@ -6,15 +6,20 @@
     @mouseenter="currentHover = true"
     @mouseleave="currentHover = hover ?? false"
   >
-    <slot />
+    <component
+      :is="name"
+      v-if="name"
+    />
+    <slot v-else />
   </span>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, type Component } from 'vue'
 import type { IconSize, TextColorVariant } from '@/types'
 
 export interface AppIconProps {
+  name?: string | Component
   size?: IconSize | string
   scale?: number
   variant?: TextColorVariant
@@ -114,11 +119,11 @@ const classList = computed(() => {
   align-items: center;
   justify-content: center;
   color: var(--app-icon-color, currentColor);
-  @include ph-icon-size($ph-icon-size-scale-base, var(--app-icon-scale, 1));
+  @include app-icon-size($app-icon-size-scale-base, var(--app-icon-scale, 1));
 
-  @each $size, $value in $ph-icon-sizes {
+  @each $size, $value in $app-icon-sizes {
     &--size-#{$size} {
-      @include ph-icon-size($value, var(--app-icon-scale));
+      @include app-icon-size($value, var(--app-icon-scale));
     }
   }
 
