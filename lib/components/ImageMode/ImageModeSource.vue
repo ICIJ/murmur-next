@@ -1,19 +1,17 @@
-<script setup>
-const props = defineProps({
+<script setup lang="ts">
+export interface ImageModeSourceProps {
   /**
    * The image source URL for this color mode variant.
    */
-  src: {
-    type: String,
-    required: true
-  },
+  src: string
   /**
    * The color mode this source should be displayed for (e.g., 'light' or 'dark').
    */
-  colorMode: {
-    type: String,
-    default: 'light'
-  }
+  colorMode?: string
+}
+
+const props = withDefaults(defineProps<ImageModeSourceProps>(), {
+  colorMode: 'light'
 })
 
 defineExpose({ ...props })
