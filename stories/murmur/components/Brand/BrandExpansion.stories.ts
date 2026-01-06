@@ -1,6 +1,8 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { BrandExpansion } from '@/components'
 
-export default {
+const meta: Meta<typeof BrandExpansion> = {
   title: 'Murmur/components/Brand/BrandExpansion',
   component: BrandExpansion,
   tags: ['autodocs'],
@@ -13,30 +15,34 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: { mode: 'short' }
 }
 
-export const Medium = {
+export const Medium: Story = {
   args: { mode: 'medium' }
 }
 
-export const Long = {
+export const Long: Story = {
   args: { mode: 'long' }
 }
 
-export const Animated = {
+export const Animated: Story = {
   args: { animated: true }
 }
 
-export const WhiteBackground = {
+export const WhiteBackground: Story = {
   args: { background: '#FFF', color: '#000' }
 }
 
-export const BlackBackground = {
+export const BlackBackground: Story = {
   args: { background: '#000', color: '#FFF' }
 }
 
-export const Dark = {
+export const Dark: Story = {
   args: { background: '#DDD', dark: true }
 }

@@ -1,39 +1,45 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { FormControlSecret } from '@/components'
 import { SIZE } from '@/enums'
 
-export default {
+const meta: Meta<typeof FormControlSecret> = {
   title: 'Murmur/components/Form/FormControl/FormControlSecret',
   component: FormControlSecret,
   tags: ['autodocs'],
   argTypes: {}
 }
 
-const secretValue = 'this is a secret passphrase 🕵️‍♀️'
+export default meta
 
-export const Default = {
+type Story = StoryObj<typeof meta>
+
+const secretValue = 'this is a secret passphrase'
+
+export const Default: Story = {
   args: {}
 }
 
-export const NoToggler = {
+export const NoToggler: Story = {
   args: { noToggler: true }
 }
 
-export const NoHapticCopy = {
+export const NoHapticCopy: Story = {
   args: { noHapticCopy: true }
 }
 
-export const HideSecret = {
+export const HideSecret: Story = {
   args: { value: secretValue }
 }
 
-export const ShowSecret = {
+export const ShowSecret: Story = {
   args: {
     value: secretValue,
     visible: true
   }
 }
 
-export const SmallSize = {
+export const SmallSize: Story = {
   args: {
     value: secretValue,
     visible: true,
@@ -41,7 +47,7 @@ export const SmallSize = {
   }
 }
 
-export const MediumSize = {
+export const MediumSize: Story = {
   args: {
     value: secretValue,
     visible: true,
@@ -49,7 +55,7 @@ export const MediumSize = {
   }
 }
 
-export const LargeSize = {
+export const LargeSize: Story = {
   args: {
     value: secretValue,
     visible: true,
@@ -57,7 +63,7 @@ export const LargeSize = {
   }
 }
 
-export const HapticCopyVariant = {
+export const HapticCopyVariant: Story = {
   args: {
     value: secretValue,
     visible: true,

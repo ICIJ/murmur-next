@@ -1,13 +1,19 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { AccordionWrapper, AccordionStep } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
 import { bgPolkaDecorator } from '../../decorators'
 
-export default {
+const meta: Meta<typeof AccordionWrapper> = {
   title: 'Murmur/components/Accordion/AccordionWrapper',
   component: AccordionWrapper,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const stepsEnum = Object.freeze({
   MAILVELOPE: Symbol('MAILVELOPE'),
@@ -17,7 +23,7 @@ const stepsEnum = Object.freeze({
 
 const steps = Object.values(stepsEnum)
 
-export const Default = {
+export const Default: Story = {
   args: {
     steps,
     step: stepsEnum.MAILVELOPE,

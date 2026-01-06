@@ -1,11 +1,17 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { LineChart } from '@/datavisualisations'
 
-export default {
+const meta: Meta<typeof LineChart> = {
   title: 'Murmur/datavisualisations/LineChart/LineChart',
   component: LineChart,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const dataUrl
   = 'https://gist.githubusercontent.com/pirhoo/a2cdb6de5e3e816c0e9d80226806a688/raw/da3fdf3488d6bd68c6cfd9b89943b750ac65fd33/line-approvals.json'
@@ -25,7 +31,7 @@ const leakDevicesDecorator = () => ({
   `
 })
 
-export const Default = {
+export const Default: Story = {
   args: { data: dataUrl },
   decorators: [leakDevicesDecorator]
 }

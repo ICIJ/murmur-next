@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { variantsArgType } from '~storybook/utils'
 import { AppIcon } from '@/components'
 
@@ -19,7 +21,7 @@ import IPhNewspaper from '~icons/ph/newspaper'
 import IPhScanSmiley from '~icons/ph/scan-smiley'
 import IPhBalloonDuotone from '~icons/ph/balloon-duotone'
 
-export default {
+const meta: Meta<typeof AppIcon> = {
   title: 'Murmur/components/App/AppIcon',
   component: AppIcon,
   tags: ['autodocs'],
@@ -38,7 +40,11 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     size: '2xl',
     name: IPhUser
@@ -50,7 +56,7 @@ export const Default = {
   })
 }
 
-export const UsingSlot = {
+export const UsingSlot: Story = {
   args: {
     size: '2xl'
   },
@@ -65,7 +71,7 @@ export const UsingSlot = {
   })
 }
 
-export const WeightBold = {
+export const WeightBold: Story = {
   args: {
     size: '2xl',
     name: IPhUserBold
@@ -77,7 +83,7 @@ export const WeightBold = {
   })
 }
 
-export const WeightFill = {
+export const WeightFill: Story = {
   args: {
     size: '2xl',
     name: IPhUserFill
@@ -89,7 +95,7 @@ export const WeightFill = {
   })
 }
 
-export const WeightDuotone = {
+export const WeightDuotone: Story = {
   args: {
     size: '2xl',
     name: IPhUserDuotone
@@ -101,7 +107,7 @@ export const WeightDuotone = {
   })
 }
 
-export const Spinning = {
+export const Spinning: Story = {
   args: {
     size: '2xl',
     spin: true,
@@ -114,7 +120,7 @@ export const Spinning = {
   })
 }
 
-export const VariantPrimary = {
+export const VariantPrimary: Story = {
   args: {
     variant: 'primary',
     size: '2xl',
@@ -127,7 +133,7 @@ export const VariantPrimary = {
   })
 }
 
-export const VariantSecondary = {
+export const VariantSecondary: Story = {
   args: {
     variant: 'secondary',
     size: '2xl',
@@ -140,7 +146,7 @@ export const VariantSecondary = {
   })
 }
 
-export const HoverVariant = {
+export const HoverVariant: Story = {
   args: {
     variant: 'link',
     hoverVariant: 'danger',
@@ -154,7 +160,7 @@ export const HoverVariant = {
   })
 }
 
-export const WithText = {
+export const WithText: Story = {
   args: {
     variant: 'primary'
   },
@@ -182,7 +188,7 @@ export const WithText = {
   })
 }
 
-export const Sizings = {
+export const Sizings: Story = {
   render: () => ({
     components: { AppIcon, IPhGlobe },
     template: `
@@ -197,7 +203,7 @@ export const Sizings = {
   })
 }
 
-export const Scaling = {
+export const Scaling: Story = {
   args: {
     variant: 'primary'
   },

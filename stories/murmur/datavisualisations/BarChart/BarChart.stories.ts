@@ -1,11 +1,17 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { BarChart } from '@/datavisualisations'
 
-export default {
+const meta: Meta<typeof BarChart> = {
   title: 'Murmur/datavisualisations/BarChart/BarChart',
   component: BarChart,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const breastImplantDecorator = () => ({
   template: `
@@ -24,14 +30,14 @@ const dataWithHighlight = [
   { label: 'Other', value: 6 }
 ]
 
-export const Default = {
+export const Default: Story = {
   args: {
     data: 'https://gist.githubusercontent.com/pirhoo/2308336d5f067ef7d84fec348fd63e29/raw/c0135f11e54e757187163dd0722b149a456c64b1/bars-icij-survey.json'
   },
   decorators: [breastImplantDecorator]
 }
 
-export const Highlight = {
+export const Highlight: Story = {
   args: {
     data: dataWithHighlight
   },

@@ -1,12 +1,18 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { StackedBarChart } from '@/datavisualisations'
 import { humanReadableGb } from '../../utils'
 
-export default {
+const meta: Meta<typeof StackedBarChart> = {
   title: 'Murmur/datavisualisations/StackedBarChart/StackedBarChart',
   component: StackedBarChart,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const incidentReports = [
   { label: 'Medtronic PLC', injury: 71444, death: 1828 },
@@ -57,12 +63,12 @@ const leaksSizeDecorator = () => ({
   `
 })
 
-export const Default = {
+export const Default: Story = {
   args: { data: incidentReports },
   decorators: [leakIncidentsDecorator]
 }
 
-export const LabelAbove = {
+export const LabelAbove: Story = {
   args: {
     data: incidentReports,
     labelAbove: true
@@ -70,7 +76,7 @@ export const LabelAbove = {
   decorators: [leakIncidentsDecorator]
 }
 
-export const FixedHeightHideLegend = {
+export const FixedHeightHideLegend: Story = {
   args: {
     data: leakSizes,
     fixedHeight: 400,
@@ -80,7 +86,7 @@ export const FixedHeightHideLegend = {
   decorators: [leaksSizeDecorator]
 }
 
-export const HideEmptyValues = {
+export const HideEmptyValues: Story = {
   args: {
     data: moviesUrl,
     labelField: 'movie',
@@ -89,7 +95,7 @@ export const HideEmptyValues = {
   }
 }
 
-export const SortByKey = {
+export const SortByKey: Story = {
   args: {
     data: moviesUrl,
     labelField: 'movie',
@@ -101,7 +107,7 @@ export const SortByKey = {
   }
 }
 
-export const RelativeValues = {
+export const RelativeValues: Story = {
   args: {
     data: moviesUrl,
     labelField: 'movie',
@@ -111,7 +117,7 @@ export const RelativeValues = {
   }
 }
 
-export const HeaderLeft = {
+export const HeaderLeft: Story = {
   args: {
     data: leakSizes,
     fixedHeight: 400,
@@ -132,7 +138,7 @@ export const HeaderLeft = {
   })
 }
 
-export const HeaderRight = {
+export const HeaderRight: Story = {
   args: {
     data: moviesUrl,
     labelField: 'movie',

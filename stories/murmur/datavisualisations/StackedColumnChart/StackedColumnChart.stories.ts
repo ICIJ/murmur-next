@@ -1,13 +1,19 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { StackedColumnChart } from '@/datavisualisations'
 import { leakSizeDecorator } from '../../decorators'
 import { humanReadableGb } from '../../utils'
 
-export default {
+const meta: Meta<typeof StackedColumnChart> = {
   title: 'Murmur/datavisualisations/StackedColumnChart/StackedColumnChart',
   component: StackedColumnChart,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const incidentReportsUrl
   = 'https://gist.githubusercontent.com/pirhoo/4055e8d1ee3016805eaf1d2feabdd895/raw/a3d2ba8e9d19fcd9fc659dab50ec075248178238/stacked-colums-incidents.json'
@@ -46,7 +52,7 @@ const icijOfficesDecorator = () => ({
   `
 })
 
-export const Default = {
+export const Default: Story = {
   args: {
     data: incidentReportsUrl,
     groups: incidentReportsGroups,
@@ -55,7 +61,7 @@ export const Default = {
   decorators: [leakIncidentsDecorator]
 }
 
-export const NoDirectLabeling = {
+export const NoDirectLabeling: Story = {
   args: {
     data: incidentReportsUrl,
     groups: incidentReportsGroups,
@@ -64,7 +70,7 @@ export const NoDirectLabeling = {
   decorators: [leakIncidentsDecorator]
 }
 
-export const ColumnLabelField = {
+export const ColumnLabelField: Story = {
   args: {
     data: icijStaff,
     labelField: 'city'
@@ -72,7 +78,7 @@ export const ColumnLabelField = {
   decorators: [icijOfficesDecorator]
 }
 
-export const MaxValue = {
+export const MaxValue: Story = {
   args: {
     data: icijStaff,
     hideEmptyValues: true,
@@ -82,7 +88,7 @@ export const MaxValue = {
   decorators: [icijOfficesDecorator]
 }
 
-export const NoTooltips = {
+export const NoTooltips: Story = {
   args: {
     data: icijStaff,
     noTooltips: true,
@@ -93,7 +99,7 @@ export const NoTooltips = {
   decorators: [icijOfficesDecorator]
 }
 
-export const SingleValueProp = {
+export const SingleValueProp: Story = {
   args: {
     data: leaksSize,
     yAxisTickFormat: humanReadableGb,
@@ -104,7 +110,7 @@ export const SingleValueProp = {
   decorators: [leakSizeDecorator]
 }
 
-export const HideLegend = {
+export const HideLegend: Story = {
   args: {
     data: leaksSize,
     yAxisTickFormat: humanReadableGb,
@@ -116,7 +122,7 @@ export const HideLegend = {
   decorators: [leakSizeDecorator]
 }
 
-export const BarMaxWidth = {
+export const BarMaxWidth: Story = {
   args: {
     data: leaksSize,
     yAxisTickFormat: humanReadableGb,

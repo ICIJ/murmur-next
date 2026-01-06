@@ -1,14 +1,20 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ref } from 'vue'
 import { ColumnChart } from '@/datavisualisations'
 import { leakSizeDecorator } from '../../decorators'
 import IPhInfo from '~icons/ph/info'
 
-export default {
+const meta: Meta<typeof ColumnChart> = {
   title: 'Murmur/datavisualisations/ColumnChart/ColumnChart',
   component: ColumnChart,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const dataUrl
   = 'https://gist.githubusercontent.com/pirhoo/259a1a5159db4a665d0c043fac71beef/raw/e74087b06cd12be2b2d3a8ca995730e38719cd4b/colums-incidents.json'
@@ -35,7 +41,7 @@ const leakInjuriesDecorator = () => ({
   `
 })
 
-export const Default = {
+export const Default: Story = {
   args: {
     data: dataUrl,
     xAxisTickCollapse: true,
@@ -45,7 +51,7 @@ export const Default = {
   decorators: [leakInjuriesDecorator]
 }
 
-export const TooltipSlot = {
+export const TooltipSlot: Story = {
   args: {
     data: discreteData,
     seriesName: 'size',
@@ -67,7 +73,7 @@ export const TooltipSlot = {
   })
 }
 
-export const DynamicHeight = {
+export const DynamicHeight: Story = {
   args: {
     data: discreteData,
     seriesName: 'size',
@@ -79,7 +85,7 @@ export const DynamicHeight = {
   }
 }
 
-export const DynamicData = {
+export const DynamicData: Story = {
   render: () => ({
     components: { ColumnChart },
     setup() {

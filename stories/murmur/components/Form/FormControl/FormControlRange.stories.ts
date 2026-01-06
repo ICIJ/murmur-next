@@ -1,10 +1,12 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { computed } from 'vue'
 import { range } from 'lodash'
 import { FormControlRange } from '@/components'
 import { ColumnChart } from '@/datavisualisations'
 import { BBadge } from 'bootstrap-vue-next'
 
-export default {
+const meta: Meta<typeof FormControlRange> = {
   title: 'Murmur/components/Form/FormControl/FormControlRange',
   component: FormControlRange,
   tags: ['autodocs'],
@@ -14,11 +16,15 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {}
 }
 
-export const WithOffsets = {
+export const WithOffsets: Story = {
   args: { range: [0.2, 0.8] },
   render: (args: any) => ({
     components: { FormControlRange, BBadge },
@@ -41,7 +47,7 @@ const dataPerYear = [
   { date: 2022, value: 130 }
 ]
 
-export const WithColumnChart = {
+export const WithColumnChart: Story = {
   args: {
     range: [0.2, 0.8],
     rangeYears: [0, 1 / 5],

@@ -1,8 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ButtonIconCounter } from '@/components'
 import { variantsArgType } from '~storybook/utils'
 import { VARIANT } from '@/enums'
 
-export default {
+const meta: Meta<typeof ButtonIconCounter> = {
   title: 'Murmur/components/Button/ButtonIconCounter',
   component: ButtonIconCounter,
   tags: ['autodocs'],
@@ -18,4 +20,8 @@ export default {
   }
 }
 
-export const Default = {}
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {}

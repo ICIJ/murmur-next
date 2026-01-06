@@ -1,20 +1,26 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { AppFooter } from '@/components'
 
-export default {
+const meta: Meta<typeof AppFooter> = {
   title: 'Murmur/components/App/AppFooter',
   component: AppFooter,
   tags: ['autodocs'],
   argTypes: {}
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: { class: 'card m-4' }
 }
 
-export const AboutUs = {
+export const AboutUs: Story = {
   args: { showAboutUs: true }
 }
 
-export const Version = {
+export const Version: Story = {
   args: { version: 'alpha-10.2' }
 }

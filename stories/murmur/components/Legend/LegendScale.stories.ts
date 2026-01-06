@@ -1,12 +1,18 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import * as d3 from 'd3'
 import { LegendScale } from '@/components'
 
-export default {
+const meta: Meta<typeof LegendScale> = {
   title: 'Murmur/components/Legend/LegendScale',
   component: LegendScale,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 function thresholdScaleFn() {
   return d3
@@ -16,22 +22,22 @@ function thresholdScaleFn() {
     .range(['#D12229', '#F68A1E', '#FDE01A', '#007940', '#24408E', '#732982'])
 }
 
-export const Default = {
+export const Default: Story = {
   args: {}
 }
 
-export const Width = {
+export const Width: Story = {
   args: { width: '200' }
 }
 
-export const ColorScale = {
+export const ColorScale: Story = {
   args: {
     colorScaleStart: '#fafa6e',
     colorScaleEnd: 'teal'
   }
 }
 
-export const ThresholdScale = {
+export const ThresholdScale: Story = {
   args: {
     min: 0,
     max: 6e4,
@@ -39,14 +45,14 @@ export const ThresholdScale = {
   }
 }
 
-export const HighlightValue = {
+export const HighlightValue: Story = {
   args: {
     width: 400,
     cursorValue: 46
   }
 }
 
-export const CustomizedWithSlot = {
+export const CustomizedWithSlot: Story = {
   args: {
     width: 400,
     cursorValue: 10

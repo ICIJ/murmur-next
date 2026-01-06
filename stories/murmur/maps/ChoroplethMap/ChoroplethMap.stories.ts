@@ -1,10 +1,12 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
 import { scaleThreshold } from 'd3'
 import { geoOrthographic } from 'd3-geo'
 import { motorVehiclesPer1000people, wineStockByDepartment } from '../fixtures'
 import { bgPolkaDecorator } from '../../decorators'
 
-export default {
+const meta: Meta<typeof ChoroplethMap> = {
   title: 'Murmur/maps/ChoroplethMap/ChoroplethMap',
   component: ChoroplethMap,
   tags: ['autodocs'],
@@ -45,13 +47,17 @@ by configuring \`topojsonUrl\`, \`topojsonObjects\`, and \`topojsonObjectsPath\`
   }
 }
 
+export default meta
+
+type Story = StoryObj<typeof meta>
+
 function featureColorScale() {
   return scaleThreshold<number, string>()
     .domain([100, 300, 700])
     .range(['#ffffcc', '#c2e699', '#78c679', '#238443'])
 }
 
-export const Default = {
+export const Default: Story = {
   args: {
     data: motorVehiclesPer1000people,
     hatchEmpty: true,
@@ -77,7 +83,7 @@ export const Default = {
   }
 }
 
-export const CustomColorScale = {
+export const CustomColorScale: Story = {
   args: {
     data: motorVehiclesPer1000people,
     featureColorScale: featureColorScale()
@@ -112,7 +118,7 @@ const featureColorScale = scaleThreshold()
   }
 }
 
-export const FrenchDepartments = {
+export const FrenchDepartments: Story = {
   args: {
     data: wineStockByDepartment,
     clickable: true,
@@ -158,7 +164,7 @@ Configure the TopoJSON source with:
   }
 }
 
-export const SphericalProjection = {
+export const SphericalProjection: Story = {
   args: {
     center: [33.435499, 35.167406],
     projection: geoOrthographic,
@@ -214,7 +220,7 @@ import { geoOrthographic } from 'd3-geo'
   }
 }
 
-export const HatchEmpty = {
+export const HatchEmpty: Story = {
   args: {
     data: motorVehiclesPer1000people,
     hatchEmpty: true
@@ -228,7 +234,7 @@ export const HatchEmpty = {
   }
 }
 
-export const Zoomable = {
+export const Zoomable: Story = {
   args: {
     data: motorVehiclesPer1000people,
     hatchEmpty: true,
@@ -243,7 +249,7 @@ export const Zoomable = {
   }
 }
 
-export const Clickable = {
+export const Clickable: Story = {
   args: {
     data: wineStockByDepartment,
     clickable: true,

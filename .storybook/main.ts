@@ -19,7 +19,13 @@ const config: StorybookConfig = {
   ],
   framework: {
     name: '@storybook/vue3-vite',
-    options: {},
+    options: {
+      docgen: 'vue-component-meta'
+    },
+  },
+  typescript: {
+    check: false,
+    reactDocgen: false
   },
   docs: {},
   viteFinal: (config) => {

@@ -1,8 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { buttonSizesArgType } from '~storybook/utils'
 import { Pagination } from '@/components'
 import { SIZE } from '@/enums'
 
-export default {
+const meta: Meta<typeof Pagination> = {
   title: 'Murmur/components/Pagination/Pagination',
   component: Pagination,
   tags: ['autodocs'],
@@ -20,38 +22,42 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {}
 }
 
-export const Small = {
+export const Small: Story = {
   args: { size: SIZE.sm }
 }
 
-export const Medium = {
+export const Medium: Story = {
   args: { size: 'md' }
 }
 
-export const Large = {
+export const Large: Story = {
   args: { size: SIZE.lg }
 }
 
-export const Compact = {
+export const Compact: Story = {
   args: { compact: true }
 }
 
-export const Pills = {
+export const Pills: Story = {
   args: { pills: true }
 }
 
-export const PillsSmall = {
+export const PillsSmall: Story = {
   args: {
     pills: true,
     size: SIZE.sm
   }
 }
 
-export const PillsCompact = {
+export const PillsCompact: Story = {
   args: {
     pills: true,
     compact: true

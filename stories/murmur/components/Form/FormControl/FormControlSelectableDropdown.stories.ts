@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ref, onBeforeMount } from 'vue'
 import { FormControlSelectableDropdown } from '@/components'
 
@@ -11,7 +13,7 @@ const streetFighters = [
   { label: 'Street Fighter (V)', uid: 'sf5' }
 ]
 
-export default {
+const meta: Meta<typeof FormControlSelectableDropdown> = {
   title: 'Murmur/components/Form/FormControl/FormControlSelectableDropdown',
   component: FormControlSelectableDropdown,
   tags: ['autodocs'],
@@ -23,14 +25,18 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     modelValue: 'Peru',
     items: countries
   }
 }
 
-export const WithSerializer = {
+export const WithSerializer: Story = {
   args: {
     modelValue: 'Peru',
     items: countries,
@@ -39,7 +45,7 @@ export const WithSerializer = {
   }
 }
 
-export const WithSerializerLabel = {
+export const WithSerializerLabel: Story = {
   args: {
     modelValue: 'Peru',
     items: countryCollection,
@@ -49,7 +55,7 @@ export const WithSerializerLabel = {
   }
 }
 
-export const WithSerializerAndEqualFn = {
+export const WithSerializerAndEqualFn: Story = {
   args: {
     eq: (item: any, other: any) => item.uid === other.uid,
     serializer: (item: { label: string }) => item.label,
@@ -60,7 +66,7 @@ export const WithSerializerAndEqualFn = {
   }
 }
 
-export const Multiple = {
+export const Multiple: Story = {
   args: {
     modelValue: 'Peru',
     items: countries,
@@ -69,7 +75,7 @@ export const Multiple = {
   }
 }
 
-export const DynamicList = {
+export const DynamicList: Story = {
   args: {
     modelValue: ['Spain', 'Peru', 'France'],
     items: countries,
@@ -96,7 +102,7 @@ export const DynamicList = {
   })
 }
 
-export const BigList = {
+export const BigList: Story = {
   args: {
     modelValue: [],
     items: [],

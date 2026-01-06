@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ActiveTextTruncate } from '@/components'
 import { bgFlexPolkaDecorator } from '../../decorators'
 
-export default {
+const meta: Meta<typeof ActiveTextTruncate> = {
   title: 'Murmur/components/ActiveTextTruncate/ActiveTextTruncate',
   component: ActiveTextTruncate,
   tags: ['autodocs'],
@@ -14,10 +16,14 @@ export default {
   }
 }
 
+export default meta
+
+type Story = StoryObj<typeof meta>
+
 const longUrl
   = 'https://www.icij.org/investigations/luanda-leaks/banking-documents-reveal-consulting-giants-cash-windfall-under-angolan-billionaire-isabel-dos-santos/'
 
-export const Default = {
+export const Default: Story = {
   args: { direction: 'ltr' },
   render: (args: any) => ({
     components: { ActiveTextTruncate },
@@ -26,7 +32,7 @@ export const Default = {
   })
 }
 
-export const RightToLeft = {
+export const RightToLeft: Story = {
   args: { direction: 'rtl' },
   render: (args: any) => ({
     components: { ActiveTextTruncate },

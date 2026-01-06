@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { TexturedDeck, Brand } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
 
-export default {
+const meta: Meta<typeof TexturedDeck> = {
   title: 'Murmur/components/TexturedDeck/TexturedDeck',
   component: TexturedDeck,
   tags: ['autodocs'],
@@ -17,13 +19,17 @@ export default {
   }
 }
 
+export default meta
+
+type Story = StoryObj<typeof meta>
+
 const loremText
   = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 
 const shortLorem
   = 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
-export const Default = {
+export const Default: Story = {
   args: {},
   render: (args: any) => ({
     components: { TexturedDeck },
@@ -32,7 +38,7 @@ export const Default = {
   })
 }
 
-export const Black = {
+export const Black: Story = {
   args: { black: true },
   render: (args: any) => ({
     components: { TexturedDeck },
@@ -41,7 +47,7 @@ export const Black = {
   })
 }
 
-export const BrickDonate = {
+export const BrickDonate: Story = {
   args: { modelValue: 'brick' },
   render: (args: any) => ({
     components: { TexturedDeck, BButton },
@@ -57,7 +63,7 @@ export const BrickDonate = {
   })
 }
 
-export const CrackBrand = {
+export const CrackBrand: Story = {
   args: { modelValue: 'crack' },
   render: (args: any) => ({
     components: { TexturedDeck, Brand },
@@ -70,7 +76,7 @@ export const CrackBrand = {
   })
 }
 
-export const Rock = {
+export const Rock: Story = {
   args: { modelValue: 'rock' },
   render: (args: any) => ({
     components: { TexturedDeck },
@@ -79,7 +85,7 @@ export const Rock = {
   })
 }
 
-export const Sand = {
+export const Sand: Story = {
   args: { modelValue: 'sand' },
   render: (args: any) => ({
     components: { TexturedDeck },
@@ -88,7 +94,7 @@ export const Sand = {
   })
 }
 
-export const Crack = {
+export const Crack: Story = {
   args: { modelValue: 'crack' },
   render: (args: any) => ({
     components: { TexturedDeck },
@@ -97,7 +103,7 @@ export const Crack = {
   })
 }
 
-export const Carbon = {
+export const Carbon: Story = {
   args: { modelValue: 'carbon' },
   render: (args: any) => ({
     components: { TexturedDeck },

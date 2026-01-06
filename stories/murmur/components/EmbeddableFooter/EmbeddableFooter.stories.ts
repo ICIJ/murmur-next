@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { EmbeddableFooter } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
 
-export default {
+const meta: Meta<typeof EmbeddableFooter> = {
   title: 'Murmur/components/EmbeddableFooter/EmbeddableFooter',
   component: EmbeddableFooter,
   tags: ['autodocs'],
@@ -12,19 +14,23 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {}
 }
 
-export const LeadText = {
+export const LeadText: Story = {
   args: { lead: 'Secret project' }
 }
 
-export const Title = {
+export const Title: Story = {
   args: { title: 'Secret project' }
 }
 
-export const TitleSlot = {
+export const TitleSlot: Story = {
   render: (args: any) => ({
     components: { EmbeddableFooter },
     setup: () => ({ args }),
@@ -38,7 +44,7 @@ export const TitleSlot = {
   })
 }
 
-export const MainSlot = {
+export const MainSlot: Story = {
   render: (args: any) => ({
     components: { EmbeddableFooter, BButton },
     setup: () => ({ args }),

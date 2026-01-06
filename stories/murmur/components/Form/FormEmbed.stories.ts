@@ -1,8 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { FormEmbed } from '@/components'
 import { SIZE } from '@/enums'
 import { modalDecorator } from '../../decorators'
 
-export default {
+const meta: Meta<typeof FormEmbed> = {
   title: 'Murmur/components/Form/FormEmbed',
   component: FormEmbed,
   tags: ['autodocs'],
@@ -12,10 +14,14 @@ export default {
   }
 }
 
+export default meta
+
+type Story = StoryObj<typeof meta>
+
 const embedUrl
   = 'https://projects.icij.org/the-implant-files/graphics/#/device-related-incidents-in-europe'
 
-export const Default = {
+export const Default: Story = {
   args: {
     noPreview: true,
     height: 330,
@@ -23,7 +29,7 @@ export const Default = {
   }
 }
 
-export const InModal = {
+export const InModal: Story = {
   args: {
     noTitle: true,
     height: 550,

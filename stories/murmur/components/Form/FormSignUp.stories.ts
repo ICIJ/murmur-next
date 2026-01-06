@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { variantsArgType } from '~storybook/utils'
 import { FormSignUp } from '@/components'
 
-export default {
+const meta: Meta<typeof FormSignUp> = {
   title: 'Murmur/components/Form/FormSignUp',
   component: FormSignUp,
   tags: ['autodocs'],
@@ -10,17 +12,21 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {}
 }
 
-export const Variant = {
+export const Variant: Story = {
   args: {
     variant: 'secondary'
   }
 }
 
-export const Horizontal = {
+export const Horizontal: Story = {
   args: {
     variant: 'secondary',
     horizontal: true,
@@ -28,13 +34,13 @@ export const Horizontal = {
   }
 }
 
-export const NoLabel = {
+export const NoLabel: Story = {
   args: {
     noLabel: true
   }
 }
 
-export const MailChimpGroups = {
+export const MailChimpGroups: Story = {
   args: {
     defaultGroups: 'group[9][1],group[9][131072]'
   }

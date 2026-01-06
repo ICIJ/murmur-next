@@ -1,16 +1,22 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { AccordionStep } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
 
-export default {
+const meta: Meta<typeof AccordionStep> = {
   title: 'Murmur/components/Accordion/AccordionStep',
   component: AccordionStep,
   tags: ['autodocs'],
   argTypes: {}
 }
 
+export default meta
+
+type Story = StoryObj<typeof meta>
+
 const MAILVELOPE = Symbol('MAILVELOPE')
 
-export const Default = {
+export const Default: Story = {
   args: {
     active: 'active',
     step: MAILVELOPE,

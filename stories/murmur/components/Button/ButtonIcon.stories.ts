@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ref } from 'vue'
 import { AppIcon, ButtonIcon } from '@/components'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
@@ -13,8 +15,7 @@ import IPhFloppyDisk from '~icons/ph/floppy-disk'
 import IPhCircleNotch from '~icons/ph/circle-notch'
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 
-export default {
-  components: { ButtonIcon },
+const meta: Meta<typeof ButtonIcon> = {
   title: 'Murmur/components/Button/ButtonIcon',
   component: ButtonIcon,
   tags: ['autodocs'],
@@ -23,20 +24,6 @@ export default {
       template: '<div class="p-4"><story /></div>'
     })
   ],
-  argTypes: {
-    size: buttonSizesArgType,
-    variant: variantsArgType,
-    pill: {
-      control: { type: 'boolean' }
-    },
-    loading: {
-      control: { type: 'boolean' }
-    },
-    counter: {
-      control: { type: 'number' }
-    },
-    counterVariant: variantsArgType
-  },
   args: {
     variant: VARIANT.primary,
     size: 'md',
@@ -52,7 +39,11 @@ export default {
   }
 }
 
-export const IconLeft = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const IconLeft: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhCirclesThreePlus },
     setup: () => ({ args }),
@@ -70,7 +61,7 @@ export const IconLeft = {
   }
 }
 
-export const IconBothSide = {
+export const IconBothSide: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhCirclesThreePlus, IPhUsers },
     setup: () => ({ args }),
@@ -91,7 +82,7 @@ export const IconBothSide = {
   }
 }
 
-export const IconRight = {
+export const IconRight: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhUsers },
     setup: () => ({ args }),
@@ -109,7 +100,7 @@ export const IconRight = {
   }
 }
 
-export const WithCounter = {
+export const WithCounter: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhUserCircle },
     setup: () => ({ args }),
@@ -127,7 +118,7 @@ export const WithCounter = {
   }
 }
 
-export const HideLabel = {
+export const HideLabel: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhUsers },
     setup: () => ({ args }),
@@ -145,7 +136,7 @@ export const HideLabel = {
   }
 }
 
-export const Square = {
+export const Square: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhPath },
     setup: () => ({ args }),
@@ -164,7 +155,7 @@ export const Square = {
   }
 }
 
-export const SquareWithCounter = {
+export const SquareWithCounter: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhPath },
     setup: () => ({ args }),
@@ -183,7 +174,7 @@ export const SquareWithCounter = {
   }
 }
 
-export const SquarePill = {
+export const SquarePill: Story = {
   render: (args: any) => ({
     components: { ButtonIcon, IPhX },
     setup: () => ({ args }),
@@ -201,7 +192,7 @@ export const SquarePill = {
   }
 }
 
-export const Truncated = {
+export const Truncated: Story = {
   args: {
     variant: VARIANT.primary,
     size: 'md',
@@ -222,7 +213,7 @@ export const Truncated = {
   })
 }
 
-export const Loading = {
+export const Loading: Story = {
   args: {
     variant: VARIANT.primary,
     size: 'md',
@@ -246,7 +237,7 @@ export const Loading = {
   })
 }
 
-export const LoadingSpinner = {
+export const LoadingSpinner: Story = {
   args: {
     variant: VARIANT.secondary,
     size: 'md',

@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { AppIcon, AppIconLayers } from '@/components'
 
 // Icon imports
@@ -7,7 +9,7 @@ import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 import IPhArrowClockwiseBold from '~icons/ph/arrow-clockwise-bold'
 import IPhArrowCounterClockwiseBold from '~icons/ph/arrow-counter-clockwise-bold'
 
-export default {
+const meta: Meta<typeof AppIconLayers> = {
   title: 'Murmur/components/App/AppIconLayers',
   component: AppIconLayers,
   tags: ['autodocs'],
@@ -19,7 +21,11 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   render: (args: any) => ({
     components: { AppIcon, AppIconLayers, IPhCircle, IPhStarFill },
     setup: () => ({ args }),
@@ -36,7 +42,7 @@ export const Default = {
   })
 }
 
-export const Sizings = {
+export const Sizings: Story = {
   render: () => ({
     components: { AppIcon, AppIconLayers, IPhArrowCounterClockwise, IPhArrowClockwiseBold, IPhArrowCounterClockwiseBold },
     template: `

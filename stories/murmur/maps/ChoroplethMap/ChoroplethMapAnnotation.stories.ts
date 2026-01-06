@@ -1,5 +1,6 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { ChoroplethMap, ChoroplethMapAnnotation } from '@/maps'
-import { StoryObj } from '@storybook/vue3-vite'
 import { geoOrthographic } from 'd3-geo'
 import { scaleSequential } from 'd3'
 import { bgPolkaDecorator } from '../../decorators'
@@ -56,7 +57,7 @@ const wineStockByDepartment: Record<string, number> = {
   33: 2416742, 34: 856268, 11: 207334
 }
 
-export default {
+const meta: Meta<typeof ChoroplethMapAnnotation> = {
   title: 'Murmur/maps/ChoroplethMap/ChoroplethMapAnnotation',
   component: ChoroplethMapAnnotation,
   tags: ['autodocs'],
@@ -102,7 +103,9 @@ It allows you to add custom annotations at specific geographic coordinates.
   }
 }
 
-type Story = StoryObj<typeof ChoroplethMapAnnotation>
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 export const Spherical: Story = {
   render: () => ({

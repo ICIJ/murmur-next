@@ -1,7 +1,8 @@
-import { ImageMode } from '@/components'
-import { ImageModeSource } from '@/components'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-export default {
+import { ImageMode, ImageModeSource } from '@/components'
+
+const meta: Meta<typeof ImageMode> = {
   title: 'Murmur/components/ImageMode/ImageMode',
   component: ImageMode,
   args: {
@@ -9,7 +10,7 @@ export default {
     defaultColorMode: 'light',
     imageClass: ['rounded-5', 'img-fluid', 'shadow-sm']
   },
-  render: args => ({
+  render: (args: any) => ({
     components: {
       ImageMode,
       ImageModeSource
@@ -26,9 +27,13 @@ export default {
   })
 }
 
-export const Default = {}
+export default meta
 
-export const LocalTheme = {
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {}
+
+export const LocalTheme: Story = {
   decorators: [
     (Story, { args }) => ({
       setup() {
@@ -47,7 +52,7 @@ export const LocalTheme = {
   ]
 }
 
-export const CustomTheme = {
+export const CustomTheme: Story = {
   args: {},
   render: () => ({
     components: {

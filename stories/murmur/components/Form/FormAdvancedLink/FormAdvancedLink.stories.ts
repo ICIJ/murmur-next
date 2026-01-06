@@ -1,14 +1,20 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { FormAdvancedLink } from '@/components'
 import { BCard } from 'bootstrap-vue-next'
 import { SIZE } from '@/enums'
 import { modalDecorator, popoverDecorator } from '../../../decorators'
 
-export default {
+const meta: Meta<typeof FormAdvancedLink> = {
   title: 'Murmur/components/Form/FormAdvancedLink/FormAdvancedLink',
   component: FormAdvancedLink,
   tags: ['autodocs'],
   argTypes: {}
 }
+
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 const tabPillsDecorator = () => ({
   components: { BCard },
@@ -21,7 +27,7 @@ const tabPillsDecorator = () => ({
   `
 })
 
-export const Default = {
+export const Default: Story = {
   args: {
     modelValue: 1,
     title: 'Medtronic spends millions each year on lobbying in the US',
@@ -31,7 +37,7 @@ export const Default = {
   }
 }
 
-export const InsideModal = {
+export const InsideModal: Story = {
   args: {
     title: 'Medtronic spends millions each year on lobbying in the US',
     link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',
@@ -40,7 +46,7 @@ export const InsideModal = {
   decorators: [modalDecorator.bind(null, 'Click to see the form', 'Advanced Link', SIZE.md)]
 }
 
-export const InsidePopover = {
+export const InsidePopover: Story = {
   args: {
     title: 'Medtronic spends millions each year on lobbying in the US',
     link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',
@@ -52,7 +58,7 @@ export const InsidePopover = {
   decorators: [popoverDecorator]
 }
 
-export const WithTabPills = {
+export const WithTabPills: Story = {
   args: {
     title: 'Medtronic spends millions each year on lobbying in the US',
     link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',
@@ -62,7 +68,7 @@ export const WithTabPills = {
   decorators: [tabPillsDecorator]
 }
 
-export const WithTabPillsActiveClass = {
+export const WithTabPillsActiveClass: Story = {
   args: {
     title: 'Medtronic spends millions each year on lobbying in the US',
     link: 'https://projects.icij.org/the-implant-files/graphics/#/medtronic-lobbying',

@@ -1,6 +1,8 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { SharingOptionsLink } from '@/components'
 
-export default {
+const meta: Meta<typeof SharingOptionsLink> = {
   title: 'Murmur/components/SharingOptions/SharingOptionsLink',
   component: SharingOptionsLink,
   tags: ['autodocs'],
@@ -12,7 +14,11 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     network: 'twitter',
     class: 'btn btn-outline-primary mx-1',
@@ -20,7 +26,7 @@ export const Default = {
   }
 }
 
-export const CustomSlot = {
+export const CustomSlot: Story = {
   args: {
     network: 'twitter',
     class: 'btn btn-outline-primary mx-1',
@@ -34,7 +40,7 @@ export const CustomSlot = {
   })
 }
 
-export const CustomTagAndSlot = {
+export const CustomTagAndSlot: Story = {
   args: {
     network: 'twitter',
     title: 'Murmur Design System',

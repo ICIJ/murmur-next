@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { HapticCopy } from '@/components'
 import { BBadge } from 'bootstrap-vue-next'
 
-export default {
+const meta: Meta<typeof HapticCopy> = {
   title: 'Murmur/components/HapticCopy/HapticCopy',
   component: HapticCopy,
   tags: ['autodocs'],
@@ -13,14 +15,18 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     text: 'Lorem info sit amet',
     variant: 'info'
   }
 }
 
-export const Feedback = {
+export const Feedback: Story = {
   args: {
     hideLabel: true,
     tooltipPlacement: 'right',
@@ -29,7 +35,7 @@ export const Feedback = {
   }
 }
 
-export const PillBadge = {
+export const PillBadge: Story = {
   args: {
     text: 'Lorem info sit amet',
     variant: 'warning',

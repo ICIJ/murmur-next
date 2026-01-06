@@ -1,8 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { buttonSizesArgType } from '~storybook/utils'
 import { PaginationTiny } from '@/components'
 import { SIZE } from '@/enums'
 
-export default {
+const meta: Meta<typeof PaginationTiny> = {
   title: 'Murmur/components/Pagination/PaginationTiny',
   component: PaginationTiny,
   tags: ['autodocs'],
@@ -18,14 +20,18 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
     modelValue: 1,
     totalRows: 200
   }
 }
 
-export const Small = {
+export const Small: Story = {
   args: {
     modelValue: 1,
     perPage: 10,
@@ -34,7 +40,7 @@ export const Small = {
   }
 }
 
-export const Medium = {
+export const Medium: Story = {
   args: {
     modelValue: 1,
     perPage: 10,
@@ -43,7 +49,7 @@ export const Medium = {
   }
 }
 
-export const Large = {
+export const Large: Story = {
   args: {
     modelValue: 1,
     perPage: 10,
@@ -52,7 +58,7 @@ export const Large = {
   }
 }
 
-export const HideNavigation = {
+export const HideNavigation: Story = {
   args: {
     modelValue: 1,
     perPage: 10,
@@ -61,7 +67,7 @@ export const HideNavigation = {
   }
 }
 
-export const CompactMode = {
+export const CompactMode: Story = {
   args: {
     modelValue: 1,
     perPage: 10,
@@ -70,7 +76,7 @@ export const CompactMode = {
   }
 }
 
-export const RowMode = {
+export const RowMode: Story = {
   args: {
     modelValue: 1,
     perPage: 25,
@@ -80,7 +86,7 @@ export const RowMode = {
   }
 }
 
-export const UniqueRowMode = {
+export const UniqueRowMode: Story = {
   args: {
     modelValue: 1,
     perPage: 1,
@@ -90,7 +96,7 @@ export const UniqueRowMode = {
   }
 }
 
-export const CompactRowMode = {
+export const CompactRowMode: Story = {
   args: {
     modelValue: 1,
     perPage: 25,
@@ -100,7 +106,7 @@ export const CompactRowMode = {
   }
 }
 
-export const RowModeFewer = {
+export const RowModeFewer: Story = {
   args: {
     modelValue: 1,
     perPage: 25,
@@ -110,7 +116,7 @@ export const RowModeFewer = {
   }
 }
 
-export const RowModeNextFewer = {
+export const RowModeNextFewer: Story = {
   args: {
     modelValue: 2,
     perPage: 25,
@@ -120,7 +126,7 @@ export const RowModeNextFewer = {
   }
 }
 
-export const RowModeSingle = {
+export const RowModeSingle: Story = {
   args: {
     modelValue: 1,
     perPage: 25,
@@ -130,7 +136,7 @@ export const RowModeSingle = {
   }
 }
 
-export const RowModeZero = {
+export const RowModeZero: Story = {
   args: {
     modelValue: 1,
     perPage: 25,

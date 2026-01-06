@@ -1,7 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { Brand } from '@/components'
 import { bgInlineFlexPolkaDecorator } from '../../decorators'
 
-export default {
+const meta: Meta<typeof Brand> = {
   title: 'Murmur/components/Brand/Brand',
   component: Brand,
   tags: ['autodocs'],
@@ -13,17 +15,21 @@ export default {
   }
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {}
 }
 
-export const Animated = {
+export const Animated: Story = {
   args: {
     animated: true
   }
 }
 
-export const Square = {
+export const Square: Story = {
   args: {
     square: true
   }

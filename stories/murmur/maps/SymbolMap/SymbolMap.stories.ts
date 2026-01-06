@@ -1,5 +1,6 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
 import { SymbolMap } from '@/maps'
-import { StoryObj } from '@storybook/vue3-vite'
 import * as d3 from 'd3'
 
 const icijOffices = [
@@ -79,7 +80,7 @@ function powerPlantMarkerWidth(data: typeof powerPlants) {
   return (d: { MWe: number }) => scale(d.MWe)
 }
 
-export default {
+const meta: Meta<typeof SymbolMap> = {
   title: 'Murmur/maps/SymbolMap/SymbolMap',
   component: SymbolMap,
   tags: ['autodocs'],
@@ -116,7 +117,9 @@ The component expects an array of objects with at least \`latitude\` and \`longi
   }
 }
 
-type Story = StoryObj<typeof SymbolMap>
+export default meta
+
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
