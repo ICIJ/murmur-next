@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, PropType } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { BPagination, Size } from 'bootstrap-vue-next'
@@ -16,55 +16,46 @@ defineOptions({
   name: 'CustomPagination'
 })
 
-const props = defineProps({
+export interface PaginationProps {
   /**
    * Total items to be stored in pages
    */
-  totalRows: {
-    type: Number,
-    default: 0
-  },
+  totalRows?: number
   /**
    * Sets the quantity of items per page
    */
-  perPage: {
-    type: Number,
-    default: 20
-  },
+  perPage?: number
   /**
    * Grabs and syncs the currentPage variable passed down from the parent in v-model
    */
-  modelValue: {
-    type: Number,
-    default: 1
-  },
+  modelValue?: number
   /**
    * Displays the pagination element in pills styling as opposed to the default boxes
    */
-  pills: {
-    type: Boolean
-  },
+  pills?: boolean
   /**
    * Set the size of the input: 'sm', 'md' (default), or 'lg'.
    */
-  size: {
-    type: String as PropType<Size>,
-    default: SIZE.md
-  },
+  size?: Size
   /**
    * Compact layout
    */
-  compact: {
-    type: Boolean
-  },
+  compact?: boolean
   /**
    * (Optional) Number of page. Property `size` is required for this to work
    * properly. If `pages` is empty, it will be calculated using the size.
    */
-  pages: {
-    type: [Number, String],
-    default: null
-  }
+  pages?: number | string | null
+}
+
+const props = withDefaults(defineProps<PaginationProps>(), {
+  totalRows: 0,
+  perPage: 20,
+  modelValue: 1,
+  pills: false,
+  size: SIZE.md,
+  compact: false,
+  pages: null
 })
 
 const emit = defineEmits(['update:modelValue'])
