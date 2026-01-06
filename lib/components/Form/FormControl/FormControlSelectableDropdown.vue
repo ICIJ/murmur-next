@@ -124,9 +124,10 @@ const items_ = computed((): Item[] => {
   if (typeof props.items[0] === 'string') {
     return props.items
   }
-  return props.items.map((item: Item) => ({
+  // Use index-based stable IDs to prevent regeneration on recompute
+  return props.items.map((item: Item, index: number) => ({
     ...item,
-    recycle_scroller_id: `id-${uniqueId()}`
+    recycle_scroller_id: `item-${index}`
   }))
 })
 
