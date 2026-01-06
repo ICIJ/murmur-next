@@ -12,14 +12,15 @@ export const $popup: Popup = {
   parent: typeof window !== 'undefined' ? window : null
 }
 
-interface SharingPlatform {
+import { SharingPlatform } from '@/enums'
+
+interface SharingPlatformConfig {
   base: string
   icon: string
   args: Record<string, string>
 }
-type Platform = 'email' | 'facebook' | 'linkedin' | 'twitter' | 'x'
 
-type SharingPlatforms = Record<Platform, SharingPlatform>
+type SharingPlatforms = Record<SharingPlatform, SharingPlatformConfig>
 /**
  * @source https://github.com/bradvin/social-share-urls
  */
@@ -105,7 +106,7 @@ export interface SharingOptionsLinkProps {
   /**
    * Social network to use
    */
-  network: Platform
+  network: SharingPlatform
   /**
    * Disable icon
    */
@@ -240,7 +241,7 @@ function cleanExistingPopupInterval() {
 }
 
 function hasPopup(): boolean {
-  return props.network !== 'email'
+  return props.network !== SharingPlatform.email
 }
 
 function handleClick(event: Event): void {
