@@ -60,7 +60,7 @@
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
-import { ComponentPublicInstance, PropType, ref } from 'vue'
+import { ComponentPublicInstance, ref } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
 
@@ -71,69 +71,55 @@ defineOptions({
   name: 'ConfirmButton'
 })
 
-const props = defineProps({
+export interface ButtonConfirmProps {
   /**
    * Confirmation message visible in the tooltip upon user's click
    */
-  label: {
-    type: String,
-    default: 'Are you sure?'
-  },
+  label?: string
   /**
    * A description text to show under the confirmation label
    */
-  description: {
-    type: String,
-    default: null
-  },
+  description?: string | null
   /**
    * Disable the closing button
    */
-  noCloseButton: {
-    type: Boolean
-  },
+  noCloseButton?: boolean
   /**
    * The confirmation callback
    */
-  confirmed: {
-    type: Function,
-    default: noop
-  },
+  confirmed?: () => void
   /**
    * The cancellation callback
    */
-  cancelled: {
-    type: Function,
-    default: noop
-  },
+  cancelled?: () => void
   /**
    * Label for 'Yes' button
    */
-  yes: {
-    type: String,
-    default: 'Yes'
-  },
+  yes?: string
   /**
    * Label for 'No' button
    */
-  no: {
-    type: String,
-    default: 'No'
-  },
+  no?: string
   /**
    * Tooltip position
    */
-  placement: {
-    type: String as PropType<PopoverPlacement>,
-    default: 'top'
-  },
+  placement?: PopoverPlacement
   /**
    * HTML tag to render this component to.
    */
-  tag: {
-    type: String,
-    default: 'button'
-  }
+  tag?: string
+}
+
+const props = withDefaults(defineProps<ButtonConfirmProps>(), {
+  label: 'Are you sure?',
+  description: null,
+  noCloseButton: false,
+  confirmed: noop,
+  cancelled: noop,
+  yes: 'Yes',
+  no: 'No',
+  placement: 'top',
+  tag: 'button'
 })
 
 const emit = defineEmits(['toggled', 'cancelled', 'confirmed'])
