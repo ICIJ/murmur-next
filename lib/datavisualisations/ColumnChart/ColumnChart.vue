@@ -19,33 +19,117 @@ interface ColumnBar {
 }
 
 const props = withDefaults(defineProps<{
+  /**
+   * Color of the columns. Falls back to theme's dark color.
+   */
   columnColor?: string | null
+  /**
+   * Color of highlighted columns. Falls back to theme's primary color.
+   */
   columnHighlightColor?: string | null
+  /**
+   * Fixed height for the chart in pixels. If not set, height is calculated from width.
+   */
   fixedHeight?: number | null
+  /**
+   * Fixed width for y-axis labels in pixels. If not set, width is calculated automatically.
+   */
   fixedLabelWidth?: number | null
+  /**
+   * Field name in data objects containing the value to display.
+   */
   seriesName?: string
+  /**
+   * Collapse x-axis ticks to prevent overlapping when there are many data points.
+   */
   xAxisTickCollapse?: boolean
+  /**
+   * Formatter function or d3 format string for x-axis tick labels.
+   */
   xAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Explicit list of x-axis tick values to display.
+   */
   xAxisTicks?: string[] | null
+  /**
+   * Formatter function or d3 format string for y-axis tick labels.
+   */
   yAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Number of y-axis ticks or d3 tick configuration object.
+   */
   yAxisTicks?: number | object
+  /**
+   * Field name(s) to sort the data by.
+   */
   sortBy?: string | string[] | null
+  /**
+   * Field name in data objects containing the x-axis category/time value.
+   */
   timeseriesKey?: string
+  /**
+   * Maximum value for the y-axis scale. If not set, derived from data.
+   */
   maxValue?: number | null
+  /**
+   * Disable tooltips on column hover.
+   */
   noTooltips?: boolean
+  /**
+   * Hide the x-axis.
+   */
   noXAxis?: boolean
+  /**
+   * Hide the y-axis.
+   */
   noYAxis?: boolean
+  /**
+   * Padding between columns as a ratio (0-1) of the column width.
+   */
   barPadding?: number
+  /**
+   * Margin between columns in pixels.
+   */
   barMargin?: number
+  /**
+   * List of timeseriesKey values to highlight.
+   */
   highlights?: string[]
+  /**
+   * Show placeholder bars for visual pattern.
+   */
   stripped?: boolean
+  /**
+   * Enable hover effects on columns.
+   */
   hover?: boolean
+  /**
+   * Icon component to display on column hover.
+   */
   hoverIcon?: string | object | object[] | null
+  /**
+   * Size of the hover icon.
+   */
   hoverIconSize?: string
+  /**
+   * Data to display, either as a URL string to fetch or an array of objects.
+   */
   data?: string | object[] | null
+  /**
+   * Type of data file when fetching from URL.
+   */
   dataUrlType?: 'json' | 'csv' | 'tsv'
+  /**
+   * Aspect ratio (height/width) for the chart.
+   */
   chartHeightRatio?: number
+  /**
+   * Enable social mode for optimal display when sharing on social media.
+   */
   socialMode?: boolean
+  /**
+   * Aspect ratio to use in social mode.
+   */
   socialModeRatio?: number
 }>(), {
   columnColor: null,

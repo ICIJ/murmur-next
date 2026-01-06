@@ -17,27 +17,93 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<{
+  /**
+   * Colors for each bar segment/key.
+   */
   barColors?: any[]
+  /**
+   * Fixed height for the chart in pixels. If not set, height is calculated automatically.
+   */
   fixedHeight?: number | null
+  /**
+   * Display names for each key in the legend.
+   */
   groups?: any[]
+  /**
+   * Hide bar segments that have no values.
+   */
   hideEmptyValues?: boolean
+  /**
+   * Hide the legend.
+   */
   hideLegend?: boolean
+  /**
+   * List of keys to highlight initially.
+   */
   highlights?: any[]
+  /**
+   * Delay in milliseconds before highlighting a key on hover.
+   */
   highlightDelay?: number
+  /**
+   * Field names in data objects containing values for each stacked segment.
+   */
   keys?: any[]
+  /**
+   * Position labels above the bars instead of to the left.
+   */
   labelAbove?: boolean
+  /**
+   * Field name in data objects containing the row label.
+   */
   labelField?: string
+  /**
+   * Minimum height for each bar row in pixels.
+   */
   minBarHeight?: number
+  /**
+   * Maximum height for each bar row in pixels.
+   */
   maxBarHeight?: number
+  /**
+   * Calculate bar widths relative to each row's total instead of the global maximum.
+   */
   relative?: boolean
+  /**
+   * Delay in milliseconds before restoring highlights to initial state.
+   */
   restoreHighlightDelay?: number
+  /**
+   * List of row labels to highlight.
+   */
   rowHighlights?: any[]
+  /**
+   * Field name(s) to sort the data by.
+   */
   sortBy?: string | string[] | null
+  /**
+   * Formatter function or d3 format string for bar values.
+   */
   xAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Data to display, either as a URL string to fetch or an array of objects.
+   */
   data?: string | object[] | null
+  /**
+   * Type of data file when fetching from URL.
+   */
   dataUrlType?: 'json' | 'csv' | 'tsv'
+  /**
+   * Aspect ratio (height/width) for the chart.
+   */
   chartHeightRatio?: number
+  /**
+   * Enable social mode for optimal display when sharing on social media.
+   */
   socialMode?: boolean
+  /**
+   * Aspect ratio to use in social mode.
+   */
   socialModeRatio?: number
 }>(), {
   barColors: () => [],

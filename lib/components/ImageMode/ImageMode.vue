@@ -5,22 +5,40 @@ import { useColorMode } from '@/composables/useColorMode'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 
 const props = defineProps({
+  /**
+   * The default color mode to use when no matching source is found.
+   */
   defaultColorMode: {
     type: String,
     default: 'light'
   },
+  /**
+   * The default image source URL, used as fallback when no matching color mode source exists.
+   */
   src: {
     type: String
   },
+  /**
+   * Alternative text description of the image for accessibility.
+   */
   alt: {
     type: String
   },
+  /**
+   * The intrinsic height of the image in pixels or CSS units.
+   */
   height: {
     type: [String, Number]
   },
+  /**
+   * The intrinsic width of the image in pixels or CSS units.
+   */
   width: {
     type: [String, Number]
   },
+  /**
+   * CSS classes to apply to the inner img element.
+   */
   imageClass: {
     type: [String, Array, Object]
   }

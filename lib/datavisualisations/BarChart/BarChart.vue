@@ -13,20 +13,65 @@ interface Datum { value: number | number[], highlight?: boolean, label?: string 
 type Bar = { width: number, height: number, x: number, y: number } & Datum
 
 const props = withDefaults(defineProps<{
+  /**
+   * Height of each bar in pixels.
+   */
   barHeight?: number
+  /**
+   * Vertical gap between bars in pixels.
+   */
   barGap?: number
+  /**
+   * Color of the bars. Falls back to theme's dark color.
+   */
   barColor?: string | null
+  /**
+   * Color of highlighted bars. Falls back to theme's primary color.
+   */
   barHighlightColor?: string | null
+  /**
+   * Fixed width for labels in pixels. If not set, width is calculated automatically.
+   */
   fixedLabelWidth?: number | null
+  /**
+   * Fixed width for values in pixels. If not set, width is calculated automatically.
+   */
   fixedValueWidth?: number | null
+  /**
+   * Horizontal gap between labels and bars in pixels.
+   */
   labelGap?: number
+  /**
+   * Horizontal gap between bars and their values in pixels.
+   */
   valueGap?: number
+  /**
+   * Field name(s) to sort the data by.
+   */
   sortBy?: string | string[] | null
+  /**
+   * Formatter function or d3 format string for x-axis tick values.
+   */
   xAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Data to display, either as a URL string to fetch or an array of objects.
+   */
   data?: string | object[] | null
+  /**
+   * Type of data file when fetching from URL.
+   */
   dataUrlType?: 'json' | 'csv' | 'tsv'
+  /**
+   * Aspect ratio (height/width) for the chart.
+   */
   chartHeightRatio?: number
+  /**
+   * Enable social mode for optimal display when sharing on social media.
+   */
   socialMode?: boolean
+  /**
+   * Aspect ratio to use in social mode.
+   */
   socialModeRatio?: number
 }>(), {
   barHeight: 30,

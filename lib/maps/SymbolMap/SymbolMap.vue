@@ -34,34 +34,121 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<{
+  /**
+   * Path in data objects to the category value for grouping markers.
+   */
   categoryObjectsPath?: string | string[]
+  /**
+   * Enable click-to-zoom on map features.
+   */
   clickable?: boolean
+  /**
+   * Hide the legend.
+   */
   hideLegend?: boolean
+  /**
+   * Hide tooltips on marker hover.
+   */
   hideTooltip?: boolean
+  /**
+   * Display legend items horizontally instead of vertically.
+   */
   horizontalLegend?: boolean
+  /**
+   * Color for map features, or function returning color based on feature data.
+   */
   featureColor?: string | ((d: any) => string)
+  /**
+   * Fit map projection to marker bounds instead of feature bounds.
+   */
   fitToMarkers?: boolean
+  /**
+   * Path in data objects to the label value for tooltips.
+   */
   labelObjectsPath?: string | string[]
+  /**
+   * Padding around the map in pixels.
+   */
   mapPadding?: number
+  /**
+   * Path in data objects to the unique identifier for each marker.
+   */
   markerObjectsPath?: string | string[]
+  /**
+   * SVG path data for marker shape, or function returning path based on marker data.
+   */
   markerPath?: string | ((d: any) => string)
+  /**
+   * Color for markers. Falls back to category colors if not set.
+   */
   markerColor?: string | null
+  /**
+   * Width of markers in pixels, or function returning width based on marker data.
+   */
   markerWidth?: number | ((d: any) => number)
+  /**
+   * Disable marker scaling when zooming the map.
+   */
   noMarkersScale?: boolean
+  /**
+   * Custom CSS class to apply to tooltips.
+   */
   tooltipCustomClass?: string | null
+  /**
+   * Placement of tooltips relative to markers.
+   */
   tooltipPlacement?: PopoverPlacement
+  /**
+   * Fallback placement(s) for tooltips when preferred placement is not available.
+   */
   tooltipFallbackPlacement?: string[] | string
+  /**
+   * Name of the TopoJSON objects collection to render as map features.
+   */
   topojsonObjects?: string
+  /**
+   * Path in TopoJSON feature properties to the identifier.
+   */
   topojsonObjectsPath?: string | string[]
+  /**
+   * URL to fetch TopoJSON data from.
+   */
   topojsonUrl?: string
+  /**
+   * Duration of zoom transitions in milliseconds.
+   */
   transitionDuration?: number
+  /**
+   * Enable zoom and pan interactions on the map.
+   */
   zoomable?: boolean
+  /**
+   * Minimum zoom level.
+   */
   zoomMin?: number
+  /**
+   * Maximum zoom level.
+   */
   zoomMax?: number
+  /**
+   * Data to display, either as a URL string to fetch or an array of objects.
+   */
   data?: string | object[] | null
+  /**
+   * Type of data file when fetching from URL.
+   */
   dataUrlType?: 'json' | 'csv' | 'tsv'
+  /**
+   * Aspect ratio (height/width) for the chart.
+   */
   chartHeightRatio?: number
+  /**
+   * Enable social mode for optimal display when sharing on social media.
+   */
   socialMode?: boolean
+  /**
+   * Aspect ratio to use in social mode.
+   */
   socialModeRatio?: number
 }>(), {
   categoryObjectsPath: 'category',

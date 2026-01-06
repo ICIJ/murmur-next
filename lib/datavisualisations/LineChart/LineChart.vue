@@ -20,18 +20,57 @@ const castCall = (fnOrValue = identity, ...rest: any[]) =>
   isFunction(fnOrValue) ? fnOrValue(...rest) : fnOrValue
 
 const props = withDefaults(defineProps<{
+  /**
+   * Color of the line. Falls back to theme's dark color.
+   */
   lineColor?: string | null
+  /**
+   * Fixed width for y-axis labels in pixels. If not set, width is calculated automatically.
+   */
   fixedLabelWidth?: number | null
+  /**
+   * Fixed height for the chart in pixels. If not set, height is calculated from width.
+   */
   fixedHeight?: number | null
+  /**
+   * Field name in data objects containing the y-axis value.
+   */
   seriesName?: string
+  /**
+   * Number of x-axis ticks or d3 tick configuration.
+   */
   xAxisTicks?: object | number | ((d: any) => any) | null
+  /**
+   * Formatter function or d3 format string for y-axis tick labels.
+   */
   yAxisTickFormat?: ((v: any) => string) | string
+  /**
+   * Number of y-axis ticks or d3 tick configuration.
+   */
   yAxisTicks?: object | number
+  /**
+   * Field name in data objects containing the x-axis time/date value (parsed as year).
+   */
   timeseriesKey?: string
+  /**
+   * Data to display, either as a URL string to fetch or an array of objects.
+   */
   data?: string | object[] | null
+  /**
+   * Type of data file when fetching from URL.
+   */
   dataUrlType?: 'json' | 'csv' | 'tsv'
+  /**
+   * Aspect ratio (height/width) for the chart.
+   */
   chartHeightRatio?: number
+  /**
+   * Enable social mode for optimal display when sharing on social media.
+   */
   socialMode?: boolean
+  /**
+   * Aspect ratio to use in social mode.
+   */
   socialModeRatio?: number
 }>(), {
   lineColor: null,
