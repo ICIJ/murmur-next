@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed } from 'vue'
 import { isString } from 'lodash'
 
 import { BrandMode } from '@/enums'
@@ -109,55 +109,46 @@ defineOptions({
   name: 'BrandExpansion'
 })
 
-const props = defineProps({
+export interface BrandExpansionProps {
   /**
    * Add a balancing effect to the globe
    */
-  animated: {
-    type: Boolean
-  },
+  animated?: boolean
   /**
    * Monochromatic logo's color
    */
-  color: {
-    type: String,
-    default: null
-  },
+  color?: string | null
   /**
    * Logo's background color
    */
-  background: {
-    type: String,
-    default: null
-  },
+  background?: string | null
   /**
    * Logo's size
    */
-  size: {
-    type: [Number, String],
-    default: '70px'
-  },
+  size?: number | string
   /**
    * Brand mode ("short", "medium", "long")
    */
-  mode: {
-    type: String as PropType<BrandMode>,
-    default: BrandMode.Short
-  },
+  mode?: BrandMode
   /**
    * Reverse color of the main text to white if no `color` is given
    */
-  dark: {
-    type: Boolean
-  },
+  dark?: boolean
   /**
    * If true, it resizes the brand as the display downsize.
    * If false, the brand keep the same size.
    */
-  responsive: {
-    type: Boolean,
-    default: false
-  }
+  responsive?: boolean
+}
+
+const props = withDefaults(defineProps<BrandExpansionProps>(), {
+  animated: false,
+  color: null,
+  background: null,
+  size: '70px',
+  mode: BrandMode.Short,
+  dark: false,
+  responsive: false
 })
 
 const breakpoints = useBreakpoints({
