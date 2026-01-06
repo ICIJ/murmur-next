@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { TextColorVariant } from 'bootstrap-vue-next'
-import { type PropType } from 'vue'
 
-defineProps({
-  counter: {
-    type: Number,
-    default: null
-  },
-  variant: {
-    type: String as PropType<TextColorVariant>,
-    default: 'secondary'
-  }
+export interface ButtonIconCounterProps {
+  /**
+   * The counter value to display
+   */
+  counter?: number | null
+  /**
+   * The badge color variant
+   */
+  variant?: TextColorVariant
+}
+
+withDefaults(defineProps<ButtonIconCounterProps>(), {
+  counter: null,
+  variant: 'secondary'
 })
 </script>
 
