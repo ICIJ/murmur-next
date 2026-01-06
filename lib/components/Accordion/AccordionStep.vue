@@ -60,29 +60,35 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, PropType } from 'vue'
+import { computed, inject } from 'vue'
 
 import SlideUpDown from '@/components/SlideUpDown/SlideUpDown.vue'
 import { AccordionKey } from '@/keys'
 import { Accordion, Step } from '@/types'
 
-const props = defineProps({
+export interface AccordionStepProps {
   /**
    * Step name
    */
-  step: { type: [String, Object as () => Step, Symbol], required: true },
+  step: Step
   /**
    * Title of the step card
    */
-  title: { type: String, default: 'Step' },
+  title?: string
   /**
    * Content of the step card
    */
-  content: { type: String, default: 'Step' },
+  content?: string
   /**
    * Force card expansion/collapse
    */
-  active: { type: Boolean as PropType<boolean | undefined>, default: false }
+  active?: boolean
+}
+
+const props = withDefaults(defineProps<AccordionStepProps>(), {
+  title: 'Step',
+  content: 'Step',
+  active: false
 })
 
 const emit = defineEmits(['next-step', 'previous-step'])
