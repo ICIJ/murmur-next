@@ -7,14 +7,14 @@ import defaultValues from './config.default'
 /**
  * Supported config value types
  */
-export type ConfigValue =
-  | string
-  | number
-  | boolean
-  | null
-  | object
-  | ConfigValue[]
-  | Record<string, ConfigValue>
+export type ConfigValue
+  = | string
+    | number
+    | boolean
+    | null
+    | object
+    | ConfigValue[]
+    | Record<string, ConfigValue>
 
 type ConfigValues = Record<string, ConfigValue>
 type ConfigScopes = Record<string, Config>
