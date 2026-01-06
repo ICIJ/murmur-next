@@ -141,13 +141,12 @@ export type {
   // Icon types
   IconSize,
   IconWeight,
-  // Component types
-  ButtonIconProps,
+  // Component internal types (provide/inject)
   Accordion,
   AccordionProvide,
   BrandStyle,
   BrandExpansionStyle,
-  // Map types
+  // Map internal types (provide/inject)
   MapTransform,
   ParentMap,
   ParentMapProvide,
