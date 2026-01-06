@@ -26,7 +26,7 @@ import {
   ref,
   watch
 } from 'vue'
-import type { GeometryCollection } from 'topojson-specification'
+import type { GeometryCollection, Topology } from 'topojson-specification'
 import { PopoverPlacement } from 'bootstrap-vue-next'
 
 defineOptions({
@@ -193,11 +193,11 @@ const emit = defineEmits<{
 }>()
 
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-const topojson = ref<any>(null)
+const topojson = ref<Topology | null>(null)
 const topojsonPromise = ref<Promise<void> | null>(null)
 const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
 const markerCursor = ref<Record<string, string> | null>(null)
-const categoryHighlight = ref<any | null>(null)
+const categoryHighlight = ref<string | null>(null)
 const featureZoom = ref<string | null>(null)
 
 const isLoaded = ref<boolean>(false)

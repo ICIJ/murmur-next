@@ -16,7 +16,7 @@ import { geoRobinson } from 'd3-geo-projection'
 import type { GeoProjection } from 'd3-geo'
 import { geoGraticule } from 'd3-geo'
 import { feature } from 'topojson'
-import type { GeometryCollection } from 'topojson-specification'
+import type { GeometryCollection, Topology } from 'topojson-specification'
 
 import {
   ComponentPublicInstance,
@@ -182,8 +182,8 @@ const emit = defineEmits<{
 }>()
 
 const resizable = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-const topojson = ref<any>(null)
-const topojsonPromise = ref<any | null>(null)
+const topojson = ref<Topology | null>(null)
+const topojsonPromise = ref<Promise<Topology> | null>(null)
 const mapRect = ref<DOMRect>(new DOMRect(0, 0, 0, 0))
 const featureCursor = ref<Record<string, string> | null>(null)
 const featureZoom = ref<string | null>(null)
