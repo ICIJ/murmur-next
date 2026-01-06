@@ -1,28 +1,42 @@
 import get from 'lodash/get'
 import each from 'lodash/each'
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import defaultValues from './config.default'
-import { Ref } from 'vue'
 
-type ConfigMap = Record<string, any>
+/**
+ * Supported config value types
+ */
+export type ConfigValue =
+  | string
+  | number
+  | boolean
+  | null
+  | object
+  | ConfigValue[]
+  | Record<string, ConfigValue>
+
+type ConfigValues = Record<string, ConfigValue>
+type ConfigScopes = Record<string, Config>
 
 export class Config {
-  _VALUES: Ref<ConfigMap>
-  _SCOPES: Ref<ConfigMap>
-  constructor(values = {}) {
-    this._VALUES = ref({})
-    this._SCOPES = ref({})
+  _VALUES: Ref<ConfigValues>
+  _SCOPES: Ref<ConfigScopes>
+
+  constructor(values: ConfigValues = {}) {
+    this._VALUES = ref<ConfigValues>({})
+    this._SCOPES = ref<ConfigScopes>({})
     this.merge(values)
     return this
   }
 
-  merge(values = {}) {
-    return each(values, (value, key) => {
+  merge(values: ConfigValues = {}): void {
+    each(values, (value, key) => {
       this.set(key, value)
     })
   }
 
-  set(key: string, value: any) {
+  set(key: string, value: ConfigValue): ConfigValue {
     const levels = key.split('.')
     this._VALUES.value = this._VALUES.value ?? {}
 
@@ -36,11 +50,11 @@ export class Config {
     return value
   }
 
-  get(key: string, defaultValue?: NonNullable<unknown> | null) {
-    return get(this._VALUES.value, key, defaultValue)
+  get<T extends ConfigValue = ConfigValue>(key: string, defaultValue?: T | null): T | null {
+    return get(this._VALUES.value, key, defaultValue) as T | null
   }
 
-  is(key: string) {
+  is(key: string): boolean {
     const value = this.get(key, null)
     switch (value) {
       case 1:
@@ -64,21 +78,21 @@ export class Config {
     }
   }
 
-  isnt(key: string) {
+  isnt(key: string): boolean {
     return !this.is(key)
   }
 
-  scope(name: string) {
+  scope(name: string): Config {
     this.scopes[name] = this.scopes[name] ?? new Config()
     return this.scopes[name]
   }
 
-  get values() {
+  get values(): ConfigValues {
     return this._VALUES.value
   }
 
-  get scopes() {
-    this._SCOPES.value = this._SCOPES.value ?? ref({})
+  get scopes(): ConfigScopes {
+    this._SCOPES.value = this._SCOPES.value ?? {}
     return this._SCOPES.value
   }
 }
