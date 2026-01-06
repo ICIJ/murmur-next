@@ -151,15 +151,6 @@ export type {
   MapTransform,
   ParentMap,
   ParentMapProvide,
-  ChoroplethMapProps,
-  ChoroplethMapAnnotationProps,
-  SymbolMapProps,
-  // Datavisualisation types
-  BarChartProps,
-  ColumnChartProps,
-  LineChartProps,
-  StackedBarChartProps,
-  StackedColumnChartProps,
   // Utility types
   Step,
   BoxStyle,
