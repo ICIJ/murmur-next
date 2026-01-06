@@ -118,38 +118,30 @@ import FollowUsPopover from '@/components/FollowUsPopover/FollowUsPopover.vue'
 import AppIcon from '@/components/App/AppIcon.vue'
 import { BrandMode } from '@/enums'
 
-/**
- * AppHeader
- */
-const props = defineProps({
+export interface AppHeaderProps {
   /**
-   * CSS position of the header. Can be <em>absolute</em>, <em>relative</em>, <em>static</em> or <em>fixed</em> (default).
+   * CSS position of the header. Can be 'absolute', 'relative', 'static' or 'fixed' (default).
    */
-  position: {
-    type: String,
-    default: 'fixed'
-  },
+  position?: string
   /**
    * Disable Headroom for hiding header until needed.
    */
-  noHeadroom: {
-    type: Boolean,
-    default: false
-  },
+  noHeadroom?: boolean
   /**
    * Target link of the ICIJ logo and project name.
    */
-  homeUrl: {
-    type: String,
-    default: () => config.get('app.home')
-  },
+  homeUrl?: string
   /**
    * Target link of the donate button.
    */
-  donateUrl: {
-    type: String,
-    default: () => config.get('app.donate-url')
-  }
+  donateUrl?: string
+}
+
+const props = withDefaults(defineProps<AppHeaderProps>(), {
+  position: 'fixed',
+  noHeadroom: false,
+  homeUrl: () => config.get('app.home'),
+  donateUrl: () => config.get('app.donate-url')
 })
 
 const { t } = useI18n()
