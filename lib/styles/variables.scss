@@ -105,24 +105,24 @@ $tooltip-opacity: 1 !default;
 
 $alert-border-width: 0 !default;
 
-$ph-icon-size-scale-base: 20 !default;
+$app-icon-size-scale-base: 20 !default;
 
-$ph-icon-size-scale-2xs: 12 !default;
-$ph-icon-size-scale-xs: 14 !default;
-$ph-icon-size-scale-sm: 16 !default;
-$ph-icon-size-scale-md: $ph-icon-size-scale-base !default;
-$ph-icon-size-scale-lg: 24 !default;
-$ph-icon-size-scale-xl: 32 !default;
-$ph-icon-size-scale-2xl: 40 !default;
+$app-icon-size-scale-2xs: 12 !default;
+$app-icon-size-scale-xs: 14 !default;
+$app-icon-size-scale-sm: 16 !default;
+$app-icon-size-scale-md: $app-icon-size-scale-base !default;
+$app-icon-size-scale-lg: 24 !default;
+$app-icon-size-scale-xl: 32 !default;
+$app-icon-size-scale-2xl: 40 !default;
 
-$ph-icon-sizes: (
-  "2xs" : $ph-icon-size-scale-2xs,
-  "xs": $ph-icon-size-scale-xs,
-  "sm": $ph-icon-size-scale-sm,
-  "md": $ph-icon-size-scale-md,
-  "lg": $ph-icon-size-scale-lg,
-  "xl": $ph-icon-size-scale-xl,
-  "2xl": $ph-icon-size-scale-2xl
+$app-icon-sizes: (
+  "2xs" : $app-icon-size-scale-2xs,
+  "xs": $app-icon-size-scale-xs,
+  "sm": $app-icon-size-scale-sm,
+  "md": $app-icon-size-scale-md,
+  "lg": $app-icon-size-scale-lg,
+  "xl": $app-icon-size-scale-xl,
+  "2xl": $app-icon-size-scale-2xl
 ) !default;
 
 /* Bootstrap variables and functions must be available everywhere */
