@@ -36,7 +36,7 @@ import { formatRows } from '@/utils/placeholder'
 import type {
   ContentPlaceholderRows,
   ContentPlaceholderStyledRows
-} from '@/utils/placeholderTypes'
+} from '@/types'
 
 /**
  * A component to fill empty spaces with animated placeholders until content is loaded.

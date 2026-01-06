@@ -133,6 +133,34 @@ export { useResizeObserver } from './composables/useResizeObserver'
 export { useColorMode } from './composables/useColorMode'
 export { useQueryObserver } from './composables/useQueryObserver'
 
+// Types - public API for library consumers
+export type {
+  // Icon types
+  IconSize,
+  IconWeight,
+  // Component types
+  ButtonIconProps,
+  Accordion,
+  AccordionProvide,
+  BrandStyle,
+  BrandExpansionStyle,
+  // Map types
+  MapTransform,
+  ParentMap,
+  ParentMapProvide,
+  // Utility types
+  Step,
+  BoxStyle,
+  ContentPlaceholderRow,
+  ContentPlaceholderRows,
+  ContentPlaceholderStyledRow,
+  ContentPlaceholderStyledRows,
+  // Re-exported bootstrap-vue-next types
+  TextColorVariant,
+  ButtonVariant,
+  Size
+} from './types'
+
 type ComponentMap = Record<string, Component | DefineComponent>
 
 interface PluginOptions {

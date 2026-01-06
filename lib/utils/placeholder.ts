@@ -1,10 +1,10 @@
-import {
+import type {
   BoxStyle,
   ContentPlaceholderRow,
   ContentPlaceholderRows,
   ContentPlaceholderStyledRow,
   ContentPlaceholderStyledRows
-} from '@/utils/placeholderTypes'
+} from '@/types'
 
 function isFlexBasis(value: string | number): boolean {
   return Number(value).toString() === value.toString()
