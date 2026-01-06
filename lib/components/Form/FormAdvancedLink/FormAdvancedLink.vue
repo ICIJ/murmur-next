@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uniqueId } from 'lodash'
 import { ButtonVariant } from 'bootstrap-vue-next'
@@ -17,75 +17,62 @@ defineOptions({
 /**
  * Index of the selected tab
  */
-const index = defineModel({
-  type: Number
-})
+const index = defineModel<number>()
 
-const props = defineProps({
+export interface FormAdvancedLinkProps {
   /**
    * The link to copy
    */
-  link: {
-    type: String
-  },
+  link?: string
   /**
    * Title associated with the link
    */
-  title: {
-    type: String,
-    default: null
-  },
+  title?: string | null
   /**
    * The forms to display
    */
-  forms: {
-    type: Array as PropType<Tab[]>,
-    default: () => ['raw', 'markdown', 'rich', 'html']
-  },
+  forms?: Tab[]
   /**
    * Activate the card integration for the tabs
    */
-  card: {
-    type: Boolean
-  },
+  card?: boolean
   /**
    * Renders the tabs with the appearance of pill buttons
    */
-  pills: {
-    type: Boolean
-  },
+  pills?: boolean
   /**
    * Makes the tabs and the panels smaller.
    */
-  small: {
-    type: Boolean
-  },
+  small?: boolean
   /**
    * Makes the tabs and the panels vertical.
    */
-  vertical: {
-    type: Boolean
-  },
+  vertical?: boolean
   /**
    * The variant to use for the copy button.
    */
-  variant: {
-    type: String as PropType<ButtonVariant>,
-    default: 'primary'
-  },
+  variant?: ButtonVariant
   /**
    * CSS class (or classes) to apply to the currently active tab.
    */
-  activeNavItemClass: {
-    type: String,
-    default: null
-  },
+  activeNavItemClass?: string | null
   /**
    * When set to 'true', disables the fade animation on the tabs.
    */
-  noFade: {
-    type: Boolean
-  }
+  noFade?: boolean
+}
+
+const props = withDefaults(defineProps<FormAdvancedLinkProps>(), {
+  link: undefined,
+  title: null,
+  forms: () => ['raw', 'markdown', 'rich', 'html'],
+  card: false,
+  pills: false,
+  small: false,
+  vertical: false,
+  variant: 'primary',
+  activeNavItemClass: null,
+  noFade: false
 })
 const advancedLinkFormId = uniqueId('advanced-link-form-')
 
