@@ -2,6 +2,8 @@
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 
+import { SlideUpDownState } from '@/enums'
+
 defineOptions({
   name: 'SlideUpDown'
 })
@@ -10,12 +12,6 @@ type StyleTransition = Pick<
   CSSProperties,
   'overflow' | 'transition-property' | 'transition-duration' | 'height'
 >
-
-const STATE = {
-  PRE: 'pre',
-  ACTIVE: 'active',
-  POST: 'post'
-}
 
 export interface SlideUpDownProps {
   /**
@@ -38,7 +34,7 @@ const props = withDefaults(defineProps<SlideUpDownProps>(), {
   tag: 'div'
 })
 
-const state = ref(STATE.POST)
+const state = ref(SlideUpDownState.post)
 const mounted = ref(false)
 const scrollHeight = ref(0)
 const container = ref<HTMLElement | undefined>(undefined)
@@ -68,9 +64,9 @@ const stylePostTransition = computed((): StyleTransition => {
 
 const style = computed((): StyleTransition => {
   switch (state.value) {
-    case STATE.PRE:
+    case SlideUpDownState.pre:
       return stylePreTransition.value
-    case STATE.ACTIVE:
+    case SlideUpDownState.active:
       return styleActiveTransition.value
     default:
       return stylePostTransition.value
@@ -86,18 +82,18 @@ const containerScrollHeight = computed((): number => {
 })
 
 async function triggerSlide(): Promise<void> {
-  state.value = STATE.PRE
+  state.value = SlideUpDownState.pre
   scrollHeight.value = containerScrollHeight.value
   // Deferred next tick to let the component render once
   await deferredNextTick()
-  state.value = STATE.ACTIVE
+  state.value = SlideUpDownState.active
 }
 
 function cleanLayout(e: Event | null) {
   // This method can be triggered by animated child elements in
   // which case, we should do anything
   if (!e || e.target === container.value) {
-    state.value = STATE.POST
+    state.value = SlideUpDownState.post
     return deferredNextTick()
   }
 }
