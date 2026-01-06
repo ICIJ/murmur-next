@@ -156,7 +156,7 @@
 
 <script lang="ts" setup>
 import { BButton, BFormInput } from 'bootstrap-vue-next'
-import { computed, PropType, ref, watch, type Component } from 'vue'
+import { computed, ref, watch, type Component } from 'vue'
 import { directive as vInputAutowidth } from 'vue-input-autowidth'
 import { useI18n } from 'vue-i18n'
 import type { ButtonVariant, Size } from 'bootstrap-vue-next'
@@ -172,172 +172,135 @@ import IPhCaretRight from '~icons/ph/caret-right'
 /**
  * Grabs and syncs the currentPage variable passed down from the parent in v-model
  */
-const modelValue = defineModel({
-  type: [Number, String] as PropType<number | string>,
+const modelValue = defineModel<number | string>({
   default: 1
 })
 
-const props = defineProps({
+export interface PaginationTinyProps {
   /**
    * Total items to be stored in pages
    */
-  totalRows: {
-    type: Number,
-    default: 0
-  },
+  totalRows?: number
   /**
    * Sets the quantity of items per page
    */
-  perPage: {
-    type: Number,
-    default: 20
-  },
+  perPage?: number
   /**
    * Use an input to set the row number
    */
-  row: {
-    type: Boolean
-  },
+  row?: boolean
   /**
    * Set the size of the input: 'sm', 'md' (default), or 'lg'.
    */
-  size: {
-    type: String as PropType<Size>,
-    default: SIZE.md
-  },
+  size?: Size
   /**
    * (Optional) Number of page. Property `size` is required for this to work
    * properly. If `pages` is empty, it will be calculated using the size.
    */
-  pages: {
-    type: [Number, String],
-    default: null
-  },
+  pages?: number | string | null
   /**
    * Hide navigation buttons (next and previous)
    */
-  noNav: {
-    type: Boolean
-  },
+  noNav?: boolean
   /**
    * Hide bounds navigation buttons (first and last)
    */
-  noNavBounds: {
-    type: Boolean
-  },
+  noNavBounds?: boolean
   /**
    * Hide the first page button
    */
-  noFirst: {
-    type: Boolean
-  },
+  noFirst?: boolean
   /**
    * Hide the last page button
    */
-  noLast: {
-    type: Boolean
-  },
+  noLast?: boolean
   /**
    * Hide the previous page button
    */
-  noPrevious: {
-    type: Boolean
-  },
+  noPrevious?: boolean
   /**
    * Hide the next page button
    */
-  noNext: {
-    type: Boolean
-  },
+  noNext?: boolean
   /**
-   * Phosphor icon of the previous page button
+   * Icon of the previous page button
    */
-  previousPageIcon: {
-    type: [String, Object, Array] as PropType<string | string[] | Component>,
-    default: () => IPhCaretLeft
-  },
+  previousPageIcon?: string | string[] | Component
   /**
-   * Phosphor icon of the next page button
+   * Icon of the next page button
    */
-  nextPageIcon: {
-    type: [String, Object, Array] as PropType<string | string[] | Component>,
-    default: () => IPhCaretRight
-  },
+  nextPageIcon?: string | string[] | Component
   /**
-   * Phosphor icon of the first page button
+   * Icon of the first page button
    */
-  firstPageIcon: {
-    type: [String, Object, Array] as PropType<string | string[] | Component>,
-    default: () => IPhCaretDoubleLeft
-  },
+  firstPageIcon?: string | string[] | Component
   /**
-   * Phosphor icon of the last page button
+   * Icon of the last page button
    */
-  lastPageIcon: {
-    type: [String, Object, Array] as PropType<string | string[] | Component>,
-    default: () => IPhCaretDoubleRight
-  },
+  lastPageIcon?: string | string[] | Component
   /**
    * Navigation button variants
    */
-  navVariant: {
-    type: String as PropType<ButtonVariant>,
-    default: 'link'
-  },
+  navVariant?: ButtonVariant
   /**
    * Display pagination as a block (full width)
    */
-  block: {
-    type: Boolean
-  },
+  block?: boolean
   /**
    * Compact mode with a grouped nav
    */
-  compact: {
-    type: Boolean
-  },
+  compact?: boolean
   /**
    * Label for the previous page button
    */
-  previousLabel: {
-    type: String,
-    default: null
-  },
+  previousLabel?: string | null
   /**
    * Label for the next page button
    */
-  nextLabel: {
-    type: String,
-    default: null
-  },
+  nextLabel?: string | null
   /**
    * Label for the first page button
    */
-  firstLabel: {
-    type: String,
-    default: null
-  },
+  firstLabel?: string | null
   /**
    * Label for the last page button
    */
-  lastLabel: {
-    type: String,
-    default: null
-  },
+  lastLabel?: string | null
   /**
    * ARIA label for the input field
    */
-  inputAriaLabel: {
-    type: String,
-    default: null
-  },
+  inputAriaLabel?: string | null
   /**
    * Title label for the pagination component
    */
-  titleLabel: {
-    type: String,
-    default: null
-  }
+  titleLabel?: string | null
+}
+
+const props = withDefaults(defineProps<PaginationTinyProps>(), {
+  totalRows: 0,
+  perPage: 20,
+  row: false,
+  size: SIZE.md,
+  pages: null,
+  noNav: false,
+  noNavBounds: false,
+  noFirst: false,
+  noLast: false,
+  noPrevious: false,
+  noNext: false,
+  previousPageIcon: () => IPhCaretLeft,
+  nextPageIcon: () => IPhCaretRight,
+  firstPageIcon: () => IPhCaretDoubleLeft,
+  lastPageIcon: () => IPhCaretDoubleRight,
+  navVariant: 'link',
+  block: false,
+  compact: false,
+  previousLabel: null,
+  nextLabel: null,
+  firstLabel: null,
+  lastLabel: null,
+  inputAriaLabel: null,
+  titleLabel: null
 })
 
 const { t, n } = useI18n()
