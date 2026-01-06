@@ -1,4 +1,4 @@
-import type { DefineComponent, PropType, StyleValue } from 'vue'
+import type { Component, DefineComponent, PropType, StyleValue } from 'vue'
 
 import { AccordionKey, ParentKey } from '@/keys'
 import { ComputedRef } from 'vue'
@@ -76,23 +76,19 @@ export interface ParentMapProvide {
 
 export interface ButtonIconProps {
   id?: string
-  iconLeft?: string | string[] | IconPhosphor
+  iconLeft?: string | Component
   iconLeftVariant?: TextColorVariant
   iconLeftHoverVariant?: TextColorVariant
-  iconLeftWeight?: IconWeight
-  iconLeftHoverWeight?: IconWeight
   iconLeftSize?: string
   iconLeftLabel?: string
-  iconLeftLabelOffset?: number //
-  iconRight?: string | string[] | any
+  iconLeftLabelOffset?: number
+  iconRight?: string | Component
   iconRightVariant?: TextColorVariant
   iconRightHoverVariant?: TextColorVariant
-  iconRightWeight?: IconWeight
-  iconRightHoverWeight?: IconWeight
   iconRightSize?: string
   iconRightLabel?: string
   iconRightLabelOffset?: number
-  iconSpinner?: string | any
+  iconSpinner?: string | Component
   hideLabel?: boolean
   hideTooltip?: boolean
   label?: string
@@ -119,6 +115,7 @@ export interface ButtonIconProps {
   counterStyle?: string | object
 }
 export interface AppIconProps {
+  name?: string | Component
   size?: IconSize | string
   scale?: number
   variant?: TextColorVariant
