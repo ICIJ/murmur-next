@@ -8,22 +8,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, provide } from 'vue'
+import { computed, provide } from 'vue'
 import { AccordionKey } from '@/keys'
 import { Accordion, Step } from '@/types'
 
-const STEP_CHANGE_EVENT = 'step-change'
+export interface AccordionWrapperProps {
+  /**
+   * Current active step
+   */
+  step: Step
+  /**
+   * Array of all available steps
+   */
+  steps: Step[]
+}
 
-const props = defineProps({
-  step: {
-    type: [String, Symbol, Object as () => Step],
-    required: true
-  },
-  steps: {
-    type: Array as PropType<Step[]>,
-    required: true
-  }
-})
+const props = defineProps<AccordionWrapperProps>()
 
 const emit = defineEmits(['step-change'])
 
