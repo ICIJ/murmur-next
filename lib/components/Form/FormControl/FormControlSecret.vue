@@ -1,51 +1,45 @@
 <script setup lang="ts">
-import { computed, ref, type PropType, type Component } from 'vue'
+import { computed, ref, type Component } from 'vue'
 import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
 import AppIcon from '@/components/App/AppIcon.vue'
 import { Size } from 'bootstrap-vue-next'
 import IPhEye from '~icons/ph/eye'
 import IPhEyeSlash from '~icons/ph/eye-slash'
 
-const props = defineProps({
+export interface FormControlSecretProps {
   /**
    * If true the value is visible by default
    */
-  visible: {
-    type: Boolean
-  },
+  visible?: boolean
   /**
    * Value of the input
    */
-  value: {
-    type: [String, Number],
-    default: ''
-  },
+  value?: string | number
   /**
    * Size of the input form
    */
-  size: {
-    type: String as PropType<Size>,
-    default: 'md'
-  },
+  size?: Size
   /**
    * Bootstrap variant of the haptic copy button
    */
-  hapticCopyVariant: {
-    type: String,
-    default: 'primary'
-  },
+  hapticCopyVariant?: string
   /**
    * Hide toggler button
    */
-  noToggler: {
-    type: Boolean
-  },
+  noToggler?: boolean
   /**
    * Hide haptic copy button
    */
-  noHapticCopy: {
-    type: Boolean
-  }
+  noHapticCopy?: boolean
+}
+
+const props = withDefaults(defineProps<FormControlSecretProps>(), {
+  visible: false,
+  value: '',
+  size: 'md',
+  hapticCopyVariant: 'primary',
+  noToggler: false,
+  noHapticCopy: false
 })
 
 const emit = defineEmits(['update:visible'])
