@@ -8,7 +8,7 @@ import {
   nextTick,
   onUnmounted,
   ref,
-  type PropType
+  type Component
 } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -19,73 +19,62 @@ import { copyHtml, copyText } from '@/utils/clipboard'
 import IPhCheckFatFill from '~icons/ph/check-fat-fill'
 import IPhClipboard from '~icons/ph/clipboard'
 
-const props = defineProps({
-  tag: {
-    type: [String, Object] as PropType<string | ComponentPublicInstance>,
-    default: BButton
-  },
+export interface HapticCopyProps {
+  /**
+   * HTML tag or component to render
+   */
+  tag?: string | Component
   /**
    * Text to copy to the clipboard
    */
-  text: {
-    type: [String, Number],
-    default: null
-  },
+  text?: string | number | null
   /**
    * Plain text to use as an alternative text for HTML copy (uses `text` by default)
    */
-  plain: {
-    type: String,
-    default: null
-  },
+  plain?: string | null
   /**
    * Hide the button label (still visible for screen reader)
    */
-  hideLabel: {
-    type: Boolean
-  },
+  hideLabel?: boolean
   /**
    * Button label
    */
-  label: {
-    type: String,
-    default: null
-  },
+  label?: string | null
   /**
    * Delay after which we hide the tooltip
    */
-  tooltipHideDelay: {
-    type: Number,
-    default: 1e3
-  },
+  tooltipHideDelay?: number
   /**
-   * Placement of the tooltip. Can be: top, topleft, topright, right,<br />
+   * Placement of the tooltip. Can be: top, topleft, topright, right,
    * righttop, rightbottom, bottom, bottomleft, bottomright, left, lefttop,
    * and leftbottom.
    */
-  tooltipPlacement: {
-    type: String as PropType<PopoverPlacement>,
-    default: 'top'
-  },
+  tooltipPlacement?: PopoverPlacement
   /**
    * Copy HTML content
    */
-  html: {
-    type: Boolean
-  },
+  html?: boolean
   /**
    * Deactivate haptic tooltip display
    */
-  noTooltip: {
-    type: Boolean
-  },
+  noTooltip?: boolean
   /**
    * Button variant
    */
-  variant: {
-    type: String as PropType<ButtonVariant>,
-    default: 'primary'
-  }
+  variant?: ButtonVariant
+}
+
+const props = withDefaults(defineProps<HapticCopyProps>(), {
+  tag: () => BButton,
+  text: null,
+  plain: null,
+  hideLabel: false,
+  label: null,
+  tooltipHideDelay: 1e3,
+  tooltipPlacement: 'top',
+  html: false,
+  noTooltip: false,
+  variant: 'primary'
 })
 
 const emit = defineEmits(['attempt', 'success', 'error', 'hideClipboardTooltip'])
