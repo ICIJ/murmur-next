@@ -14,8 +14,7 @@ import {
   computed,
   watch,
   onMounted,
-  onUnmounted,
-  PropType
+  onUnmounted
 } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
@@ -33,7 +32,6 @@ type Item = any
  * The item marked as active.
  */
 const activeItems = defineModel<Item[]>('activeItems', {
-  type: Array as PropType<Item[]>,
   default: () => []
 })
 
@@ -41,88 +39,70 @@ const activeItems = defineModel<Item[]>('activeItems', {
  * The actual selected item.
  */
 const modelValue = defineModel<Item>({
-  type: [String, Object, Array, Number] as PropType<Item>,
   default: null
 })
 
-const props = defineProps({
+export interface FormControlSelectableDropdownProps {
   /**
    * The items of the list.
    */
-  items: {
-    type: Array as PropType<Item[]>,
-    default() {
-      return []
-    }
-  },
+  items?: Item[]
   /**
    * If true, the dropdown is hidden and deactivated.
    */
-  hide: {
-    type: Boolean
-  },
+  hide?: boolean
   /**
    * If true, the key events won't be propagated.
    */
-  propagate: {
-    type: Boolean
-  },
+  propagate?: boolean
   /**
    * The user can select values.
    */
-  multiple: {
-    type: Boolean
-  },
+  multiple?: boolean
   /**
    * A function to change the label rendering.
    */
-  serializer: {
-    type: Function,
-    default: identity
-  },
+  serializer?: (item: Item) => string
   /**
    * The class to apply to the list.
    */
-  listClass: {
-    type: String,
-    default: 'dropdown-menu'
-  },
+  listClass?: string
   /**
    * The class to apply to each item.
    */
-  itemClass: {
-    type: String,
-    default: 'dropdown-item'
-  },
+  itemClass?: string
   /**
    * Set to true to deactivate action when arrow keys are pressed
    */
-  deactivateKeys: {
-    type: Boolean
-  },
+  deactivateKeys?: boolean
   /**
    * Comparison function to verify equality between selected items.
    */
-  eq: {
-    type: Function,
-    default: equals
-  },
+  eq?: (a: Item, b: Item) => boolean
   /**
    * Display height of the items in pixels used to calculate the scroll size and position
    * Default value is 32 (32px)
    */
-  itemSize: {
-    type: Number,
-    default: 32
-  },
+  itemSize?: number
   /**
    * Height of the scroll container to specify especially if using the virtual scroll feature
    * Default value is 'inherit'
    */
-  scrollerHeight: {
-    type: String,
-    default: 'inherit'
-  }
+  scrollerHeight?: string
+}
+
+const props = withDefaults(defineProps<FormControlSelectableDropdownProps>(), {
+  items: () => [],
+  hide: false,
+  propagate: false,
+  multiple: false,
+  serializer: identity,
+  listClass: 'dropdown-menu',
+  itemClass: 'dropdown-item',
+  deactivateKeys: false,
+  eq: equals,
+  itemSize: 32,
+  scrollerHeight: 'inherit'
 })
 
 const emit = defineEmits(['click', 'deactivate'])
