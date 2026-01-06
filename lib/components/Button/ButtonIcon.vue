@@ -14,6 +14,7 @@
     <app-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
       v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset, delay: tooltipDelay }"
+      :name="iconLeftOrSpinner"
       :size="iconLeftSize"
       :spin="loading"
       :spin-duration="loadingDuration"
@@ -21,9 +22,7 @@
       :hover-variant="iconLeftHoverVariant"
       :hover="currentHover"
       class="button-icon__icon-left"
-    >
-      <component :is="iconLeftOrSpinner" />
-    </app-icon>
+    />
     <span
       v-if="!hideLabel"
       class="button-icon__label"
@@ -33,6 +32,7 @@
     <app-icon
       v-if="iconRight"
       v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset, delay: tooltipDelay }"
+      :name="iconRightOrSpinner"
       :size="iconRightSize"
       :spin="loading"
       :spin-duration="loadingDuration"
@@ -41,9 +41,7 @@
       :hover="currentHover"
       class="button-icon__icon-right"
       @click="click('icon-right')"
-    >
-      <component :is="iconRightOrSpinner" />
-    </app-icon>
+    />
     <button-icon-counter
       v-if="counter !== null"
       :counter="counter"
