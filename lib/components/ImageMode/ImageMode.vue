@@ -4,44 +4,40 @@ import { computed, useTemplateRef } from 'vue'
 import { useColorMode } from '@/composables/useColorMode'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 
-const props = defineProps({
+export interface ImageModeProps {
   /**
    * The default color mode to use when no matching source is found.
    */
-  defaultColorMode: {
-    type: String,
-    default: 'light'
-  },
+  defaultColorMode?: string
   /**
    * The default image source URL, used as fallback when no matching color mode source exists.
    */
-  src: {
-    type: String
-  },
+  src?: string
   /**
    * Alternative text description of the image for accessibility.
    */
-  alt: {
-    type: String
-  },
+  alt?: string
   /**
    * The intrinsic height of the image in pixels or CSS units.
    */
-  height: {
-    type: [String, Number]
-  },
+  height?: string | number
   /**
    * The intrinsic width of the image in pixels or CSS units.
    */
-  width: {
-    type: [String, Number]
-  },
+  width?: string | number
   /**
    * CSS classes to apply to the inner img element.
    */
-  imageClass: {
-    type: [String, Array, Object]
-  }
+  imageClass?: string | string[] | Record<string, boolean>
+}
+
+const props = withDefaults(defineProps<ImageModeProps>(), {
+  defaultColorMode: 'light',
+  src: undefined,
+  alt: undefined,
+  height: undefined,
+  width: undefined,
+  imageClass: undefined
 })
 
 const element = useTemplateRef<HTMLElement>('element')
