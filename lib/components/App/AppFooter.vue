@@ -240,35 +240,30 @@ defineOptions({
   name: 'AppFooter'
 })
 
-/**
- * Version of the app to display in the bottom-right corner of the footer
- */
-const props = defineProps({
-  version: {
-    type: String,
-    default: null
-  },
+export interface AppFooterProps {
+  /**
+   * Version of the app to display in the bottom-right corner of the footer
+   */
+  version?: string | null
   /**
    * Whether to show the About Us column or not
    */
-  showAboutUs: {
-    type: Boolean,
-    default: false
-  },
+  showAboutUs?: boolean
   /**
    * If true, it resizes the brand as the display downsize.
    */
-  responsive: {
-    type: Boolean,
-    default: true
-  },
+  responsive?: boolean
   /**
    * If true, on small screens it uses the short version of the brand.
    */
-  adaptive: {
-    type: Boolean,
-    default: true
-  },
+  adaptive?: boolean
+}
+
+const props = withDefaults(defineProps<AppFooterProps>(), {
+  version: null,
+  showAboutUs: false,
+  responsive: true,
+  adaptive: true
 })
 
 const breakpoints = useBreakpoints(breakpointsBootstrapV5)
