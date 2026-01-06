@@ -40,6 +40,18 @@ export default {
 
 export const Default = {
   args: {
+    size: '2xl',
+    name: IPhUser
+  },
+  render: (args: any) => ({
+    components: { AppIcon },
+    setup: () => ({ args }),
+    template: `<AppIcon v-bind="args" />`
+  })
+}
+
+export const UsingSlot = {
+  args: {
     size: '2xl'
   },
   render: (args: any) => ({
@@ -55,94 +67,76 @@ export const Default = {
 
 export const WeightBold = {
   args: {
-    size: '2xl'
+    size: '2xl',
+    name: IPhUserBold
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhUserBold },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhUserBold />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
 export const WeightFill = {
   args: {
-    size: '2xl'
+    size: '2xl',
+    name: IPhUserFill
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhUserFill },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhUserFill />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
 export const WeightDuotone = {
   args: {
-    size: '2xl'
+    size: '2xl',
+    name: IPhUserDuotone
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhUserDuotone },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhUserDuotone />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
 export const Spinning = {
   args: {
     size: '2xl',
-    spin: true
+    spin: true,
+    name: IPhCircleNotch
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhCircleNotch },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhCircleNotch />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
 export const VariantPrimary = {
   args: {
     variant: 'primary',
-    size: '2xl'
+    size: '2xl',
+    name: IPhRocket
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhRocket },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhRocket />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
 export const VariantSecondary = {
   args: {
     variant: 'secondary',
-    size: '2xl'
+    size: '2xl',
+    name: IPhRocket
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhRocket },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhRocket />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
@@ -150,16 +144,13 @@ export const HoverVariant = {
   args: {
     variant: 'link',
     hoverVariant: 'danger',
-    size: '2xl'
+    size: '2xl',
+    name: IPhTrashDuotone
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhTrashDuotone },
+    components: { AppIcon },
     setup: () => ({ args }),
-    template: `
-      <AppIcon v-bind="args">
-        <IPhTrashDuotone />
-      </AppIcon>
-    `
+    template: `<AppIcon v-bind="args" />`
   })
 }
 
