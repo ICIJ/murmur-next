@@ -6,6 +6,14 @@
       "follow": "Suivez l'ICIJ"
     }
   },
+  "app-header": {
+    "navbar": {
+      "investigations": "Enquêtes",
+      "leak": "Contact securisé",
+      "support": "Soutenez nous",
+      "follow": "Suivez l'ICIJ"
+    }
+  },
   "generic-header": {
     "navbar": {
       "investigations": "Enquêtes",
@@ -25,6 +33,12 @@
   },
   "follow-us-popover": {
     "heading": "Suivez nous"
+  },
+  "app-footer": {
+    "investigations": "Enquêtes",
+    "follow-us": "Suivez nous",
+    "all-rights": "Tous droits réservés",
+    "version": "Version {version}"
   },
   "generic-footer": {
     "investigations": "Enquêtes",

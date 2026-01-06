@@ -15,6 +15,14 @@
       "tab": "HTML"
     }
   },
+  "app-header": {
+    "navbar": {
+      "investigations": "Investigations",
+      "leak": "Leak to us",
+      "support": "Support us",
+      "follow": "Follow ICIJ"
+    }
+  },
   "generic-header": {
     "navbar": {
       "investigations": "Investigations",
@@ -41,6 +49,12 @@
   },
   "follow-us-popover": {
     "heading": "Follow us"
+  },
+  "app-footer": {
+    "investigations": "Investigations",
+    "follow-us": "Follow us",
+    "all-rights": "All rights reserved",
+    "version": "Version {version}"
   },
   "generic-footer": {
     "investigations": "Investigations",
