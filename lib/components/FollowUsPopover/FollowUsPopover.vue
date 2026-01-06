@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import SignUpForm from '@/components/Form/FormSignUp.vue'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 
 /**
  * FollowUsPopover

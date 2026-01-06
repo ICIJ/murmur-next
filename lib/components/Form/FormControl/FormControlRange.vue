@@ -10,7 +10,7 @@ import {
 import { clamp, round } from 'lodash'
 
 import type { ButtonVariant } from 'bootstrap-vue-next'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import IPhCaretLeftBold from '~icons/ph/caret-left-bold'
 import IPhCaretRightBold from '~icons/ph/caret-right-bold'
 import type { Component } from 'vue'

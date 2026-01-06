@@ -18,7 +18,7 @@ import {
   PropType
 } from 'vue'
 
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import IPhCheckSquare from '~icons/ph/check-square'
 import IPhSquare from '~icons/ph/square'
 import type { Component } from 'vue'

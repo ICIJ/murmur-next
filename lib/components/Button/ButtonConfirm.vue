@@ -62,7 +62,7 @@ import uniqueId from 'lodash/uniqueId'
 import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
 import { ComponentPublicInstance, PropType, ref } from 'vue'
 
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 
 /**
  * ConfirmButton

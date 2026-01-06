@@ -163,7 +163,7 @@ import type { ButtonVariant, Size } from 'bootstrap-vue-next'
 
 import { SIZE } from '@/enums'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import IPhCaretDoubleLeft from '~icons/ph/caret-double-left'
 import IPhCaretDoubleRight from '~icons/ph/caret-double-right'
 import IPhCaretLeft from '~icons/ph/caret-left'

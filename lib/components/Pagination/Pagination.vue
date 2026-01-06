@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { BPagination, Size } from 'bootstrap-vue-next'
 
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import IPhCaretLeft from '~icons/ph/caret-left'
 import IPhCaretRight from '~icons/ph/caret-right'
 import { SIZE } from '@/enums'

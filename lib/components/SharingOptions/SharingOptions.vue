@@ -9,7 +9,7 @@ import {
 } from 'vue'
 
 import EmbedForm from '@/components/Form/FormEmbed.vue'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import SharingOptionsLink from '@/components/SharingOptions/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'

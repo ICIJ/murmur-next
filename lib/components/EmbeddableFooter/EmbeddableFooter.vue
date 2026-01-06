@@ -53,7 +53,7 @@ import { ref, onMounted } from 'vue'
 
 import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand/Brand.vue'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import SharingOptions from '@/components/SharingOptions/SharingOptions.vue'
 import config from '@/config'
 

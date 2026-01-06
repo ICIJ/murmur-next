@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, type PropType, type Component } from 'vue'
 import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import { Size } from 'bootstrap-vue-next'
 import IPhEye from '~icons/ph/eye'
 import IPhEyeSlash from '~icons/ph/eye-slash'

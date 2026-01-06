@@ -4,7 +4,7 @@ import { identity, iteratee, sortBy as sortByFn } from 'lodash'
 import * as d3 from 'd3'
 
 import { getChartProps, useChart } from '@/composables/useChart'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 
 defineOptions({
   name: 'ColumnChart'

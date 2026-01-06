@@ -56,9 +56,13 @@ export { default as FormControlSelectableDropdown } from './Form/FormControl/For
 /** @deprecated Use FormControlSelectableDropdown instead */
 export { default as SelectableDropdown } from './Form/FormControl/FormControlSelectableDropdown.vue'
 
-// Generic
-export { default as GenericFooter } from './Generic/GenericFooter.vue'
-export { default as GenericHeader } from './Generic/GenericHeader.vue'
+// App
+export { default as AppFooter } from './App/AppFooter.vue'
+/** @deprecated Use AppFooter instead */
+export { default as GenericFooter } from './App/AppFooter.vue'
+export { default as AppHeader } from './App/AppHeader.vue'
+/** @deprecated Use AppHeader instead */
+export { default as GenericHeader } from './App/AppHeader.vue'
 
 // HapticCopy
 export { default as HapticCopy } from './HapticCopy/HapticCopy.vue'
@@ -83,13 +87,12 @@ export { default as PaginationTiny } from './Pagination/PaginationTiny.vue'
 /** @deprecated Use PaginationTiny instead */
 export { default as TinyPagination } from './Pagination/PaginationTiny.vue'
 
-// AppIcon
-export { default as AppIcon } from './AppIcon/AppIcon.vue'
-export { default as AppIconLayers } from './AppIcon/AppIconLayers.vue'
+export { default as AppIcon } from './App/AppIcon.vue'
+export { default as AppIconLayers } from './App/AppIconLayers.vue'
 /** @deprecated Use AppIcon instead */
-export { default as PhosphorIcon } from './AppIcon/AppIcon.vue'
+export { default as PhosphorIcon } from './App/AppIcon.vue'
 /** @deprecated Use AppIconLayers instead */
-export { default as PhosphorIconLayers } from './AppIcon/AppIconLayers.vue'
+export { default as PhosphorIconLayers } from './App/AppIconLayers.vue'
 
 // ResponsiveIframe
 export { default as ResponsiveIframe } from './ResponsiveIframe/ResponsiveIframe.vue'

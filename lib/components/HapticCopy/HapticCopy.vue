@@ -12,8 +12,8 @@ import {
 } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
-import AppIconLayers from '@/components/AppIcon/AppIconLayers.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
+import AppIconLayers from '@/components/App/AppIconLayers.vue'
 
 import { copyHtml, copyText } from '@/utils/clipboard'
 import IPhCheckFatFill from '~icons/ph/check-fat-fill'

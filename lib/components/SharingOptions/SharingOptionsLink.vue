@@ -80,7 +80,7 @@ import reduce from 'lodash/reduce'
 import get from 'lodash/get'
 import { computed, reactive, type Component } from 'vue'
 
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import IPhEnvelopeFill from '~icons/ph/envelope-fill'
 import IPhFacebookLogoFill from '~icons/ph/facebook-logo-fill'
 import IPhLinkedinLogoFill from '~icons/ph/linkedin-logo-fill'
