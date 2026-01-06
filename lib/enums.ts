@@ -69,3 +69,43 @@ export enum PLACEMENTS {
   LEFTTOP = 'lefttop',
   LEFTBOTTOM = 'leftbottom'
 }
+
+export enum SlideUpDownState {
+  pre = 'pre',
+  active = 'active',
+  post = 'post'
+}
+
+export enum SharingPlatform {
+  email = 'email',
+  facebook = 'facebook',
+  linkedin = 'linkedin',
+  twitter = 'twitter',
+  x = 'x'
+}
+
+export enum DonatePeriod {
+  onetime = 'onetime',
+  monthly = 'monthly',
+  yearly = 'yearly'
+}
+
+export enum DonationCategory {
+  conversation = 'conversation',
+  rules = 'rules',
+  world = 'world'
+}
+
+export enum AdvancedLinkTab {
+  raw = 'raw',
+  rich = 'rich',
+  markdown = 'markdown',
+  html = 'html'
+}
+
+export enum LegendCategory {
+  id = 'id',
+  color = 'color',
+  path = 'path',
+  label = 'label'
+}
