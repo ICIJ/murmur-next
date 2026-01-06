@@ -4,12 +4,12 @@ import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
 import { computed, nextTick, type ShallowRef, useTemplateRef } from 'vue'
 import { uniqueId } from 'lodash'
 
-export type Tab = 'raw' | 'rich' | 'markdown' | 'html'
+import { AdvancedLinkTab } from '@/enums'
 
-interface AdvancedLinkFormTabProps {
+export interface AdvancedLinkFormTabProps {
   title: string
   link?: string
-  type?: Tab
+  type?: AdvancedLinkTab
   compact?: boolean
   variant?: keyof BaseButtonVariant
 }
@@ -26,7 +26,7 @@ interface HTMLElementSupportingCreateRange extends HTMLElement {
 }
 
 const props = withDefaults(defineProps<AdvancedLinkFormTabProps>(), {
-  type: 'raw',
+  type: AdvancedLinkTab.raw,
   compact: false,
   variant: 'primary',
   id: uniqueId('advanced-link-form-tab')
@@ -39,12 +39,12 @@ const inputRef = useTemplateRef<HTMLInputElement>('input')
 const text = computed(
   () => {
     switch (props.type) {
-      case 'rich':
-      case 'html':
+      case AdvancedLinkTab.rich:
+      case AdvancedLinkTab.html:
         return linkAsHtml.value
-      case 'markdown':
+      case AdvancedLinkTab.markdown:
         return linkAsMarkdown.value
-      case 'raw':
+      case AdvancedLinkTab.raw:
       default:
         return props.link
     }
@@ -54,11 +54,11 @@ const text = computed(
 const titleOrLink = computed(() => props.title || props.link)
 const linkAsHtml = computed(() => `<a href="${props.link}" target="_blank">${titleOrLink.value}</a>`)
 const linkAsMarkdown = computed(() => `[${titleOrLink.value}](${props.link})`)
-const isRich = computed(() => props.type === 'rich')
-const isHTML = computed(() => props.type === 'html')
+const isRich = computed(() => props.type === AdvancedLinkTab.rich)
+const isHTML = computed(() => props.type === AdvancedLinkTab.html)
 
 function select() {
-  if (props.type === 'rich') {
+  if (props.type === AdvancedLinkTab.rich) {
     selectRich(inputRef)
   }
   else {
