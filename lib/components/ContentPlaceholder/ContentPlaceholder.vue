@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed } from 'vue'
 
 import config from '@/config'
 import { formatRows } from '@/utils/placeholder'
@@ -45,21 +45,20 @@ defineOptions({
   name: 'ContentPlaceholder'
 })
 
-const props = defineProps({
+export interface ContentPlaceholderProps {
   /**
    * An array of lines describing a series of cell sizes and margin sizes.
    */
-  rows: {
-    type: Array as PropType<ContentPlaceholderRows>,
-    default: () => config.get('content-placeholder.rows')
-  },
+  rows?: ContentPlaceholderRows
   /**
    * The size of the background gradient with the elapsing effect.
    */
-  size: {
-    type: String,
-    default: '250%'
-  }
+  size?: string
+}
+
+const props = withDefaults(defineProps<ContentPlaceholderProps>(), {
+  rows: () => config.get('content-placeholder.rows'),
+  size: '250%'
 })
 
 const formattedRows = computed((): ContentPlaceholderStyledRows => {
