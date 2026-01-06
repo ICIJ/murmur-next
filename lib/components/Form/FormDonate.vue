@@ -25,16 +25,15 @@ defineOptions({
   name: 'DonateForm'
 })
 
-/**
- * Define props
- */
-defineProps({
+export interface FormDonateProps {
   /**
    * Title of the form.
    */
-  noTitle: {
-    type: Boolean
-  }
+  noTitle?: boolean
+}
+
+withDefaults(defineProps<FormDonateProps>(), {
+  noTitle: false
 })
 
 const { t, locale, messages } = useI18n()
