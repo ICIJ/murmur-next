@@ -1,15 +1,15 @@
 <template>
-  <footer class="generic-footer">
+  <footer class="app-footer">
     <div class="container">
       <div class="row">
         <div class="col-12 col-lg-5">
           <h5
-            class="text-uppercase text-white clearfix generic-footer__icij mb-3"
+            class="text-uppercase text-white clearfix app-footer__icij mb-3"
           >
             <a
               href="https://icij.org"
               target="_blank"
-              class="generic-footer__icij__logo text-decoration-none"
+              class="app-footer__icij__logo text-decoration-none"
             >
               <brand-expansion
                 :mode="mode"
@@ -99,7 +99,7 @@
             </div>
             <div class="col-12 col-sm-6 col-lg-4">
               <h5 class="text-uppercase mb-3">
-                {{ $t('generic-footer.investigations') }}
+                {{ $t('app-footer.investigations') }}
               </h5>
 
               <!-- @slot List of investigations -->
@@ -158,7 +158,7 @@
             </div>
             <div class="col-12 col-sm-6  col-lg-4">
               <h5 class="text-uppercase mb-3">
-                {{ $t('generic-footer.follow-us') }}
+                {{ $t('app-footer.follow-us') }}
               </h5>
               <ul class="list-unstyled">
                 <li class="list-unstyled-item">
@@ -208,16 +208,16 @@
       </div>
       <p class="text-white text-md-right small mt-5">
         <strong>
-          © <span class="generic-footer__year">{{ year }}</span> — The
+          © <span class="app-footer__year">{{ year }}</span> — The
           International Consortium of Investigative Journalists.
         </strong>
-        {{ $t('generic-footer.all-rights') }}
+        {{ $t('app-footer.all-rights') }}
         <br>
         <span
           v-if="version"
-          class="text-muted generic-footer__version"
+          class="text-muted app-footer__version"
         >
-          {{ $t('generic-footer.version', { version }) }}
+          {{ $t('app-footer.version', { version }) }}
         </span>
       </p>
     </div>
@@ -234,10 +234,10 @@ import { BrandMode } from '@/enums'
 import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core'
 
 /**
- * GenericFooter
+ * AppFooter
  */
 defineOptions({
-  name: 'GenericFooter'
+  name: 'AppFooter'
 })
 
 /**
@@ -295,7 +295,7 @@ const contactEmailMailto = computed((): string => {
 
 <style lang="scss" scoped>
 
-.generic-footer {
+.app-footer {
   background: $black;
   color: $white;
   padding: $spacer * 4 0;

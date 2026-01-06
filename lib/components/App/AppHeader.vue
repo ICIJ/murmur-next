@@ -2,15 +2,15 @@
   <div>
     <component
       :is="rootElement"
-      id="generic-header"
+      id="app-header"
       data-turbolinks-permanent
-      class="navbar navbar-expand-lg navbar-light generic-header"
+      class="navbar navbar-expand-lg navbar-light app-header"
       :offset="100"
       :z-index="1020"
       :on-unpin="closeFollowUsPopover"
       :class="{
         'headroom--frozen': !collapseNavbar,
-        'generic-header--collapsed': collapseNavbar
+        'app-header--collapsed': collapseNavbar
       }"
       :style="{ position: position }"
     >
@@ -18,7 +18,7 @@
       <slot name="brand">
         <a
           :href="homeUrl"
-          class="navbar-brand generic-header__brand"
+          class="navbar-brand app-header__brand"
         >
           <brand-expansion
             :size="45"
@@ -57,7 +57,7 @@
               target="_blank"
               class="nav-link text-uppercase"
             >
-              {{ t('generic-header.navbar.investigations') }}
+              {{ t('app-header.navbar.investigations') }}
             </a>
           </li>
           <li class="nav-item">
@@ -66,7 +66,7 @@
               target="_blank"
               class="nav-link text-uppercase"
             >
-              {{ t('generic-header.navbar.leak') }}
+              {{ t('app-header.navbar.leak') }}
             </a>
           </li>
           <li class="nav-item">
@@ -75,7 +75,7 @@
               class="nav-link text-uppercase"
               @mouseenter="showFollowUsPopover = true"
             >
-              {{ t('generic-header.navbar.follow') }}
+              {{ t('app-header.navbar.follow') }}
             </a>
           </li>
           <li class="nav-item me-lg-3">
@@ -85,7 +85,7 @@
                 target="_blank"
                 :href="donateUrl"
               >
-                {{ t('generic-header.navbar.support') }}
+                {{ t('app-header.navbar.support') }}
               </a>
             </slot>
           </li>
@@ -115,11 +115,11 @@ import { computed, ref } from 'vue'
 import config from '@/config'
 import BrandExpansion from '@/components/Brand/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover/FollowUsPopover.vue'
-import AppIcon from '@/components/AppIcon/AppIcon.vue'
+import AppIcon from '@/components/App/AppIcon.vue'
 import { BrandMode } from '@/enums'
 
 /**
- * GenericHeader
+ * AppHeader
  */
 const props = defineProps({
   /**
@@ -171,7 +171,7 @@ function toggleNavbar(): void {
 
 <style lang="scss">
 
-.generic-header {
+.app-header {
   background: white;
   position: relative;
   top: 0;
