@@ -185,7 +185,7 @@ const {
   dataHasHighlights
 } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
 
-const sortedData = computed((): any[] => {
+const sortedData = computed((): object[] => {
   if (!loadedData.value) {
     return []
   }

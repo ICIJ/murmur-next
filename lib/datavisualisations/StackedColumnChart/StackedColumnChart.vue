@@ -25,15 +25,15 @@ export interface StackedColumnChartProps {
   /**
    * Field of each object containing data (for each group)
    */
-  keys?: any[]
+  keys?: string[]
   /**
    * Group name to display in the legend
    */
-  groups?: any[]
+  groups?: string[]
   /**
    * Colors of each bar group
    */
-  barColors?: any[]
+  barColors?: string[]
   /**
    * Max with of each bar.
    */
@@ -78,7 +78,7 @@ export interface StackedColumnChartProps {
   /**
    * A list of highlighted groups
    */
-  highlights?: any[]
+  highlights?: string[]
   /**
    * Delay to apply when set the first highlight
    */
@@ -86,7 +86,7 @@ export interface StackedColumnChartProps {
   /**
    * A list of entire column to highlight
    */
-  columnHighlights?: any[]
+  columnHighlights?: string[]
   /**
    * Delay to apply when restoring highlights to initial state
    */
@@ -176,7 +176,7 @@ const sortedData = computed(() => {
     : sortByFn(loadedData.value, props.sortBy)
 })
 
-const discoveredKeys = computed((): any[] => {
+const discoveredKeys = computed((): string[] => {
   if (props.keys.length) {
     return props.keys
   }
@@ -438,7 +438,7 @@ function formatYDatum(d: string) {
 
 watch(
   () => props.highlights,
-  (newHighlights: any[]) => {
+  (newHighlights: string[]) => {
     highlightedKeys.value = newHighlights
   }
 )

@@ -20,7 +20,7 @@ export interface StackedBarChartProps {
   /**
    * Colors for each bar segment/key.
    */
-  barColors?: any[]
+  barColors?: string[]
   /**
    * Fixed height for the chart in pixels. If not set, height is calculated automatically.
    */
@@ -28,7 +28,7 @@ export interface StackedBarChartProps {
   /**
    * Display names for each key in the legend.
    */
-  groups?: any[]
+  groups?: string[]
   /**
    * Hide bar segments that have no values.
    */
@@ -40,7 +40,7 @@ export interface StackedBarChartProps {
   /**
    * List of keys to highlight initially.
    */
-  highlights?: any[]
+  highlights?: string[]
   /**
    * Delay in milliseconds before highlighting a key on hover.
    */
@@ -48,7 +48,7 @@ export interface StackedBarChartProps {
   /**
    * Field names in data objects containing values for each stacked segment.
    */
-  keys?: any[]
+  keys?: string[]
   /**
    * Position labels above the bars instead of to the left.
    */
@@ -76,7 +76,7 @@ export interface StackedBarChartProps {
   /**
    * List of row labels to highlight.
    */
-  rowHighlights?: any[]
+  rowHighlights?: string[]
   /**
    * Field name(s) to sort the data by.
    */
@@ -165,7 +165,7 @@ const sortedData = computed(() => {
     : sortByFn(loadedData.value, props.sortBy)
 })
 
-const discoveredKeys = computed((): any[] => {
+const discoveredKeys = computed((): string[] => {
   if (props.keys.length) {
     return props.keys
   }
@@ -361,7 +361,7 @@ function formatXDatum(d: string) {
   return d3Formatter(d, props.xAxisTickFormat)
 }
 
-watch(() => props.highlights, (newHighlights: any[]) => {
+watch(() => props.highlights, (newHighlights: string[]) => {
   highlightedKeys.value = newHighlights
 })
 </script>
