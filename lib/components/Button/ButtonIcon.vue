@@ -78,43 +78,157 @@ defineOptions({
 })
 
 export interface ButtonIconProps {
+  /**
+   * Custom ID for the button element
+   */
   id?: string
+  /**
+   * Icon component or name to display on the left side
+   */
   iconLeft?: string | Component
+  /**
+   * Color variant for the left icon
+   */
   iconLeftVariant?: TextColorVariant
+  /**
+   * Color variant for the left icon on hover
+   */
   iconLeftHoverVariant?: TextColorVariant
+  /**
+   * Size of the left icon
+   */
   iconLeftSize?: string
+  /**
+   * Tooltip label for the left icon
+   */
   iconLeftLabel?: string
+  /**
+   * Offset for the left icon tooltip
+   */
   iconLeftLabelOffset?: number
+  /**
+   * Icon component or name to display on the right side
+   */
   iconRight?: string | Component
+  /**
+   * Color variant for the right icon
+   */
   iconRightVariant?: TextColorVariant
+  /**
+   * Color variant for the right icon on hover
+   */
   iconRightHoverVariant?: TextColorVariant
+  /**
+   * Size of the right icon
+   */
   iconRightSize?: string
+  /**
+   * Tooltip label for the right icon
+   */
   iconRightLabel?: string
+  /**
+   * Offset for the right icon tooltip
+   */
   iconRightLabelOffset?: number
+  /**
+   * Icon component to display during loading state
+   */
   iconSpinner?: string | Component
+  /**
+   * Hide the button label text
+   */
   hideLabel?: boolean
+  /**
+   * Hide the button tooltip
+   */
   hideTooltip?: boolean
+  /**
+   * Button label text
+   */
   label?: string
+  /**
+   * Make the button square (equal width and height)
+   */
   square?: boolean
+  /**
+   * Router link destination (vue-router)
+   */
   to?: any
+  /**
+   * Button color variant
+   */
   variant?: ButtonVariant
+  /**
+   * Button size
+   */
   size?: Size
+  /**
+   * Make the button full-width block element
+   */
   block?: boolean
+  /**
+   * Apply pill styling (fully rounded corners)
+   */
   pill?: boolean
+  /**
+   * Toggle pressed state for toggle buttons
+   */
   pressed?: boolean
+  /**
+   * HTML tag to render the button as
+   */
   tag?: string
+  /**
+   * Button type attribute
+   */
   type?: string
+  /**
+   * Show loading spinner and disable interactions
+   */
   loading?: boolean
+  /**
+   * Duration of the loading spinner animation
+   */
   loadingDuration?: string
+  /**
+   * Text to display while loading
+   */
   loadingText?: string
+  /**
+   * Custom tooltip text (defaults to label)
+   */
   tooltipLabel?: string
+  /**
+   * Tooltip placement position
+   */
   tooltipPlacement?: PopoverPlacement
+  /**
+   * Delay before showing/hiding the tooltip
+   */
   tooltipDelay?: { show: number, hide: number }
+  /**
+   * Force showing the tooltip even when label is visible
+   */
   showTooltipForce?: boolean
+  /**
+   * Manual hover state control
+   */
   hover?: boolean
+  /**
+   * Truncate label text with ellipsis when too long
+   */
   truncate?: boolean
+  /**
+   * Counter badge value to display
+   */
   counter?: number
+  /**
+   * Color variant for the counter badge
+   */
   counterVariant?: TextColorVariant
+  /**
+   * Custom styles for the counter badge
+   */
   counterStyle?: string | object
 }
 
