@@ -28,6 +28,8 @@
     "lib/**/*.ts",
     "lib/**/*.d.ts",
     "lib/**/*.vue",
+    "stories/**/*.ts",
+    ".storybook/**/*.ts",
     "tests/**/*.ts"
   ],
   "exclude": [
