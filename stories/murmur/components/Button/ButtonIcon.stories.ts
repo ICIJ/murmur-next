@@ -24,6 +24,20 @@ const meta: Meta<typeof ButtonIcon> = {
       template: '<div class="p-4"><story /></div>'
     })
   ],
+  argTypes: {
+    size: buttonSizesArgType,
+    variant: variantsArgType,
+    pill: {
+      control: { type: 'boolean' }
+    },
+    loading: {
+      control: { type: 'boolean' }
+    },
+    counter: {
+      control: { type: 'number' }
+    },
+    counterVariant: variantsArgType
+  },
   args: {
     variant: VARIANT.primary,
     size: 'md',
