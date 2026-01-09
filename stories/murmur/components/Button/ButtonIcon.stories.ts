@@ -273,3 +273,89 @@ export const LoadingSpinner: Story = {
     `
   })
 }
+
+export const AllSizes: Story = {
+  render: () => ({
+    components: { ButtonIcon, IPhCirclesThreePlus },
+    template: `
+      <div class="d-flex align-items-center gap-3">
+        <ButtonIcon size="sm" variant="primary" label="Small">
+          <template #start>
+            <IPhCirclesThreePlus class="me-1" />
+          </template>
+        </ButtonIcon>
+        <ButtonIcon size="md" variant="primary" label="Medium">
+          <template #start>
+            <IPhCirclesThreePlus class="me-2" />
+          </template>
+        </ButtonIcon>
+        <ButtonIcon size="lg" variant="primary" label="Large">
+          <template #start>
+            <IPhCirclesThreePlus class="me-2" />
+          </template>
+        </ButtonIcon>
+      </div>
+    `
+  })
+}
+
+export const SizeSmall: Story = {
+  render: (args: any) => ({
+    components: { ButtonIcon, IPhCirclesThreePlus },
+    setup: () => ({ args }),
+    template: `
+      <ButtonIcon v-bind="args" label="Small Button">
+        <template #start>
+          <IPhCirclesThreePlus class="me-1" />
+        </template>
+      </ButtonIcon>
+    `
+  }),
+  args: {
+    variant: VARIANT.primary,
+    size: 'sm'
+  }
+}
+
+export const SizeLarge: Story = {
+  render: (args: any) => ({
+    components: { ButtonIcon, IPhCirclesThreePlus },
+    setup: () => ({ args }),
+    template: `
+      <ButtonIcon v-bind="args" label="Large Button">
+        <template #start>
+          <IPhCirclesThreePlus class="me-2" />
+        </template>
+      </ButtonIcon>
+    `
+  }),
+  args: {
+    variant: VARIANT.primary,
+    size: 'lg'
+  }
+}
+
+export const SquareAllSizes: Story = {
+  render: () => ({
+    components: { ButtonIcon, IPhPath },
+    template: `
+      <div class="d-flex align-items-center gap-3">
+        <ButtonIcon size="sm" variant="primary" label="Small" hide-label square>
+          <template #end>
+            <IPhPath />
+          </template>
+        </ButtonIcon>
+        <ButtonIcon size="md" variant="primary" label="Medium" hide-label square>
+          <template #end>
+            <IPhPath />
+          </template>
+        </ButtonIcon>
+        <ButtonIcon size="lg" variant="primary" label="Large" hide-label square>
+          <template #end>
+            <IPhPath />
+          </template>
+        </ButtonIcon>
+      </div>
+    `
+  })
+}
