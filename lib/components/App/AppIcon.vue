@@ -121,6 +121,7 @@ const classList = computed(() => {
   return {
     [`app-icon--size-${props.size}`]: hasSize.value,
     [`app-icon--has-size`]: hasSize.value,
+    [`app-icon--raw-size`]: isRawSize.value,
     [`app-icon--hover`]: currentHover.value,
     [`app-icon--spin`]: props.spin,
     [`app-icon--spin-reverse`]: props.spinReverse,
@@ -164,6 +165,10 @@ const classList = computed(() => {
     &--size-#{$size} {
       @include app-icon-size($value, var(--app-icon-scale));
     }
+  }
+
+  &--raw-size {
+    font-size: var(--app-icon-raw-size);
   }
 
   &--spin :deep(svg) {
