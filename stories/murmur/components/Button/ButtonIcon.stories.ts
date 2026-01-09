@@ -12,7 +12,6 @@ import IPhUserCircle from '~icons/ph/user-circle'
 import IPhPath from '~icons/ph/path'
 import IPhX from '~icons/ph/x'
 import IPhFloppyDisk from '~icons/ph/floppy-disk'
-import IPhCircleNotch from '~icons/ph/circle-notch'
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 
 const meta: Meta<typeof ButtonIcon> = {
