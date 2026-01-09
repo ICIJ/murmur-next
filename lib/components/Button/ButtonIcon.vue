@@ -235,6 +235,8 @@ export interface ButtonIconProps {
 const props = withDefaults(defineProps<Omit<ButtonIconProps, 'pressed'>>(), {
   square: false,
   iconLeftLabelOffset: 19,
+  iconLeftSize: '1.25em',
+  iconRightSize: '1.25em',
   iconSpinner: () => IPhCircleNotch as Component,
   hideLabel: false,
   hideTooltip: false,
@@ -305,6 +307,11 @@ const buttonProps = computed(() => ({
     flex-shrink: 0;
     align-items: center;
     min-width: 0;
+
+    // Default icon size for all SVGs in the button
+    :deep(svg) {
+      font-size: 1.25em;
+    }
 
     .button-icon-counter {
       margin: -0.5em 0 -0.5em $spacer-xs;
