@@ -226,3 +226,35 @@ export const Scaling: Story = {
     `
   })
 }
+
+export const SizeInPixels: Story = {
+  render: () => ({
+    components: { AppIcon, IPhGlobe },
+    template: `
+      <div class="d-flex align-items-end gap-3">
+        <AppIcon size="12px"><IPhGlobe /></AppIcon>
+        <AppIcon size="16px"><IPhGlobe /></AppIcon>
+        <AppIcon size="24px"><IPhGlobe /></AppIcon>
+        <AppIcon size="32px"><IPhGlobe /></AppIcon>
+        <AppIcon size="48px"><IPhGlobe /></AppIcon>
+        <AppIcon size="64px"><IPhGlobe /></AppIcon>
+      </div>
+    `
+  })
+}
+
+export const SizeInRem: Story = {
+  render: () => ({
+    components: { AppIcon, IPhGlobe },
+    template: `
+      <div class="d-flex align-items-end gap-3">
+        <AppIcon size="0.75rem"><IPhGlobe /></AppIcon>
+        <AppIcon size="1rem"><IPhGlobe /></AppIcon>
+        <AppIcon size="1.5rem"><IPhGlobe /></AppIcon>
+        <AppIcon size="2rem"><IPhGlobe /></AppIcon>
+        <AppIcon size="3rem"><IPhGlobe /></AppIcon>
+        <AppIcon size="4rem"><IPhGlobe /></AppIcon>
+      </div>
+    `
+  })
+}
