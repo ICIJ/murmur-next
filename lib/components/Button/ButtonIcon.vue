@@ -301,17 +301,17 @@ const buttonProps = computed(() => ({
 
 <style lang="scss" scoped>
 .button-icon {
+
+  &::deep(.app-icon) {
+    font-size: 1.25em;
+  }
+
   &.btn {
     // force overriding display-block from bootstrap
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
     min-width: 0;
-
-    // Default icon size for all SVGs in the button
-    :deep(svg) {
-      font-size: 1.25em;
-    }
 
     .button-icon-counter {
       margin: -0.5em 0 -0.5em $spacer-xs;

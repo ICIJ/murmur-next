@@ -58,151 +58,97 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const IconLeft: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhCirclesThreePlus },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Button">
-        <template #start>
-          <IPhCirclesThreePlus class="me-2" />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'md'
+    label: 'Button',
+    size: 'md',
+    iconLeft: IPhCirclesThreePlus
   }
 }
 
 export const IconBothSide: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhCirclesThreePlus, IPhUsers },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Save search">
-        <template #start>
-          <IPhCirclesThreePlus class="me-2" />
-        </template>
-        <template #end>
-          <IPhUsers class="ms-2" />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'md'
+    size: 'md',
+    label: 'Save search',
+    iconLeft: IPhCirclesThreePlus,
+    iconRight: IPhUsers
   }
 }
 
 export const IconRight: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhUsers },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Button">
-        <template #end>
-          <IPhUsers class="ms-2" />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'md'
+    size: 'md',
+    iconRight: IPhUsers,
+    label: 'Button'
   }
 }
 
 export const WithCounter: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhUserCircle },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Shakira" :counter="134">
-        <template #start>
-          <IPhUserCircle class="me-2" />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.outline_primary,
-    size: 'md'
+    size: 'md',
+    iconLeft: IPhUserCircle,
+    label: 'Shakira',
+    counter: 134,
+    counterVariant: VARIANT.primary
   }
 }
 
 export const HideLabel: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhUsers },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Button" hide-label>
-        <template #end>
-          <IPhUsers />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'md'
+    size: 'md',
+    iconRight: IPhUsers,
+    label: 'Button',
+    hideLabel: true
   }
 }
 
 export const Square: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhPath },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Path" hide-label square>
-        <template #end>
-          <IPhPath />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
     size: 'md',
-    pill: false
+    pill: false,
+    iconRight: IPhPath,
+    hideLabel: true,
+    square: true
   }
 }
 
 export const SquareWithCounter: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhPath },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Path" hide-label square :counter="6" counter-variant="action">
-        <template #end>
-          <IPhPath />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
     size: 'md',
-    pill: false
+    pill: false,
+    iconRight: IPhPath,
+    label: 'Path',
+    hideLabel: true,
+    square: true,
+    iconRiht: IPhPath,
+    counter: 6,
+    counterVariant: VARIANT.action
   }
 }
 
 export const SquarePill: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhX },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Close" hide-label square pill>
-        <template #end>
-          <IPhX />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'md'
+    size: 'md',
+    iconLeft: IPhX,
+    label: 'Close',
+    pill: true,
+    hideLabel: true,
+    square: true
   }
 }
 
@@ -210,18 +156,16 @@ export const Truncated: Story = {
   args: {
     variant: VARIANT.primary,
     size: 'md',
-    truncate: true
+    truncate: true,
+    label: 'Saving the tags',
+    iconLeft: IPhFloppyDisk
   },
   render: (args: any) => ({
-    components: { ButtonIcon, IPhFloppyDisk },
+    components: { ButtonIcon },
     setup: () => ({ args }),
     template: `
       <div style="max-width: 150px">
-        <ButtonIcon v-bind="args" label="Saving the tags" truncate>
-          <template #start>
-            <IPhFloppyDisk class="me-2" />
-          </template>
-        </ButtonIcon>
+        <ButtonIcon v-bind="args" />
       </div>
     `
   })
@@ -267,94 +211,57 @@ export const LoadingSpinner: Story = {
       <p class="text-muted">Click to toggle loading state.</p>
       <ButtonIcon v-bind="args" :label="loading ? 'Refreshing...' : 'Refresh'" @click="loading = !loading">
         <template #start>
-          <AppIcon class="me-2" :spin="loading" spin-duration="500ms"><IPhArrowClockwise /></AppIcon>
+          <AppIcon class="me-2" :spin="loading" spin-duration="500ms">
+            <IPhArrowClockwise />
+          </AppIcon>
         </template>
       </ButtonIcon>
     `
   })
 }
-
 export const AllSizes: Story = {
   render: () => ({
-    components: { ButtonIcon, IPhCirclesThreePlus },
+    components: { ButtonIcon },
+    setup: () => ({ IPhCirclesThreePlus }),
     template: `
       <div class="d-flex align-items-center gap-3">
-        <ButtonIcon size="sm" variant="primary" label="Small">
-          <template #start>
-            <IPhCirclesThreePlus class="me-1" />
-          </template>
-        </ButtonIcon>
-        <ButtonIcon size="md" variant="primary" label="Medium">
-          <template #start>
-            <IPhCirclesThreePlus class="me-2" />
-          </template>
-        </ButtonIcon>
-        <ButtonIcon size="lg" variant="primary" label="Large">
-          <template #start>
-            <IPhCirclesThreePlus class="me-2" />
-          </template>
-        </ButtonIcon>
+        <ButtonIcon size="sm" variant="primary" label="Small" :icon-left="IPhCirclesThreePlus" />
+        <ButtonIcon size="md" variant="primary" label="Medium" :icon-left="IPhCirclesThreePlus" />
+        <ButtonIcon size="lg" variant="primary" label="Large" :icon-left="IPhCirclesThreePlus" />
       </div>
     `
   })
 }
 
 export const SizeSmall: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhCirclesThreePlus },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Small Button">
-        <template #start>
-          <IPhCirclesThreePlus class="me-1" />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'sm'
+    size: 'sm',
+    iconLeft: IPhCirclesThreePlus,
+    label: 'Small Button'
   }
 }
 
 export const SizeLarge: Story = {
-  render: (args: any) => ({
-    components: { ButtonIcon, IPhCirclesThreePlus },
-    setup: () => ({ args }),
-    template: `
-      <ButtonIcon v-bind="args" label="Large Button">
-        <template #start>
-          <IPhCirclesThreePlus class="me-2" />
-        </template>
-      </ButtonIcon>
-    `
-  }),
+  component: ButtonIcon,
   args: {
     variant: VARIANT.primary,
-    size: 'lg'
+    size: 'lg',
+    iconLeft: IPhCirclesThreePlus,
+    label: 'Large Button'
   }
 }
 
 export const SquareAllSizes: Story = {
   render: () => ({
-    components: { ButtonIcon, IPhPath },
+    components: { ButtonIcon },
+    setup: () => ({ IPhPath }),
     template: `
       <div class="d-flex align-items-center gap-3">
-        <ButtonIcon size="sm" variant="primary" label="Small" hide-label square>
-          <template #end>
-            <IPhPath />
-          </template>
-        </ButtonIcon>
-        <ButtonIcon size="md" variant="primary" label="Medium" hide-label square>
-          <template #end>
-            <IPhPath />
-          </template>
-        </ButtonIcon>
-        <ButtonIcon size="lg" variant="primary" label="Large" hide-label square>
-          <template #end>
-            <IPhPath />
-          </template>
-        </ButtonIcon>
+        <ButtonIcon size="sm" variant="primary" label="Small" hide-label square :icon-left="IPhPath" />
+        <ButtonIcon size="md" variant="primary" label="Medium" hide-label square :icon-left="IPhPath" />
+        <ButtonIcon size="lg" variant="primary" label="Large" hide-label square :icon-left="IPhPath" />
       </div>
     `
   })
