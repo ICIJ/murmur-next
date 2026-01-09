@@ -95,7 +95,7 @@ export interface ButtonIconProps {
    */
   iconLeftHoverVariant?: TextColorVariant
   /**
-   * Size of the left icon
+   * Size of the left icon. Can be a preset ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') or a CSS value (e.g., '16px', '1rem').
    */
   iconLeftSize?: string
   /**
@@ -119,7 +119,7 @@ export interface ButtonIconProps {
    */
   iconRightHoverVariant?: TextColorVariant
   /**
-   * Size of the right icon
+   * Size of the right icon. Can be a preset ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') or a CSS value (e.g., '16px', '1rem').
    */
   iconRightSize?: string
   /**
