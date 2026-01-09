@@ -55,6 +55,7 @@ export default defineConfig({
      * from Iconify icon sets (e.g., Phosphor via @iconify-json/ph).
      */
     Icons({
+      scale: 1,
       compiler: 'vue3',
       autoInstall: false
     }),
