@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { AppIcon, ButtonIcon } from '@/components'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
 import { VARIANT } from '@/enums'
@@ -173,30 +173,28 @@ export const Truncated: Story = {
 
 export const Loading: Story = {
   args: {
+    iconLeft: IPhFloppyDisk,
     variant: VARIANT.primary,
     size: 'md',
+    label: 'Save',
     pill: true
   },
   render: (args: any) => ({
-    components: { ButtonIcon, AppIcon, IPhFloppyDisk, IPhCircleNotch },
+    components: { ButtonIcon, AppIcon },
     setup() {
       const loading = ref(true)
       return { args, loading }
     },
     template: `
       <p class="text-muted">Click to toggle loading state.</p>
-      <ButtonIcon v-bind="args" label="Save" @click="loading = !loading">
-        <template #start>
-          <AppIcon class="me-2" v-if="!loading"><IPhFloppyDisk /></AppIcon>
-          <AppIcon class="me-2" spin v-else><IPhCircleNotch /></AppIcon>
-        </template>
-      </ButtonIcon>
+      <ButtonIcon v-bind="args" :loading="loading" @click="loading = !loading" />
     `
   })
 }
 
 export const LoadingSpinner: Story = {
   args: {
+    iconLeft: IPhFloppyDisk,
     variant: VARIANT.secondary,
     size: 'md',
     pill: true
@@ -205,17 +203,12 @@ export const LoadingSpinner: Story = {
     components: { ButtonIcon, AppIcon, IPhArrowClockwise },
     setup() {
       const loading = ref(true)
-      return { args, loading }
+      const label = computed(() => loading.value ? 'Refreshing...' : 'Refresh')
+      return { args, loading, label }
     },
     template: `
       <p class="text-muted">Click to toggle loading state.</p>
-      <ButtonIcon v-bind="args" :label="loading ? 'Refreshing...' : 'Refresh'" @click="loading = !loading">
-        <template #start>
-          <AppIcon class="me-2" :spin="loading" spin-duration="500ms">
-            <IPhArrowClockwise />
-          </AppIcon>
-        </template>
-      </ButtonIcon>
+      <ButtonIcon v-bind="args" :label="label" :loading="loading" @click="loading = !loading" />
     `
   })
 }
