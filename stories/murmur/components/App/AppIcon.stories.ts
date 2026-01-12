@@ -165,7 +165,17 @@ export const WithText: Story = {
     variant: 'primary'
   },
   render: (args: any) => ({
-    components: { AppIcon, IPhGlobe, IPhChat, IPhMoon, IPhLightbulb, IPhLinkBreak, IPhUserSound, IPhNewspaper, IPhScanSmiley },
+    components: {
+      AppIcon,
+      IPhGlobe,
+      IPhChat,
+      IPhMoon,
+      IPhLightbulb,
+      IPhLinkBreak,
+      IPhUserSound,
+      IPhNewspaper,
+      IPhScanSmiley
+    },
     setup: () => ({ args }),
     template: `
       <h2>
@@ -254,6 +264,33 @@ export const SizeInRem: Story = {
         <AppIcon size="2rem"><IPhGlobe /></AppIcon>
         <AppIcon size="3rem"><IPhGlobe /></AppIcon>
         <AppIcon size="4rem"><IPhGlobe /></AppIcon>
+      </div>
+    `
+  })
+}
+
+export const SizeInPercent: Story = {
+  component: null,
+  argTypes: null,
+  render: () => ({
+    components: { AppIcon, IPhGlobe },
+    template: `
+      <div class="d-flex flex-column gap-3">
+        <div style="width: 200px; border: 1px dashed gray; padding: 8px;">
+          <AppIcon size="100%"><IPhGlobe /></AppIcon>
+          <br />
+          <span class="ms-2">100% of 200px</span>
+        </div>
+        <div style="width: 200px; border: 1px dashed gray; padding: 8px;">
+          <AppIcon size="50%"><IPhGlobe /></AppIcon>
+          <br />
+          <span class="ms-2">50% of 200px</span>
+        </div>
+        <div style="width: 200px; border: 1px dashed gray; padding: 8px;">
+          <AppIcon size="25%"><IPhGlobe /></AppIcon>
+          <br />
+          <span class="ms-2">25% of 200px</span>
+        </div>
       </div>
     `
   })
