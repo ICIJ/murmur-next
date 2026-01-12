@@ -97,8 +97,12 @@ const color = computed(() => {
   return colorVariant
 })
 
+const isPercentSize = computed(() => {
+  return typeof props.size === 'string' && props.size.endsWith('%')
+})
+
 const isRawSize = computed(() => {
-  return !['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', undefined].includes(props.size)
+  return !['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', undefined].includes(props.size) && !isPercentSize.value
 })
 
 const hasSize = computed(() => {
@@ -109,6 +113,7 @@ const style = computed(() => {
   return {
     '--app-icon-color': color.value,
     '--app-icon-raw-size': isRawSize.value ? props.size : undefined,
+    '--app-icon-percent-size': isPercentSize.value ? props.size : undefined,
     '--app-icon-size': hasSize.value ? props.size : undefined,
     '--app-icon-scale': props.scale ?? 1,
     '--app-icon-spin-duration': props.spinDuration,
@@ -122,6 +127,7 @@ const classList = computed(() => {
     [`app-icon--size-${props.size}`]: hasSize.value,
     [`app-icon--has-size`]: hasSize.value,
     [`app-icon--raw-size`]: isRawSize.value,
+    [`app-icon--percent-size`]: isPercentSize.value,
     [`app-icon--hover`]: currentHover.value,
     [`app-icon--spin`]: props.spin,
     [`app-icon--spin-reverse`]: props.spinReverse,
@@ -169,6 +175,16 @@ const classList = computed(() => {
 
   &--raw-size {
     font-size: var(--app-icon-raw-size);
+  }
+
+  &--percent-size {
+    width: var(--app-icon-percent-size);
+    height: auto;
+
+    :deep(svg) {
+      width: 100%;
+      height: auto;
+    }
   }
 
   &--spin :deep(svg) {
