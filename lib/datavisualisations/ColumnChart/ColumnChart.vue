@@ -453,11 +453,13 @@ watch(() => props.socialMode, update, { immediate: true })
       'column-chart--hover': hover,
       'column-chart--stripped': stripped,
       'column-chart--social-mode': socialMode,
-      'column-chart--loaded': isLoaded
+      'column-chart--loaded': isLoaded,
+      'column-chart--waterfall': waterfall
     }"
     :style="{
       '--column-color': columnColor,
-      '--column-highlight-color': columnHighlightColor
+      '--column-highlight-color': columnHighlightColor,
+      '--column-total-color': waterfallTotalColor
     }"
     class="column-chart"
   >
