@@ -397,33 +397,59 @@ function isHidden(i: string | number, key: string) {
   return props.hideEmptyValues && !sortedData.value[i as number][key]
 }
 
+interface LabelState {
+  overflow: boolean
+  pushed: boolean
+  hidden: boolean
+}
+
+const labelStates = ref<Record<string, LabelState>>({})
+
+function labelStateKey(i: number | string, key: string) {
+  return `${i}-${key}`
+}
+
+function computeLabelStates() {
+  const root = el.value as unknown as HTMLElement
+  if (!root || !mounted.value || !sortedData.value?.length) return
+
+  const states: Record<string, LabelState> = {}
+
+  for (let i = 0; i < sortedData.value.length; i++) {
+    try {
+      const stack = stackBarAndValue(i)
+      for (const item of stack) {
+        states[labelStateKey(i, item.key)] = {
+          overflow: item.overflow,
+          pushed: item.pushed,
+          hidden: false
+        }
+      }
+      // A value is hidden when both it and the next key overflow
+      for (let j = 0; j < stack.length; j++) {
+        const nextItem = stack[j + 1]
+        if (nextItem && stack[j].overflow && nextItem.overflow) {
+          states[labelStateKey(i, stack[j].key)].hidden = true
+        }
+      }
+    } catch {
+      // If measurement fails for a row, skip it
+    }
+  }
+
+  labelStates.value = states
+}
+
 function hasValueOverflow(i: string | number, key: string) {
-  try {
-    const stack = stackBarAndValue(i)
-    return find(stack, { key })?.overflow
-  }
-  catch {
-    return false
-  }
+  return labelStates.value[labelStateKey(i, key)]?.overflow ?? false
 }
 
 function hasValuePushed(i: string | number, key: string) {
-  try {
-    const stack = stackBarAndValue(i)
-    return find(stack, { key })?.pushed
-  }
-  catch {
-    return false
-  }
+  return labelStates.value[labelStateKey(i, key)]?.pushed ?? false
 }
 
 function hasValueHidden(i: string | number, key: string) {
-  const keyIndex = discoveredKeys.value.indexOf(key)
-  const nextKey = discoveredKeys.value[keyIndex + 1]
-  if (!nextKey) {
-    return false
-  }
-  return hasValueOverflow(i, key) && hasValueOverflow(i, nextKey)
+  return labelStates.value[labelStateKey(i, key)]?.hidden ?? false
 }
 
 function formatXDatum(d: string) {
@@ -452,6 +478,8 @@ watch(sortedData, async () => {
     leftAxisHeight.value = element.offsetHeight
     leftAxisCanvas.value.call(leftAxis.value as any)
   }
+  // Compute label overflow/pushed/hidden states after DOM layout
+  computeLabelStates()
 })
 </script>
 
