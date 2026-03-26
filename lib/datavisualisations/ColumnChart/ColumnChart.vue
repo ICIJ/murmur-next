@@ -286,7 +286,8 @@ const scaleY = computed((): d3.ScaleLinear<number, number> => {
   let maxValue: number
   if (props.waterfall) {
     maxValue = props.maxValue ?? waterfallTotalValue.value
-  } else {
+  }
+  else {
     maxValue = props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName))
   }
   return d3
