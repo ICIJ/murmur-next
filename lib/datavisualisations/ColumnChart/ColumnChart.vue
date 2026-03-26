@@ -486,7 +486,8 @@ watch(() => props.socialMode, update, { immediate: true })
           v-for="(bar, index) in bars"
           :key="index"
           :class="{
-            'column-chart__columns__item--highlight': highlighted(bar.datum)
+            'column-chart__columns__item--highlight': highlighted(bar.datum),
+            'column-chart__columns__item--total': bar.isTotal
           }"
           :style="{ transform: `translate(${bar.x}px, 0px)` }"
           class="column-chart__columns__item"
