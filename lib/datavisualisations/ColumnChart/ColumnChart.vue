@@ -274,6 +274,10 @@ const scaleX = computed((): d3.ScaleBand<string> => {
     .padding(props.barPadding)
 })
 
+const waterfallTotalValue = computed((): number => {
+  return d3.sum(sortedData.value, iteratee(props.seriesName)) ?? 0
+})
+
 const scaleY = computed((): d3.ScaleLinear<number, number> => {
   const maxValue
     = props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName))
