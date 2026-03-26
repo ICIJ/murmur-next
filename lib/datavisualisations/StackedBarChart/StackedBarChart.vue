@@ -8,7 +8,6 @@ import without from 'lodash/without'
 import sortByFn from 'lodash/sortBy'
 import { ComponentPublicInstance, computed, ref, watch } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
-import { useQueryObserver } from '@/composables/useQueryObserver'
 import { isArray } from 'lodash'
 
 defineOptions({
@@ -148,8 +147,6 @@ const {
   d3Formatter,
   dataHasHighlights
 } = useChart(el, getChartProps(props), { emit }, isLoaded)
-
-const { querySelectorAll } = useQueryObserver(el.value)
 
 const hasConstraintHeight = computed(() => {
   return props.fixedHeight !== null || props.socialMode
@@ -307,12 +304,13 @@ function stackBarAndValue(i: number | string): StackItem[] {
 }
 
 function queryBarAndValue(i: number, key: string) {
-  if (!mounted.value) {
+  const root = el.value as unknown as HTMLElement
+  if (!mounted.value || !root) {
     return {}
   }
   const barClass = 'stacked-bar-chart__groups__item__bars__item'
   const rowSelector = '.stacked-bar-chart__groups__item'
-  const row = querySelectorAll(rowSelector)[i] as HTMLElement
+  const row = root.querySelectorAll(rowSelector)[i] as HTMLElement
   const normalizedKey = normalizeKey(key)
   const barSelector = `.${barClass}--${normalizedKey}`
   const bar = row?.querySelector(barSelector) as HTMLElement
