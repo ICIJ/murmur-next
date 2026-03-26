@@ -179,7 +179,11 @@ const props = withDefaults(defineProps<ColumnChartProps>(), {
   dataUrlType: 'json',
   chartHeightRatio: undefined,
   socialMode: false,
-  socialModeRatio: 5 / 4
+  socialModeRatio: 5 / 4,
+  waterfall: false,
+  waterfallTotal: false,
+  waterfallTotalLabel: 'Total',
+  waterfallTotalColor: null
 })
 
 const emit = defineEmits<{
