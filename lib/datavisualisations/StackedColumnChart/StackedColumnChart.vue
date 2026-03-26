@@ -14,7 +14,6 @@ import {
   watch
 } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
-import { useQueryObserver } from '@/composables/useQueryObserver'
 
 defineOptions({
   name: 'StackedColumnChart'
@@ -156,7 +155,6 @@ const highlightedKeys = ref(props.highlights)
 const highlightTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
 const isLoaded = ref(false)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-const { querySelector, querySelectorAll } = useQueryObserver(el.value)
 
 const {
   elementsMaxBBox,
@@ -382,11 +380,12 @@ function stackBarAndValue(i: string | number): StackItem[] {
 }
 
 function queryBarAndValue(i: number, key: string) {
-  if (!mounted.value) {
+  const root = el.value as unknown as HTMLElement
+  if (!mounted.value || !root) {
     return {}
   }
   const rowSelector = '.stacked-column-chart__groups__item'
-  const row = querySelectorAll(rowSelector)[i] as HTMLElement
+  const row = root.querySelectorAll(rowSelector)[i] as HTMLElement
   const barSelector = `.stacked-column-chart__groups__item__bars__item--${key}`
   const bar = row.querySelector(barSelector) as HTMLElement
   const valueSelector = '.stacked-column-chart__groups__item__bars__item__value'
@@ -444,11 +443,13 @@ watch(
 
 watch(sortedData, async () => {
   await nextTick()
+  const root = el.value as unknown as HTMLElement
+  if (!root) return
   // This must be set after the column have been rendered
-  const element = querySelector('.stacked-column-chart__groups__item__bars')
+  const element = root.querySelector('.stacked-column-chart__groups__item__bars') as HTMLElement
   // Update the left axis only if the bars exists
   if (element) {
-    leftAxisHeight.value = (element as HTMLElement).offsetHeight
+    leftAxisHeight.value = element.offsetHeight
     leftAxisCanvas.value.call(leftAxis.value as any)
   }
 })
