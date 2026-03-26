@@ -363,9 +363,14 @@ const xAxisTickValues = computed((): string[] => {
   const ticks
     = props.xAxisTicks ?? sortedData.value.map(iteratee(props.timeseriesKey))
   // Then filter out ticks according to `this.xAxisHiddenTicks`
-  return ticks.map((tick: string, i: number) => {
+  const filtered = ticks.map((tick: string, i: number) => {
     return (i + 1) % xAxisHiddenTicks.value ? null : tick
   }) as string[]
+  // Add the total label for waterfall charts
+  if (props.waterfall && props.waterfallTotal) {
+    filtered.push(props.waterfallTotalLabel)
+  }
+  return filtered
 })
 
 const xAxis = computed((): d3.Axis<string> => {
