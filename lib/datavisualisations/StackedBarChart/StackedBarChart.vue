@@ -6,7 +6,7 @@ import kebabCase from 'lodash/kebabCase'
 import keysFn from 'lodash/keys'
 import without from 'lodash/without'
 import sortByFn from 'lodash/sortBy'
-import { ComponentPublicInstance, computed, ref, watch } from 'vue'
+import { ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
 import { isArray } from 'lodash'
 
