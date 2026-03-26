@@ -85,6 +85,42 @@ export const DynamicHeight: Story = {
   }
 }
 
+const waterfallData = [
+  { date: '2014', value: 55 },
+  { date: '2015', value: 566 },
+  { date: '2016', value: 1402 },
+  { date: '2017', value: 3809 },
+  { date: '2018', value: 7171 },
+  { date: '2019', value: 11084 },
+  { date: '2020', value: 14380 },
+  { date: '2021', value: 17186 },
+  { date: '2022', value: 20937 },
+  { date: '2023', value: 25011 },
+  { date: '2024', value: 29482 },
+  { date: '2025', value: 31681 }
+]
+
+export const Waterfall: Story = {
+  args: {
+    data: waterfallData,
+    waterfall: true,
+    fixedHeight: 400,
+    columnColor: '#e53935',
+    yAxisTickFormat: ',d'
+  }
+}
+
+export const WaterfallWithTotal: Story = {
+  args: {
+    data: waterfallData,
+    waterfall: true,
+    waterfallTotal: true,
+    fixedHeight: 400,
+    columnColor: '#e53935',
+    yAxisTickFormat: ',d'
+  }
+}
+
 export const DynamicData: Story = {
   render: () => ({
     components: { ColumnChart },
