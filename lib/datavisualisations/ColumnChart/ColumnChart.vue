@@ -573,6 +573,10 @@ watch(() => props.socialMode, update, { immediate: true })
       fill: var(--column-highlight-color, var(--primary, $primary));
     }
 
+    &--total {
+      fill: var(--column-total-color, currentColor);
+    }
+
     &__placeholder {
       opacity: 0;
 
