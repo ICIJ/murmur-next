@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
-import find from 'lodash/find'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
 import kebabCase from 'lodash/kebabCase'
