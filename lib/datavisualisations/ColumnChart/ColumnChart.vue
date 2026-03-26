@@ -16,6 +16,7 @@ interface ColumnBar {
   height: number
   x: number
   y: number
+  isTotal?: boolean
 }
 
 export interface ColumnChartProps {
