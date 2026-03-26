@@ -296,13 +296,44 @@ const scaleY = computed((): d3.ScaleLinear<number, number> => {
 })
 
 const bars = computed((): ColumnBar[] => {
+  const barWidth = Math.max(1, Math.abs(scaleX.value.bandwidth()) - props.barMargin)
+
+  if (props.waterfall) {
+    let cumulative = 0
+    const waterfallBars: ColumnBar[] = sortedData.value.map((datum: any) => {
+      const value = datum[props.seriesName]
+      cumulative += value
+      return {
+        datum,
+        width: barWidth,
+        height: Math.abs(padded.value.height - scaleY.value(value)),
+        x: (scaleX.value(datum[props.timeseriesKey]) ?? 0) + props.barMargin / 2,
+        y: scaleY.value(cumulative)
+      }
+    })
+
+    if (props.waterfallTotal) {
+      const totalDatum = {
+        [props.timeseriesKey]: props.waterfallTotalLabel,
+        [props.seriesName]: waterfallTotalValue.value
+      }
+      waterfallBars.push({
+        datum: totalDatum,
+        width: barWidth,
+        height: Math.abs(padded.value.height - scaleY.value(waterfallTotalValue.value)),
+        x: (scaleX.value(props.waterfallTotalLabel) ?? 0) + props.barMargin / 2,
+        y: scaleY.value(waterfallTotalValue.value),
+        isTotal: true
+      })
+    }
+
+    return waterfallBars
+  }
+
   return sortedData.value.map((datum: any) => {
     return {
       datum,
-      width: Math.max(
-        1,
-        Math.abs(scaleX.value.bandwidth()) - props.barMargin
-      ),
+      width: barWidth,
       height: Math.abs(
         padded.value.height - scaleY.value(datum[props.seriesName])
       ),
