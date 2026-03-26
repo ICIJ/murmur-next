@@ -267,9 +267,13 @@ const padded = computed((): { width: number, height: number } => {
 })
 
 const scaleX = computed((): d3.ScaleBand<string> => {
+  const domain = sortedData.value.map(iteratee(props.timeseriesKey))
+  if (props.waterfall && props.waterfallTotal) {
+    domain.push(props.waterfallTotalLabel)
+  }
   return d3
     .scaleBand()
-    .domain(sortedData.value.map(iteratee(props.timeseriesKey)))
+    .domain(domain)
     .range([0, padded.value.width])
     .padding(props.barPadding)
 })
