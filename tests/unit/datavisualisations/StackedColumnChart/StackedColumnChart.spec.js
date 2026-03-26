@@ -122,6 +122,25 @@ describe('StackedColumnChart.vue', () => {
       expect(barLegend.text()).toBe('bar')
     })
 
+    it('renders legend box as an empty color indicator without text', () => {
+      const boxes = wrapper.findAll('.stacked-column-chart__legend__item__box')
+      boxes.forEach((box) => {
+        expect(box.text()).toBe('')
+      })
+    })
+
+    it('renders legend text as a sibling of the box element', () => {
+      const items = wrapper.findAll('.stacked-column-chart__legend__item')
+      items.forEach((item) => {
+        const box = item.find('.stacked-column-chart__legend__item__box')
+        expect(box.exists()).toBe(true)
+        // The text content should come from a separate element, not the box
+        const label = item.find('.stacked-column-chart__legend__item__label')
+        expect(label.exists()).toBe(true)
+        expect(label.text()).toBeTruthy()
+      })
+    })
+
     it('highlight the legend "foo"', async () => {
       const fooLegend = wrapper.findAll('.stacked-column-chart__legend__item').at(0)
       expect(fooLegend.classes('stacked-column-chart__legend__item--highlighted')).toBeFalsy()
