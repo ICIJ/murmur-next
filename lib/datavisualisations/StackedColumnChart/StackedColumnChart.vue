@@ -484,8 +484,8 @@ watch(sortedData, async () => {
         <span
           class="stacked-column-chart__legend__item__box"
           :style="{ 'background-color': colorScale(key) }"
-        >
-          {{ groupName(key) }}</span>
+        />
+        <span class="stacked-column-chart__legend__item__label">{{ groupName(key) }}</span>
       </li>
     </ul>
     <div class="d-flex flex-grow-1 position-relative overflow-hidden">
