@@ -132,6 +132,23 @@ export interface ColumnChartProps {
    * Aspect ratio to use in social mode.
    */
   socialModeRatio?: number
+  /**
+   * Display columns as a waterfall chart where each bar starts where the previous one ended.
+   */
+  waterfall?: boolean
+  /**
+   * Show a total bar at the end of the waterfall chart displaying the sum of all values.
+   * Only applies when `waterfall` is true.
+   */
+  waterfallTotal?: boolean
+  /**
+   * Label for the waterfall total bar on the x-axis.
+   */
+  waterfallTotalLabel?: string
+  /**
+   * Color for the waterfall total bar. Falls back to currentColor.
+   */
+  waterfallTotalColor?: string | null
 }
 
 const props = withDefaults(defineProps<ColumnChartProps>(), {
