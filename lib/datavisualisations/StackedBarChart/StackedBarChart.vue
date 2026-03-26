@@ -353,7 +353,8 @@ function computeLabelStates() {
           states[labelStateKey(i, stack[j].key)].hidden = true
         }
       }
-    } catch {
+    }
+    catch {
       // If measurement fails for a row, skip it
     }
   }
