@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
 import keysFn from 'lodash/keys'
-import find from 'lodash/find'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
 import sortByFn from 'lodash/sortBy'
