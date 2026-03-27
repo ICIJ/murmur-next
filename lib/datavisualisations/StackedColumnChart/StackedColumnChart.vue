@@ -150,6 +150,7 @@ const emit = defineEmits<{
 
 const width = ref(0)
 const height = ref(0)
+const leftAxisRedrawCount = ref(0)
 const leftAxisHeight = ref(0)
 const highlightedKeys = ref(props.highlights)
 const highlightTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -214,6 +215,8 @@ const leftAxis = computed(() => {
 })
 
 const leftAxisLabelsWidth = computed(() => {
+  // Track redraw counter to re-measure after axis text is created in the DOM
+  void leftAxisRedrawCount.value
   const selector = '.stacked-column-chart__left-axis__canvas .tick text'
   const defaultWidth = 0
   return (
@@ -477,6 +480,12 @@ watch(sortedData, async () => {
   // Update the left axis only if the bars exists
   if (element) {
     leftAxisHeight.value = element.offsetHeight
+    // First draw creates tick text in the DOM
+    leftAxisCanvas.value.call(leftAxis.value as any)
+    // Invalidate leftAxisLabelsWidth so it re-measures the new tick text
+    leftAxisRedrawCount.value++
+    await nextTick()
+    // Second draw uses the correct tickSize and margins
     leftAxisCanvas.value.call(leftAxis.value as any)
   }
   // Compute label overflow/pushed/hidden states after DOM layout
