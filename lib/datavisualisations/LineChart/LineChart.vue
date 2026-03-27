@@ -210,8 +210,8 @@ const formattedData = computed(() => {
     return []
   }
   return loadedData.value.map((d: any) => {
-    // toRaw prevent modifying the Proxy object created with the props.data
-    let rawD = toRaw(d)
+    // Clone to avoid mutating reactive source data (parseTime on already-parsed Date returns null)
+    const rawD = { ...toRaw(d) }
     rawD[props.timeseriesKey] = parseTime(d[props.timeseriesKey])
     rawD[props.seriesName] = +d[props.seriesName]
     return rawD
