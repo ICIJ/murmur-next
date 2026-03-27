@@ -517,7 +517,7 @@ watch(sortedData, async () => {
         <span class="stacked-column-chart__legend__item__label">{{ groupName(key) }}</span>
       </li>
     </ul>
-    <div class="d-flex flex-grow-1 position-relative overflow-hidden">
+    <div class="stacked-column-chart__chart d-flex flex-column flex-grow-1 position-relative">
       <svg
         v-show="noDirectLabeling"
         :width="width + 'px'"
@@ -530,7 +530,7 @@ watch(sortedData, async () => {
         />
       </svg>
       <div
-        class="stacked-column-chart__groups d-flex flex-grow-1"
+        class="stacked-column-chart__groups d-flex flex-grow-1 overflow-hidden"
         :style="paddedStyle"
       >
         <div
@@ -577,9 +577,18 @@ watch(sortedData, async () => {
               </teleport>
             </div>
           </div>
-          <div class="stacked-column-chart__groups__item__label small py-2">
-            {{ formatXDatum(datum[labelField]) }}
-          </div>
+        </div>
+      </div>
+      <div
+        class="stacked-column-chart__labels d-flex"
+        :style="paddedStyle"
+      >
+        <div
+          v-for="(datum, i) in sortedData"
+          :key="i"
+          class="stacked-column-chart__groups__item__label flex-grow-1 small py-2 text-center"
+        >
+          {{ formatXDatum(datum[labelField]) }}
         </div>
       </div>
     </div>
