@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
+import * as d3 from 'd3'
 import { LineChart } from '@/datavisualisations'
 
 const meta: Meta<typeof LineChart> = {
@@ -81,6 +82,30 @@ export const MultiLineAutoColors: Story = {
     data: multiLineData,
     keys: ['europe', 'americas', 'asia'],
     groups: ['Europe', 'Americas', 'Asia-Pacific'],
+    fixedHeight: 400
+  },
+  decorators: [multiLineDecorator]
+}
+
+export const CurveStep: Story = {
+  args: {
+    data: multiLineData,
+    keys: ['europe', 'americas', 'asia'],
+    groups: ['Europe', 'Americas', 'Asia-Pacific'],
+    lineColors: ['#e53935', '#1e88e5', '#43a047'],
+    curve: d3.curveStep,
+    fixedHeight: 400
+  },
+  decorators: [multiLineDecorator]
+}
+
+export const CurveMonotoneX: Story = {
+  args: {
+    data: multiLineData,
+    keys: ['europe', 'americas', 'asia'],
+    groups: ['Europe', 'Americas', 'Asia-Pacific'],
+    lineColors: ['#e53935', '#1e88e5', '#43a047'],
+    curve: d3.curveMonotoneX,
     fixedHeight: 400
   },
   decorators: [multiLineDecorator]
