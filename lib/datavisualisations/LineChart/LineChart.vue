@@ -317,7 +317,8 @@ watchEffect(() => {
     :style="{ '--line-color': lineColor }"
     :class="{
       'line-chart--social-mode': socialMode,
-      'line-chart--multi': isMultiLine
+      'line-chart--multi': isMultiLine,
+      'line-chart--has-highlight': hasHighlight
     }"
   >
     <ul
@@ -328,6 +329,9 @@ watchEffect(() => {
         v-for="key in activeKeys"
         :key="key"
         class="line-chart__legend__item list-inline-item d-inline-flex"
+        :class="{ 'line-chart__legend__item--highlighted': isHighlighted(key) }"
+        @mouseover="highlight(key)"
+        @mouseleave="resetHighlight()"
       >
         <span
           class="line-chart__legend__item__box"
@@ -360,8 +364,11 @@ watchEffect(() => {
             v-for="series in lines"
             :key="series.key"
             class="line-chart__line"
+            :class="{ 'line-chart__line--highlighted': isHighlighted(series.key) }"
             :d="series.path"
             :style="{ stroke: series.color }"
+            @mouseover="highlight(series.key)"
+            @mouseleave="resetHighlight()"
           />
         </template>
         <path
