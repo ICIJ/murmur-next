@@ -299,8 +299,27 @@ watchEffect(() => {
     ref="el"
     class="line-chart"
     :style="{ '--line-color': lineColor }"
-    :class="{ 'line-chart--social-mode': socialMode }"
+    :class="{
+      'line-chart--social-mode': socialMode,
+      'line-chart--multi': isMultiLine
+    }"
   >
+    <ul
+      v-if="isMultiLine && !hideLegend"
+      class="line-chart__legend list-inline"
+    >
+      <li
+        v-for="key in activeKeys"
+        :key="key"
+        class="line-chart__legend__item list-inline-item d-inline-flex"
+      >
+        <span
+          class="line-chart__legend__item__box"
+          :style="{ 'background-color': colorScale(key) }"
+        />
+        <span class="line-chart__legend__item__label">{{ groupName(key) }}</span>
+      </li>
+    </ul>
     <svg
       :width="width"
       :height="height"
@@ -320,7 +339,17 @@ watchEffect(() => {
         >
       </g>
       <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
+        <template v-if="isMultiLine">
+          <path
+            v-for="series in lines"
+            :key="series.key"
+            class="line-chart__line"
+            :d="series.path"
+            :style="{ stroke: series.color }"
+          />
+        </template>
         <path
+          v-else
           class="line-chart__line"
           :d="line"
         />
