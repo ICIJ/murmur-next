@@ -241,19 +241,34 @@ function update() {
   scale.value.x.domain(
     d3.extent(formattedData.value, (d: any) => d[props.timeseriesKey]) as [Date, Date]
   )
-  scale.value.y.domain([
-    0,
-    d3.max(formattedData.value, (d: any) => d[props.seriesName]) as number
-  ])
 
-  const points = formattedData.value.map((d: any) => {
-    return {
+  // Y domain covers all series
+  const maxY = d3.max(activeKeys.value, (key) => {
+    return d3.max(formattedData.value, (d: any) => d[key]) as number
+  }) as number
+  scale.value.y.domain([0, maxY])
+
+  if (isMultiLine.value) {
+    lines.value = activeKeys.value.map((key) => {
+      const points = formattedData.value.map((d: any) => ({
+        x: scale.value.x(d[props.timeseriesKey]),
+        y: scale.value.y(d[key])
+      }))
+      return {
+        key,
+        path: createLine(points as any) as unknown as string,
+        color: colorScale.value(key)
+      }
+    })
+  }
+  else {
+    const points = formattedData.value.map((d: any) => ({
       x: scale.value.x(d[props.timeseriesKey]),
       y: scale.value.y(d[props.seriesName])
-    }
-  })
+    }))
+    line.value = createLine(points as any) as any
+  }
 
-  line.value = createLine(points as any) as any
   d3.select(el.value)
     .select('.line-chart__axis--x')
     .call(
