@@ -22,8 +22,26 @@ const castCall = (fnOrValue = identity, ...rest: any[]) =>
 export interface LineChartProps {
   /**
    * Color of the line. Falls back to theme's dark color.
+   * Used for single-series mode (when `keys` is not set).
    */
   lineColor?: string | null
+  /**
+   * Colors for each line when using multi-series mode (`keys`).
+   */
+  lineColors?: string[]
+  /**
+   * Field names in data objects for each line series.
+   * When set, enables multi-line mode. When empty, falls back to `seriesName`.
+   */
+  keys?: string[]
+  /**
+   * Display names for each key in the legend.
+   */
+  groups?: string[]
+  /**
+   * Hide the legend (only relevant in multi-line mode).
+   */
+  hideLegend?: boolean
   /**
    * Fixed width for y-axis labels in pixels. If not set, width is calculated automatically.
    */
@@ -34,6 +52,7 @@ export interface LineChartProps {
   fixedHeight?: number | null
   /**
    * Field name in data objects containing the y-axis value.
+   * Used for single-series mode (when `keys` is not set).
    */
   seriesName?: string
   /**
@@ -76,6 +95,10 @@ export interface LineChartProps {
 
 const props = withDefaults(defineProps<LineChartProps>(), {
   lineColor: null,
+  lineColors: () => [],
+  keys: () => [],
+  groups: () => [],
+  hideLegend: false,
   fixedLabelWidth: null,
   fixedHeight: null,
   seriesName: 'value',
