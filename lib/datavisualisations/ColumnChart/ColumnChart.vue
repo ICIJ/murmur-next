@@ -377,7 +377,12 @@ const xAxisTickValues = computed((): string[] => {
 const xAxis = computed((): d3.Axis<string> => {
   return d3
     .axisBottom(scaleX.value)
-    .tickFormat((d: any) => d3Formatter(d, props.xAxisTickFormat))
+    .tickFormat((d: any) => {
+      if (props.waterfall && props.waterfallTotal && d === props.waterfallTotalLabel) {
+        return d
+      }
+      return d3Formatter(d, props.xAxisTickFormat)
+    })
     .tickValues(xAxisTickValues.value)
 })
 
