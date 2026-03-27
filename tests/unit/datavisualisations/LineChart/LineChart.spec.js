@@ -100,6 +100,84 @@ describe('LineChart.vue', () => {
     })
   })
 
+  describe('a multi-line chart with three series', () => {
+    let wrapper
+
+    beforeEach(async () => {
+      const propsData = {
+        fixedHeight: 300,
+        xAxisTicks: d3.timeYear.every(1),
+        keys: ['injuries', 'deaths'],
+        groups: ['Injuries', 'Deaths'],
+        lineColors: ['#e53935', '#ff8a80'],
+        data: [
+          { date: 2000, injuries: 10, deaths: 2 },
+          { date: 2001, injuries: 20, deaths: 5 },
+          { date: 2002, injuries: 30, deaths: 8 },
+          { date: 2003, injuries: 40, deaths: 12 }
+        ]
+      }
+
+      wrapper = mount(LineChart, { propsData })
+    })
+
+    it('is a Vue instance', () => {
+      expect(wrapper.vm).toBeTruthy()
+    })
+
+    it('renders two line paths with valid d attributes', () => {
+      const paths = wrapper.findAll('.line-chart__line')
+      expect(paths).toHaveLength(2)
+      paths.forEach((path) => {
+        const d = path.attributes('d')
+        expect(d).toBeTruthy()
+        expect(d).toContain('M')
+        expect(d).not.toContain('NaN')
+      })
+    })
+
+    it('does not render a single-line path element', () => {
+      // In multi-line mode, only the v-for paths should be rendered
+      const paths = wrapper.findAll('.line-chart__line')
+      expect(paths).toHaveLength(2) // Not 3 (2 multi + 1 single)
+    })
+
+    it('renders a legend with two items', () => {
+      const items = wrapper.findAll('.line-chart__legend__item')
+      expect(items).toHaveLength(2)
+    })
+
+    it('renders legend with group names', () => {
+      const items = wrapper.findAll('.line-chart__legend__item__label')
+      expect(items.at(0).text()).toBe('Injuries')
+      expect(items.at(1).text()).toBe('Deaths')
+    })
+
+    it('renders legend boxes with correct colors', () => {
+      const boxes = wrapper.findAll('.line-chart__legend__item__box')
+      expect(boxes.at(0).element.style['background-color']).toBe('rgb(229, 57, 53)')
+      expect(boxes.at(1).element.style['background-color']).toBe('rgb(255, 138, 128)')
+    })
+
+    it('applies stroke color to each line', () => {
+      const paths = wrapper.findAll('.line-chart__line')
+      expect(paths.at(0).element.style.stroke).toBe('#e53935')
+      expect(paths.at(1).element.style.stroke).toBe('#ff8a80')
+    })
+
+    it('hides legend when hideLegend is true', async () => {
+      await wrapper.setProps({ hideLegend: true })
+      expect(wrapper.find('.line-chart__legend').exists()).toBe(false)
+    })
+
+    it('uses key names as legend labels when groups are not provided', async () => {
+      await wrapper.setProps({ groups: [] })
+      const items = wrapper.findAll('.line-chart__legend__item__label')
+      expect(items.at(0).text()).toBe('injuries')
+      expect(items.at(1).text()).toBe('deaths')
+    })
+  })
+
   describe('a 10 columns chart with two highlights using remote CSV', () => {
     let wrapper
 
