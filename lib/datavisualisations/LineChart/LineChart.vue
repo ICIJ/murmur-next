@@ -396,6 +396,12 @@ watchEffect(() => {
       flex-direction: row;
       align-items: center;
       padding-right: $spacer * 0.5;
+      transition: opacity 0.3s, filter 0.3s;
+
+      .line-chart--has-highlight &:not(&--highlighted) {
+        opacity: 0.2;
+        filter: grayscale(30%) brightness(10%);
+      }
 
       &__box {
         height: 1em;
@@ -425,6 +431,11 @@ watchEffect(() => {
     fill: none;
     stroke: var(--line-color, var(--dark, $dark));
     stroke-width: 3px;
+    transition: opacity 0.3s;
+
+    .line-chart--has-highlight &:not(&--highlighted) {
+      opacity: 0.15;
+    }
   }
 }
 </style>
