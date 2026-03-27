@@ -379,4 +379,36 @@ describe('ColumnChart.vue', () => {
       expect(wrapper.emitted().select[0][0]).toBe(wrapper.vm.bars[0].datum)
     })
   })
+
+  describe('a waterfall chart with total and xAxisTickFormat', () => {
+    let wrapper
+
+    beforeEach(async () => {
+      const propsData = {
+        data: [
+          { date: 2020, value: 10 },
+          { date: 2021, value: 20 },
+          { date: 2022, value: 30 }
+        ],
+        waterfall: true,
+        waterfallTotal: true,
+        xAxisTickFormat: v => `'${String(v).slice(2)}`
+      }
+
+      wrapper = mount(ColumnChart, { propsData })
+      wrapper.vm.$el.style.width = '500px'
+      await wrapper.vm.$nextTick()
+    })
+
+    it('should not apply xAxisTickFormat to the total label', () => {
+      const ticks = wrapper.findAll('.column-chart__axis--x .tick')
+      const lastTick = ticks.at(ticks.length - 1)
+      expect(lastTick.text()).toBe('Total')
+    })
+
+    it('should apply xAxisTickFormat to regular ticks', () => {
+      const ticks = wrapper.findAll('.column-chart__axis--x .tick')
+      expect(ticks.at(0).text()).toBe('\'20')
+    })
+  })
 })
