@@ -99,6 +99,41 @@ describe('ColumnChart.vue', () => {
     })
   })
 
+  describe('a five columns chart using the highlights prop', () => {
+    let wrapper
+
+    beforeEach(async () => {
+      const propsData = {
+        data: [
+          { date: 2000, value: 0 },
+          { date: 2001, value: 1 },
+          { date: 2002, value: 2 },
+          { date: 2003, value: 3 },
+          { date: 2004, value: 4 }
+        ],
+        highlights: [2001, 2003],
+        noYAxis: true
+      }
+
+      wrapper = mount(ColumnChart, { propsData })
+      wrapper.vm.$el.style.width = '500px'
+      await wrapper.vm.$nextTick()
+    })
+
+    it('should add has-highlights class to root', () => {
+      expect(wrapper.classes('column-chart--has-highlights')).toBeTruthy()
+    })
+
+    it('should highlight only the second and fourth columns', () => {
+      const columns = wrapper.findAll('.column-chart__columns__item')
+      expect(columns.at(0).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(1).classes('column-chart__columns__item--highlight')).toBeTruthy()
+      expect(columns.at(2).classes('column-chart__columns__item--highlight')).toBeFalsy()
+      expect(columns.at(3).classes('column-chart__columns__item--highlight')).toBeTruthy()
+      expect(columns.at(4).classes('column-chart__columns__item--highlight')).toBeFalsy()
+    })
+  })
+
   describe('a two columns chart with no highlights using remote JSON', () => {
     let wrapper
 
