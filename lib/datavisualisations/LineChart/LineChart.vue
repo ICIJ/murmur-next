@@ -118,10 +118,17 @@ const emit = defineEmits<{
   resized: []
 }>()
 
+interface LineSeries {
+  key: string
+  path: string | null
+  color: string | null
+}
+
 const width = ref(0)
 const height = ref(0)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
 const line = ref<d3.Line<[number, number]> | null>(null)
+const lines = ref<LineSeries[]>([])
 const isLoaded = ref(false)
 
 const {
@@ -131,6 +138,24 @@ const {
   xAxisYearFormat,
   baseHeightRatio
 } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
+
+const isMultiLine = computed(() => props.keys.length > 0)
+
+const activeKeys = computed(() => {
+  return isMultiLine.value ? props.keys : [props.seriesName]
+})
+
+const colorScale = computed(() => {
+  return d3
+    .scaleOrdinal<string>()
+    .domain(activeKeys.value)
+    .range(props.lineColors.length ? props.lineColors : d3.schemeCategory10)
+})
+
+function groupName(key: string) {
+  const index = props.keys.indexOf(key)
+  return props.groups[index] || key
+}
 
 const labelWidth = computed(() => {
   if (props.fixedLabelWidth) {
