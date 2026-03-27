@@ -84,6 +84,11 @@ export interface LineChartProps {
    */
   chartHeightRatio?: number
   /**
+   * D3 curve factory for line interpolation (e.g. d3.curveStep, d3.curveMonotoneX).
+   * Defaults to d3.curveLinear.
+   */
+  curve?: d3.CurveFactory
+  /**
    * Enable social mode for optimal display when sharing on social media.
    */
   socialMode?: boolean
@@ -99,6 +104,7 @@ const props = withDefaults(defineProps<LineChartProps>(), {
   keys: () => [],
   groups: () => [],
   hideLegend: false,
+  curve: undefined,
   fixedLabelWidth: null,
   fixedHeight: null,
   seriesName: 'value',
@@ -236,10 +242,13 @@ const formattedData = computed(() => {
   })
 })
 
-const createLine = d3
-  .line()
-  .x((d: any) => d.x)
-  .y((d: any) => d.y)
+const createLine = computed(() => {
+  const generator = d3.line().x((d: any) => d.x).y((d: any) => d.y)
+  if (props.curve) {
+    generator.curve(props.curve)
+  }
+  return generator
+})
 
 const parseTime = d3.timeParse('%Y')
 
@@ -272,7 +281,7 @@ function update() {
       }))
       return {
         key,
-        path: createLine(points as any) as unknown as string,
+        path: createLine.value(points as any) as unknown as string,
         color: colorScale.value(key)
       }
     })
@@ -282,7 +291,7 @@ function update() {
       x: scale.value.x(d[props.timeseriesKey]),
       y: scale.value.y(d[props.seriesName])
     }))
-    line.value = createLine(points as any) as any
+    line.value = createLine.value(points as any) as any
   }
 
   d3.select(el.value)
