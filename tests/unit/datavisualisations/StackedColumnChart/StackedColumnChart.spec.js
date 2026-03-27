@@ -263,6 +263,13 @@ describe('StackedColumnChart.vue', () => {
       expect(values.at(1).text()).toBe('$10')
     })
 
+    it('does not apply yAxisTickFormat to column labels', async () => {
+      await wrapper.setProps({ yAxisTickFormat: '$,' })
+      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
+      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
+      expect(label.text()).toBe('2006')
+    })
+
     it('creates an invisible left axis', async () => {
       const leftAxis = wrapper.find('.stacked-column-chart__left-axis')
       expect(leftAxis.attributes('style')).toBe('display: none;')
