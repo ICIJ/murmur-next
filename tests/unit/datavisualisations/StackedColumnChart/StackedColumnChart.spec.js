@@ -97,22 +97,19 @@ describe('StackedColumnChart.vue', () => {
     })
 
     it('creates the first group with "2006" as label', () => {
-      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
-      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
-      expect(label.text()).toBe('2006')
+      const labels = wrapper.findAll('.stacked-column-chart__groups__item__label')
+      expect(labels.at(0).text()).toBe('2006')
     })
 
     it('creates the second group with "2007" as label', () => {
-      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(1)
-      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
-      expect(label.text()).toBe('2007')
+      const labels = wrapper.findAll('.stacked-column-chart__groups__item__label')
+      expect(labels.at(1).text()).toBe('2007')
     })
 
     it('creates the first group with "2009" as label when ordered by "foo"', async () => {
       await wrapper.setProps({ sortBy: 'foo' })
-      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
-      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
-      expect(label.text()).toBe('2009')
+      const labels = wrapper.findAll('.stacked-column-chart__groups__item__label')
+      expect(labels.at(0).text()).toBe('2009')
     })
 
     it('creates a legend with "foo" and "bar" items', () => {
@@ -265,9 +262,8 @@ describe('StackedColumnChart.vue', () => {
 
     it('does not apply yAxisTickFormat to column labels', async () => {
       await wrapper.setProps({ yAxisTickFormat: '$,' })
-      const firstGroup = wrapper.findAll('.stacked-column-chart__groups__item').at(0)
-      const label = firstGroup.find('.stacked-column-chart__groups__item__label')
-      expect(label.text()).toBe('2006')
+      const labels = wrapper.findAll('.stacked-column-chart__groups__item__label')
+      expect(labels.at(0).text()).toBe('2006')
     })
 
     it('creates an invisible left axis', async () => {
@@ -360,15 +356,23 @@ describe('StackedColumnChart.vue', () => {
       expect(bazColumn.element.offsetHeight).toBe(0)
     })
 
+    it('renders column labels when direct labeling is disabled', () => {
+      const labels = wrapper.findAll('.stacked-column-chart__groups__item__label')
+      expect(labels).toHaveLength(2)
+      expect(labels.at(0).text()).toBe('today')
+      expect(labels.at(1).text()).toBe('tomorrow')
+    })
+
     it('creates a visible left axis', async () => {
       const leftAxis = wrapper.find('.stacked-column-chart__left-axis')
       expect(leftAxis.attributes('style')).not.toBe('display: none;')
     })
 
-    it('creates a left axis with the same sizes than the component', async () => {
+    it('creates a left axis with the same width as the component and bars height plus padding', async () => {
       const leftAxis = wrapper.find('.stacked-column-chart__left-axis')
       expect(leftAxis.attributes('width')).toBe('600px')
-      expect(leftAxis.attributes('height')).toBe('500px')
+      const bars = wrapper.find('.stacked-column-chart__groups__item__bars')
+      expect(leftAxis.attributes('height')).toBe(`${bars.element.offsetHeight + 20}px`)
     })
 
     it('creates a left axis with 0 as minimum value', async () => {
