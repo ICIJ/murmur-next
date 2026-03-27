@@ -213,7 +213,9 @@ const formattedData = computed(() => {
     // Clone to avoid mutating reactive source data (parseTime on already-parsed Date returns null)
     const rawD = { ...toRaw(d) }
     rawD[props.timeseriesKey] = parseTime(d[props.timeseriesKey])
-    rawD[props.seriesName] = +d[props.seriesName]
+    for (const key of activeKeys.value) {
+      rawD[key] = +d[key]
+    }
     return rawD
   })
 })
