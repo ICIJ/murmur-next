@@ -530,7 +530,7 @@ watch(sortedData, async () => {
       <svg
         v-show="noDirectLabeling"
         :width="width + 'px'"
-        :height="height + 'px'"
+        :height="(leftAxisHeight + 20) + 'px'"
         class="stacked-column-chart__left-axis"
       >
         <g
