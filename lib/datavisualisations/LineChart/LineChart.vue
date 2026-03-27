@@ -367,6 +367,23 @@ watchEffect(() => {
     fill: currentColor;
   }
 
+  &__legend {
+    &__item {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      padding-right: $spacer * 0.5;
+
+      &__box {
+        height: 1em;
+        width: 1em;
+        border-radius: 0.5em;
+        display: inline-block;
+        margin-right: $spacer * 0.5;
+      }
+    }
+  }
+
   &__axis {
     .domain {
       display: none;
