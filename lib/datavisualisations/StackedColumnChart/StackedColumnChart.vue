@@ -454,7 +454,7 @@ function hasValueHidden(i: string | number, key: string) {
 }
 
 function formatXDatum(d: string) {
-  return d3Formatter(d, props.yAxisTickFormat)
+  return d3Formatter(d, props.xAxisTickFormat)
 }
 
 function formatYDatum(d: string) {
