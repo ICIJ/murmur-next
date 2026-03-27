@@ -152,6 +152,22 @@ const colorScale = computed(() => {
     .range(props.lineColors.length ? props.lineColors : d3.schemeCategory10)
 })
 
+const highlightedKey = ref<string | null>(null)
+
+const hasHighlight = computed(() => highlightedKey.value !== null)
+
+function highlight(key: string) {
+  highlightedKey.value = key
+}
+
+function resetHighlight() {
+  highlightedKey.value = null
+}
+
+function isHighlighted(key: string) {
+  return highlightedKey.value === key
+}
+
 function groupName(key: string) {
   const index = props.keys.indexOf(key)
   return props.groups[index] || key
