@@ -170,6 +170,35 @@ describe('LineChart.vue', () => {
       expect(wrapper.find('.line-chart__legend').exists()).toBe(false)
     })
 
+    it('highlights a legend item on mouseover', async () => {
+      const items = wrapper.findAll('.line-chart__legend__item')
+      await items.at(0).trigger('mouseover')
+      expect(items.at(0).classes()).toContain('line-chart__legend__item--highlighted')
+      expect(items.at(1).classes()).not.toContain('line-chart__legend__item--highlighted')
+    })
+
+    it('adds has-highlight class to root on legend mouseover', async () => {
+      const items = wrapper.findAll('.line-chart__legend__item')
+      await items.at(0).trigger('mouseover')
+      expect(wrapper.classes()).toContain('line-chart--has-highlight')
+    })
+
+    it('highlights the matching line path on legend mouseover', async () => {
+      const items = wrapper.findAll('.line-chart__legend__item')
+      await items.at(0).trigger('mouseover')
+      const paths = wrapper.findAll('.line-chart__line')
+      expect(paths.at(0).classes()).toContain('line-chart__line--highlighted')
+      expect(paths.at(1).classes()).not.toContain('line-chart__line--highlighted')
+    })
+
+    it('removes highlight on mouseleave', async () => {
+      const items = wrapper.findAll('.line-chart__legend__item')
+      await items.at(0).trigger('mouseover')
+      expect(wrapper.classes()).toContain('line-chart--has-highlight')
+      await items.at(0).trigger('mouseleave')
+      expect(wrapper.classes()).not.toContain('line-chart--has-highlight')
+    })
+
     it('uses key names as legend labels when groups are not provided', async () => {
       await wrapper.setProps({ groups: [] })
       const items = wrapper.findAll('.line-chart__legend__item__label')
