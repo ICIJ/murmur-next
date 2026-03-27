@@ -450,7 +450,7 @@ watch(() => props.socialMode, update, { immediate: true })
   <div
     ref="el"
     :class="{
-      'column-chart--has-highlights': dataHasHighlights,
+      'column-chart--has-highlights': dataHasHighlights || highlights.length > 0,
       'column-chart--hover': hover,
       'column-chart--stripped': stripped,
       'column-chart--social-mode': socialMode,
