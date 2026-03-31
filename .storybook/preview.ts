@@ -3,14 +3,21 @@ import { styled } from 'storybook/theming'
 import { useArgs } from 'storybook/preview-api'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 
+import { BApp } from 'bootstrap-vue-next'
+
 import './preview.scss'
 import Murmur from '@/main'
 
 setup((app) => {
   app.use(Murmur)
+  app.component('BApp', BApp)
 })
 
 export const decorators = [
+  () => ({
+    components: { BApp },
+    template: '<BApp><story /></BApp>'
+  }),
   withThemeByDataAttribute({
     themes: {
       light: 'light',
