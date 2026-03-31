@@ -17,7 +17,9 @@ export const modalDecorator = (
   components: { BModal },
   setup() {
     const visible = ref(false)
-    const show = () => { visible.value = true }
+    const show = () => {
+      visible.value = true
+    }
     return { visible, show, buttonLabel, modalTitle, size }
   },
   template: `
