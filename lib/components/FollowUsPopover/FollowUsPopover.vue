@@ -4,9 +4,14 @@
       class="btn btn-link text-secondary follow-us__close"
       @click="closeSignupPopover"
     >
-      <app-icon><i-ph-x /></app-icon>
+      <app-icon>
+        <i-ph-x-bold />
+      </app-icon>
     </button>
-    <sign-up-form class="p-3" />
+    <sign-up-form
+      class="p-3"
+      :compact="compact"
+    />
     <div class="px-3 pb-1 text-uppercase text-muted fw-bold">
       {{ t('follow-us-popover.heading') }}
     </div>
@@ -59,9 +64,17 @@ import { useI18n } from 'vue-i18n'
 import SignUpForm from '@/components/Form/FormSignUp.vue'
 import AppIcon from '@/components/App/AppIcon.vue'
 
-/**
- * FollowUsPopover
- */
+export interface FollowUsPopoverProps {
+  /**
+   * Compact layout for the sign-up form.
+   */
+  compact?: boolean
+}
+
+withDefaults(defineProps<FollowUsPopoverProps>(), {
+  compact: false
+})
+
 const emit = defineEmits(['update:close'])
 const { t } = useI18n()
 
