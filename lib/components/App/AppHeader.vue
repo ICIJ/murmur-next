@@ -93,10 +93,11 @@
         <b-popover
           v-model="showFollowUsPopover"
           target="follow-us-toggler"
-          placement="bottom-start"
+          placement="bottom-end"
           click
         >
           <follow-us-popover
+            :compact="compactSignUp"
             @update:close="closeFollowUsPopover"
             @keydown.esc="closeFollowUsPopover"
           />
@@ -135,13 +136,18 @@ export interface AppHeaderProps {
    * Target link of the donate button.
    */
   donateUrl?: string
+  /**
+   * Compact layout for the sign-up form in the follow-us popover.
+   */
+  compactSignUp?: boolean
 }
 
 const props = withDefaults(defineProps<AppHeaderProps>(), {
   position: 'fixed',
   noHeadroom: false,
   homeUrl: () => config.get('app.home'),
-  donateUrl: () => config.get('app.donate-url')
+  donateUrl: () => config.get('app.donate-url'),
+  compactSignUp: false
 })
 
 const { t } = useI18n()
