@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
-import uniqueId from 'lodash/uniqueId'
 import {
   computed,
+  ref,
   type CSSProperties
 } from 'vue'
 
@@ -12,7 +12,7 @@ import AppIcon from '@/components/App/AppIcon.vue'
 import SharingOptionsLink from '@/components/SharingOptions/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'
-import { BModal, useModal } from 'bootstrap-vue-next'
+import { BModal } from 'bootstrap-vue-next'
 
 interface MetaValuesMap {
   url: string
@@ -77,8 +77,8 @@ const props = withDefaults(defineProps<SharingOptionsProps>(), {
   noMeta: false
 })
 
-const embedFormId = uniqueId('embed-form-')
-const { show } = useModal(embedFormId)
+const showEmbedForm = ref(false)
+const show = () => { showEmbedForm.value = true }
 const style = computed((): CSSProperties => {
   return {
     'flex-direction': props.direction
@@ -174,9 +174,9 @@ function defaultValueFor(key: string, metaSelector?: string): string {
       <span class="visually-hidden">Embed</span>
     </a>
     <b-modal
-      :id="embedFormId"
+      v-model="showEmbedForm"
       class="text-dark"
-      hide-footer
+      no-footer
       title="Embed on your website"
     >
       <embed-form
