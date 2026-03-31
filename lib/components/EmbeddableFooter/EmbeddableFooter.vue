@@ -114,7 +114,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
 @import '../../styles/mixins';
 
 @include keyframes(slideup) {
@@ -191,7 +190,7 @@ onMounted(() => {
     right: 0;
     margin: $spacer * 0.25;
 
-    .sharing-options__link {
+    &:deep(.sharing-options__link) {
       opacity: 0;
       animation: slideup 200ms forwards;
       @include animation-delay-loop(0, 10, 50ms);
