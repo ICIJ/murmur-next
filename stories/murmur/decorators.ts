@@ -1,6 +1,6 @@
-import { BModal, BPopover, Size, useModal } from 'bootstrap-vue-next'
+import { BModal, BPopover, Size } from 'bootstrap-vue-next'
 import { SIZE } from '@/enums'
-import { toRefs } from 'vue'
+import { ref, toRefs } from 'vue'
 import { geoOrthographic } from 'd3-geo'
 import { defineComponent } from 'vue'
 import { ChoroplethMap } from '@/maps'
@@ -16,8 +16,9 @@ export const modalDecorator = (
 ) => ({
   components: { BModal },
   setup() {
-    const { show } = useModal('formModal')
-    return { show, buttonLabel, modalTitle, size }
+    const visible = ref(false)
+    const show = () => { visible.value = true }
+    return { visible, show, buttonLabel, modalTitle, size }
   },
   template: `
     <div class="p-4 text-center">
@@ -25,7 +26,7 @@ export const modalDecorator = (
         {{buttonLabel}}
       </button>
     </div>
-    <b-modal hide-footer lazy :title="modalTitle" id="formModal" :size="size" no-headings>
+    <b-modal v-model="visible" no-footer :title="modalTitle" :size="size" no-header>
       <story/>
     </b-modal>`
 })
