@@ -12,11 +12,16 @@ export const $popup: Popup = {
   parent: typeof window !== 'undefined' ? window : null
 }
 
+import type { Component } from 'vue'
 import { SharingPlatform } from '@/enums'
+import IPhEnvelope from '~icons/ph/envelope-bold'
+import IPhFacebookLogoFill from '~icons/ph/facebook-logo-fill'
+import IPhLinkedinLogoFill from '~icons/ph/linkedin-logo-fill'
+import IPhButterflyFill from '~icons/ph/butterfly-fill'
 
 interface SharingPlatformConfig {
   base: string
-  icon: string
+  icon: Component
   args: Record<string, string>
 }
 
@@ -27,7 +32,7 @@ type SharingPlatforms = Record<SharingPlatform, SharingPlatformConfig>
 export const networks: SharingPlatforms = {
   email: {
     base: 'mailto:?',
-    icon: 'envelope',
+    icon: IPhEnvelope,
     args: {
       subject: 'title',
       body: 'description'
@@ -35,7 +40,7 @@ export const networks: SharingPlatforms = {
   },
   facebook: {
     base: 'https://www.facebook.com/sharer.php?',
-    icon: 'facebook-logo',
+    icon: IPhFacebookLogoFill,
     args: {
       u: 'url',
       title: 'title',
@@ -45,31 +50,19 @@ export const networks: SharingPlatforms = {
   },
   linkedin: {
     base: 'https://www.linkedin.com/sharing/share-offsite/?',
-    icon: 'linkedin-logo',
+    icon: IPhLinkedinLogoFill,
     args: {
       url: 'url',
       title: 'title',
       summary: 'description'
     }
   },
-  twitter: {
-    base: 'https://x.com/intent/tweet?',
-    icon: 'x-logo',
+  bluesky: {
+    base: 'https://bsky.app/intent/compose?',
+    icon: IPhButterflyFill,
     args: {
-      url: 'url',
       text: 'title',
-      via: 'user',
-      hashtags: 'hashtags'
-    }
-  },
-  x: {
-    base: 'https://x.com/intent/tweet?',
-    icon: 'x-logo',
-    args: {
-      url: 'url',
-      text: 'title',
-      via: 'user',
-      hashtags: 'hashtags'
+      url: 'url'
     }
   }
 }
@@ -79,20 +72,9 @@ export const networks: SharingPlatforms = {
 import querystring from 'querystring-es3'
 import reduce from 'lodash/reduce'
 import get from 'lodash/get'
-import { computed, reactive, type Component } from 'vue'
+import { computed, reactive } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
-import IPhEnvelopeFill from '~icons/ph/envelope-fill'
-import IPhFacebookLogoFill from '~icons/ph/facebook-logo-fill'
-import IPhLinkedinLogoFill from '~icons/ph/linkedin-logo-fill'
-import IPhXLogoFill from '~icons/ph/x-logo-fill'
-
-const iconMap: Record<string, Component> = {
-  'envelope': IPhEnvelopeFill,
-  'facebook-logo': IPhFacebookLogoFill,
-  'linkedin-logo': IPhLinkedinLogoFill,
-  'x-logo': IPhXLogoFill
-}
 
 defineOptions({
   name: 'SharingOptionsLink'
@@ -128,7 +110,7 @@ export interface SharingOptionsLinkProps {
    */
   media?: string | null
   /**
-   * Twitter user
+   * Social media user handle
    */
   user?: string | null
   /**
@@ -176,12 +158,8 @@ const args = computed((): Record<string, string> => {
   return get(networks, [props.network, 'args'], {})
 })
 
-const iconName = computed((): string | null => {
-  return get(networks, [props.network, 'icon'], null)
-})
-
 const iconComponent = computed((): Component | null => {
-  return iconName.value ? iconMap[iconName.value] ?? null : null
+  return get(networks, [props.network, 'icon'], null)
 })
 
 const query = computed((): Record<string, string> => {
@@ -268,7 +246,10 @@ defineExpose({
     @click="handleClick"
   >
     <slot>
-      <app-icon v-if="!noIcon && iconComponent">
+      <app-icon
+        v-if="!noIcon && iconComponent"
+        size="1.2em"
+      >
         <component :is="iconComponent" />
       </app-icon>
       <span class="visually-hidden">{{ name }}</span>
