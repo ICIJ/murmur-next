@@ -44,6 +44,14 @@ export const TitleSlot: Story = {
   })
 }
 
+export const HiddenDivider: Story = {
+  args: { hideDivider: true, lead: 'No divider next to the brand' }
+}
+
+export const CustomLogoHeight: Story = {
+  args: { logoHeight: 60, lead: 'Larger logo' }
+}
+
 export const MainSlot: Story = {
   render: (args: any) => ({
     components: { EmbeddableFooter, BButton },

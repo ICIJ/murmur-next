@@ -4,9 +4,10 @@
       :href="homeUrl"
       target="_blank"
       class="text-white embeddable-footer__brand"
+      :class="{ 'embeddable-footer__brand--no-divider': hideDivider }"
     >
       <brand
-        :size="40"
+        :size="logoHeight"
         no-border
         class="me-2"
         color="white"
@@ -82,6 +83,14 @@ export interface EmbeddableFooterProps {
    * Sharing option values to bind to the sharing-options component in the bottom-right corner.
    */
   sharingOptionsValues?: Record<string, unknown>
+  /**
+   * Hide the divider (right border) next to the brand.
+   */
+  hideDivider?: boolean
+  /**
+   * Height of the logo in pixels.
+   */
+  logoHeight?: number | string
 }
 
 withDefaults(defineProps<EmbeddableFooterProps>(), {
@@ -90,7 +99,9 @@ withDefaults(defineProps<EmbeddableFooterProps>(), {
   iframeMinHeight: 100,
   iframeMinWidth: 100,
   homeUrl: () => config.get('app.home'),
-  sharingOptionsValues: () => ({})
+  sharingOptionsValues: () => ({}),
+  hideDivider: false,
+  logoHeight: 40
 })
 
 // Reactive state
@@ -146,6 +157,10 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &--no-divider {
+      border-right: none;
+    }
   }
   &__lead {
     flex-grow: 1;
