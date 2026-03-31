@@ -16,7 +16,7 @@ function mockPopupParent() {
 vi.useFakeTimers()
 
 describe('SharingOptionsLink', () => {
-  const propsData = { network: 'twitter' }
+  const propsData = { network: 'bluesky' }
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -34,7 +34,7 @@ describe('SharingOptionsLink', () => {
   })
 
   it('should generate the component with `button` tag', () => {
-    const propsData = { network: 'twitter', tag: 'button' }
+    const propsData = { network: 'bluesky', tag: 'button' }
     const wrapper = mount(SharingOptionsLink, { propsData })
     expect(wrapper.element.tagName).toBe('BUTTON')
   })
@@ -46,10 +46,10 @@ describe('SharingOptionsLink', () => {
     expect(validNetworks.includes('email')).toBe(true)
   })
 
-  it('should give a different `base` for Twitter', () => {
-    const propsData = { network: 'twitter' }
+  it('should give a different `base` for Bluesky', () => {
+    const propsData = { network: 'bluesky' }
     const wrapper = mount(SharingOptionsLink, { propsData })
-    expect(wrapper.vm.base).toBe('https://x.com/intent/tweet?')
+    expect(wrapper.vm.base).toBe('https://bsky.app/intent/compose?')
   })
 
   it('should give a different `base` for Facebook', () => {
@@ -76,7 +76,7 @@ describe('SharingOptionsLink', () => {
   })
 
   it('should create a query with the correct `url` param', () => {
-    const propsData = { network: 'twitter', url: 'https://icij.org' }
+    const propsData = { network: 'bluesky', url: 'https://icij.org' }
     const wrapper = mount(SharingOptionsLink, { propsData })
     expect(wrapper.vm.query.url).toBe(propsData.url)
   })
@@ -88,7 +88,7 @@ describe('SharingOptionsLink', () => {
   })
 
   it('should create a query with the correct `text` param', () => {
-    const propsData = { network: 'twitter', title: 'Foo' }
+    const propsData = { network: 'bluesky', title: 'Foo' }
     const wrapper = mount(SharingOptionsLink, { propsData })
     expect(wrapper.vm.query.text).toBe(propsData.title)
   })
@@ -105,12 +105,10 @@ describe('SharingOptionsLink', () => {
     expect(wrapper.vm.query.summary).toBe(propsData.description)
   })
 
-  it('should have correct `args` for Twitter', () => {
+  it('should have correct `args` for Bluesky', () => {
     const wrapper = mount(SharingOptionsLink, { propsData })
-    expect(wrapper.vm.args).toHaveProperty('url')
     expect(wrapper.vm.args).toHaveProperty('text')
-    expect(wrapper.vm.args).toHaveProperty('via')
-    expect(wrapper.vm.args).toHaveProperty('hashtags')
+    expect(wrapper.vm.args).toHaveProperty('url')
   })
 
   it('should have correct `args` for Facebook', () => {

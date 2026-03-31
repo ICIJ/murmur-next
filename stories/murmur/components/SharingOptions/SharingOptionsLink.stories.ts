@@ -9,7 +9,7 @@ const meta: Meta<typeof SharingOptionsLink> = {
   argTypes: {
     network: {
       control: 'select',
-      options: ['twitter', 'facebook', 'linkedin', 'email']
+      options: ['bluesky', 'facebook', 'linkedin', 'email']
     }
   }
 }
@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    network: 'twitter',
+    network: 'bluesky',
     class: 'btn btn-outline-primary mx-1',
     url: 'https://www.icij.org'
   }
@@ -28,7 +28,7 @@ export const Default: Story = {
 
 export const CustomSlot: Story = {
   args: {
-    network: 'twitter',
+    network: 'bluesky',
     class: 'btn btn-outline-primary mx-1',
     url: 'https://www.icij.org',
     noIcon: true
@@ -36,13 +36,13 @@ export const CustomSlot: Story = {
   render: (args: any) => ({
     components: { SharingOptionsLink },
     setup: () => ({ args }),
-    template: '<SharingOptionsLink v-bind="args">Share twitter</SharingOptionsLink>'
+    template: '<SharingOptionsLink v-bind="args">Share bluesky</SharingOptionsLink>'
   })
 }
 
 export const CustomTagAndSlot: Story = {
   args: {
-    network: 'twitter',
+    network: 'bluesky',
     title: 'Murmur Design System',
     class: 'btn btn-warning',
     url: 'https://www.icij.org',
@@ -52,6 +52,6 @@ export const CustomTagAndSlot: Story = {
   render: (args: any) => ({
     components: { SharingOptionsLink },
     setup: () => ({ args }),
-    template: '<SharingOptionsLink v-bind="args">Twitter Button</SharingOptionsLink>'
+    template: '<SharingOptionsLink v-bind="args">Bluesky Button</SharingOptionsLink>'
   })
 }
