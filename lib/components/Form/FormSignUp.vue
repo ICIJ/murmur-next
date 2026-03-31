@@ -1,13 +1,13 @@
 <template>
   <form
     class="sign-up-form"
-    :class="{ 'sign-up-form--horizontal': horizontal }"
+    :class="classList"
     @submit.prevent="subscribe"
   >
     <fieldset :disabled="frozen">
       <label
         v-if="!noLabel"
-        class="text-uppercase text-muted fw-bold"
+        class="sign-up-form__fieldset__label text-uppercase text-muted fw-bold"
         for="input-email"
       >
         {{ t('sign-up-form.label') }}
@@ -90,6 +90,10 @@ export interface FormSignUpProps {
    * Color variant of the sign-up button
    */
   variant?: ButtonVariant
+  /**
+   * Compact layout with no gap between the input and the submit button.
+   */
+  compact?: boolean
 }
 
 const props = withDefaults(defineProps<FormSignUpProps>(), {
@@ -100,7 +104,8 @@ const props = withDefaults(defineProps<FormSignUpProps>(), {
   horizontal: false,
   tracker: () => config.get('signup-form.tracker'),
   referrer: null,
-  variant: 'primary'
+  variant: 'primary',
+  compact: false
 })
 const emit = defineEmits(['error', 'success', 'subscribed'])
 const { t } = useI18n()
@@ -116,6 +121,11 @@ const { send } = useSendEmail(
   props.referrer,
   props.defaultGroups
 )
+
+const classList = computed(() => ({
+  'sign-up-form--horizontal': props.horizontal,
+  'sign-up-form--compact': props.compact,
+}))
 
 const variantColorClass = computed(() => {
   return `btn-${props.variant}`
@@ -170,6 +180,32 @@ function unfreeze() {
 <style lang="scss">
 
 .sign-up-form {
+  .sign-up-form__fieldset {
+    &__label {
+      margin-bottom: $spacer-xs;
+    }
+
+    &__group {
+      display: flex;
+      flex-direction: column;
+      gap: $spacer-xs;
+    }
+  }
+
+  &--horizontal .sign-up-form__fieldset__group {
+    flex-direction: row;
+  }
+
+  &--compact {
+    .sign-up-form__fieldset__label {
+      margin-bottom: 0;
+    }
+
+    .sign-up-form__fieldset__group {
+      gap: 0;
+    }
+  }
+
   .sign-up-form__fieldset__group__addon.btn {
     font-size: 0.9em;
   }

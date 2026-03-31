@@ -40,6 +40,19 @@ export const NoLabel: Story = {
   }
 }
 
+export const Compact: Story = {
+  args: {
+    compact: true
+  }
+}
+
+export const CompactHorizontal: Story = {
+  args: {
+    compact: true,
+    horizontal: true
+  }
+}
+
 export const MailChimpGroups: Story = {
   args: {
     defaultGroups: 'group[9][1],group[9][131072]'
