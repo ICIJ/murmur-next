@@ -21,8 +21,6 @@ interface MetaValuesMap {
   facebook_title: string
   facebook_description: string
   facebook_media: string
-  twitter_media: string
-  twitter_user: string
 }
 
 export interface SharingOptionsProps {
@@ -78,7 +76,9 @@ const props = withDefaults(defineProps<SharingOptionsProps>(), {
 })
 
 const showEmbedForm = ref(false)
-const show = () => { showEmbedForm.value = true }
+const show = () => {
+  showEmbedForm.value = true
+}
 const style = computed((): CSSProperties => {
   return {
     'flex-direction': props.direction
@@ -105,14 +105,6 @@ const metaValues = computed((): MetaValuesMap => {
       'sharing-options.media',
       'meta[property="og:image"]'
     ),
-    twitter_media: defaultValueFor(
-      'sharing-options.media',
-      'meta[name="twitter:image"]'
-    ),
-    twitter_user: defaultValueFor(
-      'sharing-options.twitter-user',
-      'meta[name="twitter:site"]'
-    )
   }
 })
 
@@ -152,8 +144,8 @@ function defaultValueFor(key: string, metaSelector?: string): string {
     />
     <sharing-options-link
       class="sharing-options__link"
-      network="twitter"
-      v-bind="valuesFor('twitter')"
+      network="bluesky"
+      v-bind="valuesFor('bluesky')"
     />
     <sharing-options-link
       class="sharing-options__link"
@@ -170,7 +162,9 @@ function defaultValueFor(key: string, metaSelector?: string): string {
       class="sharing-options__link sharing-options__link--embed"
       @click="show"
     >
-      <app-icon><i-ph-code /></app-icon>
+      <app-icon>
+        <i-ph-code-bold />
+      </app-icon>
       <span class="visually-hidden">Embed</span>
     </a>
     <b-modal
