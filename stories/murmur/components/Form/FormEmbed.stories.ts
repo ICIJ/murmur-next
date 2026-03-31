@@ -29,6 +29,15 @@ export const Default: Story = {
   }
 }
 
+export const SwitchResponsive: Story = {
+  args: {
+    noPreview: true,
+    height: 330,
+    url: embedUrl,
+    switchResponsive: true
+  }
+}
+
 export const InModal: Story = {
   args: {
     noTitle: true,

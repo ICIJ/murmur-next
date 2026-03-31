@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 
 import { useI18n } from 'vue-i18n'
+import { BFormCheckbox } from 'bootstrap-vue-next'
 import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
 import IframeResizer from '@/utils/iframe-resizer'
 
@@ -38,6 +39,10 @@ export interface FormEmbedProps {
    * URL of the iframe code
    */
   url?: string | null
+  /**
+   * Use a switch display for the responsive iframe checkbox
+   */
+  switchResponsive?: boolean
 }
 
 const props = withDefaults(defineProps<FormEmbedProps>(), {
@@ -47,7 +52,8 @@ const props = withDefaults(defineProps<FormEmbedProps>(), {
   height: () => window.innerHeight,
   minWidth: 0,
   minHeight: 0,
-  url: null
+  url: null,
+  switchResponsive: false
 })
 
 const { t } = useI18n()
@@ -107,20 +113,14 @@ function embedCode(withPym = responsiveCheck.value): string {
           />
 
           <div class="d-flex justify-content-between">
-            <div class="form-check align-self-end">
-              <input
-                id="responsiveOptin"
-                v-model="responsiveCheck"
-                type="checkbox"
-                class="form-check-input"
-              >
-              <label
-                class="form-check-label fw-bold"
-                for="responsiveOptin"
-              >
-                {{ t('embed-form.responsive-optin') }}
-              </label>
-            </div>
+            <b-form-checkbox
+              id="responsiveOptin"
+              v-model="responsiveCheck"
+              class="align-self-end fw-bold"
+              :switch="switchResponsive"
+            >
+              {{ t('embed-form.responsive-optin') }}
+            </b-form-checkbox>
 
             <haptic-copy
               class="btn-link btn-sm text-uppercase fw-bold"
