@@ -80,8 +80,7 @@ export enum SharingPlatform {
   email = 'email',
   facebook = 'facebook',
   linkedin = 'linkedin',
-  twitter = 'twitter',
-  x = 'x'
+  bluesky = 'bluesky'
 }
 
 export enum DonatePeriod {

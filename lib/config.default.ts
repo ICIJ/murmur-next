@@ -26,7 +26,6 @@ export default {
   'sharing-options.title': 'Awesome App by ICIJ',
   'sharing-options.description': 'null',
   'sharing-options.media': null,
-  'sharing-options.twitter-user': 'ICIJorg',
   'signup-form.tracker': 'EXTERNAL',
   'signup-form.action':
     'https://icij.us15.list-manage.com/subscribe/post?u=0d48a33b1c24d257734cc2a79&id=992ecfdbb2',
