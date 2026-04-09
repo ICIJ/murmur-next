@@ -165,6 +165,18 @@ describe('LineChart.vue', () => {
       expect(paths.at(1).element.style.stroke).toBe('#ff8a80')
     })
 
+    it('subtracts legend height from fixed height', async () => {
+      const legend = wrapper.find('.line-chart__legend').element
+      // Simulate a legend with a known height
+      Object.defineProperty(legend, 'offsetHeight', { value: 40, configurable: true })
+      // Set a container width so setSizes proceeds
+      wrapper.vm.$el.style.width = '500px'
+      // Manually trigger the size recalculation
+      wrapper.vm.setSizes()
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.height).toBe(300 - 40)
+    })
+
     it('hides legend when hideLegend is true', async () => {
       await wrapper.setProps({ hideLegend: true })
       expect(wrapper.find('.line-chart__legend').exists()).toBe(false)

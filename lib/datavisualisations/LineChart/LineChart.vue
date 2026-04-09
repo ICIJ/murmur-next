@@ -255,10 +255,16 @@ const parseTime = d3.timeParse('%Y')
 function setSizes() {
   if (el.value) {
     width.value = el.value.offsetWidth
-    height.value
-      = props.fixedHeight !== null
-        ? props.fixedHeight
-        : el.value.offsetWidth * baseHeightRatio.value
+    let h = props.fixedHeight !== null
+      ? props.fixedHeight
+      : el.value.offsetWidth * baseHeightRatio.value
+    // Subtract legend height so the SVG fits within the container
+    const legend = el.value.querySelector('.line-chart__legend')
+    if (legend) {
+      const style = getComputedStyle(legend)
+      h -= legend.offsetHeight + (parseFloat(style.marginTop) || 0) + (parseFloat(style.marginBottom) || 0)
+    }
+    height.value = Math.max(0, h)
   }
 }
 
