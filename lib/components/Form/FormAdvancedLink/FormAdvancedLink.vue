@@ -64,7 +64,7 @@ export interface FormAdvancedLinkProps {
 
 const props = withDefaults(defineProps<FormAdvancedLinkProps>(), {
   link: undefined,
-  title: null,
+  title: 'Link',
   forms: () => ['raw', 'markdown', 'rich', 'html'],
   card: false,
   pills: false,
@@ -137,7 +137,7 @@ function onUpdate(event: string | undefined): void {
       :title="tab.title"
     >
       <advanced-link-form-tab
-        :title="tab.title"
+        :title="title"
         :type="tab.type"
         :data-type="tab.type"
         :compact="small"

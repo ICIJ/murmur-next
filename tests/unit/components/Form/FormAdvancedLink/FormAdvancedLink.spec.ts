@@ -54,6 +54,16 @@ describe('AdvancedLinkForm.vue', () => {
     expect(wrapper.find('.tab-pane.active [data-type="markdown"]').exists()).toBe(true)
   })
 
+  it('should pass the link title to each tab, not the tab label', async () => {
+    const propsData = { link: 'https://www.icij.org', title: 'A Great Website' }
+    const wrapper = shallowMount(AdvancedLinkForm, { propsData, global })
+    await wrapper.vm.$nextTick()
+    const tabs = wrapper.findAllComponents({ name: 'AdvancedLinkFormTab' })
+    tabs.forEach((tab) => {
+      expect(tab.attributes('title')).toBe('A Great Website')
+    })
+  })
+
   describe('Display variants', () => {
     it('should not use card by default', async () => {
       const wrapper = shallowMount(AdvancedLinkForm, { global })
