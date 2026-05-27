@@ -502,7 +502,7 @@ watch(() => props.socialMode, update, { immediate: true })
           @mouseover="shownTooltip = index"
         >
           <rect
-            :height="padded.height"
+            :height="Math.max(padded.height, 0)"
             :width="bar.width"
             class="column-chart__columns__item__placeholder"
           />
