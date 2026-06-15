@@ -1,28 +1,16 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import DTS from 'vite-plugin-dts'
 import { sharedPlugins, sharedResolve, sharedCss, umdExternal } from './vite.config.shared'
 
+// Type declarations are emitted only by the ESM pass (vite.config.es.ts) into
+// dist/es, which is where package.json `types`/`exports.types` resolve. Running
+// vite-plugin-dts here too would regenerate the whole declaration set into
+// dist/lib, where nothing references it — wasted build time.
 export default defineConfig({
   base: '/',
   assetsInclude: ['/sb-preview/**'],
   plugins: [
-    ...sharedPlugins(),
-    DTS({
-      exclude: [
-        'tests/**',
-        '**/*stories.ts',
-        'test',
-        'vite',
-        'vite.config.ts',
-        'vite.config.es.ts',
-        'vite.config.shared.ts',
-        'vitest.config.ts'
-      ],
-      outDir: 'dist/lib',
-      tsconfigPath: './tsconfig.json',
-      logLevel: 'silent'
-    })
+    ...sharedPlugins()
   ],
   resolve: sharedResolve,
   css: sharedCss,
