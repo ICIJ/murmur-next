@@ -1,6 +1,5 @@
 import { resolve, isAbsolute } from 'path'
 import { fileURLToPath, URL } from 'node:url'
-import { createRequire } from 'node:module'
 import Vue from '@vitejs/plugin-vue'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -9,9 +8,6 @@ import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Delete from './plugins/plugin-delete'
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
-
-const require = createRequire(import.meta.url)
-const pkg = require('./package.json')
 
 /**
  * Plugins shared by both build passes. A factory (not a constant array) so each
@@ -102,13 +98,13 @@ export const umdExternal = ['bootstrap', 'vue', 'bootstrap-vue-next']
  */
 export function esmExternal(id: string): boolean {
   if (
-    id.startsWith('.') ||
-    id.startsWith('/') ||
-    id.startsWith('\0') ||
-    id.startsWith('~') ||
-    id.startsWith('virtual:') ||
-    id.startsWith('@/') ||
-    isAbsolute(id)
+    id.startsWith('.')
+    || id.startsWith('/')
+    || id.startsWith('\0')
+    || id.startsWith('~')
+    || id.startsWith('virtual:')
+    || id.startsWith('@/')
+    || isAbsolute(id)
   ) {
     return false
   }

@@ -15,6 +15,8 @@ export default defineConfig({
         'test',
         'vite',
         'vite.config.ts',
+        'vite.config.es.ts',
+        'vite.config.shared.ts',
         'vitest.config.ts'
       ],
       outDir: 'dist/lib',
