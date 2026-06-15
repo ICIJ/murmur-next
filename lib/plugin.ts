@@ -62,15 +62,11 @@ const Murmur = {
     }
 
     if (registerComponents) {
-      Object.keys(this.components).forEach(key =>
-        app.component(key, this.components[key])
-      )
-      Object.keys(this.datavisualisations).forEach(key =>
-        app.component(key, this.datavisualisations[key])
-      )
-      Object.keys(this.maps).forEach(key =>
-        app.component(key, this.maps[key])
-      )
+      const registerAll = (map: ComponentMap) =>
+        Object.keys(map).forEach(key => app.component(key, map[key]))
+      registerAll(this.components)
+      registerAll(this.datavisualisations)
+      registerAll(this.maps)
     }
   }
 }

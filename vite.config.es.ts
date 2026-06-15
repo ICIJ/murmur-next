@@ -1,4 +1,4 @@
-import { resolve, relative, dirname } from 'path'
+import { resolve, relative, dirname, sep } from 'path'
 import { defineConfig } from 'vite'
 import DTS from 'vite-plugin-dts'
 import { sharedPlugins, sharedResolve, sharedCss, esmExternal } from './vite.config.shared'
@@ -12,33 +12,53 @@ import { sharedPlugins, sharedResolve, sharedCss, esmExternal } from './vite.con
  * of CSS owners. Injecting into a barrel would make
  * `import { X } from '@icij/murmur-next'` pull EVERY component's CSS (a barrel's
  * importedCss is the union of all its children), defeating CSS tree-shaking.
+ *
+ * The SFC-chunk filename pattern is a Vite/plugin-vue convention, so as a safety
+ * net we assert every emitted CSS asset ends up imported by some chunk. If a
+ * future Vite version changes chunk naming (so the regex stops matching) or a
+ * non-SFC module starts importing CSS directly, the build FAILS LOUD here
+ * instead of silently shipping components with missing styles.
  */
 function restoreCssImports() {
   return {
     name: 'restore-css-imports',
     generateBundle(_options, bundle) {
+      const importedCssFiles = new Set()
       for (const file of Object.values(bundle)) {
         if (file.type !== 'chunk') continue
         if (!/\.vue\d*\.js$/.test(file.fileName)) continue
         const importedCss = file.viteMetadata?.importedCss
-        if (!importedCss || importedCss.size === 0) continue
+        if (!importedCss?.size) continue
         const fromDir = dirname(file.fileName)
         const imports = [...importedCss]
           .map((css) => {
-            let rel = relative(fromDir, css)
-            if (!rel.startsWith('.')) rel = './' + rel
+            importedCssFiles.add(css)
+            // Normalize to POSIX separators: on Windows `relative()` yields
+            // backslashes, which are invalid in ESM import specifiers.
+            let rel = relative(fromDir, css).split(sep).join('/')
+            if (!rel.startsWith('.')) rel = `./${rel}`
             return `import '${rel}';`
           })
           .join('\n')
         file.code = `${imports}\n${file.code}`
+      }
+      const orphanCss = Object.values(bundle)
+        .filter(file => file.type === 'asset' && file.fileName.endsWith('.css'))
+        .map(file => file.fileName)
+        .filter(name => !importedCssFiles.has(name))
+      if (orphanCss.length > 0) {
+        this.error(
+          `restore-css-imports: ${orphanCss.length} CSS file(s) were emitted but `
+          + `imported by no JS chunk, so their styles would be silently dropped: `
+          + `${orphanCss.join(', ')}. The SFC chunk-name pattern likely no longer `
+          + `matches (Vite upgrade) or a non-SFC module imported CSS directly.`
+        )
       }
     }
   }
 }
 
 export default defineConfig({
-  base: '/',
-  assetsInclude: ['/sb-preview/**'],
   plugins: [
     // Scope Delete to dist/es only so a preceding UMD pass (dist/lib) is preserved.
     ...sharedPlugins(['dist/es']),

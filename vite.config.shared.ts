@@ -92,20 +92,32 @@ export const sharedCss = {
 export const umdExternal = ['bootstrap', 'vue', 'bootstrap-vue-next']
 
 /**
+ * Packages that ship raw, uncompiled sources (e.g. a `.vue` SFC) instead of
+ * built JS. These MUST be bundled, not externalized: a consumer's bundler would
+ * otherwise receive a bare `import 'pkg/src/foo.vue'` it cannot process without
+ * a Vue SFC transform over node_modules. vue-headroom (a GitHub-only dep used by
+ * AppHeader) exposes `vue-headroom/src/headroom.vue`.
+ */
+const bundledRawSourcePkgs = ['vue-headroom']
+
+/**
  * The ESM pass externalizes real third-party packages (so consumers dedupe and
- * tree-shake them) but BUNDLES local files and virtual modules — including
- * unplugin-icons' "~icons/..." specifiers, which have no installable package.
+ * tree-shake them) but BUNDLES local files, virtual modules — including
+ * unplugin-icons' "~icons/..." specifiers, which have no installable package —
+ * and the raw-source packages listed above.
  */
 export function esmExternal(id: string): boolean {
   if (
     id.startsWith('.')
-    || id.startsWith('/')
     || id.startsWith('\0')
     || id.startsWith('~')
     || id.startsWith('virtual:')
     || id.startsWith('@/')
     || isAbsolute(id)
   ) {
+    return false
+  }
+  if (bundledRawSourcePkgs.some(pkg => id === pkg || id.startsWith(`${pkg}/`))) {
     return false
   }
   return true
