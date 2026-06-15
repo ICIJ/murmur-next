@@ -98,26 +98,39 @@ export const umdExternal = ['bootstrap', 'vue', 'bootstrap-vue-next']
  * a Vue SFC transform over node_modules. vue-headroom (a GitHub-only dep used by
  * AppHeader) exposes `vue-headroom/src/headroom.vue`.
  */
-const bundledRawSourcePkgs = ['vue-headroom']
+const RAW_SOURCE_PACKAGES = ['vue-headroom']
 
-/**
- * The ESM pass externalizes real third-party packages (so consumers dedupe and
- * tree-shake them) but BUNDLES local files, virtual modules — including
- * unplugin-icons' "~icons/..." specifiers, which have no installable package —
- * and the raw-source packages listed above.
- */
-export function esmExternal(id: string): boolean {
-  if (
+// A specifier produced by this build or by a plugin at build time — relative
+// paths, Rollup virtuals (`\0`), unplugin-icons' "~icons/...", the "@/" source
+// alias, or an absolute path. None of these map to an installable package, so
+// they must be bundled rather than externalized.
+function isLocalOrVirtualModule(id: string): boolean {
+  return (
     id.startsWith('.')
     || id.startsWith('\0')
     || id.startsWith('~')
     || id.startsWith('virtual:')
     || id.startsWith('@/')
     || isAbsolute(id)
-  ) {
+  )
+}
+
+// A raw-source package (see RAW_SOURCE_PACKAGES) imported either directly or via
+// a deep path such as "vue-headroom/src/headroom.vue".
+function isBundledRawSourcePackage(id: string): boolean {
+  return RAW_SOURCE_PACKAGES.some(pkg => id === pkg || id.startsWith(`${pkg}/`))
+}
+
+/**
+ * Rollup `external` predicate for the ESM pass. Real third-party packages stay
+ * external so consumers dedupe and tree-shake them via their own node_modules;
+ * everything local, virtual, or raw-source gets bundled.
+ */
+export function esmExternal(id: string): boolean {
+  if (isLocalOrVirtualModule(id)) {
     return false
   }
-  if (bundledRawSourcePkgs.some(pkg => id === pkg || id.startsWith(`${pkg}/`))) {
+  if (isBundledRawSourcePackage(id)) {
     return false
   }
   return true
