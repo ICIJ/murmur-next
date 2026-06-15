@@ -14,7 +14,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "yarn storybook",
-    "build:lib": "vite build",
+    "build:lib": "vite build && vite build --config vite.config.es.ts",
+    "build:lib:es": "vite build --config vite.config.es.ts",
     "lint": "eslint",
     "lint:modified": "yarn lint $(git diff --name-only HEAD | xargs)",
     "lint:fix": "yarn lint --fix",

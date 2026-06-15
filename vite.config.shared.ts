@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve, isAbsolute } from 'path'
 import { fileURLToPath, URL } from 'node:url'
 import { createRequire } from 'node:module'
 import Vue from '@vitejs/plugin-vue'
@@ -16,10 +16,15 @@ const pkg = require('./package.json')
 /**
  * Plugins shared by both build passes. A factory (not a constant array) so each
  * pass gets fresh plugin instances and can append its own DTS config.
+ *
+ * @param cleanTargets Override the directories the Delete plugin will wipe before
+ *   building. Defaults to `['dist']` (the whole output root). Pass a narrower
+ *   list (e.g. `['dist/es']`) when running a secondary build pass so it does not
+ *   remove the output of a previous pass.
  */
-export function sharedPlugins() {
+export function sharedPlugins(cleanTargets?: string[]) {
   return [
-    Delete(),
+    Delete(cleanTargets ? { targetFiles: cleanTargets } : undefined),
     Vue({
       template: {
         transformAssetUrls: {
@@ -91,14 +96,21 @@ export const sharedCss = {
 export const umdExternal = ['bootstrap', 'vue', 'bootstrap-vue-next']
 
 /**
- * The ESM pass externalizes ALL runtime dependencies (and their subpaths) so
- * consumers dedupe/tree-shake them via their own node_modules instead of
- * receiving inlined copies of d3, topojson, lodash, etc.
+ * The ESM pass externalizes real third-party packages (so consumers dedupe and
+ * tree-shake them) but BUNDLES local files and virtual modules — including
+ * unplugin-icons' "~icons/..." specifiers, which have no installable package.
  */
-const esmExternalNames = [
-  ...Object.keys(pkg.dependencies ?? {}),
-  ...Object.keys(pkg.peerDependencies ?? {})
-]
 export function esmExternal(id: string): boolean {
-  return esmExternalNames.some((dep) => id === dep || id.startsWith(`${dep}/`))
+  if (
+    id.startsWith('.') ||
+    id.startsWith('/') ||
+    id.startsWith('\0') ||
+    id.startsWith('~') ||
+    id.startsWith('virtual:') ||
+    id.startsWith('@/') ||
+    isAbsolute(id)
+  ) {
+    return false
+  }
+  return true
 }
