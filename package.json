@@ -29,16 +29,25 @@
     "predeploy": "yarn build:storybook"
   },
   "main": "./dist/lib/murmur.umd.cjs",
-  "module": "./dist/lib/murmur.js",
+  "module": "./dist/es/main.js",
+  "types": "./dist/es/main.d.ts",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "files": [
     "lib/**/*",
-    "dist/lib/**/*"
+    "dist/lib/**/*",
+    "dist/es/**/*"
   ],
   "exports": {
     ".": {
-      "import": "./dist/lib/murmur.js",
-      "require": "./dist/lib/murmur.umd.cjs"
+      "types": "./dist/es/main.d.ts",
+      "import": "./dist/es/main.js",
+      "require": "./dist/lib/murmur.umd.cjs",
+      "default": "./dist/es/main.js"
     },
+    "./dist/lib/murmur.css": "./dist/lib/murmur.css",
     "./lib/": "./lib/",
     "./dist/": "./dist/"
   },
