@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import { useResizeObserver } from '@/composables/useResizeObserver'
 import { RequestAnimationFrameWrapper } from '@/utils/animation'
 
@@ -150,6 +150,24 @@ function resetTextLivePosition(): void {
    */
   emit('cancel')
 }
+
+onUnmounted(() => {
+  // Stop the Request Animation Frame loop so it doesn't reschedule forever
+  textLivePositionRequestAnimationFrame.value.stop()
+  // Remove the transition listeners added on the text element
+  textElement.value?.removeEventListener(
+    'transitionstart',
+    startTrackingTextLivePosition
+  )
+  textElement.value?.removeEventListener(
+    'transitionend',
+    endTrackingTextLivePosition
+  )
+  textElement.value?.removeEventListener(
+    'transitioncancel',
+    resetTextLivePosition
+  )
+})
 </script>
 
 <template>

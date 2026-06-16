@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 
 import { SlideUpDownState } from '@/enums'
@@ -89,6 +89,10 @@ async function triggerSlide(): Promise<void> {
   state.value = SlideUpDownState.active
 }
 
+function onTransitionEnd(e: TransitionEvent) {
+  cleanLayout(e)
+}
+
 function cleanLayout(e: Event | null) {
   // This method can be triggered by animated child elements in
   // which case, we should do anything
@@ -111,9 +115,11 @@ onMounted(async () => {
   await deferredNextTick()
   mounted.value = true
   await cleanLayout(null)
-  container.value?.addEventListener('transitionend', (e: TransitionEvent) =>
-    cleanLayout(e)
-  )
+  container.value?.addEventListener('transitionend', onTransitionEnd)
+})
+
+onUnmounted(() => {
+  container.value?.removeEventListener('transitionend', onTransitionEnd)
 })
 
 defineExpose({

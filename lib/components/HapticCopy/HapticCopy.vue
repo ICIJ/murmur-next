@@ -147,6 +147,7 @@ async function openTooltip(msg = 'haptic-copy.tooltip.succeed') {
 }
 
 async function closeTooltip() {
+  clearTimeout(tooltipTimeout.value)
   showClipboardTooltip.value = false
   tooltipTimeout.value = undefined
   emit('hideClipboardTooltip')

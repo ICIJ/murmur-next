@@ -1,4 +1,4 @@
-import { computed, reactive, toRef, watch } from 'vue'
+import { computed, onScopeDispose, reactive, toRef, watch } from 'vue'
 import { first, get } from 'lodash'
 type ElementMap = Record<string, HTMLElement[]>
 
@@ -55,6 +55,12 @@ export function useQueryObserver(root = window.document, once = false) {
     watch(rootRef, () => observe(selector), options)
     return computed(() => get(elements, selector, []))
   }
+
+  onScopeDispose(() => {
+    for (const selector in observers) {
+      observers[selector].disconnect()
+    }
+  })
 
   return {
     querySelector,

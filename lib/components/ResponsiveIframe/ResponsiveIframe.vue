@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, getCurrentInstance } from 'vue'
+import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
 import type { Parent } from 'pym.js'
 
 import { injectAssets } from '@/utils/assets'
@@ -40,6 +40,10 @@ onMounted(async (): Promise<void> => {
     props.url,
     props.options ?? {}
   )
+})
+
+onUnmounted(() => {
+  pymParent.value?.remove?.()
 })
 </script>
 

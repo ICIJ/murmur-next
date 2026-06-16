@@ -72,7 +72,7 @@ export const networks: SharingPlatforms = {
 import querystring from 'querystring-es3'
 import reduce from 'lodash/reduce'
 import get from 'lodash/get'
-import { computed, reactive } from 'vue'
+import { computed, onUnmounted, reactive } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
 
@@ -228,6 +228,13 @@ function handleClick(event: Event): void {
     click()
   }
 }
+
+// Make sure the polling interval (and any open popup) is torn down when the
+// component unmounts, otherwise the setInterval started in openPopup() keeps
+// firing against a destroyed instance.
+onUnmounted(() => {
+  cleanExistingPopupInstance()
+})
 
 defineExpose({
   base,
