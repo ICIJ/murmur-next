@@ -120,7 +120,16 @@ export default defineConfig({
         // Mirror the lib/ source tree into dist/es so each module is prunable.
         preserveModules: true,
         preserveModulesRoot: 'lib',
-        entryFileNames: '[name].js',
+        // Raw-source deps that we bundle rather than externalize (e.g.
+        // vue-headroom) live under node_modules, so preserveModules would emit
+        // them to dist/es/node_modules/*. npm strips nested node_modules/ from
+        // published tarballs, which breaks the import. Relocate those chunks
+        // under _vendor/ instead; Rollup rewrites the importing specifiers to
+        // match, so AppHeader points at the shipped file.
+        entryFileNames: (chunk) => {
+          const name = chunk.name.replace(/(^|\/)node_modules\//, '$1_vendor/')
+          return `${name}.js`
+        },
         exports: 'named'
       },
       plugins: [restoreCssImports()]
