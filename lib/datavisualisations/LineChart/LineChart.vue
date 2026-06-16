@@ -222,8 +222,8 @@ const margin = computed(() => {
 })
 
 const padded = computed(() => {
-  const widthP = width.value - margin.value.left - margin.value.right
-  const heightP = height.value - margin.value.top - margin.value.bottom
+  const widthP = Math.max(0, width.value - margin.value.left - margin.value.right)
+  const heightP = Math.max(0, height.value - margin.value.top - margin.value.bottom)
   return { width: widthP, height: heightP }
 })
 
