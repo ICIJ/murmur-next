@@ -122,6 +122,11 @@ export { default as SymbolMap } from './maps/SymbolMap/SymbolMap.vue'
 // Directives
 export { default as EllipsisTooltip } from './directives/EllipsisTooltip'
 
+// Config & i18n — tree-shakable singletons, usable without installing the
+// full plugin (which would pull in every component, chart and map).
+export { default as config } from './config'
+export { i18n } from './i18n'
+
 // Composables
 export { useChart } from './composables/useChart'
 export { useResizeObserver } from './composables/useResizeObserver'
