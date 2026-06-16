@@ -91,7 +91,7 @@ const metaValues = computed((): MetaValuesMap => {
     title: defaultValueFor('sharing-options.title'),
     description: defaultValueFor(
       'sharing-options.description',
-      'meta[name="description]'
+      'meta[name="description"]'
     ),
     facebook_title: defaultValueFor(
       'sharing-options.facebook_title',
@@ -109,7 +109,7 @@ const metaValues = computed((): MetaValuesMap => {
 })
 
 function valuesFor(network: string): Record<string, string> {
-  const values = Object.assign(metaValues.value, props.values)
+  const values = Object.assign({}, metaValues.value, props.values)
   return reduce(
     props.valuesKeys,
     (res: Record<string, string>, key) => {

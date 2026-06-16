@@ -2,7 +2,6 @@
 import { BaseButtonVariant } from 'bootstrap-vue-next'
 import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
 import { computed, nextTick, type ShallowRef, useTemplateRef } from 'vue'
-import { uniqueId } from 'lodash'
 
 import { AdvancedLinkTab } from '@/enums'
 
@@ -28,8 +27,7 @@ interface HTMLElementSupportingCreateRange extends HTMLElement {
 const props = withDefaults(defineProps<AdvancedLinkFormTabProps>(), {
   type: AdvancedLinkTab.raw,
   compact: false,
-  variant: 'primary',
-  id: uniqueId('advanced-link-form-tab')
+  variant: 'primary'
 })
 
 const size = computed(() => (props.compact ? 'sm' : 'md'))

@@ -120,11 +120,8 @@ watch(installmentPeriod, () => {
 
 watch(
   () => amount.value,
-  (v: number) => {
+  () => {
     level.value = changeThe.value
-
-    // Set manual amount
-    return (amount.value = v)
   }
 )
 </script>

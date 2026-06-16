@@ -155,6 +155,7 @@
 </template>
 
 <script lang="ts" setup>
+import clamp from 'lodash/clamp'
 import { BButton, BFormInput } from 'bootstrap-vue-next'
 import { computed, ref, watch, type Component } from 'vue'
 import { directive as vInputAutowidth } from 'vue-input-autowidth'
@@ -376,14 +377,14 @@ const title = computed(() => {
 function applyPageForm(): void {
   const { value } = currentPageInput
   if (!isNaN(value as number)) {
-    modelValue.value = +value
+    modelValue.value = clamp(Math.floor(+value), 1, numberOfPages.value)
   }
 }
 
 function applyRowForm(): void {
   const { value } = currentRowInput
   if (!isNaN(value as number)) {
-    currentPageInput.value = Math.floor(+value / +props.perPage) + 1
+    currentPageInput.value = clamp(Math.floor(+value / +props.perPage) + 1, 1, numberOfPages.value)
     currentRowInput.value = +props.perPage * (+currentPageInput.value - 1) + 1
     modelValue.value = +currentPageInput.value
   }
