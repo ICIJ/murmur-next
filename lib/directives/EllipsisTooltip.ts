@@ -9,8 +9,12 @@ import {
   unbind,
 } from '@/utils/floatingUi'
 
+interface ElementWithResizeObserver extends ElementWithPopper {
+  $__ellipsisResizeObserver?: ResizeObserver
+}
+
 export default {
-  mounted(el: ElementWithPopper, binding: DirectiveBinding) {
+  mounted(el: ElementWithResizeObserver, binding: DirectiveBinding) {
     const props = resolveDirectiveProps(binding, el)
     const tooltip = resolveActiveStatus(binding.value)
     const text = resolveContent(binding.value, el)
@@ -30,10 +34,13 @@ export default {
       }
     })
 
+    el.$__ellipsisResizeObserver = resizeObserver
     resizeObserver.observe(el)
     toggleTooltip(el)
   },
-  beforeUnmount(el: ElementWithPopper) {
+  beforeUnmount(el: ElementWithResizeObserver) {
+    el.$__ellipsisResizeObserver?.disconnect()
+    delete el.$__ellipsisResizeObserver
     unbind(el)
   }
-} satisfies Directive<ElementWithPopper>
+} satisfies Directive<ElementWithResizeObserver>
