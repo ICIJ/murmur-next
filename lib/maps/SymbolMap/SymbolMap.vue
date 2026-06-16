@@ -346,6 +346,14 @@ const categories = computed(() => {
   return uniq(cats).map(String)
 })
 
+// Name -> index lookup so markerClassObject() doesn't run an O(n) indexOf for
+// every marker (which made class assignment O(n²) across the dataset).
+const categoryIndexByName = computed(() => {
+  const index = new Map<string, number>()
+  categories.value.forEach((category, i) => index.set(category, i))
+  return index
+})
+
 const legendData = computed(() => {
   const cats = groupBy(loadedData.value || [], (d: any) => {
     return get(d, props.categoryObjectsPath)
@@ -363,7 +371,9 @@ const hasTooltip = computed(() => {
 
 const tooltipTarget = computed(() => {
   if (hasTooltip.value) {
-    return markerId(markerCursor.value)
+    // markerCursor already holds the resolved id value, so build the element
+    // id directly rather than re-extracting it through markerId().
+    return `${mapId.value}-marker-${markerCursor.value}`
   }
   return null
 })
@@ -481,7 +491,7 @@ function markerId(d: any) {
 
 function markerClassObject(d: any) {
   const category = String(get(d, props.categoryObjectsPath))
-  const categoryIndex = categories.value.indexOf(category)
+  const categoryIndex = categoryIndexByName.value.get(category) ?? -1
   const id = get(d, props.markerObjectsPath)
   const pathClass = 'symbol-map__main__markers__item'
   return {
