@@ -5,6 +5,7 @@ import findIndex from 'lodash/findIndex'
 import filter from 'lodash/filter'
 import identity from 'lodash/identity'
 import isEqual from 'lodash/isEqual'
+import omit from 'lodash/omit'
 // @ts-expect-error no typings available
 import { RecycleScroller } from 'vue-virtual-scroller'
 
@@ -135,9 +136,16 @@ const keyField = computed(() => {
 })
 
 const firstActiveItemIndex = computed(() => {
-  return activeItems.value.length
-    ? items_.value.indexOf(activeItems.value[0])
-    : -1
+  if (!activeItems.value.length) {
+    return -1
+  }
+  const activeItem = activeItems.value[0]
+  if (typeof activeItem === 'string') {
+    return items_.value.indexOf(activeItem)
+  }
+  return items_.value.findIndex(it =>
+    isEqual(omit(it, 'recycle_scroller_id'), activeItem)
+  )
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

@@ -65,8 +65,8 @@ const currentUrl = computed(() => {
   return props.url || window?.location?.href
 })
 
-function iframeCodeFor(_url = currentUrl, width: string, height: string) {
-  const src = IframeResizer.deletePymParams(props.url)
+function iframeCodeFor(url = currentUrl, width: string, height: string) {
+  const src = IframeResizer.deletePymParams(url.value)
   return `<iframe width="${width}" height="${height}" src="${src}" frameborder="0" allowfullscreen></iframe>`
 }
 

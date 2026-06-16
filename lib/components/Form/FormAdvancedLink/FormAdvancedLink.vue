@@ -5,7 +5,7 @@ import { uniqueId } from 'lodash'
 import { ButtonVariant } from 'bootstrap-vue-next'
 
 import AdvancedLinkFormTab from './FormAdvancedLinkTab.vue'
-import { Tab } from '@/components/Form/FormAdvancedLink/FormAdvancedLinkTab.vue'
+import { AdvancedLinkTab } from '@/enums'
 
 /**
  * A form with tabs to offer several copy formats to users.
@@ -31,7 +31,7 @@ export interface FormAdvancedLinkProps {
   /**
    * The forms to display
    */
-  forms?: Tab[]
+  forms?: AdvancedLinkTab[]
   /**
    * Activate the card integration for the tabs
    */
@@ -65,7 +65,7 @@ export interface FormAdvancedLinkProps {
 const props = withDefaults(defineProps<FormAdvancedLinkProps>(), {
   link: undefined,
   title: 'Link',
-  forms: () => ['raw', 'markdown', 'rich', 'html'],
+  forms: () => [AdvancedLinkTab.raw, AdvancedLinkTab.markdown, AdvancedLinkTab.rich, AdvancedLinkTab.html],
   card: false,
   pills: false,
   small: false,
@@ -86,7 +86,7 @@ const formClasses = computed(() => {
 })
 
 // default tabs order
-const defaultTabs: Tab[] = ['raw', 'rich', 'markdown', 'html']
+const defaultTabs: AdvancedLinkTab[] = [AdvancedLinkTab.raw, AdvancedLinkTab.rich, AdvancedLinkTab.markdown, AdvancedLinkTab.html]
 
 const tabs = computed(() => {
   return defaultTabs
