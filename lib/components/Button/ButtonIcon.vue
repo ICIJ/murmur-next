@@ -67,7 +67,8 @@ import { uniqueId } from 'lodash'
 import IPhCircleNotch from '~icons/ph/circle-notch'
 import type { TextColorVariant, ButtonVariant, PopoverPlacement, Size } from 'bootstrap-vue-next'
 
-import { AppIcon, ButtonIconCounter } from '@/components'
+import AppIcon from '@/components/App/AppIcon.vue'
+import ButtonIconCounter from '@/components/Button/ButtonIconCounter.vue'
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
