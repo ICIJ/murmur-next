@@ -56,9 +56,11 @@ export const injectAssets = function (...args: string[]): Promise<void> {
       }
     }
     for (const file of files) {
+      // Count a failed injection as "settled" too, otherwise one asset that
+      // fails to load leaves the batch promise pending forever.
       injectAsset(file)
         .then(allFilesLoaded)
-        .catch(() => null)
+        .catch(allFilesLoaded)
     }
   })
 }
