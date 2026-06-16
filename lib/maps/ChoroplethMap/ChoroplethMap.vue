@@ -462,11 +462,9 @@ function prepare() {
 }
 
 function prepareZoom() {
-  if (props.zoomable) {
-    map.value?.call(mapZoom.value as any)
-  }
-
-  // User can zoom on the map
+  // User can zoom on the map. A spherical map rotates and scales through its
+  // dedicated behaviors; a planar map uses mapZoom. Binding both (or binding
+  // mapZoom twice) would install conflicting zoom handlers on the selection.
   if (props.zoomable && props.spherical) {
     map.value?.call(mapRotate.value as any).call(mapSphericalZoom.value as any)
   }
@@ -653,10 +651,14 @@ function applyZoomIdentity(
   pointer: number[] | null = null,
   transitionDuration = props.transitionDuration
 ) {
+  // Dispatch through the behavior actually bound to the selection so the
+  // matching handler runs (spherical applies scale only and preserves
+  // rotation; planar applies the full transform).
+  const zoomBehavior = props.spherical ? mapSphericalZoom.value : mapZoom.value
   return map.value
     ?.transition()
     .duration(transitionDuration)
-    .call(mapZoom.value.transform as any, zoomIdentity, pointer)
+    .call(zoomBehavior.transform as any, zoomIdentity, pointer)
     .end()
 }
 
@@ -791,7 +793,6 @@ defineExpose({
     :class="mapClass"
     :style="mapStyle"
     class="choropleth-map"
-    @click="draw"
   >
     <svg
       :viewbox="`0 0 ${mapRect.width} ${mapRect.height}`"
