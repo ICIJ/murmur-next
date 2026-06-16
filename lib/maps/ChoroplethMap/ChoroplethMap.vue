@@ -372,6 +372,13 @@ const mapRotate = computed(() => {
   return d3.drag(map.value as any).on('drag', mapRotated)
 })
 
+// The zoom behavior actually bound to the selection (see prepareZoom): spherical
+// maps scale via mapSphericalZoom, planar maps via mapZoom. Programmatic zoom
+// must dispatch through this one so the matching handler runs.
+const activeZoomBehavior = computed(() => {
+  return props.spherical ? mapSphericalZoom.value : mapZoom.value
+})
+
 const mapHeight = computed(() => {
   return mapRect.value.height
 })
@@ -654,11 +661,10 @@ function applyZoomIdentity(
   // Dispatch through the behavior actually bound to the selection so the
   // matching handler runs (spherical applies scale only and preserves
   // rotation; planar applies the full transform).
-  const zoomBehavior = props.spherical ? mapSphericalZoom.value : mapZoom.value
   return map.value
     ?.transition()
     .duration(transitionDuration)
-    .call(zoomBehavior.transform as any, zoomIdentity, pointer)
+    .call(activeZoomBehavior.value.transform as any, zoomIdentity, pointer)
     .end()
 }
 
@@ -667,7 +673,7 @@ function resetZoom(_event: MouseEvent, _d: number) {
     ?.style('--map-scale', 1)
     .transition()
     .duration(props.transitionDuration)
-    .call((mapZoom.value as any)?.transform, d3.zoomIdentity)
+    .call((activeZoomBehavior.value as any)?.transform, d3.zoomIdentity)
   featureZoom.value = null
   emitResetEvent()
 }
@@ -701,7 +707,7 @@ function setFeatureZoom(d: any, pointer = [0, 0]) {
     ?.style('--map-scale', scale)
     .transition()
     .duration(props.transitionDuration)
-    .call((mapZoom.value as any)?.transform, zoomIdentity, pointer)
+    .call((activeZoomBehavior.value as any)?.transform, zoomIdentity, pointer)
     .end()
 }
 

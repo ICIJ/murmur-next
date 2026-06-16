@@ -217,7 +217,10 @@ export function useChart(
   })
 
   const dataHasHighlights = computed(() => {
-    const data = loadedData.value
+    // Prefer loadedData (so URL-fetched data is inspected), but fall back to the
+    // raw prop so a synchronously-passed array reports highlights on first paint
+    // rather than flickering once the load watcher resolves.
+    const data = loadedData.value ?? toValue(dataRef)
     if (Array.isArray(data)) {
       return some(data, highlighted)
     }

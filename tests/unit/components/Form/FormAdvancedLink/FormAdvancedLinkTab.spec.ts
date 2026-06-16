@@ -1,10 +1,11 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import AdvancedLinkFormTab, { Tab } from '@/components/Form/FormAdvancedLink/FormAdvancedLinkTab.vue'
+import AdvancedLinkFormTab from '@/components/Form/FormAdvancedLink/FormAdvancedLinkTab.vue'
+import { AdvancedLinkTab } from '@/enums'
 interface AdvancedLinkFormTabsProps {
   readonly link: string
   readonly title: string
-  readonly type?: Tab
+  readonly type?: AdvancedLinkTab
 }
 
 describe('AdvancedLinkFormTab.vue', () => {

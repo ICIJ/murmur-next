@@ -15,15 +15,15 @@ export function useResizeObserver(resizableRef?: Ref) {
     narrowWidth: false
   })
 
-  const observer = new ResizeObserver(
-    debounce((entries: ResizeObserverEntry[]) => {
-      entries.forEach((entry) => {
-        resizeState.dimensions = entry.contentRect
-        resizeState.offsetWidth = (entry.target as HTMLElement).offsetWidth
-        resizeState.narrowWidth = (resizeState.offsetWidth ?? 540) < 540
-      })
-    }, RESIZE_DEBOUNCE_MS)
-  )
+  const onResize = debounce((entries: ResizeObserverEntry[]) => {
+    entries.forEach((entry) => {
+      resizeState.dimensions = entry.contentRect
+      resizeState.offsetWidth = (entry.target as HTMLElement).offsetWidth
+      resizeState.narrowWidth = (resizeState.offsetWidth ?? 540) < 540
+    })
+  }, RESIZE_DEBOUNCE_MS)
+
+  const observer = new ResizeObserver(onResize)
 
   onMounted(async () => {
     if (resizeRef.value) {
@@ -37,9 +37,9 @@ export function useResizeObserver(resizableRef?: Ref) {
   })
 
   onBeforeUnmount(() => {
-    if (resizeRef.value) {
-      observer.unobserve(resizeRef.value)
-    }
+    // Drop any pending trailing call so it can't fire after teardown, then stop
+    // observing every element (disconnect covers unobserve).
+    onResize.cancel()
     observer.disconnect()
   })
 

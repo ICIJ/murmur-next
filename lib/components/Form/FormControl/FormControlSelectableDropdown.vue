@@ -143,8 +143,12 @@ const firstActiveItemIndex = computed(() => {
   if (typeof activeItem === 'string') {
     return items_.value.indexOf(activeItem)
   }
+  // activeItems may hold either a raw modelValue object (no recycle_scroller_id)
+  // or an items_ entry from a click/range-select (which carries it), so strip
+  // the injected key from both sides before comparing.
+  const target = omit(activeItem, 'recycle_scroller_id')
   return items_.value.findIndex(it =>
-    isEqual(omit(it, 'recycle_scroller_id'), activeItem)
+    isEqual(omit(it, 'recycle_scroller_id'), target)
   )
 })
 

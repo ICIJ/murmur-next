@@ -1,7 +1,7 @@
 import { mount, shallowMount, flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import AdvancedLinkForm from '@/components/Form/FormAdvancedLink/FormAdvancedLink.vue'
-import { Tab } from '@/components/Form/FormAdvancedLink/FormAdvancedLinkTab.vue'
+import { AdvancedLinkTab } from '@/enums'
 
 describe('AdvancedLinkForm.vue', () => {
   const global = { stubs: { HapticCopy: true }, renderStubDefaultSlot: true }
@@ -47,7 +47,7 @@ describe('AdvancedLinkForm.vue', () => {
   })
 
   it('should create only 3 forms, markdown active by default', async () => {
-    const propsData = { forms: ['raw', 'markdown', 'html'] as Tab[], modelValue: 1 }
+    const propsData = { forms: ['raw', 'markdown', 'html'] as AdvancedLinkTab[], modelValue: 1 }
     const wrapper = mount(AdvancedLinkForm, { propsData, global })
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.tab-pane').length).toBe(3)
