@@ -59,4 +59,35 @@ describe('BarChart.vue', () => {
       expect(wrapper.vm).toBeTruthy()
     })
   })
+
+  describe('with the sortBy prop set', () => {
+    let wrapper
+
+    beforeEach(async () => {
+      const propsData = {
+        sortBy: 'value',
+        data: [
+          { label: 'B', value: 20 },
+          { label: 'A', value: 50 },
+          { label: 'C', value: 10 }
+        ]
+      }
+      wrapper = mount(BarChart, { propsData })
+      wrapper.vm.$el.style.width = '500px'
+      await wrapper.vm.$nextTick()
+    })
+
+    // Regression: sortedData used to sort itself instead of loadedData, so
+    // enabling sortBy collapsed the dataset to [] and rendered no bars.
+    it('still renders a bar for every datum', () => {
+      expect(wrapper.findAll('.bar-chart__bars__item')).toHaveLength(3)
+    })
+
+    it('orders the bars by the sortBy field', () => {
+      const labels = wrapper
+        .findAll('.bar-chart__labels__item')
+        .map(node => node.text())
+      expect(labels).toEqual(['C', 'B', 'A'])
+    })
+  })
 })

@@ -411,4 +411,35 @@ describe('ColumnChart.vue', () => {
       expect(ticks.at(0).text()).toBe('\'20')
     })
   })
+
+  describe('with the sortBy prop set', () => {
+    let wrapper
+
+    beforeEach(async () => {
+      const propsData = {
+        sortBy: 'value',
+        data: [
+          { date: 2000, value: 30 },
+          { date: 2001, value: 10 },
+          { date: 2002, value: 20 }
+        ]
+      }
+      wrapper = mount(ColumnChart, { propsData })
+      wrapper.vm.$el.style.width = '500px'
+      await wrapper.vm.$nextTick()
+    })
+
+    // Regression: sortedData used to sort itself instead of loadedData, so
+    // enabling sortBy collapsed the dataset to [] and rendered no columns.
+    it('still renders a column for every datum', () => {
+      expect(wrapper.findAll('.column-chart__columns__item__bar')).toHaveLength(3)
+    })
+
+    it('orders the columns by the sortBy field', () => {
+      const ticks = wrapper
+        .findAll('.column-chart__axis--x .tick')
+        .map(node => node.text())
+      expect(ticks).toEqual(['2001', '2002', '2000'])
+    })
+  })
 })

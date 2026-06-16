@@ -2,7 +2,7 @@
 import * as d3 from 'd3'
 import identity from 'lodash/identity'
 import sortByFn from 'lodash/sortBy'
-import { computed, ref, watch, ComponentPublicInstance } from 'vue'
+import { computed, ref, ComponentPublicInstance } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
 
 defineOptions({
@@ -104,13 +104,13 @@ const isLoaded = ref(false)
 const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter }
   = useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
 
-const sortedData = computed((): [] => {
+const sortedData = computed((): object[] => {
   if (!loadedData.value) {
     return []
   }
   return !props.sortBy
     ? loadedData.value
-    : sortByFn(sortedData.value, props.sortBy)
+    : sortByFn(loadedData.value, props.sortBy)
 })
 
 const labelWidth = computed(() => {
@@ -140,8 +140,8 @@ const margin = computed(() => {
 })
 
 const padded = computed(() => {
-  const widthP = width.value - margin.value.left - margin.value.right
-  const heightP = height.value - margin.value.top - margin.value.bottom
+  const widthP = Math.max(0, width.value - margin.value.left - margin.value.right)
+  const heightP = Math.max(0, height.value - margin.value.top - margin.value.bottom)
   return { width: widthP, height: heightP }
 })
 
@@ -150,7 +150,7 @@ const scale = computed(() => {
     .scaleLinear()
     // @ts-expect-error D3 api
     .domain([0, d3.max(sortedData.value, (d: Datum) => d.value)])
-    .range([0, padded.value.width - valueWidth.value])
+    .range([0, Math.max(0, padded.value.width - valueWidth.value)])
   return { x }
 })
 
@@ -191,14 +191,6 @@ function onResize() {
   }
 }
 
-function initialize() {
-  // @ts-expect-error D3 api
-  d3.axisBottom().scale(scale.value.x)
-}
-
-watch(width, () => {
-  initialize()
-})
 </script>
 
 <template>

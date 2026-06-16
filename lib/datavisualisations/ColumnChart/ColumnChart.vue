@@ -213,7 +213,7 @@ const sortedData = computed((): object[] => {
   }
   return !props.sortBy
     ? loadedData.value
-    : sortByFn(sortedData.value, props.sortBy)
+    : sortByFn(loadedData.value, props.sortBy)
 })
 
 const labelWidth = computed((): number => {
@@ -261,8 +261,8 @@ const margin = computed(
 )
 
 const padded = computed((): { width: number, height: number } => {
-  const widthP = width.value - margin.value.left - margin.value.right
-  const heightP = height.value - margin.value.top - margin.value.bottom
+  const widthP = Math.max(0, width.value - margin.value.left - margin.value.right)
+  const heightP = Math.max(0, height.value - margin.value.top - margin.value.bottom)
   return { width: widthP, height: heightP }
 })
 
@@ -288,7 +288,7 @@ const scaleY = computed((): d3.ScaleLinear<number, number> => {
     maxValue = props.maxValue ?? waterfallTotalValue.value
   }
   else {
-    maxValue = props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName))
+    maxValue = props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName)) ?? 0
   }
   return d3
     .scaleLinear()

@@ -255,9 +255,10 @@ function isRowHighlighted(i: number | string) {
 
 function barStyle(i: number | string, key: string) {
   const value = sortedData.value[i as number][key]
-  const totalWidth = props.relative ? totalRowValue(i) : maxValue.value
+  let totalWidth = props.relative ? totalRowValue(i) : maxValue.value
   if (!totalWidth) {
-    throw new Error('Total width is not correct' + totalWidth)
+    console.error('totalWidth as divider cannot be ' + totalWidth)
+    totalWidth = 100
   }
   const width = `${100 * (value / totalWidth)}%`
   const backgroundColor = colorScale.value(key)

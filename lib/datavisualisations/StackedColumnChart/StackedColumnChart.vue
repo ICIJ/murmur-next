@@ -210,7 +210,7 @@ const leftAxis = computed(() => {
   return d3
     .axisLeft(leftScale.value)
     .tickFormat(d => d3Formatter(d, props.yAxisTickFormat))
-    .tickSize(width.value - leftAxisLabelsWidth.value)
+    .tickSize(Math.max(0, width.value - leftAxisLabelsWidth.value))
     .tickPadding(props.yAxisTickPadding)
 })
 
@@ -246,7 +246,7 @@ const barTooltipDelay = computed(() => {
 const maxRowValue = computed(() => {
   return (
     props.maxValue
-    || (d3.max(loadedData.value || [], (datum, i) => {
+    ?? (d3.max(loadedData.value || [], (datum, i) => {
       return totalRowValue(i)
     }) as number)
   )

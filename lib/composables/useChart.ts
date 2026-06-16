@@ -155,7 +155,7 @@ export function useChart(
 
     await afterLoaded?.()
     isLoaded.value = true
-    emit('loaded')
+    emit('loaded', loadedData.value)
 
     if (onResized) {
       onResized()
@@ -217,7 +217,7 @@ export function useChart(
   })
 
   const dataHasHighlights = computed(() => {
-    const data = toValue(dataRef)
+    const data = loadedData.value
     if (Array.isArray(data)) {
       return some(data, highlighted)
     }
