@@ -132,6 +132,7 @@ export { useChart } from './composables/useChart'
 export { useResizeObserver } from './composables/useResizeObserver'
 export { useColorMode } from './composables/useColorMode'
 export { useQueryObserver } from './composables/useQueryObserver'
+export { useHapticCopy } from './composables/useHapticCopy'
 
 // Types - public API for library consumers
 export type {
