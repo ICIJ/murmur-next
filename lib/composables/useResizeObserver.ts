@@ -7,11 +7,29 @@ import ResizeObserver from 'resize-observer-polyfill'
 // consumers only redraw once the dimensions settle, rather than every frame.
 const RESIZE_DEBOUNCE_MS = 100
 
+const NARROW_WIDTH_THRESHOLD = 540
+
+/**
+ * Observes an element's size and exposes reactive, debounced dimensions.
+ *
+ * @param resizableRef - Optional ref to the observed element; when omitted, a fresh ref is created and returned as `resizeRef`.
+ * @returns An object with `resizeRef` (attach to the element) and reactive `resizeState` holding `dimensions`, `offsetWidth`, and `narrowWidth`.
+ * @example
+ * <script setup>
+ * import { useResizeObserver } from '@icij/murmur-next'
+ *
+ * const { resizeRef, resizeState } = useResizeObserver()
+ * </script>
+ *
+ * <template>
+ *   <div ref="resizeRef">{{ resizeState.offsetWidth }}px</div>
+ * </template>
+ */
 export function useResizeObserver(resizableRef?: Ref) {
   const resizeRef: Ref<HTMLElement> = resizableRef ?? ref()
   const resizeState = reactive({
     dimensions: {} as DOMRect,
-    offsetWidth: 540,
+    offsetWidth: NARROW_WIDTH_THRESHOLD,
     narrowWidth: false
   })
 
@@ -19,7 +37,7 @@ export function useResizeObserver(resizableRef?: Ref) {
     entries.forEach((entry) => {
       resizeState.dimensions = entry.contentRect
       resizeState.offsetWidth = (entry.target as HTMLElement).offsetWidth
-      resizeState.narrowWidth = (resizeState.offsetWidth ?? 540) < 540
+      resizeState.narrowWidth = (resizeState.offsetWidth ?? NARROW_WIDTH_THRESHOLD) < NARROW_WIDTH_THRESHOLD
     })
   }, RESIZE_DEBOUNCE_MS)
 

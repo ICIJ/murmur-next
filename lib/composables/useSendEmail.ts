@@ -4,7 +4,26 @@ import flatten from 'lodash/flatten'
 import castArray from 'lodash/castArray'
 
 interface FormDataResult { result: string, msg: string }
-// by convention, composable function names start with "use"
+
+/**
+ * Builds and submits a Mailchimp newsletter signup request via JSONP.
+ *
+ * @param email - Subscriber email address (plain value, ref, or getter).
+ * @param action - Mailchimp form action URL; required before `send` can succeed.
+ * @param emailField - Name of the Mailchimp merge field carrying the email.
+ * @param tracker - Mailchimp signup tracker value (the `SIGNUP` parameter).
+ * @param referrer - Explicit referrer to record; falls back to the parent/document referrer when omitted.
+ * @param defaultGroups - Mailchimp interest group names to opt into; comma-separated strings are split.
+ * @returns An object with a `send` function that resolves with the Mailchimp `FormDataResult`.
+ * @example
+ * <script setup>
+ * import { useSendEmail } from '@icij/murmur-next'
+ *
+ * const email = ref('jane@example.org')
+ * const { send } = useSendEmail(email, action, 'EMAIL', 'newsletter')
+ * await send()
+ * </script>
+ */
 export function useSendEmail(
   email: MaybeRefOrGetter<string>,
   action?: string,
@@ -17,6 +36,7 @@ export function useSendEmail(
     return flatten(castArray(defaultGroups).map(g => g.split(',')))
   })
 
+  // Mailchimp's JSONP endpoint lives at /post-json and echoes the callback via the "c" param.
   const urlFromAction = computed(() => {
     return action?.replace('/post?', '/post-json?').concat('&c=?')
   })
