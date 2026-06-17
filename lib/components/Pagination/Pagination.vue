@@ -8,6 +8,7 @@ import AppIcon from '@/components/App/AppIcon.vue'
 import IPhCaretLeft from '~icons/ph/caret-left'
 import IPhCaretRight from '~icons/ph/caret-right'
 import { SIZE } from '@/enums'
+import { usePagination } from '@/composables/usePagination'
 
 /**
  * Define options
@@ -71,11 +72,13 @@ const inputPlaceholder = computed((): string => {
   return t(`custom-pagination.${compact}placeholder`) as string
 })
 
-const numberOfPages = computed((): number => {
-  if (props.pages === null) {
-    return Math.ceil(props.totalRows / props.perPage)
-  }
-  return Number(props.pages)
+// Page count shared with the other pagination components. Only the derived
+// total is reused here; the jump form keeps its own reject-on-invalid logic.
+const { numberOfPages } = usePagination({
+  currentPage: () => props.modelValue,
+  totalRows: () => props.totalRows,
+  perPage: () => props.perPage,
+  pages: () => props.pages
 })
 
 const paginationClassList = computed((): string[] => {
@@ -98,6 +101,14 @@ function applyJumpFormPage(): void {
 function updateModelValue(value: string | number): void {
   emit('update:modelValue', value)
 }
+
+// Expose the page-form internals so consumers (and the test suite) can read the
+// derived page count and drive the page-jump form programmatically.
+defineExpose({
+  numberOfPages,
+  currentPageInput,
+  applyJumpFormPage
+})
 </script>
 
 <template>
