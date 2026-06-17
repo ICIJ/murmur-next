@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { filter } from 'lodash'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useDigitsModel } from '@/composables/useDigitsModel'
 
 /**
  * Create an input for digits.
@@ -41,13 +41,15 @@ onMounted(async () => {
   await nextTick()
 })
 
-const values = ref(
-  String(props.modelValue).split('').slice(0, props.length)
+// Per-cell state and digit-spreading normalization live in a dedicated
+// composable; the component owns focus management and event emission.
+const { values, joinedValues } = useDigitsModel(
+  {
+    modelValue: () => props.modelValue,
+    length: () => props.length
+  },
+  focusToNextInput
 )
-
-const joinedValues = computed((): string => {
-  return filter(values.value, v => !isNaN(v as any)).join('')
-})
 
 const lastInput = computed((): HTMLElement | null => {
   const index = inputs.value.length - 1
@@ -78,39 +80,6 @@ function focusToPreviousWhenEmpty(d: number) {
     inputs.value[d - 1]?.focus()
   }
 }
-
-watch(
-  () => values,
-  (valuesRef: typeof values) => {
-    // Copy and remove values that are not numbers
-    const formattedValues = valuesRef.value.map((value: string) =>
-      String(value).replace(/\D/g, '')
-    )
-    // Iterate over the values to be sure
-    // they are not exceeding 10 and should
-    // be spread to the next inputs
-    formattedValues.forEach((value: string, d: number) => {
-      // The value must be spread to the next input only
-      // if it's higher than 9 (more than one digit)
-      if (value !== null && Number(value) > 9) {
-        // Split the number into an array of strings
-        String(value)
-          .split('')
-          .forEach((nextValue, n) => {
-            // Spread the value to the next inputs of the array
-            formattedValues[d + n] = String(Number(nextValue))
-          })
-      }
-    })
-    // We update the values data attribute only if they changed
-    // to avoid an infinite update cycle
-    if (JSON.stringify(valuesRef.value) !== JSON.stringify(formattedValues)) {
-      valuesRef.value = formattedValues.slice(0, props.length)
-    }
-    focusToNextInput()
-  },
-  { deep: true }
-)
 
 watch(
   () => joinedValues.value,
