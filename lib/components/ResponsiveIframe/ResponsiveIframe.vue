@@ -1,20 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
-import type { Parent } from 'pym.js'
-
-import { injectAssets } from '@/utils/assets'
-
-declare global {
-  interface Window {
-    pym: { Parent: new (id: string, url: string, options: object) => Parent }
-  }
-}
+import { useResponsiveIframe } from '@/composables/useResponsiveIframe'
 
 defineOptions({
   name: 'ResponsiveIframe'
 })
-
-type StartsWithIcijIframe = `icij-iframe-${string}`
 
 export interface ResponsiveIframeProps {
   /**
@@ -29,21 +18,9 @@ export interface ResponsiveIframeProps {
 
 const props = defineProps<ResponsiveIframeProps>()
 
-const instance = getCurrentInstance()
-const iframeId = ref<StartsWithIcijIframe>(`icij-iframe-${instance?.uid ?? Math.random()}`)
-const pymParent = ref<Parent | null>(null)
-
-onMounted(async (): Promise<void> => {
-  await injectAssets('https://pym.nprapps.org/pym.v1.min.js')
-  pymParent.value = new window.pym.Parent(
-    iframeId.value,
-    props.url,
-    props.options ?? {}
-  )
-})
-
-onUnmounted(() => {
-  pymParent.value?.remove?.()
+const { iframeId } = useResponsiveIframe({
+  url: () => props.url,
+  options: () => props.options
 })
 </script>
 
