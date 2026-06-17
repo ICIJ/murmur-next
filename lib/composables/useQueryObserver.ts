@@ -1,8 +1,24 @@
 import { computed, onScopeDispose, reactive, toRef, watch } from 'vue'
 import { first, get } from 'lodash'
-type ElementMap = Record<string, HTMLElement[]>
 
+type ElementMap = Record<string, HTMLElement[]>
 type ObserverMap = Record<string, MutationObserver>
+
+/**
+ * Reactively tracks DOM elements matching CSS selectors via `MutationObserver`.
+ *
+ * @param root - Root node whose subtree is observed; defaults to `window.document`.
+ * @param once - When `true`, stops observing a selector as soon as it matches at least one element.
+ * @returns An object with `querySelector` (first match) and `querySelectorAll` (all matches), both returning reactive computed refs.
+ * @example
+ * <script setup>
+ * import { useQueryObserver } from '@icij/murmur-next'
+ *
+ * const { querySelector, querySelectorAll } = useQueryObserver()
+ * const heading = querySelector('h1')
+ * const links = querySelectorAll('a')
+ * </script>
+ */
 export function useQueryObserver(root = window.document, once = false) {
   const rootRef = toRef<Document | null>(root)
   const elements = reactive<ElementMap>({})

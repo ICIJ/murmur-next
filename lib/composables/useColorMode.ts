@@ -1,35 +1,41 @@
 import { ref, toRef, onMounted, onUnmounted } from 'vue'
 
+const THEME_ATTRIBUTE = 'data-bs-theme'
+
+/**
+ * Tracks the Bootstrap color mode (`data-bs-theme`) of the closest themed ancestor.
+ *
+ * @param element - Element to resolve the color mode from; defaults to the document body.
+ * @param defaultColorMode - Color mode to fall back on when no themed ancestor exists.
+ * @returns An object with a reactive `colorMode` ref that stays in sync with the ancestor's theme.
+ * @example
+ * <script setup>
+ * import { useColorMode } from '@icij/murmur-next'
+ *
+ * const { colorMode } = useColorMode()
+ * </script>
+ */
 export function useColorMode(element = window?.document?.body, defaultColorMode = 'light') {
   const elementRef = toRef(element)
-  // Reactive reference to store the current color mode
   const colorMode = ref(defaultColorMode)
 
-  // Function to find the closest parent with data-bs-theme attribute
-  const findClosestThemeElement = () => elementRef.value.closest('[data-bs-theme]')
+  const findClosestThemeElement = () => elementRef.value.closest(`[${THEME_ATTRIBUTE}]`)
 
-  // Function to update the color mode based on the closest parent
   const updateColorMode = () => {
-    colorMode.value = findClosestThemeElement()?.getAttribute('data-bs-theme') ?? defaultColorMode
+    colorMode.value = findClosestThemeElement()?.getAttribute(THEME_ATTRIBUTE) ?? defaultColorMode
   }
 
-  // MutationObserver to watch for changes to the data-bs-theme attribute
   let observer: MutationObserver | null = null
 
   onMounted(() => {
-    // Set initial color mode
     updateColorMode()
-    // Create a new MutationObserver
     observer = new MutationObserver(updateColorMode)
-    // Start getting the closest theme element (element with data-bs-theme attribute)
     const themeElement = findClosestThemeElement()
-    // If the themeElement exists, observe it for changes to the data-bs-theme attribute
     if (themeElement) {
-      observer.observe(themeElement, { attributes: true, attributeFilter: ['data-bs-theme'] })
+      observer.observe(themeElement, { attributes: true, attributeFilter: [THEME_ATTRIBUTE] })
     }
   })
 
-  // Disconnect the observer when the component is unmounted
   onUnmounted(() => observer && observer.disconnect())
 
   return { colorMode }

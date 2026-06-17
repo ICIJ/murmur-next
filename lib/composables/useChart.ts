@@ -39,6 +39,19 @@ export interface ChartPropsRefs {
   socialModeRatio: Ref<number>
 }
 
+/**
+ * Wraps a chart component's raw props into individual refs consumable by {@link useChart}.
+ *
+ * @param props - The chart component props (typically from `defineProps`).
+ * @returns A {@link ChartPropsRefs} object exposing each chart prop as its own ref.
+ * @example
+ * <script setup>
+ * import { getChartProps, useChart } from '@icij/murmur-next'
+ *
+ * const props = defineProps(chartProps())
+ * const chart = useChart(resizableRef, getChartProps(props), { emit }, isLoaded)
+ * </script>
+ */
 export function getChartProps(props: {
   chartHeightRatio?: number
   data?: ChartData
@@ -55,6 +68,17 @@ export function getChartProps(props: {
   }
 }
 
+/**
+ * Builds the shared Vue prop definitions every chart component accepts.
+ *
+ * @returns A {@link ChartPropsDefinition} object passable to `defineProps`.
+ * @example
+ * <script setup>
+ * import { chartProps } from '@icij/murmur-next'
+ *
+ * const props = defineProps(chartProps())
+ * </script>
+ */
 export const chartProps = (): ChartPropsDefinition => ({
   data: {
     type: [Array, String, Object],
@@ -119,6 +143,26 @@ export interface UseChartReturn {
   baseHeightRatio: ComputedRef<number>
 }
 
+/**
+ * Powers a chart component: loads data (inline or from a URL), tracks size, and emits lifecycle events.
+ *
+ * @param resizableRef - Ref to the chart's resizable root element, observed for size changes.
+ * @param props - The chart props as refs, typically produced by {@link getChartProps}.
+ * @param context - The setup context providing `emit`, used to fire `loaded` and `resized`.
+ * @param isLoaded - Ref flipped to `true` once data has finished loading; shared with the component.
+ * @param onResized - Optional callback run after each settled resize and after the initial load.
+ * @param afterLoaded - Optional async hook awaited after data loads but before `loaded` is emitted.
+ * @returns A {@link UseChartReturn} with reactive state (`loadedData`, `mounted`, `dataHasHighlights`, `baseHeightRatio`) and helpers (`elementsMaxBBox`, `xAxisYearFormat`, `d3Formatter`).
+ * @example
+ * <script setup>
+ * import { useChart, getChartProps, chartProps, chartEmits } from '@icij/murmur-next'
+ *
+ * const props = defineProps(chartProps())
+ * const emit = defineEmits(chartEmits)
+ * const isLoaded = ref(false)
+ * const { loadedData, baseHeightRatio } = useChart(resizableRef, getChartProps(props), { emit }, isLoaded)
+ * </script>
+ */
 export function useChart(
   resizableRef: Ref<ComponentPublicInstance<HTMLElement> | null>,
   props: ChartPropsRefs,
@@ -178,13 +222,13 @@ export function useChart(
       return returnDefault
     }
     const width = max(
-      [...elements].map((l) => {
-        return l.getBBox ? l.getBBox().width : defaultWidth
+      [...elements].map((element) => {
+        return element.getBBox ? element.getBBox().width : defaultWidth
       })
     )
     const height = max(
-      [...elements].map((l) => {
-        return l.getBBox ? l.getBBox().height : defaultHeight
+      [...elements].map((element) => {
+        return element.getBBox ? element.getBBox().height : defaultHeight
       })
     )
     return { width, height }
