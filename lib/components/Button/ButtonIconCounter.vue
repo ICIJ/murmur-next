@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TextColorVariant } from 'bootstrap-vue-next'
+import type { TextColorVariant } from 'bootstrap-vue-next'
 
 export interface ButtonIconCounterProps {
   /**
