@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import { AppIcon, AppIconLayers } from '@/components'
 
-// Icon imports
 import IPhCircle from '~icons/ph/circle'
 import IPhStarFill from '~icons/ph/star-fill'
 import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'

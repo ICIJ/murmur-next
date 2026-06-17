@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { EmbeddableFooter } from '@/components'
 import { BButton } from 'bootstrap-vue-next'
+
+import { EmbeddableFooter } from '@/components'
 
 const meta: Meta<typeof EmbeddableFooter> = {
   title: 'Murmur/components/EmbeddableFooter/EmbeddableFooter',

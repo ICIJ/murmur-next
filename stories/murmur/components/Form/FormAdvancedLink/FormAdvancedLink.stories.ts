@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { FormAdvancedLink } from '@/components'
 import { BCard } from 'bootstrap-vue-next'
+
+import { FormAdvancedLink } from '@/components'
 import { SIZE } from '@/enums'
 import { modalDecorator, popoverDecorator } from '../../../decorators'
 
