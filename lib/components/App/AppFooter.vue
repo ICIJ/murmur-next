@@ -226,16 +226,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core'
 
 import config from '@/config'
 import BrandExpansion from '@/components/Brand/BrandExpansion.vue'
-
 import { BrandMode } from '@/enums'
-import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core'
 
-/**
- * AppFooter
- */
 defineOptions({
   name: 'AppFooter'
 })
@@ -267,14 +263,16 @@ const props = withDefaults(defineProps<AppFooterProps>(), {
 })
 
 const breakpoints = useBreakpoints(breakpointsBootstrapV5)
-const xs = breakpoints.smaller('sm')
+const isExtraSmall = breakpoints.smaller('sm')
 
-const mode = computed(() => {
+// In adaptive mode the brand shrinks to its short variant on extra-small screens.
+const mode = computed((): BrandMode => {
   if (props.adaptive) {
-    return xs.value ? BrandMode.Short : BrandMode.Long
+    return isExtraSmall.value ? BrandMode.Short : BrandMode.Long
   }
   return BrandMode.Long
 })
+
 const year = computed((): number => {
   return new Date().getFullYear()
 })

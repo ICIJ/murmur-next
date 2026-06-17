@@ -117,6 +117,7 @@ import config from '@/config'
 import BrandExpansion from '@/components/Brand/BrandExpansion.vue'
 import FollowUsPopover from '@/components/FollowUsPopover/FollowUsPopover.vue'
 import AppIcon from '@/components/App/AppIcon.vue'
+import { useAppHeader } from '@/composables/useAppHeader'
 import { BrandMode } from '@/enums'
 
 export interface AppHeaderProps {
@@ -151,20 +152,12 @@ const props = withDefaults(defineProps<AppHeaderProps>(), {
 })
 
 const { t } = useI18n()
-const showFollowUsPopover = ref<boolean>(false)
-const collapseNavbar = ref(true)
 const shortMode = ref(BrandMode.Short)
 const longMode = ref(BrandMode.Long)
 const rootElement = computed((): string => props.noHeadroom ? 'div' : Headroom)
 
-function closeFollowUsPopover() {
-  showFollowUsPopover.value = false
-}
-
-function toggleNavbar(): void {
-  collapseNavbar.value = !collapseNavbar.value
-  closeFollowUsPopover()
-}
+// Navbar collapse and popover visibility are managed by useAppHeader.
+const { showFollowUsPopover, collapseNavbar, closeFollowUsPopover, toggleNavbar } = useAppHeader()
 </script>
 
 <style lang="scss">
