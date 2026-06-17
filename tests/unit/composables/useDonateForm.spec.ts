@@ -105,4 +105,15 @@ describe('useDonateForm', () => {
     await nextTick()
     expect(amount.value).toBe(25)
   })
+
+  // Locks the preserved legacy quirk: once the amount is no longer pristine,
+  // getSuggestedAmount returns undefined, so selectLevel blanks the amount.
+  it('blanks the amount when selecting a level after a manual edit', async () => {
+    const { amount, selectLevel, amountIsNotPristine } = setup()
+
+    amountIsNotPristine()
+    selectLevel('world')
+    await nextTick()
+    expect(amount.value).toBeUndefined()
+  })
 })
