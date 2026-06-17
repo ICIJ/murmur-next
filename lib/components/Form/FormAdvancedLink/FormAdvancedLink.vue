@@ -1,10 +1,11 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uniqueId } from 'lodash'
 import { ButtonVariant } from 'bootstrap-vue-next'
 
 import AdvancedLinkFormTab from './FormAdvancedLinkTab.vue'
+import { useFormAdvancedLink } from '@/composables/useFormAdvancedLink'
 import { AdvancedLinkTab } from '@/enums'
 
 /**
@@ -85,35 +86,20 @@ const formClasses = computed(() => {
   }, {} as Record<string, boolean>)
 })
 
-// default tabs order
-const defaultTabs: AdvancedLinkTab[] = [AdvancedLinkTab.raw, AdvancedLinkTab.rich, AdvancedLinkTab.markdown, AdvancedLinkTab.html]
-
-const tabs = computed(() => {
-  return defaultTabs
-    .filter(elem => props.forms.includes(elem))
-    .map((elem) => {
-      return {
-        type: elem,
-        title: t(`advanced-link-form.${elem}.tab`),
-        id: `${advancedLinkFormId}-${elem}`,
-      }
-    }
-    )
-})
-
-const activeForm = computed(() => {
-  if (index.value && index.value > 0 && index.value < tabs.value.length) {
-    return tabs.value[index.value].id
+// Build a tab's presentation metadata: the translated label and the unique id
+// scoped to this form instance.
+function buildTab(type: AdvancedLinkTab): { title: string, id: string } {
+  return {
+    title: t(`advanced-link-form.${type}.tab`),
+    id: `${advancedLinkFormId}-${type}`
   }
-  return tabs.value[0].id
-}
-)
-
-function onUpdate(event: string | undefined): void {
-  const id = tabs.value.findIndex((elem: { id: string }) => elem.id === event)
-  index.value = id < 0 ? 0 : id
 }
 
+const { tabs, activeForm, onUpdate } = useFormAdvancedLink({
+  forms: () => props.forms,
+  buildTab,
+  index
+})
 </script>
 
 <template>
