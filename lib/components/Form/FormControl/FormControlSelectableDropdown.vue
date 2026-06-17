@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import castArray from 'lodash/castArray'
 import equals from 'lodash/eq'
-import findIndex from 'lodash/findIndex'
-import filter from 'lodash/filter'
 import identity from 'lodash/identity'
-import isEqual from 'lodash/isEqual'
-import omit from 'lodash/omit'
 // @ts-expect-error no typings available
 import { RecycleScroller } from 'vue-virtual-scroller'
 
@@ -18,6 +13,7 @@ import {
 } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
+import { useSelectableDropdown } from '@/composables/useSelectableDropdown'
 import IPhCheckSquare from '~icons/ph/check-square'
 import IPhSquare from '~icons/ph/square'
 import type { Component } from 'vue'
@@ -135,21 +131,23 @@ const keyField = computed(() => {
   return typeof items_.value[0] === 'string' ? null : 'recycle_scroller_id'
 })
 
-const firstActiveItemIndex = computed(() => {
-  if (!activeItems.value.length) {
-    return -1
-  }
-  const activeItem = activeItems.value[0]
-  if (typeof activeItem === 'string') {
-    return items_.value.indexOf(activeItem)
-  }
-  // activeItems may hold either a raw modelValue object (no recycle_scroller_id)
-  // or an items_ entry from a click/range-select (which carries it), so strip
-  // the injected key from both sides before comparing.
-  const target = omit(activeItem, 'recycle_scroller_id')
-  return items_.value.findIndex(it =>
-    isEqual(omit(it, 'recycle_scroller_id'), target)
-  )
+// Selection state machine (active set, navigation, range select, model sync)
+// lives in a dedicated composable; the component keeps DOM and emit wiring.
+const {
+  itemActivated,
+  selectItem,
+  addItem,
+  selectRangeToItem,
+  activateItemOrItems,
+  activatePreviousItem,
+  activateNextItem,
+  clearActiveItems
+} = useSelectableDropdown({
+  activeItems,
+  modelValue,
+  items: () => items_.value,
+  multiple: () => props.multiple,
+  eq: () => props.eq
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
@@ -163,30 +161,8 @@ const keysMap = computed((): Record<string, Function> => {
 
 watch(toRef(props, 'hide'), toggleKeys)
 
-watch(modelValue, (itemOrItems: unknown) => {
-  const items = castArray(itemOrItems)
-  if (!isEqual(activeItems.value, items)) {
-    activateItemOrItems(itemOrItems)
-  }
-}, { deep: true, immediate: false })
-
-watch(activeItems, (itemOrItems: unknown[]) => {
-  /**
-   * Fired when the selected value changes. It will pass a canonical value
-   * or an array of values if the property `multiple` is set to true.
-   *
-   * @event input
-   * @type {String, Object, Array, Number}
-   */
-  modelValue.value = props.multiple ? itemOrItems : itemOrItems[0]
-}, { deep: true })
-
 function indexIcon(item: Item): Component {
   return itemActivated(item) ? IPhCheckSquare : IPhSquare
-}
-
-function itemActivated(item: Item) {
-  return findIndex(activeItems.value, i => props.eq(item, i)) > -1
 }
 
 function clickToSelectItem(item: Item) {
@@ -228,67 +204,8 @@ function clickToSelectRangeToItem(item: Item) {
   selectRangeToItem(item)
 }
 
-function selectItem(item: Item) {
-  if (itemActivated(item) && activeItems.value.length === 1) {
-    activeItems.value = filter(activeItems.value, i => !props.eq(item, i))
-  }
-  else {
-    activeItems.value = [item]
-  }
-}
-
-function addItem(item: Item) {
-  if (itemActivated(item)) {
-    activeItems.value = filter(activeItems.value, i => !props.eq(item, i))
-  }
-  else {
-    activeItems.value = [...activeItems.value, item]
-  }
-}
-
-function selectRangeToItem(item: Item) {
-  // No activated items
-  if (!activeItems.value.length || !props.multiple) {
-    selectItem(item)
-  }
-  else {
-    const index = items_.value.indexOf(item)
-    if (index > firstActiveItemIndex.value) {
-      activeItems.value = items_.value.slice(
-        firstActiveItemIndex.value,
-        index + 1
-      )
-    }
-    else {
-      activeItems.value = items_.value.slice(
-        index,
-        firstActiveItemIndex.value + 1
-      )
-    }
-  }
-}
-
-function activateItemOrItems(itemOrItems = modelValue.value) {
-  const items = castArray(itemOrItems)
-  activeItems.value = [...items]
-}
-
-function activatePreviousItem() {
-  activeItems.value = [
-    items_.value[Math.max(firstActiveItemIndex.value - 1, -1)]
-  ]
-}
-
-function activateNextItem() {
-  activeItems.value = [
-    items_.value[
-      Math.min(firstActiveItemIndex.value + 1, items_.value.length - 1)
-    ]
-  ]
-}
-
 function deactivateItems() {
-  activeItems.value = []
+  clearActiveItems()
   /**
    * Fired when items selection is deactivated
    *

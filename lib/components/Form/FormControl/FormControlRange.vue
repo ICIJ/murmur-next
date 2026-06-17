@@ -3,14 +3,13 @@ import {
   VNode,
   DirectiveBinding,
   ref,
-  watch,
-  computed,
-  toRef
+  computed
 } from 'vue'
-import { clamp, round } from 'lodash'
+import { clamp } from 'lodash'
 
 import type { ButtonVariant } from 'bootstrap-vue-next'
 import AppIcon from '@/components/App/AppIcon.vue'
+import { useRangeControl } from '@/composables/useRangeControl'
 import IPhCaretLeftBold from '~icons/ph/caret-left-bold'
 import IPhCaretRightBold from '~icons/ph/caret-right-bold'
 import type { Component } from 'vue'
@@ -152,14 +151,18 @@ const emit = defineEmits<{
 }>()
 
 const rangePickerBounds = ref<HTMLElement | null>(null)
-const start = toRef(props.range[0] ?? 0)
-const end = toRef(props.range[1] ?? 0)
 const moving = ref(false)
 const resizing = ref(false)
 
-const disabled = computed(() => {
-  return props.range.length < 2
-})
+// Bounds math (snapping, rounding, minimum-distance constraint) lives in a
+// dedicated composable; the component keeps the DOM and emit wiring.
+const { start, end, disabled, moveStartTo, moveEndTo, moveBoundsTo }
+  = useRangeControl({
+    range: () => props.range,
+    snap: () => props.snap,
+    precision: () => props.precision,
+    minDistance: () => props.minDistance
+  })
 
 const overlayStyle = computed((): { left: string, right: string } => {
   return {
@@ -210,47 +213,12 @@ function toggleResizing(value: boolean) {
   resizing.value = value ?? !resizing.value
 }
 
-function snapValue(value: number): number {
-  return round(value / props.snap) * props.snap
-}
-
 function rangeWidth(): number {
   return rangePickerBounds.value?.getBoundingClientRect().width ?? 0
 }
 
-function dragStartBound({ detail: dx }: DragDropValue) {
-  const newValue = snapValue(dx / rangeWidth())
-  // Ensure start value doesn't get too close to end value
-  if (newValue < end.value - props.minDistance) {
-    start.value = round(newValue, props.precision)
-    /**
-     * Update the values of the range (both start and end)
-     * @event update
-     * @param Number[] New value of the range
-     */
-    emit('update:range', [start.value, end.value])
-  }
-}
-
-function dragEndBound({ detail: dx }: DragDropValue) {
-  const newValue = snapValue(dx / rangeWidth())
-  // Ensure end value doesn't get too close to start value
-  if (newValue > start.value + props.minDistance) {
-    end.value = round(newValue, props.precision)
-    /**
-     * Update the values of the range (both start and end)
-     * @event update
-     * @param Number[] New value of the range
-     */
-    emit('update:range', [start.value, end.value])
-  }
-}
-
-function dragBounds({ detail: dx }: DragDropValue) {
-  const diff = snapValue(end.value - start.value)
-  const newValue = snapValue(dx / rangeWidth())
-  start.value = round(newValue, props.precision)
-  end.value = round(newValue + diff, props.precision)
+// Emit the current bounds as the canonical range update.
+function emitRangeUpdate() {
   /**
    * Update the values of the range (both start and end)
    * @event update
@@ -259,14 +227,26 @@ function dragBounds({ detail: dx }: DragDropValue) {
   emit('update:range', [start.value, end.value])
 }
 
+function dragStartBound({ detail: dx }: DragDropValue) {
+  if (moveStartTo(dx, rangeWidth())) {
+    emitRangeUpdate()
+  }
+}
+
+function dragEndBound({ detail: dx }: DragDropValue) {
+  if (moveEndTo(dx, rangeWidth())) {
+    emitRangeUpdate()
+  }
+}
+
+function dragBounds({ detail: dx }: DragDropValue) {
+  moveBoundsTo(dx, rangeWidth())
+  emitRangeUpdate()
+}
+
 function valueWithUnit(value: number | string): string {
   return typeof value === 'number' ? `${value}px` : `${value}`
 }
-
-watch(() => props.range, (newRange: [number, number]) => {
-  start.value = newRange[0] ?? 0
-  end.value = newRange[1] ?? 0
-})
 
 defineExpose({
   rangeWidth
