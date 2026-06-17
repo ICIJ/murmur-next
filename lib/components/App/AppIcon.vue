@@ -15,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, type Component } from 'vue'
+import { toRef, type Component } from 'vue'
+
+import { useAppIcon } from '@/composables/useAppIcon'
 import type { IconSize, TextColorVariant } from '@/types'
 
 export interface AppIconProps {
@@ -80,60 +82,20 @@ const props = withDefaults(defineProps<AppIconProps>(), {
   spinDuration: '1s'
 })
 
-const currentHover = ref(false)
-watch(() => props.hover, () => (currentHover.value = props.hover), { immediate: true })
-
-const color = computed(() => {
-  let colorVariant = 'currentColor'
-
-  if (props.variant) {
-    colorVariant = `var(--bs-${props.variant}, currentColor)`
-  }
-
-  if (currentHover.value && props.hoverVariant) {
-    colorVariant = `var(--bs-${props.hoverVariant}, ${colorVariant})`
-  }
-
-  return colorVariant
-})
-
-const isPercentSize = computed(() => {
-  return typeof props.size === 'string' && props.size.endsWith('%')
-})
-
-const isRawSize = computed(() => {
-  return !['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', undefined].includes(props.size) && !isPercentSize.value
-})
-
-const hasSize = computed(() => {
-  return ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(props.size ?? '')
-})
-
-const style = computed(() => {
-  return {
-    '--app-icon-color': color.value,
-    '--app-icon-raw-size': isRawSize.value ? props.size : undefined,
-    '--app-icon-percent-size': isPercentSize.value ? props.size : undefined,
-    '--app-icon-size': hasSize.value ? props.size : undefined,
-    '--app-icon-scale': props.scale ?? 1,
-    '--app-icon-spin-duration': props.spinDuration,
-    '--app-icon-beat-duration': props.beatDuration,
-    '--app-icon-fade-duration': props.fadeDuration,
-  }
-})
-
-const classList = computed(() => {
-  return {
-    [`app-icon--size-${props.size}`]: hasSize.value,
-    [`app-icon--has-size`]: hasSize.value,
-    [`app-icon--raw-size`]: isRawSize.value,
-    [`app-icon--percent-size`]: isPercentSize.value,
-    [`app-icon--hover`]: currentHover.value,
-    [`app-icon--spin`]: props.spin,
-    [`app-icon--spin-reverse`]: props.spinReverse,
-    [`app-icon--beat`]: props.beat,
-    [`app-icon--fade`]: props.fade,
-  }
+// Size classification, color resolution and hover tracking live in useAppIcon.
+const { currentHover, style, classList } = useAppIcon({
+  size: toRef(props, 'size'),
+  scale: toRef(props, 'scale'),
+  variant: toRef(props, 'variant'),
+  hoverVariant: toRef(props, 'hoverVariant'),
+  hover: toRef(props, 'hover'),
+  spinDuration: toRef(props, 'spinDuration'),
+  beatDuration: toRef(props, 'beatDuration'),
+  fadeDuration: toRef(props, 'fadeDuration'),
+  spin: toRef(props, 'spin'),
+  spinReverse: toRef(props, 'spinReverse'),
+  beat: toRef(props, 'beat'),
+  fade: toRef(props, 'fade')
 })
 </script>
 
