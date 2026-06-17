@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import * as d3 from 'd3'
 import identity from 'lodash/identity'
-import sortByFn from 'lodash/sortBy'
-import { computed, ref, ComponentPublicInstance } from 'vue'
+import { computed, ref, toRef, ComponentPublicInstance } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
+import { useBarChart } from '@/composables/useBarChart'
 
 defineOptions({
   name: 'BarChart'
 })
-
-interface Datum { value: number | number[], highlight?: boolean, label?: string }
-type Bar = { width: number, height: number, x: number, y: number } & Datum
 
 export interface BarChartProps {
   /**
@@ -104,22 +100,15 @@ const isLoaded = ref(false)
 const { loadedData, elementsMaxBBox, dataHasHighlights, d3Formatter }
   = useChart(el, getChartProps(props), { emit }, isLoaded, onResize)
 
-const sortedData = computed((): object[] => {
-  if (!loadedData.value) {
-    return []
-  }
-  return !props.sortBy
-    ? loadedData.value
-    : sortByFn(loadedData.value, props.sortBy)
-})
-
+// Label and value widths are measured from the rendered SVG text, so they stay
+// in the component (the geometry composable holds no DOM state) and feed it.
 const labelWidth = computed(() => {
   if (props.fixedLabelWidth) {
     return props.fixedLabelWidth
   }
   const selector = '.bar-chart__labels__item'
   const defaultWidth = 100
-  return elementsMaxBBox({ selector, defaultWidth }).width
+  return elementsMaxBBox({ selector, defaultWidth }).width as number
 })
 
 const valueWidth = computed(() => {
@@ -128,57 +117,18 @@ const valueWidth = computed(() => {
   }
   const selector = '.bar-chart__bars__item__value'
   const defaultWidth = 0
-  return elementsMaxBBox({ selector, defaultWidth }).width + props.valueGap
+  return (elementsMaxBBox({ selector, defaultWidth }).width as number) + props.valueGap
 })
 
-const margin = computed(() => {
-  const left = labelWidth.value + props.labelGap
-  const right = 0
-  const top = 0
-  const bottom = 0
-  return { left, right, top, bottom }
-})
-
-const padded = computed(() => {
-  const widthP = Math.max(0, width.value - margin.value.left - margin.value.right)
-  const heightP = Math.max(0, height.value - margin.value.top - margin.value.bottom)
-  return { width: widthP, height: heightP }
-})
-
-const scale = computed(() => {
-  const x = d3
-    .scaleLinear()
-    // @ts-expect-error D3 api
-    .domain([0, d3.max(sortedData.value, (d: Datum) => d.value)])
-    .range([0, Math.max(0, padded.value.width - valueWidth.value)])
-  return { x }
-})
-
-const bars = computed((): Bar[] => {
-  return sortedData.value.map((d: Datum, i: number) => {
-    return {
-      width: Math.abs(scale.value.x(d.value)),
-      height: Math.abs(props.barHeight),
-      value: d.value,
-      highlight: d.highlight,
-      x: 0,
-      y: (props.barHeight + props.barGap) * i
-    }
-  })
-})
-
-const labels = computed(() => {
-  return sortedData.value.map((d: Datum, i: number) => {
-    return {
-      label: d.label,
-      x: labelWidth.value,
-      y: 4 + props.barHeight / 2 + (props.barHeight + props.barGap) * i
-    }
-  })
-})
-
-const height = computed(() => {
-  return (props.barHeight + props.barGap) * sortedData.value.length
+const { margin, padded, scale, bars, labels, height } = useBarChart({
+  loadedData,
+  width,
+  labelWidth,
+  valueWidth,
+  sortBy: toRef(() => props.sortBy),
+  barHeight: toRef(() => props.barHeight),
+  barGap: toRef(() => props.barGap),
+  labelGap: toRef(() => props.labelGap)
 })
 
 function formatXDatum(d: number | number[]) {
@@ -191,6 +141,9 @@ function onResize() {
   }
 }
 
+// Expose the derived geometry so tests (and host apps) can read the scale and
+// dimensions the chart computes.
+defineExpose({ margin, padded, scale, bars, labels, height })
 </script>
 
 <template>
