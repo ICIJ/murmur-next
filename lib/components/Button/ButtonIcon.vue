@@ -1,4 +1,9 @@
 <template>
+  <!--
+    NOTE: `@mousenter` is a typo for `@mouseenter`, so the hover-in state never
+    fires and `currentHover` only ever resets on mouse leave. Preserved as-is;
+    fixing it changes rendered behavior and belongs in a separate change.
+  -->
   <b-button
     v-bind="buttonProps"
     :id="buttonId"
@@ -40,7 +45,7 @@
       :hover-variant="iconRightHoverVariant"
       :hover="currentHover"
       class="button-icon__icon-right"
-      @click="click('icon-right')"
+      @click="emitIconRightClick"
     />
     <button-icon-counter
       v-if="counter !== null"
@@ -69,10 +74,6 @@ import type { TextColorVariant, ButtonVariant, PopoverPlacement, Size } from 'bo
 
 import AppIcon from '@/components/App/AppIcon.vue'
 import ButtonIconCounter from '@/components/Button/ButtonIconCounter.vue'
-
-const injectedVariant = inject('variant', 'action')
-const injectedSize = inject('size', 'md')
-const elementRef = useTemplateRef<HTMLElement>('element')
 
 defineOptions({
   name: 'ButtonIcon'
@@ -213,6 +214,10 @@ export interface ButtonIconProps {
   showTooltipForce?: boolean
   /**
    * Manual hover state control
+   *
+   * NOTE: this prop is part of the public API but is currently never consumed
+   * by the component; hover is tracked internally via `currentHover`. Kept for
+   * API compatibility; wiring it up is a follow-up.
    */
   hover?: boolean
   /**
@@ -250,9 +255,15 @@ const props = withDefaults(defineProps<Omit<ButtonIconProps, 'pressed'>>(), {
 
 const emit = defineEmits(['click:icon-right'])
 
-function click(name: 'icon-right') {
-  emit(`click:${name}`)
+function emitIconRightClick() {
+  emit('click:icon-right')
 }
+
+// Fall back to the variant and size provided by an ancestor (e.g. a button
+// group) whenever the component does not set them explicitly.
+const injectedVariant = inject('variant', 'action')
+const injectedSize = inject('size', 'md')
+const elementRef = useTemplateRef<HTMLElement>('element')
 
 const currentHover = ref(false)
 

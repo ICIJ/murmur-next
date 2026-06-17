@@ -3,7 +3,7 @@
     :is="tag"
     :id="uniqComponentId"
     class="confirm-button"
-    @click.stop="toggleConfirmationTooltip"
+    @click.stop="toggle"
   >
     <!-- @slot Main content of the button -->
     <slot>-</slot>
@@ -59,10 +59,13 @@
 <script setup lang="ts">
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
-import { BTooltip, PopoverPlacement } from 'bootstrap-vue-next'
-import { ComponentPublicInstance, ref } from 'vue'
+import { BTooltip } from 'bootstrap-vue-next'
+import type { PopoverPlacement } from 'bootstrap-vue-next'
+import { ref } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
+import { useConfirmButton } from '@/composables/useConfirmButton'
 
 /**
  * ConfirmButton
@@ -122,51 +125,23 @@ const props = withDefaults(defineProps<ButtonConfirmProps>(), {
   tag: 'button'
 })
 
+/**
+ * @event toggled Emitted when the confirmation tooltip is toggled. Payload is
+ *   `true` when the tooltip becomes visible.
+ * @event cancelled Emitted when the confirmation is cancelled.
+ * @event confirmed Emitted when the confirmation is confirmed.
+ */
 const emit = defineEmits(['toggled', 'cancelled', 'confirmed'])
 
-const showTooltip = ref<boolean>(false)
 const uniqComponentId = uniqueId('murmur-confirm-button-')
 const confirmationTooltip = ref<ComponentPublicInstance | null>(null)
 
-function toggleConfirmationTooltip(): void {
-  showTooltip.value = !showTooltip.value
-  /**
-   * Emitted when the confirmation is toggled.
-   * @event toggled
-   * @param Boolean True if the button is shown.
-   */
-  emit('toggled', showTooltip.value)
-}
-
-function hideConfirmationTooltip(): void {
-  showTooltip.value = false
-  /**
-   * Emitted when the confirmation is toggled.
-   * @event toggled
-   * @param Boolean True if the button is shown.
-   */
-  emit('toggled', false)
-}
-
-function cancel(): void {
-  hideConfirmationTooltip()
-  props.cancelled?.()
-  /**
-   * Emitted when the confirmation is cancelled.
-   * @event cancelled
-   */
-  emit('cancelled')
-}
-
-function confirm(): void {
-  hideConfirmationTooltip()
-  props.confirmed?.()
-  /**
-   * Emitted when the confirmation is confirmed.
-   * @event confirmed
-   */
-  emit('confirmed')
-}
+// The confirmation lifecycle (show/hide state plus cancel/confirm handlers) is
+// owned by the composable; the callback props are forwarded so they still run.
+const { showTooltip, toggle, cancel, confirm } = useConfirmButton(emit, {
+  onConfirmed: () => props.confirmed?.(),
+  onCancelled: () => props.cancelled?.()
+})
 </script>
 
 <style lang="scss">
