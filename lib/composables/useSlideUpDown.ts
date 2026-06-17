@@ -73,8 +73,10 @@ export interface UseSlideUpDown {
  *   host element, the `state`/`mounted` refs, the `style` computed for the
  *   template, and the `triggerSlide`/`cleanLayout` lifecycle handlers.
  * @example
+ * // Internal building block of the `SlideUpDown` component; not exported from
+ * // the package root. Inside a `<script setup>` block:
  * import { toRef } from 'vue'
- * import { useSlideUpDown } from '@icij/murmur-next'
+ * import { useSlideUpDown } from '@/composables/useSlideUpDown'
  *
  * const props = defineProps<{ active?: boolean, duration?: number }>()
  * const { container, style } = useSlideUpDown({
