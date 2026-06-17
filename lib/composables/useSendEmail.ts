@@ -15,9 +15,10 @@ interface FormDataResult { result: string, msg: string }
  * @param referrer - Explicit referrer to record; falls back to the parent/document referrer when omitted.
  * @param defaultGroups - Mailchimp interest group names to opt into; comma-separated strings are split.
  * @returns An object with a `send` function that resolves with the Mailchimp `FormDataResult`.
+ * @remarks Internal building block; not exported from the package root.
  * @example
  * <script setup>
- * import { useSendEmail } from '@icij/murmur-next'
+ * import { useSendEmail } from '@/composables/useSendEmail'
  *
  * const email = ref('jane@example.org')
  * const { send } = useSendEmail(email, action, 'EMAIL', 'newsletter')

@@ -73,9 +73,10 @@ const TEXT_SELECTOR = '.active-text-truncate__wrapper__text'
  * @returns The {@link UseActiveTextTruncate} API: `resizeRef` to attach to the
  *   host element, the derived CSS-value computeds for the template, and the
  *   `resetTextLivePosition` handler.
+ * @remarks Internal building block of `ActiveTextTruncate`; not exported from the package root.
  * @example
  * import { toRef } from 'vue'
- * import { useActiveTextTruncate } from '@icij/murmur-next'
+ * import { useActiveTextTruncate } from '@/composables/useActiveTextTruncate'
  *
  * const { resizeRef, isFading, resetTextLivePosition } = useActiveTextTruncate(
  *   {
