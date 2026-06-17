@@ -76,6 +76,10 @@ export interface SharingPopup {
   parent: (Window & typeof globalThis) | null
 }
 
+/**
+ * @internal Module-level singleton, not part of the public API. Re-exported
+ * from SharingOptionsLink.vue only so the existing component spec can poke it.
+ */
 export const $popup: SharingPopup = {
   instance: null,
   interval: undefined,
@@ -109,10 +113,11 @@ type SharingValueKey = keyof SharingValues
  * @param values - Generic share values (url, title, description, …); may be reactive.
  * @returns Reactive share-link state plus popup lifecycle helpers.
  * @example
+ * // Internal building block — import via relative path inside the library.
  * <script setup>
- * import { useSharingOptionsLink } from '@icij/murmur-next'
+ * import { useSharingOptionsLink } from '@/composables/useSharingOptionsLink'
  *
- * const { href, openPopup } = useSharingOptionsLink('facebook', { url: 'https://icij.org' })
+ * const { href, openSharePopup } = useSharingOptionsLink('facebook', { url: 'https://icij.org' })
  * </script>
  */
 export function useSharingOptionsLink(
@@ -168,6 +173,8 @@ export function useSharingOptionsLink(
     return base.value + querystring.stringify(query.value)
   })
 
+  // NOTE: latent quirk preserved from the original — no network entry carries a
+  // `name` key, so this lookup always falls back to the network id itself.
   const name = computed((): string => {
     return get(networks, [toValue(network), 'name'], toValue(network))
   })
