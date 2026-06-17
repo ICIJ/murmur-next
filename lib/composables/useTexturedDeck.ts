@@ -95,7 +95,9 @@ export function useTexturedDeck(options: UseTexturedDeckOptions): UseTexturedDec
 
   // A texture can be selected by name or by numeric index. A name is mapped
   // back to its index and clamped so an unknown name falls back to a valid
-  // texture; a numeric index is used as-is.
+  // texture. A numeric index is used as-is and is intentionally NOT clamped,
+  // so an out-of-range number yields an undefined texture name (latent edge
+  // preserved).
   const textureIndex = computed((): number => {
     const value = toValue(modelValue)
     if (typeof value !== 'number') {
