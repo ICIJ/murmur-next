@@ -1,23 +1,13 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
-import isFunction from 'lodash/isFunction'
 import identity from 'lodash/identity'
 import { getChartProps, useChart } from '@/composables/useChart'
-import {
-  computed,
-  ref,
-  watchEffect,
-  ComponentPublicInstance,
-  toRaw
-} from 'vue'
+import { useLineChart } from '@/composables/useLineChart'
+import { computed, ref, toRef, watchEffect, ComponentPublicInstance } from 'vue'
 
 defineOptions({
   name: 'LineChart'
 })
-
-// Call the first argument if it's a function, or return it
-const castCall = (fnOrValue = identity, ...rest: any[]) =>
-  isFunction(fnOrValue) ? fnOrValue(...rest) : fnOrValue
 
 export interface LineChartProps {
   /**
@@ -124,17 +114,9 @@ const emit = defineEmits<{
   resized: []
 }>()
 
-interface LineSeries {
-  key: string
-  path: string | null
-  color: string | null
-}
-
 const width = ref(0)
 const height = ref(0)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-const line = ref<d3.Line<[number, number]> | null>(null)
-const lines = ref<LineSeries[]>([])
 const isLoaded = ref(false)
 
 const {
@@ -144,19 +126,6 @@ const {
   xAxisYearFormat,
   baseHeightRatio
 } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
-
-const isMultiLine = computed(() => props.keys.length > 0)
-
-const activeKeys = computed(() => {
-  return isMultiLine.value ? props.keys : [props.seriesName]
-})
-
-const colorScale = computed(() => {
-  return d3
-    .scaleOrdinal<string>()
-    .domain(activeKeys.value)
-    .range(props.lineColors.length ? props.lineColors : d3.schemeCategory10)
-})
 
 const highlightedKey = ref<string | null>(null)
 
@@ -206,13 +175,6 @@ const bucketWidth = computed(() => {
   return elementsMaxBBox({ selector, defaultWidth }).width
 })
 
-const scale = computed(() => {
-  return {
-    x: d3.scaleTime().range([0, padded.value.width]),
-    y: d3.scaleLinear().range([padded.value.height, 0])
-  }
-})
-
 const margin = computed(() => {
   const left = labelWidth.value + 10
   const right = bucketWidth.value / 2
@@ -227,30 +189,33 @@ const padded = computed(() => {
   return { width: widthP, height: heightP }
 })
 
-const formattedData = computed(() => {
-  if (!loadedData.value) {
-    return []
-  }
-  return loadedData.value.map((d: any) => {
-    // Clone to avoid mutating reactive source data (parseTime on already-parsed Date returns null)
-    const rawD = { ...toRaw(d) }
-    rawD[props.timeseriesKey] = parseTime(d[props.timeseriesKey])
-    for (const key of activeKeys.value) {
-      rawD[key] = +d[key]
-    }
-    return rawD
-  })
+// Pure d3 geometry (scales, line paths, axes) lives in the line-chart
+// composable; the component keeps the DOM measurement and axis rendering.
+const {
+  isMultiLine,
+  activeKeys,
+  colorScale,
+  formattedData,
+  scaleX,
+  scaleY,
+  lines,
+  line,
+  xAxis,
+  yAxis
+} = useLineChart({
+  loadedData,
+  padded,
+  d3Formatter,
+  xAxisYearFormat,
+  keys: toRef(() => props.keys),
+  seriesName: toRef(() => props.seriesName),
+  timeseriesKey: toRef(() => props.timeseriesKey),
+  lineColors: toRef(() => props.lineColors),
+  curve: toRef(() => props.curve),
+  xAxisTicks: toRef(() => props.xAxisTicks),
+  yAxisTickFormat: toRef(() => props.yAxisTickFormat),
+  yAxisTicks: toRef(() => props.yAxisTicks)
 })
-
-const createLine = computed(() => {
-  const generator = d3.line().x((d: any) => d.x).y((d: any) => d.y)
-  if (props.curve) {
-    generator.curve(props.curve)
-  }
-  return generator
-})
-
-const parseTime = d3.timeParse('%Y')
 
 function setSizes() {
   if (el.value) {
@@ -268,60 +233,42 @@ function setSizes() {
   }
 }
 
+// Render the axes imperatively from the composable's d3 axis generators; the
+// line paths themselves are bound declaratively in the template.
 function update() {
-  scale.value.x.domain(
-    d3.extent(formattedData.value, (d: any) => d[props.timeseriesKey]) as [Date, Date]
-  )
-
-  // Y domain covers all series
-  const maxY = d3.max(activeKeys.value, (key) => {
-    return d3.max(formattedData.value, (d: any) => d[key]) as number
-  }) as number
-  scale.value.y.domain([0, maxY])
-
-  if (isMultiLine.value) {
-    lines.value = activeKeys.value.map((key) => {
-      const points = formattedData.value.map((d: any) => ({
-        x: scale.value.x(d[props.timeseriesKey]),
-        y: scale.value.y(d[key])
-      }))
-      return {
-        key,
-        path: createLine.value(points as any) as unknown as string,
-        color: colorScale.value(key)
-      }
-    })
-  }
-  else {
-    const points = formattedData.value.map((d: any) => ({
-      x: scale.value.x(d[props.timeseriesKey]),
-      y: scale.value.y(d[props.seriesName])
-    }))
-    line.value = createLine.value(points as any) as any
-  }
-
   d3.select(el.value)
     .select('.line-chart__axis--x')
-    .call(
-      d3
-        .axisBottom(scale.value.x)
-        .ticks(props.xAxisTicks as any)
-        .tickFormat((d: any) => castCall(xAxisYearFormat, d.getFullYear())) as any
-    )
+    .call(xAxis.value as any)
   d3.select(el.value)
     .select('.line-chart__axis--y')
-    .call(
-      d3
-        .axisLeft(scale.value.y)
-        .tickFormat((d: any) => d3Formatter(d, props.yAxisTickFormat))
-        .ticks(props.yAxisTicks) as any
-    )
+    .call(yAxis.value as any)
     .selectAll('.tick line')
     .attr('x2', padded.value.width)
 }
 
 watchEffect(() => {
   update()
+})
+
+defineExpose({
+  width,
+  height,
+  setSizes,
+  isMultiLine,
+  activeKeys,
+  colorScale,
+  formattedData,
+  scaleX,
+  scaleY,
+  lines,
+  line,
+  xAxis,
+  yAxis,
+  highlightedKey,
+  hasHighlight,
+  highlight,
+  resetHighlight,
+  isHighlighted
 })
 </script>
 
