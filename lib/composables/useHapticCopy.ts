@@ -1,6 +1,6 @@
 import noop from 'lodash/noop'
-import { nextTick, onUnmounted, ref } from 'vue'
-import type { Ref } from 'vue'
+import { computed, nextTick, onUnmounted, ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 
 /**
  * Copies content to the clipboard. May run synchronously (HTML copy) or return
@@ -65,35 +65,27 @@ export interface UseHapticCopyOptions {
  */
 export interface UseHapticCopy {
   /**
-   * Text currently displayed in the feedback tooltip.
-   */
-  tooltipContent: Ref<string>
-  /**
-   * Whether the feedback tooltip is visible.
-   */
-  showTooltip: Ref<boolean>
-  /**
-   * Pending hide timer handle. Doubles as the "feedback is showing" flag the
-   * host template uses to swap the clipboard/check icons.
-   */
-  tooltipTimeout: Ref<ReturnType<typeof setTimeout> | undefined>
-  /**
    * Run the copy action, surface success/failure feedback, then hide it after
    * the configured delay.
    */
   copy: () => Promise<void>
   /**
-   * Show the feedback tooltip with the given (resolved) message.
+   * Text currently displayed in the feedback tooltip.
    */
-  openTooltip: (message?: string) => Promise<void>
+  tooltipContent: Ref<string>
+  /**
+   * Whether the feedback tooltip is requested to be shown.
+   */
+  showTooltip: Ref<boolean>
+  /**
+   * Whether the transient "copied!" feedback is currently active, i.e. a hide
+   * timer is pending. Drives the success/idle icon swap in host components.
+   */
+  isVisible: ComputedRef<boolean>
   /**
    * Hide the feedback tooltip and clear any pending hide timer.
    */
-  closeTooltip: () => Promise<void>
-  /**
-   * Reset the hide timer, then run `fn` after `delay` and a `nextTick` flush.
-   */
-  nextTimeout: (fn?: () => unknown, delay?: number) => Promise<unknown>
+  close: () => Promise<void>
 }
 
 /**
@@ -108,14 +100,16 @@ export interface UseHapticCopy {
  *
  * @param options - Copy action, message resolver, delay and lifecycle hooks
  *   (see {@link UseHapticCopyOptions}).
- * @returns The {@link UseHapticCopy} API: the `tooltipContent`, `showTooltip`
- *   and `tooltipTimeout` state plus the `copy`, `openTooltip`, `closeTooltip`
- *   and `nextTimeout` handlers.
+ * @returns The {@link UseHapticCopy} API: the `copy` action, the reactive
+ *   `tooltipContent`, `showTooltip` and `isVisible` state, and the `close`
+ *   handler.
  * @example
- * const { copy, tooltipContent, showTooltip } = useHapticCopy({
+ * const { copy, tooltipContent, isVisible } = useHapticCopy({
  *   copy: () => navigator.clipboard.writeText('hello'),
- *   resolveMessage: (key) => t(key),
- *   onSuccess: () => emit('success')
+ *   resolveMessage: (key) => translate(key),
+ *   onSuccess: () => {
+ *     // show a toast, log analytics, etc.
+ *   }
  * })
  */
 export function useHapticCopy(options: UseHapticCopyOptions = {}): UseHapticCopy {
@@ -132,8 +126,12 @@ export function useHapticCopy(options: UseHapticCopyOptions = {}): UseHapticCopy
   } = options
 
   const tooltipContent = ref<string>('')
-  const tooltipTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const tooltipTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
   const showTooltip = ref(false)
+
+  // Truthy exactly while a hide timer is pending, which is also when the
+  // "copied!" feedback (the success icon) should be shown.
+  const isVisible = computed(() => tooltipTimeout.value !== null)
 
   function openTooltip(message = succeedMessage): Promise<void> {
     tooltipContent.value = resolveMessage(message)
@@ -141,10 +139,10 @@ export function useHapticCopy(options: UseHapticCopyOptions = {}): UseHapticCopy
     return Promise.resolve()
   }
 
-  function closeTooltip(): Promise<void> {
-    clearTimeout(tooltipTimeout.value)
+  function close(): Promise<void> {
+    clearTimeout(tooltipTimeout.value ?? undefined)
     showTooltip.value = false
-    tooltipTimeout.value = undefined
+    tooltipTimeout.value = null
     onHide?.()
     return Promise.resolve()
   }
@@ -152,7 +150,7 @@ export function useHapticCopy(options: UseHapticCopyOptions = {}): UseHapticCopy
   // Reset the single hide timer before scheduling a new one so back-to-back
   // copies never leave a stale reset running.
   function nextTimeout(fn = noop, delay = 0): Promise<unknown> {
-    clearTimeout(tooltipTimeout.value)
+    clearTimeout(tooltipTimeout.value ?? undefined)
     return new Promise((resolve) => {
       tooltipTimeout.value = setTimeout(resolve, delay)
     })
@@ -164,7 +162,7 @@ export function useHapticCopy(options: UseHapticCopyOptions = {}): UseHapticCopy
     try {
       onAttempt?.()
       await copyAction()
-      await openTooltip(succeedMessage)
+      await openTooltip()
       onSuccess?.()
     }
     catch (error) {
@@ -173,21 +171,19 @@ export function useHapticCopy(options: UseHapticCopyOptions = {}): UseHapticCopy
     }
     // Hide the feedback once the delay elapses, reading a reactive delay afresh.
     const delay = typeof hideDelay === 'function' ? hideDelay() : hideDelay
-    return nextTimeout(closeTooltip, delay)
+    return nextTimeout(close, delay)
   }
 
   onUnmounted(() => {
-    closeTooltip()
+    close()
   })
 
   return {
+    copy,
     tooltipContent,
     showTooltip,
-    tooltipTimeout,
-    copy,
-    openTooltip,
-    closeTooltip,
-    nextTimeout
+    isVisible,
+    close
   }
 }
 
