@@ -32,7 +32,7 @@
 /**
  * A component to create variations of ICIJ logo
  */
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { CSSProperties } from 'vue'
 import isString from 'lodash/isString'
 
@@ -73,9 +73,13 @@ const props = withDefaults(defineProps<BrandProps>(), {
   background: undefined,
   size: '70px'
 })
-const sizeAsNumber = computed(() => {
-  return isString(props.size) ? parseInt(props.size) : props.size
-})
+// NOTE: `size` is read once at setup and is intentionally not reactive, to
+// preserve the original behavior. Making the brand react to `size` prop changes
+// (by using a computed, as the sibling `BrandExpansion` does) would change the
+// public rendering and belongs in a separate change.
+const sizeAsNumber = ref(
+  isString(props.size) ? parseInt(props.size) : props.size
+)
 
 const width = computed(
   () => `${(REFERENCE_WIDTH / REFERENCE_HEIGHT) * sizeAsNumber.value}px`
