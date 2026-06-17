@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
-import keysFn from 'lodash/keys'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
-import sortByFn from 'lodash/sortBy'
-import without from 'lodash/without'
 import {
   ComponentPublicInstance,
   computed,
   getCurrentInstance,
   ref,
   nextTick,
+  toRef,
   watch
 } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
+import { useStackedChart } from '@/composables/useStackedChart'
 
 defineOptions({
   name: 'StackedColumnChart'
@@ -165,30 +164,21 @@ const {
   d3Formatter
 } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
 
-const sortedData = computed(() => {
-  if (!isLoaded.value) {
-    return []
-  }
-  return !props.sortBy
-    ? loadedData.value
-    : sortByFn(loadedData.value, props.sortBy)
-})
-
-const discoveredKeys = computed((): string[] => {
-  if (props.keys.length) {
-    return props.keys
-  }
-  if (!loadedData.value) {
-    return []
-  }
-  return without(keysFn(loadedData.value[0]), props.labelField)
-})
-
-const colorScale = computed((): (key: string) => string => {
-  return d3
-    .scaleOrdinal()
-    .domain(discoveredKeys.value)
-    .range(props.barColors) as unknown as (key: string) => string
+const {
+  sortedData,
+  discoveredKeys,
+  colorScale,
+  totalRowValue,
+  maxStackValue,
+  groupName
+} = useStackedChart({
+  loadedData,
+  isLoaded,
+  sortBy: toRef(() => props.sortBy),
+  keys: toRef(() => props.keys),
+  labelField: toRef(() => props.labelField),
+  groups: toRef(() => props.groups),
+  barColors: toRef(() => props.barColors)
 })
 
 const hasHighlights = computed(() => {
@@ -244,12 +234,7 @@ const barTooltipDelay = computed(() => {
 })
 
 const maxRowValue = computed(() => {
-  return (
-    props.maxValue
-    ?? (d3.max(loadedData.value || [], (datum, i) => {
-      return totalRowValue(i)
-    }) as number)
-  )
+  return props.maxValue ?? (maxStackValue.value as number)
 })
 
 function setSizes() {
@@ -261,11 +246,6 @@ function setSizes() {
     = props.fixedHeight !== null
       ? props.fixedHeight
       : width.value * baseHeightRatio.value
-}
-
-function groupName(key: string) {
-  const index = discoveredKeys.value.indexOf(key)
-  return props.groups[index] || key
 }
 
 function highlight(key: string) {
@@ -299,12 +279,6 @@ function isColumnHighlighted(i: string | number) {
   return (
     props.columnHighlights.includes(column) && !highlightedKeys.value.length
   )
-}
-
-function totalRowValue(i: string | number) {
-  return d3.sum(discoveredKeys.value, (key: string) => {
-    return sortedData.value[i as number][key]
-  })
 }
 
 function barStyle(i: string | number, key: string) {
