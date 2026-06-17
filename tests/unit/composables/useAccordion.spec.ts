@@ -49,4 +49,16 @@ describe('useAccordion', () => {
     emitAccordionNextStepEvent()
     expect(emit).toHaveBeenCalledWith('step-change', step3)
   })
+
+  it('reads the step ref reactively when navigating', () => {
+    const emit = vi.fn()
+    const step = ref(step1)
+    const { emitAccordionNextStepEvent } = useAccordion(step, ref(steps), emit)
+
+    // Move the active step forward through the ref, then navigate: the emitted
+    // neighbour must reflect the updated ref value, not the call-time snapshot.
+    step.value = step2
+    emitAccordionNextStepEvent()
+    expect(emit).toHaveBeenCalledWith('step-change', step3)
+  })
 })

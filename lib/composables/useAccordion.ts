@@ -20,11 +20,16 @@ type StepChangeEmit = (event: 'step-change', step: Step) => void
  * @param steps - Ref to the ordered list of all available steps.
  * @param emit - The component's emit function, used to raise `step-change`.
  * @returns The {@link Accordion} navigation API plus the `activeStepIndex` computed.
+ *   `activeStepIndex` and the predicate functions (`isActiveStep`,
+ *   `isPreviousStep`, `isFirstStep`, `isLastStep`) read the `step`/`steps` refs
+ *   live, so they stay reactive as the refs change. By contrast, the returned
+ *   `step` and `steps` values are plain snapshots captured at call time (NOT
+ *   reactive); they exist to satisfy the {@link Accordion} provide/inject
+ *   contract and will not update when the source refs change.
  * @example
- * const props = defineProps<{ step: Step; steps: Step[] }>()
- * const emit = defineEmits(['step-change'])
+ * import { toRef } from 'vue'
+ *
  * const accordion = useAccordion(toRef(props, 'step'), toRef(props, 'steps'), emit)
- * provide(AccordionKey, accordion)
  */
 export function useAccordion(
   step: Ref<Step>,
