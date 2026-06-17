@@ -44,13 +44,11 @@ export interface ChartPropsRefs {
  *
  * @param props - The chart component props (typically from `defineProps`).
  * @returns A {@link ChartPropsRefs} object exposing each chart prop as its own ref.
+ * @remarks Internal building block consumed by {@link useChart}; not exported from the package root.
  * @example
- * <script setup>
- * import { getChartProps, useChart } from '@icij/murmur-next'
- *
+ * // Inside a chart component, alongside chartProps() and useChart():
  * const props = defineProps(chartProps())
  * const chart = useChart(resizableRef, getChartProps(props), { emit }, isLoaded)
- * </script>
  */
 export function getChartProps(props: {
   chartHeightRatio?: number
@@ -72,12 +70,10 @@ export function getChartProps(props: {
  * Builds the shared Vue prop definitions every chart component accepts.
  *
  * @returns A {@link ChartPropsDefinition} object passable to `defineProps`.
+ * @remarks Internal building block used by chart components together with {@link useChart}; not exported from the package root.
  * @example
- * <script setup>
- * import { chartProps } from '@icij/murmur-next'
- *
+ * // Inside a chart component's <script setup>:
  * const props = defineProps(chartProps())
- * </script>
  */
 export const chartProps = (): ChartPropsDefinition => ({
   data: {
@@ -155,13 +151,25 @@ export interface UseChartReturn {
  * @returns A {@link UseChartReturn} with reactive state (`loadedData`, `mounted`, `dataHasHighlights`, `baseHeightRatio`) and helpers (`elementsMaxBBox`, `xAxisYearFormat`, `d3Formatter`).
  * @example
  * <script setup>
- * import { useChart, getChartProps, chartProps, chartEmits } from '@icij/murmur-next'
+ * import { ref } from 'vue'
+ * import { useChart } from '@icij/murmur-next'
  *
- * const props = defineProps(chartProps())
- * const emit = defineEmits(chartEmits)
+ * const resizableRef = ref()
+ * const emit = defineEmits(['resized', 'loaded'])
  * const isLoaded = ref(false)
- * const { loadedData, baseHeightRatio } = useChart(resizableRef, getChartProps(props), { emit }, isLoaded)
+ * const chartProps = {
+ *   data: ref([]),
+ *   dataUrlType: ref('json'),
+ *   chartHeightRatio: ref(undefined),
+ *   socialMode: ref(false),
+ *   socialModeRatio: ref(5 / 4)
+ * }
+ * const { loadedData, baseHeightRatio } = useChart(resizableRef, chartProps, { emit }, isLoaded)
  * </script>
+ *
+ * <template>
+ *   <div ref="resizableRef">{{ loadedData }}</div>
+ * </template>
  */
 export function useChart(
   resizableRef: Ref<ComponentPublicInstance<HTMLElement> | null>,
