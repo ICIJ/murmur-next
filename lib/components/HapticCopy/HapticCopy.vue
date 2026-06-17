@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { BButton, BTooltip, PopoverPlacement, ButtonVariant } from 'bootstrap-vue-next'
-import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
 import {
   ComponentPublicInstance,
   computed,
-  nextTick,
-  onUnmounted,
   ref,
   type Component
 } from 'vue'
@@ -15,6 +12,7 @@ import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/App/AppIcon.vue'
 import AppIconLayers from '@/components/App/AppIconLayers.vue'
 
+import { useHapticCopy } from '@/composables/useHapticCopy'
 import { copyHtml, copyText } from '@/utils/clipboard'
 import IPhCheckFatFill from '~icons/ph/check-fat-fill'
 import IPhClipboard from '~icons/ph/clipboard'
@@ -82,9 +80,6 @@ const emit = defineEmits(['attempt', 'success', 'error', 'hideClipboardTooltip']
 const { t, te } = useI18n()
 const tooltip = ref<ComponentPublicInstance | null>(null)
 const el = ref<ComponentPublicInstance<HTMLElement> | null>(null)
-const tooltipContent = ref<string>('')
-const tooltipTimeout = ref<ReturnType<typeof setTimeout> | undefined>(undefined)
-const showClipboardTooltip = ref(false)
 const buttonId = computed(() => uniqueId('haptic-copy-'))
 const buttonBinding = computed(() => {
   if (props.tag?.props?.['variant']) {
@@ -93,81 +88,59 @@ const buttonBinding = computed(() => {
   return { }
 })
 
-function copyTextToClipboard(): Promise<void> {
+// Use clipboard.js internally, copying either rich HTML or plain text.
+function copyTextOrHtml(): void | Promise<void> {
+  if (props.html) {
+    return copyHtml(String(props.text), String(props.plain ?? props.text))
+  }
   return el.value ? copyText(String(props.text), el.value.$el) : Promise.resolve()
 }
 
-function copyHtmlToClipboard(): void {
-  return copyHtml(String(props.text), String(props.plain ?? props.text))
+// Resolve a known i18n key to its translation, leaving arbitrary strings as-is.
+function resolveTooltipMessage(message: string): string {
+  return te(message) ? t(message) : message
 }
 
-function copyTextOrHtml() {
-  return props.html ? copyHtmlToClipboard() : copyTextToClipboard()
-}
-
-async function copy(): Promise<void> {
-  try {
-    /**
-     * Emitted when an attempt to copy text is made
-     *
-     * @event attempt
-     */
-    emit('attempt')
-    // Use clipboard.js internally
-    await copyTextOrHtml()
-    // Then option the tooltip in case of success
-    await openTooltip('haptic-copy.tooltip.succeed')
-    /**
-     * Emitted when the text has been copied successfully
-     *
-     * @event success
-     */
-    emit('success')
-  }
-  catch (error) {
-    await openTooltip('haptic-copy.tooltip.failed')
-    /**
-     * Emitted when the text couldn't be copied
-     *
-     * @event error
-     */
-    emit('error', error)
-  }
-  // And close the tooltip after a short delay
-  return nextTimeout(closeTooltip, props.tooltipHideDelay)
-}
-
-function getTooltipContent(msg: string) {
-  return te(msg) ? t(msg) : msg
-}
-
-async function openTooltip(msg = 'haptic-copy.tooltip.succeed') {
-  tooltipContent.value = getTooltipContent(msg)
-  showClipboardTooltip.value = true
-}
-
-async function closeTooltip() {
-  clearTimeout(tooltipTimeout.value)
-  showClipboardTooltip.value = false
-  tooltipTimeout.value = undefined
-  emit('hideClipboardTooltip')
-}
-
-function nextTimeout(fn = noop, delay = 0) {
-  clearTimeout(tooltipTimeout.value)
-  return new Promise((resolve) => {
-    tooltipTimeout.value = setTimeout(resolve, delay)
-  })
-    .finally(nextTick)
-    .then(fn)
-}
-
-onUnmounted(() => {
-  closeTooltip()
+const {
+  tooltipContent,
+  showTooltip: showClipboardTooltip,
+  tooltipTimeout,
+  copy,
+  openTooltip,
+  closeTooltip,
+  nextTimeout
+} = useHapticCopy({
+  copy: copyTextOrHtml,
+  resolveMessage: resolveTooltipMessage,
+  hideDelay: () => props.tooltipHideDelay,
+  /**
+   * Emitted when an attempt to copy text is made
+   *
+   * @event attempt
+   */
+  onAttempt: () => emit('attempt'),
+  /**
+   * Emitted when the text has been copied successfully
+   *
+   * @event success
+   */
+  onSuccess: () => emit('success'),
+  /**
+   * Emitted when the text couldn't be copied
+   *
+   * @event error
+   */
+  onError: error => emit('error', error),
+  onHide: () => emit('hideClipboardTooltip')
 })
 
 defineExpose({
-  hide: closeTooltip
+  hide: closeTooltip,
+  copy,
+  openTooltip,
+  closeTooltip,
+  nextTimeout,
+  tooltipContent
 })
 </script>
 
