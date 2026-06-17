@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { isString } from 'lodash'
 import * as d3 from 'd3'
-import * as scaleFunctions from 'd3-scale'
 import {
   ref,
   computed,
@@ -11,12 +9,12 @@ import {
   toRef
 } from 'vue'
 
+import { useLegendScale } from '@/composables/useLegendScale'
+import type { ColorScaleFn } from '@/composables/useLegendScale'
+
 defineOptions({
   name: 'ScaleLegend'
 })
-
-type ColorScaleFn = (v?: number) => string
-type WidthScaleFn = (x: number) => string
 
 export interface LegendScaleProps {
   width?: number
@@ -43,6 +41,23 @@ const props = withDefaults(defineProps<LegendScaleProps>(), {
   colorScaleStart: '#fff'
 })
 
+const {
+  colorScaleFunction,
+  widthScale,
+  widthScaleColor,
+  colorScaleWidthRange,
+  hasCursor,
+  cursorLeft
+} = useLegendScale({
+  width: toRef(() => props.width),
+  min: toRef(() => props.min),
+  max: toRef(() => props.max),
+  cursorValue: toRef(() => props.cursorValue),
+  colorScale: toRef(() => props.colorScale),
+  colorScaleStart: toRef(() => props.colorScaleStart),
+  colorScaleEnd: toRef(() => props.colorScaleEnd)
+})
+
 const cursorWrapperOffset = ref(0)
 const mounted = ref(false)
 const el = ref<Element | null>(null)
@@ -62,11 +77,6 @@ onMounted(async () => {
   mounted.value = true
 })
 
-const cursorLeft = computed((): string => {
-  const left = cursorLeftScale.value(props.cursorValue)
-  return isNaN(left) ? '0%' : `${left}%`
-})
-
 const colorScaleBaseCanvas = computed((): HTMLCanvasElement | null => {
   return d3
     .create('canvas')
@@ -84,46 +94,6 @@ const colorScaleBase64 = computed((): string | undefined => {
     return colorScaleBaseCanvas.value?.toDataURL() ?? undefined
   }
   return undefined
-})
-
-const colorScaleWidthRange = computed((): number[] => {
-  return d3.range(1, props.width + 1)
-})
-
-const hasCursor = computed((): boolean => {
-  return props.cursorValue != null // double equal also tests undefined
-})
-
-const colorScaleFunction = computed((): ColorScaleFn => {
-  if (isString(props.colorScale)) {
-    const fn: () => any = (scaleFunctions as unknown as Record<string, () => any>)[props.colorScale]
-    return fn()
-      .domain([props.min, props.max])
-      .range([props.colorScaleStart, props.colorScaleEnd])
-  }
-  return props.colorScale
-})
-
-const cursorLeftScale = computed((): d3.ScaleLinear<number, number> => {
-  return d3
-    .scaleLinear()
-    .domain([props.min, props.max])
-    .range([0, 100])
-    .interpolate(d3.interpolateRound)
-})
-
-const widthScaleColor = computed((): WidthScaleFn => {
-  return (x: number) => {
-    const value = widthScale.value(x)
-    return colorScaleFunction.value(value)
-  }
-})
-
-const widthScale = computed((): d3.ScaleLinear<number, number> => {
-  return d3
-    .scaleLinear()
-    .domain([0, props.width])
-    .range([props.min, props.max])
 })
 
 const formatNumber = d3.format(',')

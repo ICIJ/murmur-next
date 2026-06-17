@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { get, isFunction, kebabCase } from 'lodash'
-import * as d3 from 'd3'
-import { computed } from 'vue'
+import { get, kebabCase } from 'lodash'
+import { computed, toRef } from 'vue'
 
+import { useLegendMarker } from '@/composables/useLegendMarker'
 import { LegendCategory } from '@/enums'
 
 defineOptions({
@@ -34,25 +34,9 @@ const emit = defineEmits<{
   'update:highlight': [value: string | number | null]
 }>()
 
-const markerBoundingClientRect = computed((): DOMRect | undefined => {
-  const svg = d3
-    .select('body')
-    .append('svg')
-    .attr('width', 2046)
-    .attr('height', 2046)
-  const marker = svg.append('path').attr('d', markerPathFunction())
-  const rect: DOMRect | undefined = marker.node()?.getBoundingClientRect()
-  svg.remove()
-  return rect
-})
-
-const markerViewbox = computed(() => {
-  const { width, height } = markerBoundingClientRect.value ?? {
-    width: 0,
-    height: 0
-  }
-  return `0 0 ${width} ${height}`
-})
+const { markerViewbox, markerPathFunction } = useLegendMarker(
+  toRef(() => props.markerPath)
+)
 
 const classList = computed(() => {
   return {
@@ -69,12 +53,6 @@ function itemClassList(d: Datum) {
     'ordinal-legend__item--highlighted': id === props.highlight,
     'ordinal-legend__item--selected': id === props.value
   }
-}
-
-function markerPathFunction(d?: Datum): string {
-  return isFunction(props.markerPath) && d
-    ? props.markerPath(d)
-    : props.markerPath as string
 }
 
 function update(d: Datum) {
