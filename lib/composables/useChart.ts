@@ -1,19 +1,21 @@
-import * as d3 from 'd3'
-import isFunction from 'lodash/isFunction'
 import isObject from 'lodash/isObject'
 import isString from 'lodash/isString'
 import max from 'lodash/max'
-import some from 'lodash/some'
-import { ComponentPublicInstance, computed, toRef, toValue, ref, watch, onMounted, nextTick } from 'vue'
+import { ComponentPublicInstance, toRef, ref, onMounted, nextTick, watch } from 'vue'
 import { isUrl } from '@/utils/strings'
 import type { Ref, SetupContext, ComputedRef } from 'vue'
 import { useResizeObserver } from '@/composables/useResizeObserver'
+import { useChartData } from '@/composables/useChartData'
+import { useChartFormat } from '@/composables/useChartFormat'
+import type { ChartData, LoadedData } from '@/composables/useChartData'
+
+// Re-exported so the public type surface of this module is unchanged even
+// though the underlying definitions now live in the data sub-composable.
+export type { ChartData, LoadedData }
 
 type ChartContext<T extends string[]> = SetupContext<[...T, ...string[]]>
 
 type ChartEmit = Pick<ChartContext<['resized', 'loaded']>, 'emit'>
-
-export type ChartData = object[] | Record<string, number> | string | null
 
 interface ChartPropsDefinition {
   chartHeightRatio: { type: NumberConstructor }
@@ -116,8 +118,6 @@ export const chartProps = (): ChartPropsDefinition => ({
 
 export const chartEmits = ['resized', 'loaded']
 
-export type LoadedData = object[] | Record<string, number> | null
-
 export interface ElementsMaxBBoxOptions {
   selector?: string
   defaultWidth?: number | null
@@ -180,10 +180,7 @@ export function useChart(
   afterLoaded?: () => Promise<void>
 ): UseChartReturn {
   const { resizeRef, resizeState } = useResizeObserver(resizableRef)
-  const loadedData = ref<LoadedData>(null)
   const mounted = ref<boolean>(false)
-  const dataRef = toRef(props.data)
-  const dataUrlTypeRef = toRef(props.dataUrlType)
 
   onMounted(() => {
     return nextTick(() => {
@@ -191,29 +188,33 @@ export function useChart(
     })
   })
 
-  watch([dataRef, dataUrlTypeRef], async () => {
-    await document.fonts?.ready
+  // Data loading: delegate fetching/parsing to the data sub-composable and run
+  // the lifecycle side effects in the order consumers depend on once a load
+  // settles (after the optional afterLoaded hook, flip isLoaded, emit loaded,
+  // then run the initial resize).
+  const { loadedData } = useChartData(
+    { data: props.data, dataUrlType: props.dataUrlType },
+    async (data) => {
+      await afterLoaded?.()
+      isLoaded.value = true
+      emit('loaded', data)
 
-    const data = toValue(dataRef)
-    const dataUrlType = toValue(dataUrlTypeRef)
-
-    if (isString(data)) {
-      // @ts-expect-error introspection in typescript is tricky
-      loadedData.value = await d3[dataUrlType](data)
+      if (onResized) {
+        onResized()
+        emit('resized')
+      }
     }
-    else {
-      loadedData.value = data as unknown as []
-    }
+  )
 
-    await afterLoaded?.()
-    isLoaded.value = true
-    emit('loaded', loadedData.value)
-
-    if (onResized) {
-      onResized()
-      emit('resized')
-    }
-  }, { immediate: true })
+  // Formatting and derived config (value formatter, base height ratio, highlight
+  // detection) live in the format sub-composable; they hold no DOM state.
+  const { dataHasHighlights, baseHeightRatio, d3Formatter } = useChartFormat({
+    loadedData,
+    rawData: toRef(props.data),
+    chartHeightRatio: props.chartHeightRatio,
+    socialMode: props.socialMode,
+    socialModeRatio: props.socialModeRatio
+  })
 
   function elementsMaxBBox({
     selector = 'text',
@@ -246,38 +247,6 @@ export function useChart(
     // previously using narrowWidth, but it is automatically updated through resizeObserver state reactivity
     return resizeState.narrowWidth ? '’' + String(year).slice(2, 4) : year
   }
-
-  function highlighted(datum: { highlight: boolean }) {
-    return datum.highlight
-  }
-
-  function d3Formatter(value: any, formatter: any) {
-    if (isFunction(formatter)) {
-      return formatter(value)
-    }
-    else if (isString(formatter)) {
-      return d3.format(formatter)(value)
-    }
-    return value
-  }
-
-  const baseHeightRatio = computed(() => {
-    const chartHeightRatio = toValue(props.chartHeightRatio)
-    const socialMode = toValue(props.socialMode)
-    const socialModeRatio = toValue(props.socialModeRatio)
-    return chartHeightRatio || (socialMode ? socialModeRatio : 9 / 16)
-  })
-
-  const dataHasHighlights = computed(() => {
-    // Prefer loadedData (so URL-fetched data is inspected), but fall back to the
-    // raw prop so a synchronously-passed array reports highlights on first paint
-    // rather than flickering once the load watcher resolves.
-    const data = loadedData.value ?? toValue(dataRef)
-    if (Array.isArray(data)) {
-      return some(data, highlighted)
-    }
-    return false
-  })
 
   watch(resizeState.dimensions, () => {
     if (isLoaded.value && onResized) {
