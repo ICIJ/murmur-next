@@ -71,6 +71,16 @@ describe('useTexturedDeck', () => {
     })
   })
 
+  it('returns an undefined texture name / texture-undefined.jpg for an out-of-range numeric index', () => {
+    // A numeric index is intentionally not clamped; an out-of-range number
+    // yields an undefined texture name (latent edge preserved).
+    const { style } = buildTexturedDeck({
+      modelValue: ref(99),
+      backgroundBaseUrl: ref('https://example.com')
+    })
+    expect(style.value.backgroundImage).toContain('texture-undefined.jpg')
+  })
+
   it('reacts to a change of the model value', () => {
     const modelValue = ref<DeckTexture | number>(DeckTexture.Brick)
     const { textureName } = buildTexturedDeck({ modelValue })
