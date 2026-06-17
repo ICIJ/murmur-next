@@ -19,7 +19,6 @@ defineExpose({ ...props })
 
 <template>
   <source
-    ref="element"
     class="image-mode-source"
     :src="src"
     :data-src="src"
