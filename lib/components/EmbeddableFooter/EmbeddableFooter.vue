@@ -1,61 +1,8 @@
-<template>
-  <div class="embeddable-footer p-2 text-nowrap">
-    <a
-      :href="homeUrl"
-      target="_blank"
-      class="text-white embeddable-footer__brand"
-      :class="{ 'embeddable-footer__brand--no-divider': hideDivider }"
-    >
-      <brand
-        :size="logoHeight"
-        no-border
-        class="me-2"
-        color="white"
-      />
-      <!-- @slot Slot to redefine title display -->
-      <slot name="title">
-        <span v-html="title" />
-      </slot>
-    </a>
-    <div class="embeddable-footer__lead small text-truncate">
-      <!-- @slot Main slot to redefine lead text display -->
-      <slot :lead="lead">
-        <span v-html="lead" />
-      </slot>
-    </div>
-    <!-- @slot Override the sharing button -->
-    <slot
-      name="sharing-button"
-      v-bind="{ sharingOptionsValues }"
-    >
-      <button
-        class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
-        :class="{ active: showShareOptions }"
-        @click="showShareOptions = !showShareOptions"
-      >
-        <app-icon size="1.2em">
-          <i-ph-share-network-fill />
-        </app-icon>
-        <span class="visually-hidden">{{ $t('embeddable-footer.share') }}</span>
-      </button>
-    </slot>
-    <sharing-options
-      v-if="showShareOptions"
-      :values="sharingOptionsValues"
-      direction="column-reverse"
-      :iframe-min-height="iframeMinHeight"
-      :iframe-min-width="iframeMinWidth"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-
-import IframeResizer from '@/utils/iframe-resizer'
 import Brand from '@/components/Brand/Brand.vue'
 import AppIcon from '@/components/App/AppIcon.vue'
 import SharingOptions from '@/components/SharingOptions/SharingOptions.vue'
+import { useEmbeddableFooter } from '@/composables/useEmbeddableFooter'
 import config from '@/config'
 
 export interface EmbeddableFooterProps {
@@ -104,14 +51,59 @@ withDefaults(defineProps<EmbeddableFooterProps>(), {
   logoHeight: 40
 })
 
-// Reactive state
-const showShareOptions = ref(false)
-
-onMounted(() => {
-  IframeResizer.create()
-})
-
+const { showShareOptions, toggleShareOptions } = useEmbeddableFooter()
 </script>
+
+<template>
+  <div class="embeddable-footer p-2 text-nowrap">
+    <a
+      :href="homeUrl"
+      target="_blank"
+      class="text-white embeddable-footer__brand"
+      :class="{ 'embeddable-footer__brand--no-divider': hideDivider }"
+    >
+      <brand
+        :size="logoHeight"
+        no-border
+        class="me-2"
+        color="white"
+      />
+      <!-- @slot Slot to redefine title display -->
+      <slot name="title">
+        <span v-html="title" />
+      </slot>
+    </a>
+    <div class="embeddable-footer__lead small text-truncate">
+      <!-- @slot Main slot to redefine lead text display -->
+      <slot :lead="lead">
+        <span v-html="lead" />
+      </slot>
+    </div>
+    <!-- @slot Override the sharing button -->
+    <slot
+      name="sharing-button"
+      v-bind="{ sharingOptionsValues }"
+    >
+      <button
+        class="btn btn-link text-white btn-sm py-0 embeddable-footer__share-btn"
+        :class="{ active: showShareOptions }"
+        @click="toggleShareOptions"
+      >
+        <app-icon size="1.2em">
+          <i-ph-share-network-fill />
+        </app-icon>
+        <span class="visually-hidden">{{ $t('embeddable-footer.share') }}</span>
+      </button>
+    </slot>
+    <sharing-options
+      v-if="showShareOptions"
+      :values="sharingOptionsValues"
+      direction="column-reverse"
+      :iframe-min-height="iframeMinHeight"
+      :iframe-min-width="iframeMinWidth"
+    />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import '../../styles/mixins';
