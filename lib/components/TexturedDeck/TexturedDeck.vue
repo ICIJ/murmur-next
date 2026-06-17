@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { clamp } from 'lodash'
-import { computed, useAttrs } from 'vue'
+import { computed, toRef, useAttrs } from 'vue'
 
+import { useTexturedDeck } from '@/composables/useTexturedDeck'
+import type { TexturedDeckValue } from '@/composables/useTexturedDeck'
 import { DeckTexture } from '@/enums'
 import config from '@/config'
 
 defineOptions({
   name: 'TexturedDeck'
 })
-
-type TexturedDeckValue = DeckTexture | number
 
 export interface TexturedDeckProps {
   /**
@@ -44,44 +43,17 @@ const props = withDefaults(defineProps<TexturedDeckProps>(), {
 
 const attrs = useAttrs()
 
-const names = computed((): DeckTexture[] => {
-  return Object.values(DeckTexture)
+const { style } = useTexturedDeck({
+  modelValue: toRef(props, 'modelValue'),
+  size: toRef(props, 'size'),
+  black: toRef(props, 'black'),
+  backgroundBaseUrl: toRef(props, 'backgroundBaseUrl')
 })
 
-const textureIndex = computed((): number => {
-  if (typeof props.modelValue !== 'number') {
-    return clamp(
-      names.value.indexOf(props.modelValue),
-      0,
-      names.value.length - 1
-    )
-  }
-  return props.modelValue
-})
-
-const textureName = computed((): string => {
-  return names.value[textureIndex.value]
-})
-
-const filename = computed((): string => {
-  if (props.black) {
-    return `texture-${textureName.value}-black.jpg`
-  }
-  return `texture-${textureName.value}.jpg`
-})
-
-const backgroundUrl = computed((): string => {
-  return `${props.backgroundBaseUrl}/assets/img/${filename.value}`
-})
-
-const backgroundSize = computed((): string => {
-  return props.size
-})
-
-const backgroundImage = computed((): string => {
-  return `url("${backgroundUrl.value}")`
-})
-
+// NOTE: latent behaviour preserved — every prop (modelValue, size, black,
+// backgroundBaseUrl) is forwarded onto the root element as an attribute, on
+// top of Vue's automatic attribute fallthrough. The `tag` prop is dropped so
+// it does not surface as an attribute on the rendered element.
 const inheritedProps = computed((): object => {
   return { ...attrs, ...props, tag: undefined }
 })
@@ -90,7 +62,7 @@ const inheritedProps = computed((): object => {
 <template>
   <component
     :is="tag"
-    :style="{ backgroundSize, backgroundImage }"
+    :style="style"
     v-bind="inheritedProps"
     class="textured-deck"
   >
