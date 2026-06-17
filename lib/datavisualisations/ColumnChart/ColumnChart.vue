@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { ComponentPublicInstance, computed, getCurrentInstance, ref, watch } from 'vue'
-import { identity, iteratee, sortBy as sortByFn } from 'lodash'
+import { ComponentPublicInstance, computed, getCurrentInstance, ref, toRef, watch } from 'vue'
+import { identity } from 'lodash'
 import * as d3 from 'd3'
 
 import { getChartProps, useChart } from '@/composables/useChart'
+import { useColumnChart } from '@/composables/useColumnChart'
 import AppIcon from '@/components/App/AppIcon.vue'
 
 defineOptions({
   name: 'ColumnChart'
 })
-
-interface ColumnBar {
-  datum: Record<string, any>
-  width: number
-  height: number
-  x: number
-  y: number
-  isTotal?: boolean
-}
 
 export interface ColumnChartProps {
   /**
@@ -207,22 +199,15 @@ const {
   dataHasHighlights
 } = useChart(el, getChartProps(props), { emit }, isLoaded, setSizes)
 
-const sortedData = computed((): object[] => {
-  if (!loadedData.value) {
-    return []
-  }
-  return !props.sortBy
-    ? loadedData.value
-    : sortByFn(loadedData.value, props.sortBy)
-})
-
+// Label and bucket dimensions are measured from the rendered SVG ticks, so they
+// stay in the component (the geometry composable holds no DOM state) and feed it.
 const labelWidth = computed((): number => {
   if (props.fixedLabelWidth) {
     return props.fixedLabelWidth
   }
   const selector = '.column-chart__axis--y .tick text'
   const defaultWidth = 100
-  return elementsMaxBBox({ selector, defaultWidth }).width
+  return elementsMaxBBox({ selector, defaultWidth }).width as number
 })
 
 const labelHeight = computed((): number => {
@@ -231,7 +216,7 @@ const labelHeight = computed((): number => {
   }
   const selector = '.column-chart__axis--y .tick text'
   const defaultHeight = 10
-  return elementsMaxBBox({ selector, defaultHeight }).height
+  return elementsMaxBBox({ selector, defaultHeight }).height as number
 })
 
 const bucketHeight = computed((): number => {
@@ -240,160 +225,55 @@ const bucketHeight = computed((): number => {
   }
   const selector = '.column-chart__axis--x .tick text'
   const defaultHeight = 10
-  return elementsMaxBBox({ selector, defaultHeight }).height
+  return elementsMaxBBox({ selector, defaultHeight }).height as number
 })
 
 const bucketWidth = computed((): number => {
   const selector = '.column-chart__axis--x .tick text'
   const defaultWidth = 100
-  return elementsMaxBBox({ selector, defaultWidth }).width
+  return elementsMaxBBox({ selector, defaultWidth }).width as number
 })
 
-const margin = computed(
-  (): { left: number, right: number, top: number, bottom: number } => {
-    return {
-      left: props.noYAxis ? 0 : labelWidth.value + 10,
-      right: 0,
-      top: labelHeight.value / 2,
-      bottom: props.noXAxis ? 0 : bucketHeight.value + 10
-    }
-  }
-)
-
-const padded = computed((): { width: number, height: number } => {
-  const widthP = Math.max(0, width.value - margin.value.left - margin.value.right)
-  const heightP = Math.max(0, height.value - margin.value.top - margin.value.bottom)
-  return { width: widthP, height: heightP }
+const {
+  sortedData,
+  margin,
+  padded,
+  scaleX,
+  scaleY,
+  waterfallTotalValue,
+  bars,
+  xAxisHiddenTicks,
+  xAxisTickValues,
+  xAxis,
+  yAxis
+} = useColumnChart({
+  loadedData,
+  width,
+  height,
+  labelWidth,
+  labelHeight,
+  bucketHeight,
+  bucketWidth,
+  d3Formatter,
+  sortBy: toRef(() => props.sortBy),
+  seriesName: toRef(() => props.seriesName),
+  timeseriesKey: toRef(() => props.timeseriesKey),
+  maxValue: toRef(() => props.maxValue),
+  barPadding: toRef(() => props.barPadding),
+  barMargin: toRef(() => props.barMargin),
+  noXAxis: toRef(() => props.noXAxis),
+  noYAxis: toRef(() => props.noYAxis),
+  xAxisTickCollapse: toRef(() => props.xAxisTickCollapse),
+  xAxisTickFormat: toRef(() => props.xAxisTickFormat),
+  xAxisTicks: toRef(() => props.xAxisTicks),
+  yAxisTickFormat: toRef(() => props.yAxisTickFormat),
+  yAxisTicks: toRef(() => props.yAxisTicks),
+  waterfall: toRef(() => props.waterfall),
+  waterfallTotal: toRef(() => props.waterfallTotal),
+  waterfallTotalLabel: toRef(() => props.waterfallTotalLabel)
 })
 
-const scaleX = computed((): d3.ScaleBand<string> => {
-  const domain = sortedData.value.map(iteratee(props.timeseriesKey))
-  if (props.waterfall && props.waterfallTotal) {
-    domain.push(props.waterfallTotalLabel)
-  }
-  return d3
-    .scaleBand()
-    .domain(domain)
-    .range([0, padded.value.width])
-    .padding(props.barPadding)
-})
-
-const waterfallTotalValue = computed((): number => {
-  return d3.sum(sortedData.value, iteratee(props.seriesName)) ?? 0
-})
-
-const scaleY = computed((): d3.ScaleLinear<number, number> => {
-  let maxValue: number
-  if (props.waterfall) {
-    maxValue = props.maxValue ?? waterfallTotalValue.value
-  }
-  else {
-    maxValue = props.maxValue ?? d3.max(sortedData.value, iteratee(props.seriesName)) ?? 0
-  }
-  return d3
-    .scaleLinear()
-    .domain([0, maxValue])
-    .range([padded.value.height, 0])
-})
-
-const bars = computed((): ColumnBar[] => {
-  const barWidth = Math.max(1, Math.abs(scaleX.value.bandwidth()) - props.barMargin)
-
-  if (props.waterfall) {
-    let cumulative = 0
-    const waterfallBars: ColumnBar[] = sortedData.value.map((datum: any) => {
-      const value = datum[props.seriesName]
-      cumulative += value
-      return {
-        datum,
-        width: barWidth,
-        height: Math.abs(padded.value.height - scaleY.value(value)),
-        x: (scaleX.value(datum[props.timeseriesKey]) ?? 0) + props.barMargin / 2,
-        y: scaleY.value(cumulative)
-      }
-    })
-
-    if (props.waterfallTotal) {
-      const totalDatum = {
-        [props.timeseriesKey]: props.waterfallTotalLabel,
-        [props.seriesName]: waterfallTotalValue.value
-      }
-      waterfallBars.push({
-        datum: totalDatum,
-        width: barWidth,
-        height: Math.abs(padded.value.height - scaleY.value(waterfallTotalValue.value)),
-        x: (scaleX.value(props.waterfallTotalLabel) ?? 0) + props.barMargin / 2,
-        y: scaleY.value(waterfallTotalValue.value),
-        isTotal: true
-      })
-    }
-
-    return waterfallBars
-  }
-
-  return sortedData.value.map((datum: any) => {
-    return {
-      datum,
-      width: barWidth,
-      height: Math.abs(
-        padded.value.height - scaleY.value(datum[props.seriesName])
-      ),
-      x:
-        (scaleX.value(datum[props.timeseriesKey]) ?? 0)
-        + props.barMargin / 2,
-      y: scaleY.value(datum[props.seriesName]) ?? 0
-    }
-  })
-})
-
-const xAxisHiddenTicks = computed((): number => {
-  if (!props.xAxisTickCollapse) {
-    return 0
-  }
-
-  const hiddenTicks = d3.range(1, sortedData.value.length).find((mod) => {
-    const bucketWidthT = bucketWidth.value * 1.5
-    return width.value / (bucketWidthT / mod) >= sortedData.value.length
-  })
-
-  return hiddenTicks ?? sortedData.value.length
-})
-
-const xAxisTickValues = computed((): string[] => {
-  // Either use the explicit `xAxisTicks` prop or use the data
-  const ticks
-    = props.xAxisTicks ?? sortedData.value.map(iteratee(props.timeseriesKey))
-  // Then filter out ticks according to `this.xAxisHiddenTicks`
-  const filtered = ticks.map((tick: string, i: number) => {
-    return (i + 1) % xAxisHiddenTicks.value ? null : tick
-  }) as string[]
-  // Add the total label for waterfall charts
-  if (props.waterfall && props.waterfallTotal) {
-    filtered.push(props.waterfallTotalLabel)
-  }
-  return filtered
-})
-
-const xAxis = computed((): d3.Axis<string> => {
-  return d3
-    .axisBottom(scaleX.value)
-    .tickFormat((d: any) => {
-      if (props.waterfall && props.waterfallTotal && d === props.waterfallTotalLabel) {
-        return d
-      }
-      return d3Formatter(d, props.xAxisTickFormat)
-    })
-    .tickValues(xAxisTickValues.value)
-})
-
-const yAxis = computed((): d3.Axis<d3.NumberValue> => {
-  return d3
-    .axisLeft(scaleY.value)
-    .tickFormat((d: any) => d3Formatter(d, props.yAxisTickFormat))
-    .ticks(props.yAxisTicks as number)
-})
-
-const activeBar = computed((): ColumnBar => bars.value[shownTooltip.value] ?? null)
+const activeBar = computed(() => bars.value[shownTooltip.value] ?? null)
 const activeBarId = computed((): string => columnUniqueId(shownTooltip.value))
 
 function formatXDatum(d: any) {
@@ -449,6 +329,22 @@ function highlighted(datum: any): boolean {
 
 watch([width, height, loadedData, mounted], update, { immediate: true })
 watch(() => props.socialMode, update, { immediate: true })
+
+// Expose the derived geometry so tests (and host apps) can read the scales and
+// dimensions the chart computes. Superset of the bindings poked by the specs.
+defineExpose({
+  sortedData,
+  margin,
+  padded,
+  scaleX,
+  scaleY,
+  waterfallTotalValue,
+  bars,
+  xAxisHiddenTicks,
+  xAxisTickValues,
+  xAxis,
+  yAxis
+})
 </script>
 
 <template>
