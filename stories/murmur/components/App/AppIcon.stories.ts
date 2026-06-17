@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { variantsArgType } from '~storybook/utils'
 import { AppIcon } from '@/components'
 
-// Icon imports
 import IPhUser from '~icons/ph/user'
 import IPhUserBold from '~icons/ph/user-bold'
 import IPhUserFill from '~icons/ph/user-fill'

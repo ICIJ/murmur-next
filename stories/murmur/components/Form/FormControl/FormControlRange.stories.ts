@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import { computed } from 'vue'
 import { range } from 'lodash'
+import { BBadge } from 'bootstrap-vue-next'
+
 import { FormControlRange } from '@/components'
 import { ColumnChart } from '@/datavisualisations'
-import { BBadge } from 'bootstrap-vue-next'
 
 const meta: Meta<typeof FormControlRange> = {
   title: 'Murmur/components/Form/FormControl/FormControlRange',

@@ -5,7 +5,6 @@ import { AppIcon, ButtonIcon } from '@/components'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
 import { VARIANT } from '@/enums'
 
-// Icon imports
 import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhUsers from '~icons/ph/users'
 import IPhUserCircle from '~icons/ph/user-circle'
@@ -211,6 +210,7 @@ export const LoadingSpinner: Story = {
     `
   })
 }
+
 export const AllSizes: Story = {
   render: () => ({
     components: { ButtonIcon },

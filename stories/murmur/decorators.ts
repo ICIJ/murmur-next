@@ -1,13 +1,9 @@
-import { BModal, BPopover, Size } from 'bootstrap-vue-next'
-import { SIZE } from '@/enums'
 import { ref, toRefs } from 'vue'
+import { BModal, BPopover, Size } from 'bootstrap-vue-next'
 import { geoOrthographic } from 'd3-geo'
-import { defineComponent } from 'vue'
-import { ChoroplethMap } from '@/maps'
 
-export default defineComponent({
-  components: { ChoroplethMap }
-})
+import { SIZE } from '@/enums'
+import { ChoroplethMap } from '@/maps'
 
 export const modalDecorator = (
   buttonLabel = 'Click to see the form',
