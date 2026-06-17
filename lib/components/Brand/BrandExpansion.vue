@@ -95,12 +95,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { isString } from 'lodash'
+import { toRef } from 'vue'
 
 import { BrandMode } from '@/enums'
-import type { BrandExpansionStyle } from '@/types'
-import { useBreakpoints } from '@vueuse/core'
+import { useBrandExpansion } from '@/composables/useBrandExpansion'
 
 /**
  * A component to create variations of ICIJ logo with text
@@ -151,42 +149,13 @@ const props = withDefaults(defineProps<BrandExpansionProps>(), {
   responsive: false
 })
 
-const breakpoints = useBreakpoints({
-  [BrandMode.Short]: 401.256,
-  [BrandMode.Medium]: 901.24,
-  [BrandMode.Long]: 1047.01
+const { width, height, style } = useBrandExpansion({
+  size: toRef(props, 'size'),
+  mode: toRef(props, 'mode'),
+  color: toRef(props, 'color'),
+  background: toRef(props, 'background'),
+  responsive: toRef(props, 'responsive')
 })
-const baseWidth = computed((): number => {
-  const widths: Record<BrandMode, number> = {
-    [BrandMode.Short]: 401.256,
-    [BrandMode.Medium]: 901.24,
-    [BrandMode.Long]: 1047.01
-  }
-  return widths[props.mode as BrandMode]
-})
-
-const sizeAsNumber = computed((): number => {
-  return isString(props.size) ? parseInt(props.size) : props.size
-})
-
-const width = computed((): string => {
-  if (props.responsive && breakpoints.smallerOrEqual(props.mode)) {
-    return '100%'
-  }
-  return `${(baseWidth.value / 200) * sizeAsNumber.value}px`
-})
-
-const height = computed((): string => {
-  return `${sizeAsNumber.value}px`
-})
-
-const style = computed((): BrandExpansionStyle => {
-  return {
-    '--monochrome-color': props.color,
-    'background': props.background
-  }
-})
-
 </script>
 
 <style scoped lang="scss">

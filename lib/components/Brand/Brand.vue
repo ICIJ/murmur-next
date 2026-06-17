@@ -32,9 +32,13 @@
 /**
  * A component to create variations of ICIJ logo
  */
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import type { CSSProperties } from 'vue'
 import isString from 'lodash/isString'
-import { CSSProperties } from 'vue'
+
+// The SVG viewBox is authored at this height; the width scales proportionally.
+const REFERENCE_HEIGHT = 200
+const REFERENCE_WIDTH = 147.151
 
 interface BrandProps {
   /**
@@ -69,11 +73,13 @@ const props = withDefaults(defineProps<BrandProps>(), {
   background: undefined,
   size: '70px'
 })
-const sizeAsNumber = ref(
-  isString(props.size) ? parseInt(props.size) : props.size
-)
+const sizeAsNumber = computed(() => {
+  return isString(props.size) ? parseInt(props.size) : props.size
+})
 
-const width = computed(() => `${(147.151 / 200) * sizeAsNumber.value}px`)
+const width = computed(
+  () => `${(REFERENCE_WIDTH / REFERENCE_HEIGHT) * sizeAsNumber.value}px`
+)
 const height = computed(() => `${sizeAsNumber.value}px`)
 
 const style = computed<BrandStyle>(() => {
