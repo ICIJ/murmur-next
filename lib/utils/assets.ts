@@ -2,34 +2,73 @@ import { memoize, flatten } from 'lodash'
 
 let assetUniqueIdCounter = 0
 
+function resolveAssetParent(): HTMLElement {
+  return document.querySelector('body') || document.querySelector('head')!
+}
+
+function fileExtension(file: string): string {
+  const parts = file.split('.')
+  return parts[parts.length - 1].toLowerCase()
+}
+
+function injectScript(
+  parent: HTMLElement,
+  file: string,
+  id: string,
+  resolve: (value?: unknown) => void,
+  reject: (reason?: unknown) => void
+): void {
+  const script = document.createElement('script')
+  script.setAttribute('type', 'text/javascript')
+  script.onload = resolve
+  script.onerror = reject
+  parent.appendChild(script)
+  script.setAttribute('src', file)
+  script.setAttribute('id', id)
+}
+
+function injectStylesheet(
+  parent: HTMLElement,
+  file: string,
+  id: string,
+  resolve: (value?: unknown) => void,
+  reject: (reason?: unknown) => void
+): void {
+  const css = document.createElement('link')
+  css.setAttribute('rel', 'stylesheet')
+  css.setAttribute('type', 'text/css')
+  css.onload = resolve
+  css.onerror = reject
+  parent.appendChild(css)
+  css.setAttribute('href', file)
+  css.setAttribute('id', id)
+}
+
+/**
+ * Inject a JS or CSS asset into the document, resolving once it loads.
+ *
+ * Results are memoized by file URL so the same asset is injected only once.
+ *
+ * @param file - The URL of the asset to inject; its extension selects the type.
+ * @param id - The element id to assign; defaults to a generated unique id.
+ * @returns A promise resolving when the asset loads and rejecting on failure
+ *   or on an unsupported extension.
+ * @example
+ * await injectAsset('https://example.com/widget.js')
+ */
 export const injectAsset = memoize(function (
   file: string,
   id = `dynamic-asset-${assetUniqueIdCounter++}`
 ): Promise<unknown> {
   const promise = new Promise((resolve: (value?: unknown) => void, reject: (reason?: unknown) => void) => {
-    const parent: HTMLElement
-      = document.querySelector('body') || document.querySelector('head')!
-    const parts = file.split('.')
-    const ext = parts[parts.length - 1].toLowerCase()
+    const parent = resolveAssetParent()
+    const ext = fileExtension(file)
 
     if (ext === 'js') {
-      const script = document.createElement('script')
-      script.setAttribute('type', 'text/javascript')
-      script.onload = resolve
-      script.onerror = reject
-      parent.appendChild(script)
-      script.setAttribute('src', file)
-      script.setAttribute('id', id)
+      injectScript(parent, file, id, resolve, reject)
     }
     else if (ext === 'css') {
-      const css = document.createElement('link')
-      css.setAttribute('rel', 'stylesheet')
-      css.setAttribute('type', 'text/css')
-      css.onload = resolve
-      css.onerror = reject
-      parent.appendChild(css)
-      css.setAttribute('href', file)
-      css.setAttribute('id', id)
+      injectStylesheet(parent, file, id, resolve, reject)
     }
     else {
       reject(new Error(`Unsupported asset extension: ${ext}`))
@@ -42,6 +81,17 @@ export const injectAsset = memoize(function (
   })
 })
 
+/**
+ * Inject several assets in parallel, resolving once all have settled.
+ *
+ * A failed asset still counts as settled so one broken URL cannot leave the
+ * batch promise pending forever.
+ *
+ * @param args - Asset URLs, either as separate arguments or nested arrays.
+ * @returns A promise resolving when every asset has loaded or failed.
+ * @example
+ * await injectAssets('a.js', 'b.css')
+ */
 export const injectAssets = function (...args: string[]): Promise<void> {
   const files = flatten(args)
   return new Promise((resolve: () => void) => {
@@ -56,8 +106,6 @@ export const injectAssets = function (...args: string[]): Promise<void> {
       }
     }
     for (const file of files) {
-      // Count a failed injection as "settled" too, otherwise one asset that
-      // fails to load leaves the batch promise pending forever.
       injectAsset(file)
         .then(allFilesLoaded)
         .catch(allFilesLoaded)
