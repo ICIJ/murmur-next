@@ -107,6 +107,10 @@ export function useDigitsModel(
     return filter(values.value, v => !isNaN(v as any)).join('')
   })
 
+  // Intentionally watches the ref object itself (not `values.value`) and relies
+  // on `{ deep: true }` to traverse into it — preserved verbatim from the
+  // original; do not "simplify" to `values` or `() => values.value`, as that
+  // changes the watcher's firing and timing.
   watch(
     () => values,
     (valuesRef: typeof values) => {
