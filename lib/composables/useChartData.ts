@@ -53,6 +53,8 @@ export interface UseChartData {
  * const { loadedData } = useChartData(
  *   { data: props.data, dataUrlType: props.dataUrlType },
  *   async (data) => {
+ *     // simplified — see useChart for the full load→emit ordering
+ *     // (afterLoaded → isLoaded → emit('loaded') → onResized → emit('resized'))
  *     await afterLoaded?.()
  *     emit('loaded', data)
  *   }
