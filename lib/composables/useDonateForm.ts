@@ -65,7 +65,10 @@ export interface UseDonateForm {
    */
   level: Ref<DonationCategory | null>
   /**
-   * Picks a level and resets the amount to its suggested value.
+   * Picks a level and resets the amount to its suggested value. Note that the
+   * suggested value is `undefined` once the amount is no longer pristine, so
+   * selecting a level after a manual edit blanks the amount (preserved legacy
+   * behavior).
    *
    * @param levelSelected - The tier the user clicked.
    */
@@ -127,6 +130,8 @@ export function useDonateForm(options: UseDonateFormOptions): UseDonateForm {
   })
 
   function getSuggestedAmount(): number | undefined {
+    // NOTE: returns undefined once the amount is no longer pristine — preserved
+    // legacy behavior; selectLevel will then blank the amount.
     if (!amountIsPristine.value) {
       return
     }
