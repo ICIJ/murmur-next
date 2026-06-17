@@ -25,7 +25,7 @@ const SOURCE_SELECTOR = '.image-mode-source'
  * import { useImageMode } from '@/composables/useImageMode'
  *
  * const element = useTemplateRef('element')
- * const { colorMode, src } = useImageMode(element, 'light', props.src)
+ * const { colorMode, src } = useImageMode(element, 'light', () => props.src)
  * </script>
  */
 export function useImageMode(
