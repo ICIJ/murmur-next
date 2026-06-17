@@ -70,10 +70,18 @@ describe('useMapProjection', () => {
     })
 
     it('honors a custom graticule step', () => {
-      const { graticuleLines } = useMapProjection(
+      const { graticuleLines: defaultStepLines } = useMapProjection(
+        createOptions()
+      )
+      const { graticuleLines: coarseStepLines } = useMapProjection(
         createOptions({ graticuleStep: ref([40, 40] as [number, number]) })
       )
-      expect(graticuleLines.value.type).toBe('MultiLineString')
+      // A coarser step (40 vs the default 20 degrees) yields fewer parallel and
+      // meridian lines, proving the step is actually applied rather than ignored.
+      expect(coarseStepLines.value.type).toBe('MultiLineString')
+      expect(coarseStepLines.value.coordinates.length).toBeLessThan(
+        defaultStepLines.value.coordinates.length
+      )
     })
   })
 

@@ -59,20 +59,40 @@ export interface UseMapProjectionOptions {
 export interface UseMapProjection {
   /**
    * The base projection, fitted to the map size and the geojson bounds.
+   *
+   * WARNING: this is a single d3 projection object mutated in place, not an
+   * immutable snapshot. Reading {@link initialMapProjection} or
+   * {@link rotatingMapProjection} re-centers/re-rotates THIS same instance, so
+   * its state reflects whichever of those was evaluated last. Treat it as a
+   * live view of the projection, not a stable value.
    */
   mapProjection: ComputedRef<GeoProjection>
   /**
    * The geo path generator bound to {@link mapProjection}.
+   *
+   * WARNING: this is the SAME GeoPath instance returned by
+   * {@link initialFeaturePath} — there is only one path generator. Reading
+   * `initialFeaturePath` repoints this generator at the initial projection, so
+   * both refs alias one mutated object rather than two independent generators.
    */
   featurePath: ComputedRef<GeoPath>
   /**
    * The projection used for the first render: spherical maps are rotated to
    * their center, fitted by height and translated to the middle; planar maps
    * are recentered on their planar center.
+   *
+   * WARNING: this does NOT return a new projection — it mutates
+   * {@link mapProjection} in place and returns that same instance. Evaluating
+   * it changes the base projection's center/rotation/translation as a side
+   * effect.
    */
   initialMapProjection: ComputedRef<GeoProjection>
   /**
    * The geo path generator bound to {@link initialMapProjection}.
+   *
+   * WARNING: this is the SAME GeoPath instance as {@link featurePath}, re-bound
+   * to {@link initialMapProjection}. Reading it repoints `featurePath` too;
+   * they are two views of one mutated generator.
    */
   initialFeaturePath: ComputedRef<GeoPath>
   /**
@@ -83,6 +103,10 @@ export interface UseMapProjection {
    * The base projection rotated by the transform's `rotateX`/`rotateY`, used
    * while a spherical map is dragged. Falls back to {@link mapProjection} when
    * no rotation is set.
+   *
+   * WARNING: when a rotation is set this mutates {@link mapProjection} in place
+   * (via `.rotate(...)`) and returns that same instance; it is not an
+   * independent projection.
    */
   rotatingMapProjection: ComputedRef<GeoProjection>
   /**
@@ -102,6 +126,12 @@ export interface UseMapProjection {
  * variants. It holds no DOM state — the measured size and parsed geojson are
  * passed in, and rendering stays in the component.
  *
+ * @remarks The returned projection/path refs are mutating VIEWS over two shared
+ * d3 objects, not independent snapshots: there is one projection (mutated in
+ * place by `initialMapProjection`/`rotatingMapProjection`) and one GeoPath
+ * (`featurePath` and `initialFeaturePath` are the same instance, re-bound on
+ * read). Reading one ref can change another's state as a side effect. See the
+ * per-field warnings on {@link UseMapProjection}.
  * @param options - Reactive projection options (see {@link UseMapProjectionOptions}).
  * @returns The {@link UseMapProjection} API of derived projection geometry.
  * @example
