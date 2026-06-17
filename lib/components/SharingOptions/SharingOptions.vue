@@ -1,27 +1,13 @@
 <script setup lang="ts">
-import get from 'lodash/get'
-import reduce from 'lodash/reduce'
-import {
-  computed,
-  ref,
-  type CSSProperties
-} from 'vue'
+import { computed, ref, type CSSProperties } from 'vue'
 
 import EmbedForm from '@/components/Form/FormEmbed.vue'
 import AppIcon from '@/components/App/AppIcon.vue'
 import SharingOptionsLink from '@/components/SharingOptions/SharingOptionsLink.vue'
 import config from '@/config'
 import IframeResizer from '@/utils/iframe-resizer'
+import { useSharingOptions } from '@/composables/useSharingOptions'
 import { BModal } from 'bootstrap-vue-next'
-
-interface MetaValuesMap {
-  url: string
-  title: string
-  description: string
-  facebook_title: string
-  facebook_description: string
-  facebook_media: string
-}
 
 export interface SharingOptionsProps {
   /**
@@ -76,60 +62,27 @@ const props = withDefaults(defineProps<SharingOptionsProps>(), {
 })
 
 const showEmbedForm = ref(false)
-const show = () => {
+function showEmbed(): void {
   showEmbedForm.value = true
 }
+
 const style = computed((): CSSProperties => {
   return {
     'flex-direction': props.direction
   } as CSSProperties
 })
 
-const metaValues = computed((): MetaValuesMap => {
-  return {
-    url: props.url ?? '',
-    title: defaultValueFor('sharing-options.title'),
-    description: defaultValueFor(
-      'sharing-options.description',
-      'meta[name="description"]'
-    ),
-    facebook_title: defaultValueFor(
-      'sharing-options.facebook_title',
-      'meta[property="og:title"]'
-    ),
-    facebook_description: defaultValueFor(
-      'sharing-options.description',
-      'meta[property="og:description"]'
-    ),
-    facebook_media: defaultValueFor(
-      'sharing-options.media',
-      'meta[property="og:image"]'
-    ),
-  }
+const { valuesFor } = useSharingOptions(
+  () => props.url,
+  () => props.values,
+  () => props.valuesKeys,
+  () => props.noMeta
+)
+
+// Exposed so consumers (and tests) can resolve a network's share values.
+defineExpose({
+  valuesFor
 })
-
-function valuesFor(network: string): Record<string, string> {
-  const values = Object.assign({}, metaValues.value, props.values)
-  return reduce(
-    props.valuesKeys,
-    (res: Record<string, string>, key) => {
-      res[key] = get(values, `${network}_${key}`, values[key])
-      return res
-    },
-    {}
-  )
-}
-
-function defaultValueFor(key: string, metaSelector?: string): string {
-  if (props.noMeta || !metaSelector) {
-    return config.get(key)
-  }
-  return get(
-    document.head.querySelector(metaSelector),
-    'content',
-    config.get(key)
-  )
-}
 </script>
 
 <template>
@@ -160,7 +113,7 @@ function defaultValueFor(key: string, metaSelector?: string): string {
     <a
       v-show="!noEmbed"
       class="sharing-options__link sharing-options__link--embed"
-      @click="show"
+      @click="showEmbed"
     >
       <app-icon>
         <i-ph-code-bold />

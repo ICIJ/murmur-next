@@ -1,80 +1,18 @@
 <script lang="ts">
-// Popup instance and an interval holder
-interface Popup {
-  instance: Window | null | undefined
-  interval: undefined | ReturnType<typeof setTimeout>
-  parent: (Window & typeof globalThis) | null
-}
-
-export const $popup: Popup = {
-  instance: null,
-  interval: undefined,
-  parent: typeof window !== 'undefined' ? window : null
-}
-
-import type { Component } from 'vue'
-import { SharingPlatform } from '@/enums'
-import IPhEnvelope from '~icons/ph/envelope-bold'
-import IPhFacebookLogoFill from '~icons/ph/facebook-logo-fill'
-import IPhLinkedinLogoFill from '~icons/ph/linkedin-logo-fill'
-import IPhButterflyFill from '~icons/ph/butterfly-fill'
-
-interface SharingPlatformConfig {
-  base: string
-  icon: Component
-  args: Record<string, string>
-}
-
-type SharingPlatforms = Record<SharingPlatform, SharingPlatformConfig>
-/**
- * @source https://github.com/bradvin/social-share-urls
- */
-export const networks: SharingPlatforms = {
-  email: {
-    base: 'mailto:?',
-    icon: IPhEnvelope,
-    args: {
-      subject: 'title',
-      body: 'description'
-    }
-  },
-  facebook: {
-    base: 'https://www.facebook.com/sharer.php?',
-    icon: IPhFacebookLogoFill,
-    args: {
-      u: 'url',
-      title: 'title',
-      description: 'description',
-      hashtag: 'hashtags'
-    }
-  },
-  linkedin: {
-    base: 'https://www.linkedin.com/sharing/share-offsite/?',
-    icon: IPhLinkedinLogoFill,
-    args: {
-      url: 'url',
-      title: 'title',
-      summary: 'description'
-    }
-  },
-  bluesky: {
-    base: 'https://bsky.app/intent/compose?',
-    icon: IPhButterflyFill,
-    args: {
-      text: 'title',
-      url: 'url'
-    }
-  }
-}
+// Re-exported for backward compatibility: the share popup singleton and the
+// per-network share endpoints now live in the composable.
+export { $popup, networks } from '@/composables/useSharingOptionsLink'
 </script>
 
 <script setup lang="ts">
-import querystring from 'querystring-es3'
-import reduce from 'lodash/reduce'
-import get from 'lodash/get'
-import { computed, onUnmounted, reactive } from 'vue'
+import { computed } from 'vue'
 
 import AppIcon from '@/components/App/AppIcon.vue'
+import { SharingPlatform } from '@/enums'
+import {
+  useSharingOptionsLink,
+  type SharingValues
+} from '@/composables/useSharingOptionsLink'
 
 defineOptions({
   name: 'SharingOptionsLink'
@@ -130,111 +68,38 @@ const props = withDefaults(defineProps<SharingOptionsLinkProps>(), {
   hashtags: null
 })
 
-const popup = reactive({
-  status: 'no',
-  resizable: 'yes',
-  toolbar: 'no',
-  menubar: 'no',
-  scrollbars: 'no',
-  location: 'no',
-  directories: 'no',
-  width: 626,
-  height: 436,
-  top: 0,
-  left: 0,
-  screenY: 0,
-  screenX: 0
-})
-
-const href = computed((): string => {
-  return base.value + querystring.stringify(query.value)
-})
-
-const base = computed((): string => {
-  return get(networks, [props.network, 'base'], '')
-})
-
-const args = computed((): Record<string, string> => {
-  return get(networks, [props.network, 'args'], {})
-})
-
-const iconComponent = computed((): Component | null => {
-  return get(networks, [props.network, 'icon'], null)
-})
-
-const query = computed((): Record<string, string> => {
-  type PropKey = 'url' | 'title' | 'description' | 'media' | 'user' | 'hashtags'
-  return reduce(
-    args.value,
-    (obj: Record<string, string>, prop: string, param: string) => {
-      const value = props[prop as PropKey]
-      if (value) {
-        obj[param] = value
-      }
-      return obj
-    },
-    {}
-  )
-})
-
-const name = computed((): string => {
-  return get(networks, [props.network, 'name'], props.network)
-})
-
-const popupParams = computed((): string => {
-  return querystring.stringify(popup).split('&').join(',')
-})
-
-function click(): void {
-  cleanExistingPopupInstance()
-  openPopup()
-}
-
-function openPopup(): void {
-  // Create the popup
-  $popup.instance = $popup.parent?.open(
-    href.value,
-    'sharer',
-    popupParams.value
-  )
-  $popup.instance?.focus()
-  // Watch for popup closing
-  $popup.interval = setInterval(cleanExistingPopupInterval, 500)
-}
-
-function cleanExistingPopupInstance(): void {
-  if ($popup.instance && $popup.interval) {
-    clearInterval($popup.interval)
-    $popup.interval = undefined
-    $popup.instance.close()
+const sharingValues = computed((): SharingValues => {
+  return {
+    url: props.url,
+    title: props.title,
+    description: props.description,
+    media: props.media,
+    user: props.user,
+    hashtags: props.hashtags
   }
-}
+})
 
-function cleanExistingPopupInterval() {
-  if ($popup.instance && $popup.instance.closed) {
-    clearInterval($popup.interval)
-    $popup.interval = undefined
-    $popup.instance = null
-  }
-}
+const {
+  base,
+  args,
+  iconComponent,
+  query,
+  href,
+  name,
+  hasPopup,
+  openSharePopup,
+  openPopup,
+  cleanExistingPopupInstance
+} = useSharingOptionsLink(() => props.network, sharingValues)
 
-function hasPopup(): boolean {
-  return props.network !== SharingPlatform.email
-}
-
+// Only intercept the click for networks that open a share popup; the email
+// network keeps its native mailto: behavior.
 function handleClick(event: Event): void {
   if (hasPopup()) {
     event.preventDefault()
-    click()
+    openSharePopup()
   }
 }
-
-// Make sure the polling interval (and any open popup) is torn down when the
-// component unmounts, otherwise the setInterval started in openPopup() keeps
-// firing against a destroyed instance.
-onUnmounted(() => {
-  cleanExistingPopupInstance()
-})
 
 defineExpose({
   base,
