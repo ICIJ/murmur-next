@@ -29,14 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import config from '@/config'
-import { formatRows } from '@/utils/placeholder'
-import type {
-  ContentPlaceholderRows,
-  ContentPlaceholderStyledRows
-} from '@/types'
+import { useContentPlaceholder } from '@/composables/useContentPlaceholder'
+import type { ContentPlaceholderRows } from '@/types'
 
 /**
  * A component to fill empty spaces with animated placeholders until content is loaded.
@@ -44,6 +39,10 @@ import type {
 defineOptions({
   name: 'ContentPlaceholder'
 })
+
+// CSS sub-class applied to the spacer boxes the geometry helper inserts
+// between content boxes (leading spacers and the trailing filler).
+const BOX_SUB_CLASS = 'content-placeholder__wrapper__row__box'
 
 export interface ContentPlaceholderProps {
   /**
@@ -61,11 +60,7 @@ const props = withDefaults(defineProps<ContentPlaceholderProps>(), {
   size: '250%'
 })
 
-const formattedRows = computed((): ContentPlaceholderStyledRows => {
-  return props.rows
-    ? formatRows(props.rows, 'content-placeholder__wrapper__row__box')
-    : []
-})
+const { formattedRows } = useContentPlaceholder(() => props.rows, BOX_SUB_CLASS)
 </script>
 
 <style scoped lang="scss">
