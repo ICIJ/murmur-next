@@ -1,22 +1,10 @@
 <script setup lang="ts">
-import keys from 'lodash/keys'
-import map from 'lodash/map'
-import sortBy from 'lodash/sortBy'
-import forEach from 'lodash/forEach'
-
 import config from '@/config'
 import { useI18n } from 'vue-i18n'
-import { computed, ref, watch } from 'vue'
-import type { Ref } from 'vue'
+import { ref } from 'vue'
 
-type Period = 'onetime' | 'monthly' | 'yearly'
-type DonationCategory = 'conversation' | 'rules' | 'world'
-type SuggestedDonation = Record<DonationCategory, Record<Period, number>>
-interface LabelForChange {
-  monthly: Record<number, DonationCategory>
-  yearly: Record<number, DonationCategory>
-  onetime?: Record<number, DonationCategory>
-}
+import { useDonateForm } from '@/composables/useDonateForm'
+import type { DonationCategory, DonationThresholds, SuggestedDonation } from '@/composables/useDonateForm'
 
 /**
  * A form to encourage donations. We usually put this form inside a modal
@@ -37,13 +25,9 @@ withDefaults(defineProps<FormDonateProps>(), {
 })
 
 const { t, locale, messages } = useI18n()
-const amount = ref<number | undefined>(10)
-// True if the amount wasn't changed by the user yet
-const amountIsPristine = ref(true)
-const installmentPeriod: Ref<Period> = ref('monthly')
-const level = ref<DonationCategory | null>('conversation')
 const campaign = ref(config.get('donate-form.tracker'))
-const labelForChange = ref<LabelForChange>({
+
+const thresholds: DonationThresholds = {
   monthly: {
     1: t('donate-form.result.conversation') as DonationCategory,
     15: t('donate-form.result.rules') as DonationCategory,
@@ -54,76 +38,17 @@ const labelForChange = ref<LabelForChange>({
     180: t('donate-form.result.rules') as DonationCategory,
     600: t('donate-form.result.world') as DonationCategory
   }
-})
+}
 
-const suggestedAmount = ref<SuggestedDonation>(
-  messages.value[locale.value]['donate-form']['suggesteddonation']
-)
+const suggestedAmount = messages.value[locale.value]['donate-form']['suggesteddonation'] as SuggestedDonation
 const listBenefits = ref<string[]>(
   messages.value[locale.value]['donate-form']['benefits']['list']
 )
 
-const ranges = computed((): Record<number, DonationCategory> => {
-  if (installmentPeriod.value === 'onetime') {
-    return labelForChange.value['yearly']
-  }
-  return labelForChange.value[installmentPeriod.value]
+const { amount, installmentPeriod, level, selectLevel, amountIsNotPristine } = useDonateForm({
+  thresholds,
+  suggestedAmount
 })
-
-const firstRange = computed(() => {
-  const key = Number(keys(ranges.value)[0])
-  return ranges.value[key]
-})
-
-const changeThe = computed(() => {
-  // Final label
-  let label: DonationCategory | null = null
-  forEach(sortBy(map(keys(ranges.value), Number)), (amountV) => {
-    label = amount.value && (amount.value >= amountV) ? ranges.value[amountV] : label
-  })
-  return label
-})
-
-function getSuggestedAmount() {
-  if (!amountIsPristine.value) {
-    return
-  }
-
-  if (!level.value) {
-    level.value = firstRange.value
-  }
-
-  // Return suggested amount
-  return suggestedAmount.value[level.value][installmentPeriod.value]
-}
-
-function selectLevel(levelSelected: DonationCategory) {
-  // Set chose level
-  level.value = levelSelected
-
-  // Set suggested amount
-  amount.value = getSuggestedAmount()
-}
-
-function amountIsNotPristine() {
-  amountIsPristine.value = false
-}
-
-watch(installmentPeriod, () => {
-  if (!amountIsPristine.value) {
-    return
-  }
-
-  // Set suggested amount
-  amount.value = getSuggestedAmount()
-})
-
-watch(
-  () => amount.value,
-  () => {
-    level.value = changeThe.value
-  }
-)
 </script>
 
 <template>

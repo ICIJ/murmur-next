@@ -49,12 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import last from 'lodash/last'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import config from '@/config'
 import { useI18n } from 'vue-i18n'
-import { useSendEmail } from '@/composables/useSendEmail'
+import { useSignUpForm } from '@/composables/useSignUpForm'
 import type { ButtonVariant } from 'bootstrap-vue-next'
 
 export interface FormSignUpProps {
@@ -109,18 +108,15 @@ const props = withDefaults(defineProps<FormSignUpProps>(), {
 })
 const emit = defineEmits(['error', 'success', 'subscribed'])
 const { t } = useI18n()
-const email = ref('')
-const frozen = ref(false)
-const errorMessage = ref(null)
-const successMessage = ref(null)
-const { send } = useSendEmail(
-  email,
-  props.action,
-  props.emailField,
-  props.tracker,
-  props.referrer,
-  props.defaultGroups
-)
+
+const { email, frozen, errorMessage, successMessage, subscribe } = useSignUpForm({
+  action: props.action,
+  emailField: props.emailField,
+  tracker: props.tracker,
+  referrer: props.referrer,
+  defaultGroups: props.defaultGroups,
+  emit
+})
 
 const classList = computed(() => ({
   'sign-up-form--horizontal': props.horizontal,
@@ -130,51 +126,6 @@ const classList = computed(() => ({
 const variantColorClass = computed(() => {
   return `btn-${props.variant}`
 })
-
-async function subscribe() {
-  resetMessages()
-  freeze()
-  // Send the data, catch the result no matter what and unfreeze the form
-  try {
-    const { result, msg } = await send()
-    done({ result, msg })
-  }
-  catch (e) {
-    error(e)
-  }
-  unfreeze()
-  emit('subscribed')
-}
-
-function done({ result, msg }: any): void {
-  if (result === 'success') {
-    email.value = ''
-    successMessage.value = msg
-    emit('success', msg)
-  }
-  else {
-    error({ msg })
-  }
-}
-
-// Mailchimp formats errors in list
-function error({ msg }: any): void {
-  errorMessage.value = last((msg || 'Something\'s wrong').split('0 -')) ?? null
-  emit('error', errorMessage.value)
-}
-
-function resetMessages() {
-  errorMessage.value = null
-  successMessage.value = null
-}
-
-function freeze() {
-  frozen.value = true
-}
-
-function unfreeze() {
-  frozen.value = false
-}
 </script>
 
 <style lang="scss">
