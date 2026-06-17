@@ -155,7 +155,6 @@
 </template>
 
 <script lang="ts" setup>
-import clamp from 'lodash/clamp'
 import { BButton, BFormInput } from 'bootstrap-vue-next'
 import { computed, ref, watch, type Component } from 'vue'
 import { directive as vInputAutowidth } from 'vue-input-autowidth'
@@ -163,6 +162,7 @@ import { useI18n } from 'vue-i18n'
 import type { ButtonVariant, Size } from 'bootstrap-vue-next'
 
 import { SIZE } from '@/enums'
+import { usePagination } from '@/composables/usePagination'
 import vEllipsisTooltip from '@/directives/EllipsisTooltip'
 import AppIcon from '@/components/App/AppIcon.vue'
 import IPhCaretDoubleLeft from '~icons/ph/caret-double-left'
@@ -306,11 +306,21 @@ const props = withDefaults(defineProps<PaginationTinyProps>(), {
 
 const { t, n } = useI18n()
 
-const numberOfPages = computed((): number => {
-  if (props.pages === null) {
-    return Math.ceil(props.totalRows / props.perPage)
-  }
-  return Number(props.pages)
+// Page-range math shared with the other pagination components.
+const {
+  pageValue,
+  numberOfPages,
+  lastRangeRow,
+  hasFirst,
+  hasPrevious,
+  hasLast,
+  hasNext,
+  clampPage
+} = usePagination({
+  currentPage: modelValue,
+  totalRows: () => props.totalRows,
+  perPage: () => props.perPage,
+  pages: () => props.pages
 })
 
 const paginationClassList = computed((): object => {
@@ -322,15 +332,6 @@ const paginationClassList = computed((): object => {
     [`tiny-pagination--compact`]: props.compact
   }
 })
-
-const hasFirst = computed((): boolean => pageValue.value > 1)
-const hasPrevious = computed((): boolean => hasFirst.value)
-
-const hasLast = computed((): boolean => pageValue.value < numberOfPages.value)
-const hasNext = computed((): boolean => hasLast.value)
-
-const pageValue = computed(() => +modelValue.value)
-const lastRangeRow = computed(() => +pageValue.value * props.perPage)
 
 const currentPageInput = ref<number>(0)
 const currentRowInput = ref<number>(0)
@@ -377,14 +378,14 @@ const title = computed(() => {
 function applyPageForm(): void {
   const { value } = currentPageInput
   if (!isNaN(value as number)) {
-    modelValue.value = clamp(Math.floor(+value), 1, numberOfPages.value)
+    modelValue.value = clampPage(+value)
   }
 }
 
 function applyRowForm(): void {
   const { value } = currentRowInput
   if (!isNaN(value as number)) {
-    currentPageInput.value = clamp(Math.floor(+value / +props.perPage) + 1, 1, numberOfPages.value)
+    currentPageInput.value = clampPage(+value / +props.perPage + 1)
     currentRowInput.value = +props.perPage * (+currentPageInput.value - 1) + 1
     modelValue.value = +currentPageInput.value
   }
@@ -405,6 +406,14 @@ function applyFirstPage(): void {
 function applyLastPage(): void {
   modelValue.value = numberOfPages.value
 }
+
+// Expose the page-form internals so consumers (and the test suite) can read the
+// derived page count and drive the page-jump form programmatically.
+defineExpose({
+  numberOfPages,
+  currentPageInput,
+  applyPageForm
+})
 </script>
 
 <style lang="scss" scoped>
