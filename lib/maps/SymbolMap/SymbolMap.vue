@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
 import type { GeoPermissibleObjects } from 'd3'
-import { geoRobinson } from 'd3-geo-projection'
-import { feature } from 'topojson'
 import {
   debounce,
   find,
@@ -13,20 +11,21 @@ import {
   keys,
   pickBy,
   set,
-  uniq,
   uniqueId
 } from 'lodash'
 
 import config from '@/config'
 import OrdinalLegend from '@/components/Legend/LegendOrdinal.vue'
 import { getChartProps, useChart } from '@/composables/useChart'
+import { useSymbolMap } from '@/composables/useSymbolMap'
 import {
   ComponentPublicInstance,
   computed,
   ref,
+  toRef,
   watch
 } from 'vue'
-import type { GeometryCollection, Topology } from 'topojson-specification'
+import type { Topology } from 'topojson-specification'
 import { PopoverPlacement } from 'bootstrap-vue-next'
 
 defineOptions({
@@ -224,9 +223,34 @@ function afterLoaded() {
   })
 }
 
-// computed
-const featurePath = computed(() => {
-  return d3.geoPath().projection(mapProjection.value)
+const mapHeight = computed(() => {
+  return mapRect.value.height
+})
+
+const mapWidth = computed(() => {
+  return mapRect.value.width
+})
+
+// The symbol-specific projection (fitExtent with padding), geo path, derived
+// geojson, category indexing and marker geometry live in this composable. It
+// fits with fitExtent (NOT the shared useMapProjection's fitSize), preserving
+// the symbol map's exact framing.
+const {
+  featuresGeojson,
+  mapProjection,
+  featurePath,
+  categories,
+  categoryIndexByName,
+  markerTransformValue
+} = useSymbolMap({
+  topojson,
+  loadedData,
+  width: mapWidth,
+  height: mapHeight,
+  padding: toRef(() => props.mapPadding),
+  topojsonObjects: toRef(() => props.topojsonObjects),
+  categoryObjectsPath: toRef(() => props.categoryObjectsPath),
+  fitToMarkers: toRef(() => props.fitToMarkers)
 })
 
 const hasCursor = computed(() => {
@@ -239,35 +263,6 @@ const hasHighlight = computed(() => {
 
 const hasZoom = computed(() => {
   return !!featureZoom.value
-})
-
-const geojson = computed(() => {
-  return props.fitToMarkers ? markersGeojson.value : featuresGeojson.value
-})
-
-const featuresGeojson = computed(() => {
-  const object = get(
-    topojson.value,
-    ['objects', props.topojsonObjects],
-    null
-  )
-  return feature(topojson.value, object as GeometryCollection)
-})
-
-const markersGeojson = computed(() => {
-  return {
-    type: 'Feature',
-    geometry: {
-      type: 'Polygon',
-      coordinates: [coordinates.value]
-    }
-  }
-})
-
-const coordinates = computed(() => {
-  return (loadedData.value || []).map(({ longitude, latitude }: any) => {
-    return [longitude, latitude]
-  })
 })
 
 const mapId = computed(() => {
@@ -283,18 +278,6 @@ const mapClass = computed(() => {
   }
 })
 
-const mapProjection = computed(() => {
-  const { height, width } = mapRect.value
-  const padding = props.mapPadding
-  return geoRobinson().fitExtent(
-    [
-      [padding, padding],
-      [width - padding, height - padding]
-    ],
-    geojson.value as any
-  )
-})
-
 const mapZoom = computed(() => {
   return d3
     .zoom()
@@ -304,14 +287,6 @@ const mapZoom = computed(() => {
       [mapWidth.value, mapHeight.value]
     ])
     .on('zoom', mapZoomed)
-})
-
-const mapHeight = computed(() => {
-  return mapRect.value.height
-})
-
-const mapWidth = computed(() => {
-  return mapRect.value.width
 })
 
 const map = computed(() => {
@@ -337,21 +312,6 @@ const loadedDataWithIds = computed(() => {
       ...d
     }
   })
-})
-
-const categories = computed(() => {
-  const cats = (loadedData.value || []).map((d: any) => {
-    return get(d, props.categoryObjectsPath)
-  })
-  return uniq(cats).map(String)
-})
-
-// Name -> index lookup so markerClassObject() doesn't run an O(n) indexOf for
-// every marker (which made class assignment O(n²) across the dataset).
-const categoryIndexByName = computed(() => {
-  const index = new Map<string, number>()
-  categories.value.forEach((category, i) => index.set(category, i))
-  return index
 })
 
 const legendData = computed(() => {
@@ -531,12 +491,9 @@ function markerLabel(d: any) {
 
 function markerTransform(d: any) {
   const { latitude, longitude } = d
-  const { height, width } = markerBoundingClientRect(d)
-  const [x, y] = mapProjection.value([longitude, latitude])!
-  const scale = markerWidthFunction(d) / Math.max(1, width)
-  const cx = x - (width / 2) * scale
-  const cy = y - (height / 2) * scale
-  return `translate(${cx}, ${cy}) scale(${scale})`
+  const box = markerBoundingClientRect(d)
+  const point = mapProjection.value([longitude, latitude]) as [number, number]
+  return markerTransformValue(point, box, markerWidthFunction(d))
 }
 
 async function featureClicked(
@@ -661,6 +618,13 @@ watch(
     setMarkersClasses()
   }
 )
+
+defineExpose({
+  el,
+  markerCursor,
+  loadTopojson,
+  draw
+})
 </script>
 
 <template>
