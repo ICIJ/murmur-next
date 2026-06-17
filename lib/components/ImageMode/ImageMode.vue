@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue'
 
-import { useColorMode } from '@/composables/useColorMode'
-import { useQueryObserver } from '@/composables/useQueryObserver'
+import { useImageMode } from '@/composables/useImageMode'
 
 export interface ImageModeProps {
   /**
@@ -42,28 +41,10 @@ const props = withDefaults(defineProps<ImageModeProps>(), {
 
 const element = useTemplateRef<HTMLElement>('element')
 
-const { colorMode } = useColorMode(element, props.defaultColorMode)
-const { querySelectorAll } = useQueryObserver(element)
-const imageModeSources = querySelectorAll('.image-mode-source')
+const { colorMode, src } = useImageMode(element, props.defaultColorMode, () => props.src)
 
 const classList = computed(() => {
   return [`image-mode--${colorMode.value}`]
-})
-
-const sources = computed(() => {
-  return imageModeSources.value.map((source: HTMLElement) => source.dataset)
-})
-
-const source = computed(() => {
-  return sources.value.find((source: DOMStringMap) => source.colorMode === colorMode.value)
-})
-
-const defaultSource = computed(() => {
-  return sources.value.find((source: DOMStringMap) => source.colorMode === props.defaultColorMode || !source.colorMode)
-})
-
-const src = computed(() => {
-  return source.value?.src ?? defaultSource.value?.src ?? props.src
 })
 </script>
 
