@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import * as d3 from 'd3'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
 import kebabCase from 'lodash/kebabCase'
-import keysFn from 'lodash/keys'
-import without from 'lodash/without'
-import sortByFn from 'lodash/sortBy'
-import { ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue'
+import { ComponentPublicInstance, computed, nextTick, ref, toRef, watch } from 'vue'
 import { getChartProps, useChart } from '@/composables/useChart'
+import { useStackedChart } from '@/composables/useStackedChart'
 import { isArray } from 'lodash'
 
 defineOptions({
@@ -148,40 +145,25 @@ const {
   dataHasHighlights
 } = useChart(el, getChartProps(props), { emit }, isLoaded)
 
+const {
+  sortedData,
+  discoveredKeys,
+  colorScale,
+  totalRowValue,
+  maxStackValue: maxValue,
+  groupName
+} = useStackedChart({
+  loadedData,
+  isLoaded,
+  sortBy: toRef(() => props.sortBy),
+  keys: toRef(() => props.keys),
+  labelField: toRef(() => props.labelField),
+  groups: toRef(() => props.groups),
+  barColors: toRef(() => props.barColors)
+})
+
 const hasConstraintHeight = computed(() => {
   return props.fixedHeight !== null || props.socialMode
-})
-
-const sortedData = computed(() => {
-  if (!isLoaded.value) {
-    return []
-  }
-  return !props.sortBy
-    ? loadedData.value
-    : sortByFn(loadedData.value, props.sortBy)
-})
-
-const discoveredKeys = computed((): string[] => {
-  if (props.keys.length) {
-    return props.keys
-  }
-  if (!loadedData.value) {
-    return []
-  }
-  return without(keysFn(loadedData.value[0]), props.labelField)
-})
-
-const colorScale = computed(() => {
-  return d3
-    .scaleOrdinal()
-    .domain(discoveredKeys.value)
-    .range(props.barColors)
-})
-
-const maxValue = computed(() => {
-  return d3.max(loadedData.value || [], (_datum: any, i: number) => {
-    return totalRowValue(i)
-  })
 })
 
 const hasHighlights = computed(() => {
@@ -207,17 +189,6 @@ const height = computed(() => {
 
 function normalizeKey(key: string) {
   return kebabCase(key)
-}
-
-function totalRowValue(i: number | string) {
-  return d3.sum(discoveredKeys.value, (key: string) => {
-    return sortedData.value[i as number][key]
-  })
-}
-
-function groupName(key: string) {
-  const index = discoveredKeys.value.indexOf(key)
-  return props.groups[index] || key
 }
 
 function highlight(key: string) {
