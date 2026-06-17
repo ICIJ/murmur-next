@@ -1,3 +1,74 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue'
+
+import SlideUpDown from '@/components/SlideUpDown/SlideUpDown.vue'
+import { AccordionKey } from '@/keys'
+import { Accordion, Step } from '@/types'
+
+export interface AccordionStepProps {
+  /**
+   * Step name
+   */
+  step: Step
+  /**
+   * Title of the step card
+   */
+  title?: string
+  /**
+   * Content of the step card
+   */
+  content?: string
+  /**
+   * Force card expansion/collapse
+   */
+  active?: boolean
+}
+
+const props = withDefaults(defineProps<AccordionStepProps>(), {
+  title: 'Step',
+  content: 'Step',
+  active: false
+})
+
+const emit = defineEmits(['next-step', 'previous-step'])
+
+const accordion = inject<Accordion>(AccordionKey)
+
+// A step is expanded when the parent accordion marks it active or when the
+// consumer forces it open through the `active` prop.
+const isActive = computed(
+  () => props.active || !!accordion?.isActiveStep(props.step)
+)
+
+const isPrevious = computed(() => !!accordion?.isPreviousStep(props.step))
+const isFirst = computed(() => !!accordion?.isFirstStep(props.step))
+const isLast = computed(() => !!accordion?.isLastStep(props.step))
+
+const nextStep = () => {
+  accordion?.emitAccordionNextStepEvent()
+  /**
+   * Fired when the nextStep function is called
+   * either by clicking on the next button or in the next step slot
+   * with the new value as parameter
+   * @event next-step
+   * @param Mixed New step value.
+   */
+  emit('next-step')
+}
+
+const previousStep = () => {
+  accordion?.emitAccordionPreviousStepEvent()
+  /**
+   * Fired when the previousStep function is called
+   * either by clicking on the previous button or in the previous step slot
+   * with the new value as parameter
+   * @event previous-step
+   * @param Mixed New step value.
+   */
+  emit('previous-step')
+}
+</script>
+
 <template>
   <b-card
     :class="{
@@ -58,74 +129,3 @@
     </slide-up-down>
   </b-card>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue'
-
-import SlideUpDown from '@/components/SlideUpDown/SlideUpDown.vue'
-import { AccordionKey } from '@/keys'
-import { Accordion, Step } from '@/types'
-
-export interface AccordionStepProps {
-  /**
-   * Step name
-   */
-  step: Step
-  /**
-   * Title of the step card
-   */
-  title?: string
-  /**
-   * Content of the step card
-   */
-  content?: string
-  /**
-   * Force card expansion/collapse
-   */
-  active?: boolean
-}
-
-const props = withDefaults(defineProps<AccordionStepProps>(), {
-  title: 'Step',
-  content: 'Step',
-  active: false
-})
-
-const emit = defineEmits(['next-step', 'previous-step'])
-
-const accordion = inject<Accordion>(AccordionKey)
-
-const isActive = computed(() => {
-  const fromAccordion = !!accordion?.isActiveStep(props.step)
-  const fromSelf = props.active !== undefined ? props.active : false
-  return fromSelf || fromAccordion
-})
-
-const isPrevious = computed(() => !!accordion?.isPreviousStep(props.step))
-const isFirst = computed(() => !!accordion?.isFirstStep(props.step))
-const isLast = computed(() => !!accordion?.isLastStep(props.step))
-
-const nextStep = () => {
-  accordion?.emitAccordionNextStepEvent()
-  /**
-   * Fired when the nextStep function is called
-   * either by clicking on the next button or in the next step slot
-   * with the new value as parameter
-   * @event next-step
-   * @param Mixed New step value.
-   */
-  emit('next-step')
-}
-
-const previousStep = () => {
-  accordion?.emitAccordionPreviousStepEvent()
-  /**
-   * Fired when the previousStep function is called
-   * either by clicking on the previous button or in the previous step slot
-   * with the new value as parameter
-   * @event previous-step
-   * @param Mixed New step value.
-   */
-  emit('previous-step')
-}
-</script>

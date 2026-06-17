@@ -1,16 +1,9 @@
-<template>
-  <div class="accordion-wrapper">
-    <div class="accordion-wrapper__content">
-      <!-- @slot Content with all the steps declarations -->
-      <slot />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { computed, provide } from 'vue'
+import { provide, toRef } from 'vue'
+
+import { useAccordion } from '@/composables/useAccordion'
 import { AccordionKey } from '@/keys'
-import { Accordion, Step } from '@/types'
+import { Step } from '@/types'
 
 export interface AccordionWrapperProps {
   /**
@@ -27,35 +20,23 @@ const props = defineProps<AccordionWrapperProps>()
 
 const emit = defineEmits(['step-change'])
 
-const activeStepIndex = computed(() => props.steps?.indexOf(props.step))
+const accordion = useAccordion(toRef(props, 'step'), toRef(props, 'steps'), emit)
 
-const emitAccordionNextStepEvent = () => {
-  emit('step-change', props.steps[activeStepIndex.value + 1] || props.step)
-}
+provide(AccordionKey, accordion)
 
-const emitAccordionPreviousStepEvent = () => {
-  emit('step-change', props.steps[activeStepIndex.value - 1] || props.step)
-}
-
-const isFirstStep = (step: Step): boolean =>
-  props.steps?.indexOf(step) === 0
-const isLastStep = (step: Step): boolean =>
-  props.steps?.indexOf(step) === props.steps?.length - 1
-const isActiveStep = (step: Step): boolean => props.step === step
-const isPreviousStep = (step: Step): boolean =>
-  props.steps?.indexOf(step) < activeStepIndex.value
-
-provide<Accordion>(AccordionKey, {
-  emitAccordionNextStepEvent,
-  emitAccordionPreviousStepEvent,
-  isActiveStep,
-  isPreviousStep,
-  isFirstStep,
-  isLastStep,
-  step: props.step,
-  steps: props.steps
-})
+// Expose the navigation helpers on the component instance so they remain
+// reachable from unit tests (which call them through `wrapper.vm`).
+defineExpose(accordion)
 </script>
+
+<template>
+  <div class="accordion-wrapper">
+    <div class="accordion-wrapper__content">
+      <!-- @slot Content with all the steps declarations -->
+      <slot />
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 
