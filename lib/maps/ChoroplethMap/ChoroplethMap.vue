@@ -5,16 +5,12 @@ import {
   get,
   kebabCase,
   keys,
-  max as maxFn,
-  min as minFn,
-  pickBy,
-  values
+  pickBy
 } from 'lodash'
 
 import * as d3 from 'd3'
 import { geoRobinson } from 'd3-geo-projection'
 import type { GeoProjection } from 'd3-geo'
-import { geoGraticule } from 'd3-geo'
 import { feature } from 'topojson'
 import type { GeometryCollection, Topology } from 'topojson-specification'
 
@@ -23,6 +19,7 @@ import {
   computed,
   provide,
   ref,
+  toRef,
   watch
 } from 'vue'
 
@@ -30,6 +27,8 @@ import { ParentKey } from '@/keys'
 import { MapTransform, ParentMap } from '@/types'
 import config from '@/config'
 import { getChartProps, useChart } from '@/composables/useChart'
+import { useChoropleth } from '@/composables/useChoropleth'
+import { useMapProjection } from '@/composables/useMapProjection'
 import ScaleLegend from '@/components/Legend/LegendScale.vue'
 
 defineOptions({
@@ -219,19 +218,11 @@ async function afterLoaded() {
   })
 }
 
-const sphericalCenter = computed((): [number, number] => {
-  const [lng = 0, lat = 0] = props.center ?? [0, 0]
-  return [-lng, -lat]
-})
-
-const planarCenter = computed((): [number, number] => {
-  const [lng = 0, lat = 0] = props.center ?? [0, 0]
-  return [lng, lat]
-})
-
+// The two endpoint colors are read from the rendered SVG's computed style, so
+// they stay in the component (the projection/color composables are DOM-free).
+// `socialMode` is always different from null but accessing it makes this
+// computed property reactive to social-mode toggles.
 const featureColorScaleStart = computed(() => {
-  // `socialMode` is always different from null but accessing it will make
-  // this computed property reactive.
   const defaultColor = '#fff'
   const node = map.value?.node()
   if (isLoaded.value && props.socialMode !== null && node) {
@@ -251,54 +242,19 @@ const featureColorScaleEnd = computed(() => {
   return defaultColor
 })
 
-const featureColor = computed(() => {
-  return (d: number) => {
-    const id = get(d, props.topojsonObjectsPath)
-    const hasIdProp = loadedData.value && (id in loadedData.value)
-    return hasIdProp
-      ? featureColorScaleFunction.value(loadedData.value[id])
-      : undefined
-  }
-})
-
-const featureColorScaleFunction = computed(() => {
-  if (props.featureColorScale !== null) {
-    return props.featureColorScale
-  }
-  return defaultFeatureColorScale.value
-})
-
-const graticuleLines = computed(() => {
-  return geoGraticule().step([20, 20])()
-})
-
-const defaultFeatureColorScale = computed(() => {
-  return d3
-    .scaleSequential()
-    .domain([Math.max(1, minValue.value), maxValue.value])
-    .range([featureColorScaleStart.value, featureColorScaleEnd.value] as any)
-})
-
-const initialFeaturePath = computed(() => {
-  return featurePath.value.projection(initialMapProjection.value)
-})
-
-const initialGraticulePath = computed(() => {
-  return initialFeaturePath.value(graticuleLines.value)
-})
-
-const initialMapProjection = computed(() => {
-  if (props.spherical) {
-    return mapProjection.value
-      .rotate(sphericalCenter.value)
-      .fitHeight(mapHeight.value, geojson.value)
-      .translate([mapWidth.value / 2, mapHeight.value / 2])
-  }
-  return mapProjection.value.center(planarCenter.value)
-})
-
-const featurePath = computed(() => {
-  return d3.geoPath().projection(mapProjection.value)
+const {
+  maxValue,
+  minValue,
+  featureColorScaleFunction,
+  featureColor
+} = useChoropleth({
+  loadedData,
+  topojsonObjectsPath: toRef(() => props.topojsonObjectsPath),
+  max: toRef(() => props.max),
+  min: toRef(() => props.min),
+  featureColorScale: toRef(() => props.featureColorScale),
+  colorScaleStart: featureColorScaleStart,
+  colorScaleEnd: featureColorScaleEnd
 })
 
 const hasCursor = computed(() => {
@@ -324,30 +280,6 @@ const mapClass = computed(() => {
     'choropleth-map--has-zoom': hasZoom.value,
     'choropleth-map--hatch-empty': props.hatchEmpty
   }
-})
-
-const mapProjection = computed(() => {
-  if (!props.projection) {
-    throw new Error('props.projection is ' + props.projection)
-  }
-  return props
-    .projection()
-    .fitSize(
-      [mapWidth.value, mapHeight.value],
-      geojson.value
-    ) as GeoProjection
-})
-
-const rotatingMapProjection = computed(() => {
-  const { rotateX = null, rotateY = null } = mapTransform.value
-  if (rotateX !== null && rotateY !== null) {
-    return mapProjection.value.rotate([rotateX, rotateY]) ?? null
-  }
-  return mapProjection.value
-})
-
-const mapCenter = computed(() => {
-  return mapProjection.value.center()
 })
 
 const mapZoom = computed(() => {
@@ -387,6 +319,24 @@ const mapWidth = computed(() => {
   return mapRect.value.width
 })
 
+const {
+  mapProjection,
+  featurePath,
+  initialFeaturePath,
+  initialGraticulePath,
+  rotatingMapProjection,
+  graticuleLines,
+  mapCenter
+} = useMapProjection({
+  projection: toRef(() => props.projection),
+  geojson,
+  width: mapWidth,
+  height: mapHeight,
+  spherical: toRef(() => props.spherical),
+  center: toRef(() => props.center),
+  transform: mapTransform
+})
+
 const mapStyle = computed(() => {
   const {
     k = 0,
@@ -416,20 +366,6 @@ const map = computed(
     return selection
   }
 )
-
-const maxValue = computed(() => {
-  if (props.max !== null) {
-    return props.max
-  }
-  return maxFn<number>(values(loadedData.value)) || 0
-})
-
-const minValue = computed((): number => {
-  if (props.min !== null) {
-    return props.min
-  }
-  return minFn(values(loadedData.value)) || 0
-})
 
 const transformOrigin = computed(() => {
   return props.spherical ? '50% 50%' : '0 0'
