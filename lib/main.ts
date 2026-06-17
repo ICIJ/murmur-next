@@ -133,6 +133,7 @@ export { useResizeObserver } from './composables/useResizeObserver'
 export { useColorMode } from './composables/useColorMode'
 export { useQueryObserver } from './composables/useQueryObserver'
 export { useHapticCopy } from './composables/useHapticCopy'
+export { useSharingOptionsLink, networks as sharingNetworks } from './composables/useSharingOptionsLink'
 
 // Types - public API for library consumers
 export type {
