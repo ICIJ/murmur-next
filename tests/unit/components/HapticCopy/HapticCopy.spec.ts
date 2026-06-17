@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, beforeAll, afterAll, vi } from 'vitest'
 import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
-import noop from 'lodash/noop'
 
 describe('HapticCopy.vue', () => {
   const propsData = { text: 'Lorem ipsum', noTooltip: true }
@@ -68,22 +67,16 @@ describe('HapticCopy.vue', () => {
     expect(wrapper.vm.tooltipContent).not.toBe('Unable to copy the text')
   })
 
-  it('should fill the tooltip content with a success message', () => {
+  it('should fill the tooltip content with a success message', async () => {
     const wrapper = mount(HapticCopy, { propsData })
-    wrapper.vm.openTooltip()
+    await wrapper.vm.copy()
     expect(wrapper.vm.tooltipContent).toBe('Copied!')
   })
 
   it('should empty tooltip content', async () => {
     const wrapper = mount(HapticCopy, { propsData })
-    await wrapper.vm.closeTooltip()
+    await wrapper.vm.hide()
     expect(wrapper.vm.tooltipContent).toBe('')
-  })
-
-  it('should have a method `nextTimeout` which returns a promise', () => {
-    const wrapper = mount(HapticCopy, { propsData })
-    const promise = wrapper.vm.nextTimeout(noop, 0)
-    expect(promise.then).toBeDefined()
   })
 
   it('should have a method `copy` which returns a promise', () => {
@@ -92,31 +85,15 @@ describe('HapticCopy.vue', () => {
     expect(promise.then).toBeDefined()
   })
 
-  it('should have a method `openTooltip` which returns a promise', () => {
+  it('should have a method `hide` which returns a promise', () => {
     const wrapper = mount(HapticCopy, { propsData })
-    const promise = wrapper.vm.openTooltip()
+    const promise = wrapper.vm.hide()
     expect(promise.then).toBeDefined()
   })
 
-  it('should have a method `closeTooltip` which returns a promise', () => {
+  it('should resolve the success locale message after copying', async () => {
     const wrapper = mount(HapticCopy, { propsData })
-    const promise = wrapper.vm.closeTooltip()
-    expect(promise.then).toBeDefined()
-  })
-
-  it('should change the tooltip content with locale message', () => {
-    const wrapper = mount(HapticCopy, { propsData })
-    wrapper.vm.openTooltip('haptic-copy.tooltip.succeed')
+    await wrapper.vm.copy()
     expect(wrapper.vm.tooltipContent).toBe('Copied!')
-    wrapper.vm.openTooltip('haptic-copy.tooltip.failed')
-    expect(wrapper.vm.tooltipContent).toBe('Unable to copy the text')
-  })
-
-  it('should change the tooltip content with arbitrary message', () => {
-    const wrapper = mount(HapticCopy, { propsData })
-    wrapper.vm.openTooltip('foo')
-    expect(wrapper.vm.tooltipContent).toBe('foo')
-    wrapper.vm.openTooltip('bar')
-    expect(wrapper.vm.tooltipContent).toBe('bar')
   })
 })

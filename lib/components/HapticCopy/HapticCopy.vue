@@ -104,11 +104,9 @@ function resolveTooltipMessage(message: string): string {
 const {
   tooltipContent,
   showTooltip: showClipboardTooltip,
-  tooltipTimeout,
+  isVisible,
   copy,
-  openTooltip,
-  closeTooltip,
-  nextTimeout
+  close
 } = useHapticCopy({
   copy: copyTextOrHtml,
   resolveMessage: resolveTooltipMessage,
@@ -135,11 +133,8 @@ const {
 })
 
 defineExpose({
-  hide: closeTooltip,
+  hide: close,
   copy,
-  openTooltip,
-  closeTooltip,
-  nextTimeout,
   tooltipContent
 })
 </script>
@@ -151,7 +146,7 @@ defineExpose({
     ref="el"
     v-bind="buttonBinding"
     class="haptic-copy"
-    @mouseleave="closeTooltip"
+    @mouseleave="close"
     @click.stop="copy"
   >
     <!-- @slot Main content of the button (including the icon) -->
@@ -159,7 +154,7 @@ defineExpose({
       <app-icon-layers>
         <transition name="spin">
           <app-icon
-            v-if="!tooltipTimeout"
+            v-if="!isVisible"
             class="haptic-copy__icon"
           >
             <i-ph-clipboard />
@@ -167,7 +162,7 @@ defineExpose({
         </transition>
         <transition name="spin">
           <app-icon
-            v-if="tooltipTimeout"
+            v-if="isVisible"
             class="haptic-copy__icon"
           >
             <i-ph-check-fat-fill />

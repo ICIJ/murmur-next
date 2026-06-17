@@ -22,6 +22,14 @@ function withHapticCopy(options: UseHapticCopyOptions = {}): {
   return { result, unmount: () => app.unmount() }
 }
 
+// `copy()` awaits the copy action then the tooltip open before scheduling the
+// hide timer, so several microtask turns must drain before the feedback shows.
+async function flushMicrotasks(): Promise<void> {
+  for (let turn = 0; turn < 5; turn += 1) {
+    await Promise.resolve()
+  }
+}
+
 describe('useHapticCopy', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -31,37 +39,49 @@ describe('useHapticCopy', () => {
     vi.useRealTimers()
   })
 
-  it('starts with empty, hidden feedback and no pending timer', () => {
+  it('starts with empty, hidden, not-visible feedback', () => {
     const { result, unmount } = withHapticCopy()
     expect(result.tooltipContent.value).toBe('')
     expect(result.showTooltip.value).toBe(false)
-    expect(result.tooltipTimeout.value).toBeUndefined()
+    expect(result.isVisible.value).toBe(false)
     unmount()
   })
 
-  it('resolves the message when opening the tooltip', async () => {
+  it('shows the resolved succeed message and becomes visible during a copy', async () => {
     const resolveMessage = vi.fn((message: string) => `resolved:${message}`)
-    const { result, unmount } = withHapticCopy({ resolveMessage })
+    const { result, unmount } = withHapticCopy({
+      resolveMessage,
+      succeedMessage: 'ok'
+    })
 
-    await result.openTooltip('hello')
-    expect(resolveMessage).toHaveBeenCalledWith('hello')
-    expect(result.tooltipContent.value).toBe('resolved:hello')
+    const pending = result.copy()
+    // Feedback is shown and the hide timer is pending before the delay elapses.
+    await flushMicrotasks()
+    expect(resolveMessage).toHaveBeenCalledWith('ok')
+    expect(result.tooltipContent.value).toBe('resolved:ok')
     expect(result.showTooltip.value).toBe(true)
+    expect(result.isVisible.value).toBe(true)
+
+    await vi.runAllTimersAsync()
+    await pending
+    // Once the delay elapses the feedback hides itself.
+    expect(result.isVisible.value).toBe(false)
+    expect(result.showTooltip.value).toBe(false)
     unmount()
   })
 
-  it('clears content and pending timer when closing the tooltip', async () => {
+  it('hides the feedback and runs the hide hook when closed', async () => {
     const onHide = vi.fn()
     const { result, unmount } = withHapticCopy({ onHide })
 
-    await result.openTooltip('hello')
-    result.nextTimeout(vi.fn(), 1000)
-    expect(result.tooltipTimeout.value).toBeDefined()
+    result.copy()
+    await flushMicrotasks()
+    expect(result.isVisible.value).toBe(true)
 
-    await result.closeTooltip()
+    await result.close()
     expect(result.showTooltip.value).toBe(false)
-    expect(result.tooltipTimeout.value).toBeUndefined()
-    expect(onHide).toHaveBeenCalledOnce()
+    expect(result.isVisible.value).toBe(false)
+    expect(onHide).toHaveBeenCalled()
     unmount()
   })
 
@@ -98,7 +118,7 @@ describe('useHapticCopy', () => {
 
     const pending = result.copy()
     // The failure message is shown before the hide delay runs.
-    await Promise.resolve()
+    await flushMicrotasks()
     expect(result.tooltipContent.value).toBe('failed')
     expect(onError).toHaveBeenCalledWith(failure)
 
@@ -108,19 +128,29 @@ describe('useHapticCopy', () => {
   })
 
   it('resets the single hide timer so back-to-back copies do not stack resets', async () => {
-    const first = vi.fn()
-    const second = vi.fn()
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout')
     const { result, unmount } = withHapticCopy()
 
-    result.nextTimeout(first, 1000)
-    const firstTimer = result.tooltipTimeout.value
-    // Scheduling again replaces the pending timer rather than adding another.
-    result.nextTimeout(second, 1000)
-    expect(result.tooltipTimeout.value).not.toBe(firstTimer)
+    // Start a first copy that schedules a hide timer. Its promise is awaited
+    // only through the timer it owns, so superseding it intentionally orphans
+    // the first promise — the test never awaits it.
+    result.copy()
+    await flushMicrotasks()
+    expect(result.isVisible.value).toBe(true)
+    const clearsAfterFirst = clearTimeoutSpy.mock.calls.length
+
+    // A second copy clears the pending hide timer before scheduling its own.
+    const secondCopy = result.copy()
+    await flushMicrotasks()
+    expect(clearTimeoutSpy.mock.calls.length).toBeGreaterThan(clearsAfterFirst)
+    expect(result.isVisible.value).toBe(true)
 
     await vi.runAllTimersAsync()
-    expect(first).not.toHaveBeenCalled()
-    expect(second).toHaveBeenCalledOnce()
+    await secondCopy
+    // Only one hide runs at the end; the feedback is no longer visible.
+    expect(result.isVisible.value).toBe(false)
+
+    clearTimeoutSpy.mockRestore()
     unmount()
   })
 
