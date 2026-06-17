@@ -64,14 +64,16 @@ function select() {
   }
 }
 
-const selectInput = async (target: Readonly<ShallowRef<HTMLInputElement | null>>) => {
+async function selectInput(target: Readonly<ShallowRef<HTMLInputElement | null>>) {
   // wait for the copy to finish to select text
   await nextTick()
   target.value?.element.select()
 }
 
 async function selectRich(target: Readonly<ShallowRef<HTMLInputElement | null>>) {
-  if (!target.value) return
+  if (!target.value) {
+    return
+  }
   // wait for the copy to finish to select text
   await nextTick()
   const selection = window.getSelection ? window.getSelection() : null
