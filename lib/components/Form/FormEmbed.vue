@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import { useI18n } from 'vue-i18n'
 import { BFormCheckbox } from 'bootstrap-vue-next'
 import HapticCopy from '@/components/HapticCopy/HapticCopy.vue'
-import IframeResizer from '@/utils/iframe-resizer'
+import { useEmbedForm } from '@/composables/useEmbedForm'
 
 defineOptions({
   name: 'EmbedForm'
@@ -61,33 +61,27 @@ const { t } = useI18n()
 const responsiveCheck = ref(false)
 const embedFormCode = ref<HTMLTextAreaElement | null>(null)
 
-const currentUrl = computed(() => {
-  return props.url || window?.location?.href
+const { embedCode: buildEmbedCode } = useEmbedForm({
+  url: () => props.url,
+  width: () => props.width,
+  height: () => props.height,
+  minWidth: () => props.minWidth,
+  minHeight: () => props.minHeight
 })
-
-function iframeCodeFor(url = currentUrl, width: string, height: string) {
-  const src = IframeResizer.deletePymParams(url.value)
-  return `<iframe width="${width}" height="${height}" src="${src}" frameborder="0" allowfullscreen></iframe>`
-}
-
-function pymCodeFor(url = currentUrl): string {
-  return IframeResizer.template(url.value)
-}
 
 function selectCode(): void {
   embedFormCode.value?.select()
 }
 
+// The responsive checkbox drives the default snippet flavour, so callers can
+// omit the flag to follow the current selection or force it explicitly.
 function embedCode(withPym = responsiveCheck.value): string {
-  const width
-    = typeof props.width === 'string'
-      ? props.width
-      : Math.max(props.width, props.minWidth).toString()
-  const height = Math.max(props.height, props.minHeight).toString()
-  return withPym
-    ? pymCodeFor(currentUrl)
-    : iframeCodeFor(currentUrl, width, height)
+  return buildEmbedCode(withPym)
 }
+
+// Keep the snippet builder and responsive flag reachable for tests that poke
+// the component instance directly.
+defineExpose({ embedCode, responsiveCheck })
 </script>
 
 <template>
