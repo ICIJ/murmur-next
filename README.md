@@ -10,9 +10,9 @@ Murmur is <a href="https://icij.org">ICIJ</a>'s Design System for Bootstrap 5 an
 
 |                    | Status                                                                                                                                                   |
 |-------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Github Actions** | ![Github Actions](https://github.com/ICIJ/murmur-next/actions/workflows/main.yml/badge.svg)                                              |
-|    **NPM version** | [![NPM version](https://img.shields.io/npm/v/@icij/murmur-next)](https://www.npmjs.com/package/@icij/murmur-next)                                        |
-|  **NPM downloads** | [![NPM download](https://img.shields.io/npm/dm/@icij/murmur-next)](https://www.npmjs.com/package/@icij/murmur-next)                                      |
+| **Github Actions** | ![Github Actions](https://github.com/ICIJ/murmur/actions/workflows/main.yml/badge.svg)                                              |
+|    **NPM version** | [![NPM version](https://img.shields.io/npm/v/@icij/murmur)](https://www.npmjs.com/package/@icij/murmur)                                        |
+|  **NPM downloads** | [![NPM download](https://img.shields.io/npm/dm/@icij/murmur)](https://www.npmjs.com/package/@icij/murmur)                                      |
 
 </div>
 
@@ -24,16 +24,16 @@ To get started, use NPM or Yarn to get latest version of **@icij/murmur**.
 
 ```bash
 # with NPM:
-npm i @icij/murmur-next
+npm i @icij/murmur
 
 # or with Yarn:
-yarn add @icij/murmur-next
+yarn add @icij/murmur
 ```
 Then, register Murmur as a plugin in your app entry point:
 
 ```js
 import {createApp} from 'vue'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 
 const app = createApp({})
@@ -45,10 +45,10 @@ Now all components will be globally available in your app.
 
 ## Importing components
 
-`@icij/murmur-next` ships a tree-shakable ESM build. Import only the components you use and your bundler drops the rest:
+`@icij/murmur` ships a tree-shakable ESM build. Import only the components you use and your bundler drops the rest:
 
 ```js
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 ```
 
 Each component automatically imports its own styles, so the components you use bring their CSS with them and unused components — and their CSS — never reach your bundle. There is no separate Murmur stylesheet to import.
@@ -58,7 +58,7 @@ Murmur is a Bootstrap 5 design system: its components are styled on top of Boots
 If you would rather load every component's styles from a single file — for example in a UMD/CDN page — the aggregate stylesheet is still published:
 
 ```js
-import '@icij/murmur-next/dist/lib/murmur.css'
+import '@icij/murmur/dist/lib/murmur.css'
 ```
 
 Importing the aggregate pulls in every component's styles at once, so it opts out of per-component CSS tree-shaking.
@@ -69,13 +69,13 @@ The all-in plugin still registers every component at once and loads their styles
 
 ```js
 import { createApp } from 'vue'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 const app = createApp({})
 app.use(Murmur)
 ```
 
-> **Upgrading:** the ESM build now imports each component's CSS automatically, so a manual `import '@icij/murmur-next/dist/lib/murmur.css'` is no longer required for Murmur's component styles. The UMD/CDN build (`dist/lib/murmur.umd.cjs`) is unchanged.
+> **Upgrading:** the ESM build now imports each component's CSS automatically, so a manual `import '@icij/murmur/dist/lib/murmur.css'` is no longer required for Murmur's component styles. The UMD/CDN build (`dist/lib/murmur.umd.cjs`) is unchanged.
 
 ## Build Setup
 

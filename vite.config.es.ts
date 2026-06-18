@@ -20,7 +20,7 @@ function toRelativeCssSpecifier(chunkFileName, cssFileName) {
 
 // Re-add the per-component CSS imports that Vite 7 strips in lib mode, but ONLY
 // into SFC chunks — never barrels (main.js, index.js), whose importedCss is the
-// union of all children and would make `import { X } from '@icij/murmur-next'`
+// union of all children and would make `import { X } from '@icij/murmur'`
 // pull every component's CSS, defeating tree-shaking. Returns the set of CSS
 // files that received an importer, for the orphan check below.
 function injectCssImportsIntoSfcChunks(bundle) {

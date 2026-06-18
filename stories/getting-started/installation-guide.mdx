@@ -13,23 +13,23 @@ guidelines.
 ### Install the package
 
 If you are using module bundlers such as Webpack or Vite, you might need to include the package into your project.
-To get started, use NPM or Yarn to get latest version of **@icij/murmur-next**.
+To get started, use NPM or Yarn to get latest version of **@icij/murmur**.
 
 ```bash
 # with NPM:
-npm i @icij/murmur-next
+npm i @icij/murmur
 
 # or with Yarn:
-yarn add @icij/murmur-next
+yarn add @icij/murmur
 ```
 
 ### Importing components
 
-`@icij/murmur-next` ships a tree-shakable ESM build. Import only the components
+`@icij/murmur` ships a tree-shakable ESM build. Import only the components
 you use and your bundler drops the rest:
 
 ```js
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 export default {
   name: 'component-name',
@@ -51,7 +51,7 @@ If you would rather load every component's styles from a single file — for
 example in a UMD/CDN page — the aggregate stylesheet is still published:
 
 ```js
-import '@icij/murmur-next/dist/lib/murmur.css'
+import '@icij/murmur/dist/lib/murmur.css'
 ```
 
 Importing the aggregate pulls in every component's styles at once, so it opts
@@ -65,7 +65,7 @@ once and loads their styles automatically:
 
 ```js
 import { createApp } from 'vue'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 const app = createApp({})
 
@@ -81,6 +81,6 @@ If you need to use a component with images, please make sure to
 final app bundle.
 
 > **Upgrading:** the ESM build now imports each component's CSS automatically,
-> so a manual `import '@icij/murmur-next/dist/lib/murmur.css'` is no longer
+> so a manual `import '@icij/murmur/dist/lib/murmur.css'` is no longer
 > required for Murmur's component styles. The UMD/CDN build
 > (`dist/lib/murmur.umd.cjs`) is unchanged.

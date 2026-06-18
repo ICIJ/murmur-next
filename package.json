@@ -1,15 +1,15 @@
 {
-  "name": "@icij/murmur-next",
+  "name": "@icij/murmur",
   "version": "4.10.1",
   "private": false,
   "description": "Murmur is ICIJ's Design System for Bootstrap 5 and Vue.js",
   "author": "promera@icij.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ICIJ/murmur-next"
+    "url": "https://github.com/ICIJ/murmur"
   },
   "bugs": {
-    "url": "https://github.com/ICIJ/murmur-next/issues"
+    "url": "https://github.com/ICIJ/murmur/issues"
   },
   "license": "MIT",
   "scripts": {
