@@ -1,6 +1,6 @@
 <p align="center">
 <a href="https://icij.github.io/murmur/">
-  <img src="https://github.com/ICIJ/murmur/raw/master/lib/assets/images/murmur-dark.png" width="158px">
+  <img src="https://github.com/ICIJ/murmur/raw/main/lib/assets/images/murmur-dark.png" width="158px">
 </a>
 <br>
 Murmur is <a href="https://icij.org">ICIJ</a>'s Design System for Bootstrap 5 and Vue.js
